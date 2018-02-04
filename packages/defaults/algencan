@@ -1,0 +1,37 @@
+#!/bin/bash
+# Definitions for the ALGENCAN package in Fortran 77
+# N. Gould, D. Orban & Ph. Toint, February 17th, 2013
+
+# The name of the package
+export PACKAGE=algencan
+
+# Subdirectory of ${CUTEST}/src where the package lives
+export PACKDIR=algencan
+
+# Precision for which the package was written
+# Valid values are "single", "double", "single double" and "double single"
+export PACK_PRECISION="single double"
+
+# Define the name of any package object files used; any object file without
+# a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/
+export ALGSRC="${ALGENCAN}/sources/algencan"
+export PACKOBJS="${ALGSRC}/algencan.o ${ALGSRC}/auglag.o \
+ ${ALGSRC}/backtrack.o  ${ALGSRC}/betra.o    ${ALGSRC}/calc.o \
+ ${ALGSRC}/cgm.o        ${ALGSRC}/checkder.o ${ALGSRC}/dogleg.o \
+ ${ALGSRC}/drand.o      ${ALGSRC}/evalal.o   ${ALGSRC}/extrap.o \
+ ${ALGSRC}/fparam.o     ${ALGSRC}/gencan.o   ${ALGSRC}/happrox.o \
+ ${ALGSRC}/lss.o        ${ALGSRC}/moresor.o  ${ALGSRC}/newtd.o \
+ ${ALGSRC}/newtonkkt.o  ${ALGSRC}/scl.o      ${ALGSRC}/setpoint.o \
+ ${ALGSRC}/sevalus.o    ${ALGSRC}/spgls.o    ${ALGSRC}/tevalus.o \
+ ${ALGSRC}/tnls.o       ${ALGSRC}/uevalus.o  ${ALGSRC}/vevalus.o"
+
+# Define package and system libraries using -llibrary to include library.a
+# or library.so together with any nonstandard library paths using -L(path)
+export PACKLIBS=""
+
+# Define the name of the package specification file if any. This possibly
+# precision-dependent file must either lie in the current directory or in
+# ${CUTEST}/src/${PACKDIR}
+export SPECS="ALGENCAN.SPC"
+
+

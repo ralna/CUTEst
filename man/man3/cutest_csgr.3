@@ -1,0 +1,134 @@
+'\" e  @(#)cutest_csgr v1.0 12/2012;
+.TH cutest_csgr 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_csgr \- CUTEst tool to evaluate constraints gradients and gradient of
+objective/Lagrangian function.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_csgr( status, n, m, X, Y, grlagf,
+nnzj, lj, J_val, J_var, J_fun )
+.SH DESCRIPTION
+The CUTEST_csgr subroutine evaluates the gradients of the general
+constraints and of either the objective function or the Lagrangian function
+.EQ
+l(x,y) = f(x) + y sup T c(x)
+.EN
+corresponding to the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point
+.EQ
+(x,y) =
+.EN
+(X,Y).
+The gradients are stored in a sparse format.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and
+all constraint functions are partially separable.
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_csgr are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B Y \fP[in] - real/double precision
+an array which should give the Lagrange multipliers whenever grlagf is
+set .TRUE. but need not otherwise be set,
+.TP
+.B grlagf \fP[in] - logical
+a logical variable which should be set .TRUE. if the gradient of the
+Lagrangian function is required and .FALSE. if the gradient of the
+objective function is sought,
+.TP
+.B nnzj \fP[out] - integer
+the number of nonzeros in J_val,
+.TP
+.B lj \fP[in] - integer
+the actual declared dimensions of J_val, J_var and J_fun,
+.TP
+.B J_val \fP[out] - real/double precision
+an array which gives the values of the nonzeros of the gradients of
+the objective, or Lagrangian, and general constraint functions
+evaluated at X and Y. The i-th entry of J_val gives the value of the
+derivative with respect to variable J_var(i) of function J_fun(i),
+.TP
+.B J_var \fP[out] - integer
+an array whose i-th component is the index of the variable with
+respect to which J_val(i) is the derivative,
+.TP
+.B J_fun \fP[out] - integer
+an array whose i-th component is the index of the problem function
+whose value J_val(i) is the derivative. J_fun(i) = 0 indicates the
+objective function whenever grlagf is .FALSE. or the Lagrangian
+function when grlagf is .TRUE., while J_fun(i) = j > 0 indicates the
+j-th general constraint function.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_ugr(3M), cutest_cgr(3M), sifdecoder(1).

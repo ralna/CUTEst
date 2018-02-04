@@ -1,0 +1,119 @@
+'\" e  @(#)cutest_clfg_threaded v1.1 10/2012;
+.TH cutest_clfg_threaded 3M "13 Oct 2013" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_clfg_threaded \- CUTEst tool to evaluate Lagrangian function value a
+nd possibly gradient.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_clfg_threaded( status, n, m, X, Y, f, G, grad, thread )
+.SH DESCRIPTION
+The CUTEST_clfg_threaded subroutine evaluates the value of the Lagrangian 
+function 
+.EQ
+l(x,y) = f(x) + y sup T c(x)
+.EN
+for the problem decoded from a SIF file by the script \fIsifdecoder\fP
+at the point (X,Y), and possibly its gradient.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_clfg_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B Y \fP[in] - real/double precision
+an array which gives the Lagrange multipliers,
+.TP
+.B f \fP[out] - real/double precision
+the value of the Lagrangian function evaluated at (X,Y),
+.TP
+.B G \fP[out] - real/double precision
+an array which gives the value of the gradient of the Lagrangian
+function evaluated at (X,Y),
+.TP
+.B grad \fP[in] - logical
+a logical variable which should be set to .TRUE. if the gradient of
+the Lagrangian function is required and .FALSE. otherwise.
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP 
+.SH NOTE
+A call to CUTEST_clfg_threaded is more efficient than two separate calls 
+to CUTEST_cfn_threaded and CUTEST_cgr_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_uofg_threaded(3M), sifdecoder(1).

@@ -1,0 +1,77 @@
+.\" @(#)cobma v1.0 11/2000;
+.TH cobma 3M "17 Nov 2000"
+.SH NAME
+cobma \- CUTEr COBYLA test driver
+
+.SH SYNOPSIS
+cobma
+
+.SH DESCRIPTION
+The \fIcobma\fP main program test drives COBYLA on SIF problems from the
+CUTEr distribution.
+
+COBYLA is a nonlinear programming code for unconstrained and constrained
+problems, which only uses function values (no derivatives needed).
+ 
+COBYLA was written by M.J.D. Powell, DAMTP, Cambridge University, Silver
+Street, Cambridge (GB) (email: mjdp@damtp.cambridge.ac.uk). It is available
+from the author.
+
+The object module \fIcobma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Compile (but do not link) the COBYLA source code and copy the
+resulting object file cobyla.o in the directory
+$MYCUTER/\fIprecision\fP/bin. Launch using cob(1) or sdcob(1).
+
+.SH NOTE
+COBYLA is not available in double precision.
+
+If no COBYLA.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/cobyla/. The
+default specifications are as follows:
+
+.nf
+.ta 1.2i 2i 3i
+  0.5	RHOBEG	size of the simplex initially
+  0.00001	RHOEND	size of the simplex at termination
+  8000	MAXFUN	maximum number of function calls
+  0	IPRINT	verbosity \- set to 0, 1, 2 or 3
+.fi
+
+The reader is referred to the paper quoted below and the code itself
+if they wish to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIA direct search optimization method that models the
+objective and constraints functions by linear
+interpolation\fP,
+M.J.D. Powell,
+In Advances in optimization and numerical analysis,
+Proceedings of the Sixth workshop on Optimization and
+Numerical Analysis, Oaxaca, Mexico,
+vol.275 of Mathematics and its Applications, pp.51-67.
+Kluwer Academic Publishers, 1994.
+

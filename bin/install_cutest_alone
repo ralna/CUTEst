@@ -1,0 +1,749 @@
+#!/bin/bash
+
+# Build script for cutest
+# version for Bourne/bash shell
+
+# syntax: install_cutest
+
+# N. Gould, D. Orban & Ph. Toint
+# ( Last modified on 20 October 2012 at 11:00 GMT )
+
+if [[ ! -e ./install_cutest ]]; then
+    echo 'Error: This script must be run from the top-level CUTEst directory.'
+    exit 1
+fi
+
+. $ARCHDEFS/bin/helper_functions
+
+#  check input arguments (if any)
+
+if [ $# != 0 ]; then
+   echo "Use: install_cutest"
+   exit 1
+fi
+
+#  determine the platform and operating system used
+
+CORRECT_PLATFORM="false"
+while [ $CORRECT_PLATFORM == "false" ]; do
+   echo ' Select platform'
+   echo
+   echo '   (1) Compaq (DEC) alpha'
+   echo '   (2) Cray'
+   echo '   (3) HP workstation'
+   echo '   (4) IBM PowerPC'
+   echo '   (5) PC'
+   echo '   (6) PC with generic 64-bit processor'
+   echo '   (7) PC with 64-bit Itanium processor'
+   echo '   (8) PC with 64-bit Opteron processor'
+   echo '   (9) PC with 64-bit Athlon processor'
+   echo '  (10) SGI workstation'
+   echo '  (11) SUN workstation'
+   echo '  (12) MAC OS/X'
+   echo '  (13) 64-bit MAC OS/X'
+
+   read CHOICE
+
+   case  $CHOICE  in
+       "1")
+            CORRECT_PLATFORM="true"
+            export MCH="alp"
+            export MACHINE="Compaq Alpha"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) Digital Unix'
+               echo '   (2) Tru-64 Unix'
+               echo '   (3) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="dux"
+                  export OPSYS="Digital Unix"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="t64"
+                  export OPSYS="Tru-64 Unix"
+;;
+               3)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 3'
+               esac
+            done
+;;
+       "2")
+            CORRECT_PLATFORM="true"
+            export MCH="cry"
+            export MACHINE="CRAY T3E"
+            export OS="unc"
+            export OPSYS="UNICOS"
+;;
+       "3")
+            CORRECT_PLATFORM="true"
+            export MCH="hp"
+            export MACHINE="HP workstation"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) HP-UX'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="hpu"
+                  export OPSYS="HP-UX"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "4")
+            CORRECT_PLATFORM="true"
+            export MCH="ppc"
+            export MACHINE="IBM PowerPC"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) AIX'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="aix"
+                  export OPSYS="AIX"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "5")
+            CORRECT_PLATFORM="true"
+            export MCH="pc"
+            export MACHINE="Intel-like PC"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) Windows 2000/XP with MinGW/Msys'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="mgw"
+                  export OPSYS="MGW"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "6")
+            CORRECT_PLATFORM="true"
+            export MCH="pc64"
+            export MACHINE="Intel-like PC with a 64-bit processor"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) Windows 2000/XP with MinGW/Msys'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="mgw"
+                  export OPSYS="MGW"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "7")
+            CORRECT_PLATFORM="true"
+            export MCH="i64"
+            export MACHINE="Intel-like PC with a 64-bit Itanium processor"
+            export OS="lnx"
+            export OPSYS="Linux"
+;;
+       "8")
+            CORRECT_PLATFORM="true"
+            export MCH="opt"
+            export MACHINE="AMD-like PC with a 64-bit Opteron processor"
+            export OS="lnx"
+            export OPSYS="Linux"
+;;
+       "9")
+            CORRECT_PLATFORM="true"
+            export MCH="ath"
+            export MACHINE="AMD-like PC with a 64-bit Athlon processor"
+            export OS="lnx"
+            export OPSYS="Linux"
+;;
+       "10")
+            CORRECT_PLATFORM="true"
+            export MCH="sgi"
+            export MACHINE="SGI workstation"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) IRIX'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="irx"
+                  export OPSYS="IRIX"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "11")
+            CORRECT_PLATFORM="true"
+            export MCH="sun"
+            export MACHINE="Sun workstation"
+
+            CORRECT_OS="false"
+            while [ $CORRECT_OS == "false" ]; do
+
+               echo ' Select operating system'
+               echo
+               echo '   (1) Solaris'
+               echo '   (2) Linux'
+
+               read CHOICE
+
+               case  $CHOICE  in
+               1)
+                  CORRECT_OS="true"
+                  export OS="sol"
+                  export OPSYS="Solaris"
+;;
+               2)
+                  CORRECT_OS="true"
+                  export OS="lnx"
+                  export OPSYS="Linux"
+;;
+               *)
+                  echo ' Please give an integer between 1 and 2'
+               esac
+            done
+;;
+       "12")
+             CORRECT_PLATFORM="true"
+             export MCH="mac"
+             export MACHINE="Mac"
+             export OS="osx"
+             export OPSYS="MacOSX"
+;;
+       "13")
+             CORRECT_PLATFORM="true"
+             export MCH="mac64"
+             export MACHINE="64-bit Mac"
+             export OS="osx"
+             export OPSYS="MacOSX"
+;;
+       *)
+         echo ' Please give an integer between 1 and 13'
+   esac
+done
+
+unalias source 2>/dev/null
+
+source $ARCHDEFS/system.$OS
+
+echo -e ' Select compiler\n'
+
+COMP=( `$LS $ARCHDEFS/compiler.${MCH}.${OS}.* $ARCHDEFS/compiler.all.all.* 2>/dev/null` )
+NUMBER=${#COMP[@]}
+LIST=( ${COMP[@]} )
+let count=-1
+for i  in  ${COMP[@]}; do
+  (( count++ ))
+  COMP[$count]="`$SED q $i | $SED 's/^[# ]*//'`"
+done
+
+CORRECT_COMPILER="false"
+
+let count=-1
+for i  in  ${LIST[@]}; do
+  (( count++ ))
+  let counter=count+1
+  echo "        ($counter) ${COMP[$count]}"
+done
+
+while [ $CORRECT_COMPILER == "false" ]; do
+   read CHOICE
+   let CHOICE=CHOICE-1
+   if (( 0 <= CHOICE && CHOICE < NUMBER )); then
+     CORRECT_COMPILER="true"
+     COMPILER=${LIST[$CHOICE]##*/}
+     CMP=${COMPILER##*\.} #${LIST[$CHOICE]%*\.}
+     COMPUSED="${COMP[$CHOICE]}"
+   else
+     echo " Please give an integer between 1 and $NUMBER"
+   fi
+done
+
+source $ARCHDEFS/$COMPILER
+
+export CUTEST=`dirs -l`
+export CUTEST=`echo $CUTEST | $SED 's"/tmp_mnt""'`
+
+VERSION=${MCH}.${OS}.${CMP}
+#PREFIX=$VERSION
+#OD='$CUTEST'/objects/$VERSION
+
+CORRECT_SUBSET="false"
+NEWCC="false"
+#PLPLOTUSED="unused"
+#PLPLOT=""
+
+if [[ -e $CUTEST/versions/$VERSION ]]; then
+    warning " There is already a CUTEST installation with version $VERSION."
+    yesno_default_no ' Do you wish to proceed ... existing version will be destroyed'
+    [[ $? == 0 ]] && exit 4
+fi
+
+MATLABGCC="gcc-4.3"
+MATLABGFORTRAN="gfortran-4.3"
+matlab=""
+
+#echo $CMP
+
+while [ $CORRECT_SUBSET == "false" ]; do
+   echo ' Select subset of CUTEST packages to be installed'
+   echo ' (the chosen subset will optionally be installed below)'
+   echo
+   echo '     (1) Everything'
+   echo '     (2) Everything except Matlab support'
+   echo '     (3) Unconstrained tools without Matlab support'
+   echo '     (4) Constrained tools without Matlab support'
+   if [[ $CMP="gfortran" ]]; then
+     echo '     (5) Everything for Matlab'
+   fi
+
+  read CHOICE
+
+   case  $CHOICE  in
+       "1")
+            if [[ $CMP="gfortran" ]]; then
+              CORRECT_SUBSET="true"
+              SUBSET="all"
+              matlab="true"
+              if [[ $CMP="gfortran" ]]; then
+                type -P $MATLABGFORTRAN &>/dev/null || \
+              { error " you need to install $MATLABGFORTRAN/$MATLABGCC
+ to allow for Matlab and CUTEst interaction. Aborting "; exit 3; }
+                type -P $MATLABGCC &>/dev/null || \
+              { error " Warning: you need to install $MATLABGCC
+ to allow for Matlab and CUTEst interaction. Aborting "; exit 3; }
+                FORTRAN="$MATLABGFORTRAN"
+                CC="$MATLABGCC"
+                NEWCC="true"
+                warning "$MATLABGCC and $MATLABGFORTRAN override more modern
+ GNU compilers to allow for Matlab and CUTEst interaction"
+              fi
+            else
+              warning ' Matlab only supports gfortran/gcc
+ Please give an integer between 2 and 4!'
+            fi
+;;
+       "2")
+            CORRECT_SUBSET="true"
+            SUBSET="all_except_matlab"
+;;
+       "3")
+            CORRECT_SUBSET="true"
+            SUBSET="all_unconstrained"
+;;
+       "4")
+            CORRECT_SUBSET="true"
+            SUBSET="all_constrained"
+;;
+       "5")
+            if [[ $CMP="gfortran" ]]; then
+              CORRECT_SUBSET="true"
+              SUBSET="all_matlab"
+              matlab="true"
+              if [[ $CMP="gfortran" ]]; then
+                type -P $MATLABGFORTRAN &>/dev/null || \
+              { echo " Warning: you need to install $MATLABGFORTRAN/$MATLABGCC" \
+                echo ' to allow for Matlab and CUTEst interaction. Aborting ' \
+                 >&2; exit 3; }
+                type -P $MATLABGCC &>/dev/null || \
+              { echo ' Warning: you need to install $MATLABGCC' \
+                echo ' to allow for Matlab and CUTEst interaction. Aborting ' \
+                 >&2; exit 3; }
+                FORTRAN="$MATLABGFORTRAN"
+                CC="$MATLABGCC"
+                NEWCC="true"
+                warning "$MATLABGCC and $MATLABGFORTRAN override more modern\n
+ GNU compilers to allow for Matlab and CUTEst interaction"
+              fi
+            else
+              warning ' Matlab only supports gfortran/gcc
+ Please give an integer between 2 and 4!'
+            fi
+;;
+       *)
+         echo ' Please give an integer between 1 and 5'
+   esac
+done
+
+#CCOMPILER=ccompiler.all.all.gcc
+#CCOMP=( `$LS $ARCH/ccompiler.${MCH}.${OS}.*`)
+CCOMP=( `$LS $ARCHDEFS/ccompiler.${MCH}.${OS}.* $ARCHDEFS/ccompiler.all.all.*`)
+NUMBER=${#CCOMP[@]}
+LIST=( ${CCOMP[@]} )
+let count=-1
+for i  in  ${CCOMP[@]}; do
+  (( count++ ))
+  CCOMP[$count]="`$SED q $i | $SED 's/^[# ]*//'`"
+done
+
+CORRECT_CCOMPILER="false"
+while [[ $CORRECT_CCOMPILER == "false" ]]; do
+
+    let count=-1
+    for i  in  ${LIST[@]}; do
+      (( count++ ))
+      let counter=count+1
+      echo "        ($counter) ${CCOMP[$count]}"
+    done
+
+    read CHOICE
+	(( CHOICE-- ))
+
+    i=0
+    while [[ $i -lt $NUMBER &&  $CORRECT_CCOMPILER == "false" ]]; do
+       if [[ $CHOICE == $i ]]; then
+         CORRECT_CCOMPILER="true"
+         CHOICE=$i
+       fi
+       (( i++ ))
+    done
+    if [[ $CORRECT_CCOMPILER == "true" ]]; then
+      CCOMPILER=${LIST[$CHOICE]##*/}
+      CMP=${CCOMPILER##*\.} #${LIST[$CHOICE]%*\.}
+      #CCOMPILER=$LIST[$CHOICE]:t
+      #CMP=$LIST[$CHOICE]:e
+      CCOMPUSED="${CCOMP[$CHOICE]}"
+    else
+      echo " Please give an integer between 1 and $NUMBER"
+    fi
+done
+
+source $ARCHDEFS/$CCOMPILER
+if [[ $NEWCC == "true" ]]; then
+  CC=$MATLABGCC
+fi
+
+#  create architecture-dependent object and module directories
+
+OBJDIR=$CUTEST/objects/$VERSION
+MODDIR=$CUTEST/modules/$VERSION
+PKGDIR=$CUTEST/packages/$VERSION
+
+echo "$MACHINE ($OPSYS) $COMPUSED" > $CUTEST/versions/$VERSION
+
+if [[ ! -e $OBJDIR ]]; then
+    $MKDIR $OBJDIR
+    $MKDIR $OBJDIR/double $OBJDIR/single
+else
+    [[ ! -e $OBJDIR/double ]] && $MKDIR $OBJDIR/double
+    [[ ! -e $OBJDIR/single ]] && $MKDIR $OBJDIR/single
+fi
+
+if [[ ! -e $MODDIR ]]; then
+    $MKDIR $MODDIR
+    $MKDIR $MODDIR/double $MODDIR/single
+else
+    [[ ! -e $MODDIR/double ]] && $MKDIR $MODDIR/double
+    [[ ! -e $MODDIR/single ]] && $MKDIR $MODDIR/single
+fi
+
+[[ ! -e $PKGDIR ]] && $MKDIR $PKGDIR
+[[ ! -e $PKGDIR/double ]] && $MKDIR $PKGDIR/double
+[[ ! -e $PKGDIR/single ]] && $MKDIR $PKGDIR/single
+
+#$CP $CUTEST/packages/defaults/* $PKGDIR/double/
+#$CP $CUTEST/packages/defaults/* $PKGDIR/single/
+
+#  write out the cutest/bin/sys file for this architecture
+
+SYSFILE=$CUTEST/bin/sys/$VERSION
+
+echo 'RM="'$RM'"'                                                  >  $SYSFILE
+echo 'MAKE="'$MAKE'"'                                              >> $SYSFILE
+echo 'CAT="'$CAT'"'                                                >> $SYSFILE
+echo 'SED="'$SED'"'                                                >> $SYSFILE
+echo 'MV="'$MV'"'                                                  >> $SYSFILE
+echo 'CP="'$CP'"'                                                  >> $SYSFILE
+echo 'LS="'$LS'"'                                                  >> $SYSFILE
+echo 'LN="'$LN'"'                                                  >> $SYSFILE
+echo 'FORTRAN="'$FORTRAN'"'                                        >> $SYSFILE
+MOD='$CUTEST/modules/'$VERSION'/$PRECIS'
+FFLAGS="$LIBCMD"' '`eval echo $MODCMD`' '"$F90"
+echo 'FFLAGS="'$FFLAGS' '$MBASIC' '$OPENMP'"'                      >> $SYSFILE
+echo 'PROBFLAGS="'$FFLAGS' '$BASIC' '$OPTIMIZATION' '$F77' "'      >> $SYSFILE
+#echo 'CUTESTUSED="'$CUTESTUSED'"'                                 >> $SYSFILE
+echo 'BLAS="'$BLAS'"'                                              >> $SYSFILE
+echo 'LAPACK="'$LAPACK'"'                                          >> $SYSFILE
+#echo 'HSL="'$HSL'"'                                                >> $SYSFILE
+#echo 'METIS="'$METIS'"'                                            >> $SYSFILE
+#echo 'PARDISO="'$PARDISO'"'                                        >> $SYSFILE
+#echo 'WSMP="'$WSMP'"'                                              >> $SYSFILE
+#echo 'PLPLOT="'$PLPLOT'"'                                          >> $SYSFILE
+
+#  write out the cutest/makefile/ file for this architecture
+
+MAKEFILE=$CUTEST/makefiles/$VERSION
+
+echo ' '                                                           >  $MAKEFILE
+echo '#  Architecture dependent makefile'                          >> $MAKEFILE
+echo '#  (automatically generated by install_cutest)'              >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'VERSION = '$VERSION                                          >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Basic system commands'                                    >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'CP = '$CP                                                    >> $MAKEFILE
+echo 'MV = '$MV                                                    >> $MAKEFILE
+echo 'RM = '$RM                                                    >> $MAKEFILE
+echo 'SED = '$SED                                                  >> $MAKEFILE
+echo 'GREP = '$GREP                                                >> $MAKEFILE
+echo 'AR = '$AR                                                    >> $MAKEFILE
+echo 'ARREPFLAGS = '$ARREPFLAGS                                    >> $MAKEFILE
+echo 'RANLIB = '$RANLIB                                            >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Directory for binaries'                                   >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'PRECIS = double'                                             >> $MAKEFILE
+echo 'OBJ = $(CUTEST)/objects/$(VERSION)/$(PRECIS)'             >> $MAKEFILE
+echo 'OBJS = $(CUTEST)/objects/$(VERSION)/single'               >> $MAKEFILE
+echo 'OBJD = $(CUTEST)/objects/$(VERSION)/double'               >> $MAKEFILE
+echo 'MOD = $(CUTEST)/modules/$(VERSION)/$(PRECIS)'             >> $MAKEFILE
+echo 'SEDS = $(CUTEST)/seds/$(PRECIS).sed'                      >> $MAKEFILE
+echo 'MVMODS = '"$MVMODS"                                          >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Compiler options'                                         >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'FORTRAN = '$FORTRAN                                          >> $MAKEFILE
+echo 'BASIC = '$BASIC                                              >> $MAKEFILE
+MODTMP="$LIBCMD"' '`echo $MODCMD | $SED 's/MOD/(MOD)/g'`
+echo 'MODULES = '$MODTMP                                           >> $MAKEFILE
+echo 'OPTIMIZATION = '$OPTIMIZATION                                >> $MAKEFILE
+echo 'NOOPTIMIZATION = '$NOOPTIMIZATION                            >> $MAKEFILE
+echo 'DEBUG = '$DEBUG                                              >> $MAKEFILE
+echo 'OPENMP = '$OPENMP                                            >> $MAKEFILE
+echo 'F77 = '$F77                                                  >> $MAKEFILE
+echo 'F90 = '$F90                                                  >> $MAKEFILE
+echo 'F95 = '$F95                                                  >> $MAKEFILE
+echo 'NOFMAIN = '$NOFMAIN                                          >> $MAKEFILE
+echo 'USUAL = '$USUAL                                              >> $MAKEFILE
+echo 'SPECIAL = '$SPECIAL                                          >> $MAKEFILE
+echo 'F77SUFFIX = '$F77SUFFIX                                      >> $MAKEFILE
+echo 'F95SUFFIX  = '$F95SUFFIX                                     >> $MAKEFILE
+echo 'TIMER = '$TIMER                                              >> $MAKEFILE
+echo 'NOT95 = '$NOT95                                              >> $MAKEFILE
+echo 'NOT64 = '$NOT64                                              >> $MAKEFILE
+#echo 'PLPLOTUSED = '$PLPLOTUSED                                   >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'AMPLDIR   = '$AMPLLIBDIR                                     >> $MAKEFILE
+echo 'CC        = '$CC                                             >> $MAKEFILE
+echo 'CCBASIC   = '$CCBASIC                                        >> $MAKEFILE
+echo 'CCISO     = '$CCISO                                          >> $MAKEFILE
+echo 'CCONDEF   = '$CCONDEF                                        >> $MAKEFILE
+echo 'CCDEBUG   = '$CCDEBUG                                        >> $MAKEFILE
+echo 'CCFFLAGS  = '$CCFFLAGS                                       >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Special flags'                                            >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Libraries'                                                >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'BLAS = '$BLAS                                                >> $MAKEFILE
+echo 'LAPACK = '$LAPACK                                            >> $MAKEFILE
+#echo 'HSL = '$HSL                                                 >> $MAKEFILE
+#echo 'METIS = '$METIS                                             >> $MAKEFILE
+#echo 'PARDISO = '$PARDISO                                         >> $MAKEFILE
+#echo 'WSMP = '$WSMP                                               >> $MAKEFILE
+#echo 'PLPLOT = '$PLPLOT                                           >> $MAKEFILE
+#echo 'CUTESTUSED = '$CUTESTUSED                                   >> $MAKEFILE
+echo 'CUTESTUSED = '                                               >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Shell used'                                               >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'BINSHELL = '$BINSHELL                                        >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Set directories for optional packages'                    >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'include $(CUTEST)/src/makedefs/packages'                  >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo '#  Body of makefile'                                         >> $MAKEFILE
+echo ' '                                                           >> $MAKEFILE
+echo 'include $(PWD)/makemaster'                                   >> $MAKEFILE
+
+#  optionally edit the compiler and platform settings
+
+yesno_default_no ' Would you like to review and modify if necessary the compiler settings'
+[[ $? == 1 ]] && ${FCEDIT:-${VISUAL:-${EDITOR:-vim}}} $PWD/makefiles/$VERSION
+
+yesno_default_no ' Would you like to review and modify if necessary the system commands'
+[[ $? == 1 ]] && ${FCEDIT:-${VISUAL:-${EDITOR:-vim}}} $PWD/bin/sys/$VERSION
+
+#  optionally compile the selected packages
+
+yesno_default_yes ' Do you now wish to compile the package subset ...'
+
+if [[ $? == 1 ]]; then
+
+    echo -e '\n The package subset may be installed in (S)ingle or (D)ouble precision'
+    read -p ' Which precision do you require for the installed subset (D/s) ? ' -r -n 1 PREC;
+    [[ $PREC == [Ss] ]] && PREC='single' || PREC='double'
+
+    cd $CUTEST/src/
+
+    echo -e "\nInstalling the $PREC precision version"
+    OPTIONS="-s -f $CUTEST/makefiles/$VERSION"
+    MACROS="PRECIS=$PREC PWD=$CUTEST/src CUTEST=$CUTEST"
+    case  $SUBSET  in
+        "all")
+            $MAKE $OPTIONS all $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_except_matlab")
+            $MAKE $OPTIONS all $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_unconstrained")
+            $MAKE $OPTIONS all_unconstrained $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_constrained")
+            $MAKE $OPTIONS all_constrained $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_matlab")
+            $MAKE $OPTIONS all_matlab $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+    esac
+
+#  optionally compile the selected packages in the other precision
+
+    [[ $PREC == 'single' ]] && PREC='double' || PREC='single'
+
+    yesno_default_no "Do you also wish to install the $PREC precision version"
+
+    if [[ $? == 1 ]]; then
+
+        echo -e "\nInstalling the $PREC precision version"
+        MACROS="PRECIS=$PREC PWD=$CUTEST/src CUTEST=$CUTEST"
+        case  $SUBSET  in
+        "all")
+            $MAKE $OPTIONS all $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_except_matlab")
+            $MAKE $OPTIONS all $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_unconstrained")
+            $MAKE $OPTIONS all_unconstrained $MACROS
+            [[ $? != 0 ]] && exit 2
+;;
+        "all_constrained")
+            $MAKE $OPTIONS all_constrained $MACROS
+            [[ $? != 0 ]] && exit 2
+        esac
+
+    fi
+fi
+
+echo -e "\n Remember to set the environment variable"
+echo "  CUTEST to $CUTEST"
+echo " In addition, please update your MANPATH to include"
+echo "    $CUTEST/man"
+echo " and your PATH to include"
+echo "    $CUTEST/bin"
+echo ''
+echo " (see $CUTEST/doc/README.bashrc"
+echo "  for an example on how to do that)."
+echo -e "\n If you wish the version you have just installed to become your"
+echo " default CUTEst version, additionally set"
+echo "  MYARCH to $VERSION"
+if [[ $matlab == "true" ]]; then
+  echo " and"
+  echo "  MYMATLABARCH to $VERSION"
+fi
+
+exit 0

@@ -1,0 +1,138 @@
+'\" e  @(#)cutest_cjprod v2.1 10/2014;
+.TH cutest_cjprod_threaded 3M "3 Oct 2014"
+.SH NAME
+CUTEST_cjprod_threaded \- CUTEst tool to form the matrix-vector product of 
+a vector with the Jacobian of the constraints, or its transpose.
+\fP
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cjprod_threaded( status, n, m, gotj, jtrans, X,
+VECTOR, lvector, RESULT, lresult, thread )
+.SH DESCRIPTION
+The CUTEST_cjprod_threaded subroutine forms the product of a vector with 
+the Jacobian matrix, or with its transpose,  of the constraint functions
+of the problem decoded from a SIF file by the script \fIsifdecoder\fP
+evaluated at the point X.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable 
+and all constraint functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cjprod_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B gotj \fP[in] - logical
+a logical variable which specifies whether the first derivatives of
+the groups and elements have already been set (gotj = .TRUE.) or if
+they should be computed (gotj = .FALSE.),
+.TP
+.B jtrans \fP[in] - logical
+a logical variable which specifies whether the product should
+involve the Jacobian (jtrans = .FALSE.) or its transpose
+(jtrans = .TRUE.),
+.TP
+.B X \fP[in] - real/double precision
+when gotj = .FALSE., the derivatives will be evaluated at X. Otherwise
+X is not used,
+.TP
+.B VECTOR \fP[in] - real/double precision
+an array which gives the vector whose product with the Jacobian or its 
+transposeis is required,
+.TP
+.B lvector \fP[in] - integer
+the actual declared dimension of VECTOR.
+.TP
+.B RESULT \fP[out] - real/double precision
+an array which gives the result of multiplying the Jacobian or its
+transpose by VECTOR. 
+.TP
+.B lresult \fP[in] - integer
+the actual declared dimension of RESULT.
+.TP
+.LP
+.SH NOTE
+gotj should be set to .TRUE. whenever
+.TP 3
+.B (1)\fP
+a call has been made to CUTEST_cgr_threaded, CUTEST_csgr_threaded, CUTEST_cgrdh_threaded, CUTEST_csgreh_threaded or CUTEST_csgrsh_threaded at the current
+point, or
+.TP
+.B (2)\fP
+a previous call to CUTEST_cjprod_threaded, with gotj = .FALSE., at the current 
+point has been made.
+.TP
+.B \fPOtherwise, it should be set .FALSE.,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1).

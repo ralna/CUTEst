@@ -1,0 +1,94 @@
+                      *****************************
+		      *                           *
+                      *  USING UNCMIN WITH CUTEst *
+		      *                           *
+                      *****************************
+
+              ( Last modified on 19 Jan 2013 at 15:05:00 )
+
+
+WHAT IS UNCMIN?
+---------------
+
+The UNCMIN package is designed for unconstrained minimization and has options
+that include both line search and trust region approaches.
+The provided options include analytic gradients or difference
+approximations with analytic Hessians or finite difference Hessians
+(from analytic or finite difference gradients) or secant methods (BFGS).
+
+HOW DO I GET UNCMIN?
+--------------------
+
+See
+
+  http://people.sc.fsu.edu/~jburkardt/f77_src/uncmin/uncmin.html
+
+or
+
+  http://orion.math.iastate.edu/docs/cmlib/uncmin.html
+
+COMPILING THE OBJECT MODULE FOR UNCMIN
+--------------------------------------
+
+For correct performance, IEEE flags should be set for the compiler,
+wherever appropriate.  (Otherwise, the machine precision EPSM may not
+be calculated correctly by UNCMIN.)  On an RS/6000, for example, the
+UNCMIN source should be compiled with at least the following flags:
+
+xlf -qrndsngl -c uncmind.f
+
+where uncmind.f is the file containing the double precision UNCMIN source.
+Of course, you may wish to use additional flags for optimization, debugging,
+etc.
+
+The resulting double precision object file uncmind.o 
+should then be placed in either the user-defined directory $UNCMIN or in 
+$CUTEST/objects/(architecture)/double/ for the architecture you intend to use.
+The same applies when working in single precision, where uncmins.o should be 
+found under in $UNCMIN or in $CUTEST/objects/(architecture)/single/.
+
+
+USING THE UNCMIN INTERFACE TOOL
+-------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The UNCMIN interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   UNCMIN.SPC     sets values for UNCMIN run-time parameters
+
+If no UNCMIN.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/uncmin directory. 
+This default file is as follows:
+
+       1.0   TYPX    typical size for each component of X
+       1.0   FSCALE  estimate of scale of minimization function
+         1   METHOD  algorithm to use to solve minimization problem
+         0   IEXP    =0 if minimization function not expensive to evaluate (0/1)
+         8   MSG     message to inhibit certain automatic checks + output 
+        -1   NDIGIT  number of good digits in minimization function (-1 = all)
+      1000   ITNLIM  maximum number of allowable iterations
+         1   IAGFLG  =0 if analytic gradient not supplied (0/1)
+         1   IAHFLG  =0 if analytic hessian  not supplied (0/1)
+      -1.0   DLT     initial trust region radius (-1 = uncmin chooses)
+   0.00001   GRADTL  gradient tolerance for convergence
+   0.00001   STEPL   minimum steplength
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p uncmin option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+J. E. Koontz, R.B. Schnabel, and B.E. Weiss,
+"A modular system of algorithms for unconstrained minimization",
+ACM Transactions on Mathematical Software, 11(4), pp. 419-440, 1985.
+
+J. E. Dennis and R. B. Schnabel,
+Numerical Methods for Unconstrained Optimization and Nonlinear Equations,
+SIAM, 1996.

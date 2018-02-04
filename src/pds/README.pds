@@ -1,0 +1,140 @@
+
+                      ****************************
+		      *                          *
+                      *   USING PDS WITH CUTEst  *
+		      *                          *
+                      ****************************
+
+              ( Last modified on 19 Jan 2013 at 11:50:00 )
+
+WHAT IS PDS?
+------------
+
+PDS is a nonlinear programming code for unconstrained problems, which only
+uses function values (no derivatives needed).  It is especially intended to be
+used in a parallel computing environment.
+
+PDS was written by V. Torczon (email: va@cs.wm.edu). 
+The following notice goes with the PDS distribution:
+
+   Copyright (C) 1992 Virginia Torczon.  All rights reserved.
+   See below for limited use and distribution authorization.
+
+   PDS, the collection of sofware for executing the parallel direct
+   search methods, was written by Dr. Virginia Torczon, Department 
+   of Mathematical Sciences, Rice University, Houston, Texas.  The
+   two versions of Quicksort included in this release were written
+   by Dr. Robert Michael Lewis, Department of Mathematical Sciences,
+   Rice University, Houston, Texas.  This software is distributed by
+   CITI, the Computer and Information Technology Institute of Rice
+   University.  CITI Catalog Number PD92005, released for distribution
+   March 16, 1992.
+     
+   Subject to the terms below, this software may be copied,
+   distributed, or modified in any way desired without permission
+   from the author(s) or from Rice University.  
+   
+   If the software is distributed in complete, unmodified form, no
+   charge may be made for any copies so distributed, except that a
+   nominal fee not exceeding the reasonable cost of distribution may
+   be charged.  In addition, this legend must be included in all
+   such complete, unmodified copies so distributed (but otherwise no
+   reference may be made to the author(s) or to Rice University or
+   CITI).
+     
+   Neither the author(s)' names nor that of their affiliated insti-
+   tutions (if any), nor the names of Rice University or CITI, may
+   be used by any person or entity, in any manner, without his/her/
+   its express prior written consent.
+   
+   This software was created in the course of academic and/or re-
+   search endeavors and not as a commercial package.  Its present
+   version (which may still be in development) is distributed for a
+   nominal fee to cover the cost of distribution and administrative
+   costs, "AS IS, WITH ALL DEFECTS."   By using the software, each
+   user agrees to assume all responsibility for any and all such
+   use.  The author(s) and Rice University are not aware that the
+   software or the use thereof infringe any proprietary right be-
+   longing to a third party.  However, NO WARRANTY OR REPRESENTA-
+   TION OF ANY KIND, EXPRESS OR IMPLIED, is made about the software,
+   including without limitation any warranty of title, noninfringe-
+   ment, merchantability, or fitness for a particular purpose, by
+   the author(s) or by Rice University.  
+     
+   Independent of the foregoing disclaimer of warranties, the user
+   agrees, by using the software, that NEITHER RICE UNIVERSITY NOR
+   THE AUTHOR(S) SHALL BE LIABLE FOR ANY INCIDENTAL OR CONSEQUENTIAL
+   DAMAGES IN CONNECTION WITH THE USE OF THIS SOFTWARE, INCLUDING
+   WITHOUT LIMITATION LOST PROFITS OR INJURY TO BUSINESS, WHETHER OR
+   NOT RICE UNIVERSITY AND/OR THE AUTHOR(S) KNOW OR HAVE REASON TO
+   KNOW OF THE POSSIBILITY OF SUCH DAMAGES.
+     
+   By using this software, the user agrees to indemnify and defend
+   Rice University and the author(s) and their affiliated institu-
+   tions (if any), or any of them, against any loss, expense, claim,
+   damage, or liability of any kind arising from or connected with
+   the licensee's use of the software, and to hold them or any of
+   them harmless from any of the same, WHETHER OR NOT ARISING IN
+   WHOLE OR IN PART FROM THE NEGLIGENCE OR GROSS NEGLIGENCE OF RICE
+   UNIVERSITY OR ANY OF THE AUTHOR(S) OR THEIR AFFILIATED INSTITU-
+   TIONS (IF ANY).
+
+
+CREATING THE OBJECT MODULE FOR PDS
+-------------------------------------
+
+Concatenate the files
+
+   create.f  define.f  depth.f   done.f    equal.f  fcn.f     getss.f 
+   init.f    maxlen.f  order.f   pds.f     quick.f  reads.f   result.f 
+   right.f   scaled.f  search.f  shrink.f  sort.f   writes.f
+ 
+from the PDS distribution in a single new file named pdsd.f.  Compile
+(but do not link) pdsd.f. The resulting object file pdsd.o 
+should then be placed in either the user-defined directory $PDS or in 
+$CUTEST/objects/(architecture)/(precision)/ for the architecture and 
+precsion you intend to use.
+
+PDS is not available in single precision.
+
+USING THE PDS INTERFACE TOOL
+-------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The PDS interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   PDS.SPC        sets values for PDS run-time parameters
+
+If no PDS.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/pds directory. 
+This default file is as follows:
+
+   0.00001   TOL     the stopping tolerance for the step size 
+       500   MAXITR  the maximum number of iterations allowed
+         2   TYPE    0 given 1 right 2 regular 3 scaled rt (1,2 & 3 constructed)
+       1.0   SCALE   if type not 0 scale contains base length (and orientation)
+         4   DEBUG   flag 0 (none) 1 2 3 and 4 give progressively more info.
+       256   SSS     number of points used in the search strategy.
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p pds option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+V. Torczon 
+PDS: Direct search methods for unconstrained optimization on either 
+sequential or parallel machines, 
+Rice University (1992)
+
+V. Torczon
+On the Convergence of the Multidirectional Search Algorithm
+SIAM J. Optimization, 1(1), 123–145 (1990).
+
+

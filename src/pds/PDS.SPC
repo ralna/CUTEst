@@ -1,0 +1,6 @@
+   0.00001   the stopping tolerance for the step size (TOL)
+       500   the maximum number of iterations allowed (MAXITR)
+         2   0 given 1 right 2 regular 3 scaled rt (1,2 & 3 constructed) (TYPE)
+       1.0   if type not 0 scale contains base length (and orientation) (SCALE)
+         4   flag 0 (none) 1 2 3 and 4 give progressively more info. (DEBUG)
+       256   number of points used in the search strategy (SSS)

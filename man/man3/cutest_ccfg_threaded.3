@@ -1,0 +1,131 @@
+'\" e  @(#)cutest_ccfg_threaded v1.0 12/2012;
+.TH cutest_ccfg_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.TA T 1i
+.SH NAME
+CUTEST_ccfg_threaded \- CUTEst tool to evaluate constraint functions values and
+possibly their gradients.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_ccfg_threaded( status, n, m, X, C, jtrans, lj1, lj2, J_val, 
+grad, thread )
+.SH DESCRIPTION
+The CUTEST_ccfg_threaded subroutine evaluates the values of the constraint 
+functions of
+the problem decoded from a SIF file by the script \fIsifdecoder\fP at the
+point X, and possibly their gradients. The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable 
+and all constraint functions are partially separable.
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_ccfg_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B C \fP[out] - real/double precision
+an array which gives the values of the general constraint functions
+evaluated at X. The i-th component of C will contain the value of 
+.EQ
+c sub i (x),
+.EN
+.TP
+.B jtrans \fP[in] - logical
+a logical variable which should be set .TRUE. if the transpose of the
+constraint Jacobian is required and .FALSE. if the Jacobian itself is
+wanted. The Jacobian matrix is the matrix whose i-th row is the
+gradient of the i-th constraint function,
+.TP
+.B lj1 \fP[in] - integer
+the actual declared size of the leading dimension of J_val (with lj1
+no smaller than n if jtrans is .TRUE. or m if jtrans is .FALSE.),
+.TP
+.B lj2 \fP[in] - integer
+the actual declared size of the second dimension of J_val (with lj2
+no smaller than m if jtrans is .TRUE. or n if jtrans is .FALSE.),
+.TP
+.B J_val \fP[out] - real/double precision
+a two-dimensional array of dimension (lj1, lj2) which gives the
+value of the Jacobian matrix of the constraint functions, or its
+transpose, evaluated at X. If jtrans is .TRUE., the i,j-th component
+of the array will contain the i-th derivative of the j-th constraint
+function. Otherwise, if jtrans is .FALSE., the i,j-th component of the
+array will contain the j-th derivative of the i-th constraint
+function,
+.TP
+.B grad \fP[in] - logical
+a logical variable which should be set .TRUE. if the gradient of the
+constraint functions are required and .FALSE. otherwise,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1)

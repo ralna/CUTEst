@@ -1,0 +1,71 @@
+                      **************************
+                      *                        *
+                      *  USING CG+ WITH CUTEst *
+                      *                        *
+                      **************************
+
+              ( Last modified on 19 Jan 2013 at 15:50:00 )
+
+
+WHAT IS CG+?
+------------
+
+The CG+ package is a nonlinear conjugate-gradient algorithm
+designed for unconstrained minimization by G. Liu, Jorge 
+Nocedal and Richard Waltz (Northwestern U.). A choice of three 
+conjugate-gradient strategies, Fletcher-Reeves, Polak-Ribiere,
+and positive Polak-Ribiere, are available.
+
+HOW DO I GET CG+?
+-----------------
+
+See
+
+  http://users.eecs.northwestern.edu/~nocedal/CG+.html
+
+COMPILING THE OBJECT MODULE FOR CG+
+-----------------------------------
+
+The CG+ files cgfam.f cgsearch.f timer.f and blas.f should be compiled 
+(but not linked) and the resulting object files cgfam.o cgsearch.o timer.o 
+and blas.o should then be placed in either the user-defined directory 
+$CGPLUS or in $CUTEST/objects/(architecture)/double/ for the architecture 
+you intend to use.
+
+There is no single-precision version.
+
+USING THE CG+ INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The CG+ interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   CGPLUS.SPC     sets values for CG+ run-time parameters
+
+If no CGPLUS.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/cgplus directory. 
+This default file is as follows:
+
+        -1    IPRINT(1) specifies the frequency of output (<0: no output)
+         0    IPRINT(2) specifies content of output (0: minimal)
+         3    METHOD    method used (1=Fletcher-Reeves,2=Polak-Ribiere,3=P-R+)
+         0    IREST     no restart (0) or restart every n iterations (1)
+     10000    MAXIT     specifies the maximum number of iterations
+   0.00001    EPS       specifies the required gradient accuracy
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p cgplus option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+ J.-Ch. Gilbert and J. Nocedal.
+  "Global Convergence Properties of Conjugate Gradient Methods", 
+  SIAM Journal on Optimization, Vol. 2, (1992) 21-42.
+

@@ -1,0 +1,63 @@
+'\" e  @(#)cutest_udimsh v1.0 12/2012;
+.TH cutest_udimsh 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation" "CUTEst documentation" "CUTEst documentation"
+.SH NAME
+CUTEST_udimsh \- CUTEst tool to determine the number of nonzeros required to
+store the sparse Hessian matrix in coordinate format.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_udimsh( status, nnzh )
+.SH DESCRIPTION
+The CUTEST_udimsh subroutine determine the number of nonzeros required to
+store the Hessian matrix of the objective function of the problem
+decoded from a SIF file by the script \fIsifdecoder\fP at the point X.
+This Hessian matrix is stored as a sparse matrix in coordinate format.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to the simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_udimsh are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B nnzh \fP[out] - integer
+the number of nonzero elements in the matrix.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_cdimsh(3M), sifdecoder(1).

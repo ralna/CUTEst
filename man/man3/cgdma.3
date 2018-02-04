@@ -1,0 +1,87 @@
+.\" @(#)cgdma v1.0 9/2004;
+.TH cgdma 3M "03 Sep 2004"
+.SH NAME
+cgdma \- CUTEr CG_DESCENT test driver
+
+.SH SYNOPSIS
+cgdma
+
+.SH DESCRIPTION
+The \fIcgdma\fP main program test drives CG_DESCENT on SIF problems from the
+CUTEr distribution.
+
+The CG_DESCENT package is a nonlinear congugate-gradient
+method for large-scale unconstrained minimization designed 
+by William Hager and Hongchao Zhang (U. Florida).
+
+.SH USAGE
+The CG_DESCENT file cg_desecent.f should be compiled, and the resulting 
+file cg_descent.o placed in (or symbolically linked to) the directory 
+$MYCUTER/double/bin.
+
+There is no single-precision version.
+
+.SH NOTE
+If no CG_DESCENT.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/cg_descent/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+    1.0D-5    eps          The stopping tolerance  
+    1.0D-1    delta        Wolfe line search parameter
+    9.0D-1    sigma        Wolfe line search parameter
+    1.0D-6    epsilon      approximate Wolfe threshold factor
+    5.0D-1    theta        update
+    6.6D-1    gamma        required decay factor in interval
+    5.0D+0    rho          growth factor in bracket
+    1.0D-2    eta          lower bound for cg's beta_k
+    1.0D-2    psi0         factor used in very initial starting guess
+    1.0D-1    psi1         factor previous step multiplied by in QuadStep
+    2.0D+0    psi2         factor previous step is multipled by for startup
+   1.0D-12    QuadCutOff   lower bound on rel change in f before QuadStep
+    1.0D+0    restart_fac  restart cg in restart_fac*n iterations
+    5.0D+2    maxit_fac    terminate in maxit_fac*n iterations
+    0.0D+0    feps         stop when value change <= feps*|f|
+        50    nexpand      number of grow/shrink allowed in bracket
+        50    nsecant      number of secant steps allowed in line search
+         T    QuadStep     use initial quad interpolation in line search
+         F    PrintLevel   F (no print) T (intermediate results)
+         F    PrintFinal   F (no print) T (print error messages, final error)
+         F    StopRule     F (|grad|_infty <= tol) T (... <= tol*(1+|f|))
+         F    ERule        F (eps_k = eps|f|) T (eps_k = eps)
+         T    AWolfe       F (Wolfe) T (+approx Wolfe) 2 (epsilon pert)
+         F    Step         F (no initial line search guess) T (guess in gnorm)
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+  N.I.M. Gould, D. Orban and Ph.L. Toint, 
+  ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fICG_DESCENT, A conjugate gradient method with guaranteed descent\fP,
+W. W. Hager and H. Zhang,
+Department of Mathematics, University of Florida, Gainesville, FL 32611, USA,
+January, 2004.
+
+sdcgd(1), cgd(1).

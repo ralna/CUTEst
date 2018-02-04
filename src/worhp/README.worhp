@@ -1,0 +1,65 @@
+                      ***************************
+                      *                         *
+                      * Using WORHP with CUTEst *
+                      *                         *
+                      ***************************
+
+WHAT IS WORHP?
+-------------------
+
+WORHP is a software library for solving large-scale nonlinear programming
+problems of the form
+
+  min           f(x)
+
+  subject to    l <=   x  <= u
+                L <= g(x) <= U
+
+where the bounds may have infinite entries for unbounded constraints and can
+have equal lower and upper bounds for equality constraints.
+
+HOW DO I GET WORHP?
+--------------------
+
+See http://worhp.de . Here you can also get the user manual, which provides
+more details about WORHP.
+
+USING WORHP WITH CUTEst
+----------------------------
+
+The shell variable WORHP should be set to point to the directory
+in which WORHP has been installed. So that CUTEst can find the WORHP
+binaries, you need to ensure that your LD_LIBRARY_PATH path variable includes
+$WORHP/lib . Make sure that you have also obtained a WORHP licence file,
+worhp.lic, and that the shell variable WORHP_LICENSE_FILE points to it.
+
+USING THE WORHP INTERFACE TOOL
+-----------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The WORHP interface tools require two input files:
+
+    probname.SIF   specifies the problem in SIF format
+    worhp.xml      sets values for WORHP parameters
+
+The worhp.xml file should be present in the execution directory, that is the
+directory that WORHP is called from. The path to the file can be changed by
+setting the shell variable WORHP_PARAM_FILE to point at the required
+worhp.xml file. As a last resort, it can also be set by modifying the second
+argument of the call to ReadParamsNoInit in line 96 of the worhp_main.c
+interface file. For more details on the available parameters please refer
+to the WORHP documentation.
+
+To run with CUTEst, use the runcutest command with the -p worhp option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+[1] The ESA NLP Solver WORHP.
+    C. Bueskens and D. Wassel. In Giorgio Fasano and Janos D. Pinter, editors,
+    Modeling and Optimization in Space Engineering, volume 73 of
+    Springer Optimization and Its Applications, pages 85-110.
+    Springer New York, 2013.

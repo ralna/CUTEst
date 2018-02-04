@@ -1,0 +1,96 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          HS11
+
+*   Problem :
+*   *********
+
+*   Source: problem 11 in
+*   W. Hock and K. Schittkowski,
+*   "Test examples for nonlinear programming codes",
+*   Lectures Notes in Economics and Mathematical Systems 187, Springer
+*   Verlag, Heidelberg, 1981.
+
+*   SIF input: Ph. L. Toint, October 1990.
+
+*   classification SQR2-AN-2-1
+
+VARIABLES
+
+    X1
+    X2
+
+GROUPS
+
+ N  OBJ
+
+ G  CON1      X2        1.0
+
+CONSTANTS
+
+    HS11      OBJ       25.0
+
+BOUNDS
+
+ FR HS11      'DEFAULT'
+
+START POINT
+
+    HS11      X1        4.9
+    HS11      X2        0.1
+
+ELEMENT TYPE
+
+ EV SSQ       V1
+ EP SSQ       SH
+
+ELEMENT USES
+
+ XT 'DEFAULT' SSQ
+
+ V  E1        V1                       X1
+ P  E1        SH        5.0
+
+ V  E2        V1                       X2
+ P  E2        SH        0.0
+
+ V  E3        V1                       X1
+ P  E3        SH        0.0
+
+GROUP USES
+
+ E  OBJ       E1                       E2
+ E  CON1      E3        -1.0
+
+OBJECT BOUND
+
+ LO HS11                -25.0
+
+*   Solution
+
+*LO SOLTN               -8.49846
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      HS11
+
+TEMPORARIES
+
+ R  X
+
+INDIVIDUALS
+
+ T  SSQ
+ A  X                   V1 - SH
+ F                      X * X
+ G  V1                  X + X
+ H  V1        V1        2.0
+
+ENDATA

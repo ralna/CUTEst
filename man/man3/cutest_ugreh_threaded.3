@@ -1,0 +1,136 @@
+'\" e  @(#)cutest_ugreh_threaded v1.0 12/2012;
+.TH cutest_ugreh_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_ugreh_threaded \- CUTEst tool to evaluate the gradient and 
+sparse Hessian matrix in finite element format.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_ugreh_threaded( status, n, X, G, ne, lhe_ptr, 
+HE_row_ptr, HE_val_ptr, lhe_row, HE_row, 
+lhe_val, HE_val, byrows, thread )
+.SH DESCRIPTION
+The CUTEST_ugreh_threaded subroutine evaluates the gradient and Hessian matrix 
+of the objective function of the problem decoded from a SIF file by the
+script \fIsifdecoder\fP at the point X. This Hessian matrix is stored
+as a sparse matrix in finite element format
+.ce
+.EQ
+                   H = sum from {e=1} to {ne} H sub e,
+.EN 
+
+where each square symmetric element \fIH sub e\fP involves a small subset of the
+rows of the Hessian matrix.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to the simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_ugreh_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B G \fP[out] - real/double precision
+an array which gives the value of the gradient of the objective
+function evaluated at X
+.TP
+.B ne \fP[out] - integer
+the number, ne, of "finite-elements" used,
+.TP
+.B lhe_ptr \fP[in] - integer
+the actual declared dimensions of HE_row_ptr and HE_val_ptr,
+.TP
+.B HE_row_ptr \fP[out] - integer
+HE_row_ptr(i) points to the position in HE_row of the first row index
+involved with element number e: the row indices of element number e
+are stored in HE_row between the indices HE_row_ptr(e) and
+HE_row_ptr(e+1)-1. HE_row_ptr(ne+1) points to the first empty location in
+HE_row,
+.TP
+.B HE_val_ptr \fP[out] - integer
+HE_val_ptr(i) points to the position in HE_val of the first nonzero involved
+with element number i: the values involved in element number e are
+stored in HE_val between the indices HE_val_ptr(e) and
+HE_val_ptr(e+1)-1. HE_val_ptr(ne+1) points to the first empty location in 
+HE_val,
+.TP
+.B lhe_row \fP[in] - integer
+the actual declared dimension of HE_row,
+.TP
+.B HE_row \fP[out] - integer
+an array which holds a list of the row indices involved which each
+element. Those for element e directly preceed those for element e+1, e
+= 1, ..., ne-1. Since the elements are symmetric, HE_row is also the
+list of column indices involved with each element.
+.TP
+.B lhe_val \fP[in] - integer
+the actual declared dimension of HE_val,
+.TP
+.B HE_val \fP[out] - real/double precision
+an array of the nonzeros in the upper triangle of H_e, evaluated at X
+and stored by rows, or by columns. Those for element e directly
+proceed those for element, e+1, i = 1, ..., ne-1. Element number e
+contains the values stored between
+
+HE_val( HE_val_ptr(e) ) and HE_val( HE_val_ptr(e+1)-1 )
+
+and involves the rows/columns stored between
+
+HE_row( HE_row_ptr(e) ) and HE_row( HE_row_ptr(e+1)-1 ).
+.TP
+.B byrows \fP[in] - logical
+must be set to .TRUE. if the upper triangle of each H_i is to be
+stored by rows, and to .FALSE. if it is to be stored by columns,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_usetup_threaded.
+.LP
+.SH NOTE
+Calling this routine is more efficient than separate calls to CUTEST_ugr
+and CUTEST_ueh_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_csgreh_threaded(3M), sifdecoder(1).

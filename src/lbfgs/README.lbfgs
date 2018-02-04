@@ -1,0 +1,67 @@
+                      *****************************
+                      *                           *
+                      *  USING L-BFGS WITH CUTEst *
+                      *                           *
+                      *****************************
+
+              ( Last modified on 19 Jan 2013 at 15:00:00 )
+
+WHAT IS L-BFGS?
+---------------
+
+The L-BFGS package is a limited-memory algorithm designed for 
+unconstrained minimization by Jorge Nocedal (Northwestern U.). 
+
+HOW DO I GET L-BFGS?
+--------------------
+
+See
+
+  http://users.eecs.northwestern.edu/~nocedal/lbfgs.html
+
+COMPILING THE OBJECT MODULE FOR L-BFGS
+--------------------------------------
+
+The file lbfgs.f compiled, and the resulting file lbfgs.o 
+should then be placed in either the user-defined directory $LBFGS or in 
+$CUTEST/objects/(architecture)/double/ for the architecture you intend to use.
+
+There is no single-precision version.
+
+USING THE L-BFGS INTERFACE TOOL
+-------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The L-BFGS interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   LBFGS.SPC      sets values for L-BFGS run-time parameters
+
+If no LBFGS.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/lbfgs directory. 
+This default file is as follows:
+
+         5    M         specifies the number of iterations in the memory
+        -1    IPRINT(1) specifies the frequency of output (<0: no output)
+         0    IPRINT(2) specifies content of output (0: minimal)
+     10000    MAXIT     specifies the maximum number of iterations
+   0.00001    EPS       specifies the required gradient accuracy
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p lbfgs option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+J. Nocedal,
+ "Updating quasi-Newton matrices with limited storage",
+  Mathematics of Computation, Vol 35, (1980) 773--782.
+
+D.C. Liu and J. Nocedal,
+ "On the Limited Memory Method for Large Scale Optimization",
+  Mathematical Programming B, 45, 3, (1989) pp. 503-528.

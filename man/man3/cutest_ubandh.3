@@ -1,0 +1,87 @@
+'\" e  @(#)cutest_ubandh v1.0 12/2012;
+.TH cutest_ubandh 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_ubandh \- CUTEst tool to extract a banded matrix out of the Hessian
+matrix.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_ubandh( status, n, X, nsemib, BANDH, lbandh, maxsbw )
+.SH DESCRIPTION
+The CUTEST_ubandh subroutine extracts the elements which lie within a band
+of given semi-bandwidth out of the Hessian matrix of the objective
+function of the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point X.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to the simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_ubandh are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B X \fP[in] - real/double precision
+the derivatives will be evaluated at X. 
+.TP
+.B nsemib \fP[in] - integer
+the required semi-bandwidth, i.e., the required number of bands directly below
+the diagonal of the band Hessian approximation.
+.TP
+.B BANDH \fP[out] - real/double precision
+a two-dimensional array of dimension (0:lbandh,n) which gives the
+lower triangular part of the band segment of the Hessian. The diagonal
+entry in column i is returned in location BANDH(0,i), while the entry
+j places below the diagonal in column i may be found in location
+BANDH(j,i),
+.TP
+.B lbandh \fP[in] - integer
+the actual declared size of the leading dimension of BANDH (with
+lbandh no smaller than nsemib). N.B. the leading component of BANDH
+includes the index 0 so strictly, the size of the leading dimension is
+lbandh + 1.
+.TP
+.B maxsbw \fP[out] - integer
+the actual semi-bandwidth, i.e., the actual number of bands directly below
+the diagonal of the Hessian.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1).

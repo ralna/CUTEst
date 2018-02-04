@@ -1,0 +1,170 @@
+'\" e  @(#)cutest_csetup_threaded v1.0 12/2012;
+.TH cutest_csetup_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_csetup_threaded \- CUTEst tool to set up the data structures for constrained
+minimization.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_csetup_threaded( status, input, out, threads, IO_BUFFERS, 
+n, m, X, X_l, X_u, Y, C_l, C_u, 
+EQUATN, LINEAR, e_order, l_order, v_order )
+.SH DESCRIPTION
+The CUTEST_csetup_threaded subroutine sets up the correct data structures for
+subsequent threaded computations on the problem decoded from a SIF file by
+the script \fIsifdecoder\fP. The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_csetup_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B input \fP[in] - integer
+the unit number for the decoded data; the unit from which OUTSDIF.d is
+read,
+.TP
+.B out \fP[in] - integer
+the unit number for any error messages,
+.TP
+.B threads \fP[in] - integer
+the total number of independent evaluation threads that are required,
+.TP
+.B IO_BUFFERS \fP[in] - integer
+an array of different unit numbers, one entry for each thread, 
+for any internal input/output,
+.TP
+.B n \fP[inout] - integer
+on input, the declared dimesions of X, X_l and X_u 
+(see argument n in CUTEST_cdimen).
+On output, the number of variables for the problem,
+.TP
+.B m \fP[inout] - integer
+on input, the declared dimesions of Y, C_l, C_u, EQUATN and LINEAR 
+(see argument m in CUTEST_cdimen).
+On output, the total number of general constraints,
+.TP
+.B X \fP[out] - real/double precision
+an array that gives the initial estimate of the solution of the
+problem,
+.TP
+.B X_l \fP[out] - real/double precision
+an array that gives lower bounds on the variables,
+.TP
+.B  X_u \fP[out] - real/double precision
+an array that gives upper bounds on the variables,
+.TP
+.B Y \fP[out] - real/double precision
+an array that gives the initial estimate of the Lagrange multipliers
+at the solution of the problem. By convention, the signs of the
+Lagrange multipliers Y are set so the Lagrangian function can be
+written as
+.EQ
+l(x,y) = f(x) + y sup T c(x),
+.EN
+.TP
+.B C_l \fP[out] - real/double precision
+an array that gives lower bounds on the inequality constraints,
+.TP
+.B C_u \fP[out] - real/double precision
+an array that gives upper bounds on the inequality constraints,
+.TP
+.B EQUATN \fP[out] - logical
+a logical array whose i-th component is .TRUE. if the i-th constraint
+is an equation (i in E) and .FALSE. if the constraint is an inequality
+(i in I),
+.TP
+.B LINEAR \fP[out] - logical
+a logical array whose i-th component is .TRUE. if the i-th constraint
+is linear or affine and .FALSE. otherwise,
+.TP
+.B e_order \fP[in] - integer
+if the user wishes the general equations to occur before the general 
+inequalities in the list of constraints, e_order must be set to 1.
+If the general equations should follow the general inequalities,
+e_order must be set to 2. If the order is unimportant, e_order
+should be set to 0; any value except 1 and 2 will be interpreted as 0,
+.TP
+.B l_order \fP[in] - integer
+if the user wishes the general linear (or affine) constraints to occur 
+before the general nonlinear ones
+in the list of constraints, l_order must be set to 1.
+If the general linear constraints should follow the general nonlinear ones,
+l_order must be set to 2. If the order is unimportant, l_order
+should be set to 0; any value except 1 and 2 will be interpreted as 0,
+.TP
+.B v_order \fP[in] - integer
+if the user wishes the nonlinear variables to occur 
+before those that only appear linearly in the problem,
+in the list of variables, v_order must be set to 1;
+within the nonlinear variables the
+smaller set of either the nonlinear objective or nonlinear Jacobian
+variables will appear first.
+If the nonlinear variables must follow the linear ones,
+v_order should be set to 2. If the order is unimportant, v_order
+should be set to 0; any value except 1 and 2 will be interpreted as 0.
+.LP
+.SH APPLICATION USAGE
+A call to CUTEST_csetup_threaded must precede calls to other threaded 
+evaluation tools, except CUTEST_cdimen, for generally-constrained problems.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_usetup_threaded(3M), cutest_cdimen(3M), sifdecoder(1).

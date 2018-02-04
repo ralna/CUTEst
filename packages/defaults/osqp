@@ -1,0 +1,27 @@
+#!/bin/bash
+# Definitions for the OSQP package
+# N. Gould, D. Orban & Ph. Toint, December 18th, 2017
+
+# The name of the package
+export PACKAGE=osqp
+
+# Subdirectory of ${CUTEST}/src where the package lives
+export PACKDIR=osqp
+
+# Precision for which the package was written
+# Valid values are "single", "double", "single double" and "double single"
+export PACK_PRECISION="double"
+
+# Define the name of any package object files used; any object file without
+# a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/
+export PACKOBJS=""
+
+# Define package and system libraries using -llibrary to include library.a
+# or library.so together with any nonstandard library paths using -L(path)
+#export PACKLIBS="-L${OSQP}/lib -losqp"
+export PACKLIBS="-losqpstatic -L${OSQP}/build/out -ldl -lm"
+
+# Define the name of the package specification file if any. This possibly
+# precision-dependent file must either lie in the current directory or in
+# ${CUTEST}/src/${PACKDIR}
+export SPECS="OSQP.SPC"

@@ -1,0 +1,111 @@
+                      ******************************
+		      *                            *
+                      * Using FilterSD with CUTEst *
+		      *                            *
+                      ******************************
+
+              ( Last modified on 29 Jan 2013 at 14:50:00 )
+
+WHAT IS FilterSD?
+------------------
+
+FilterSD is a code for solving large-scale nonlinear programming
+problems of the form
+
+  minimize           f(x)
+  subject to  l_x <=   x  <= u_x
+              l_c <= c(x) <= u_c
+
+The code is based on a sequential linearly-constrained approach, and is
+globalized using a filter mechanism. It uses first derivatives of the problem 
+functions. 
+
+The code was written by Roger Fletcher <fletcher@maths.dundee.ac.uk>
+of the University of Dundee, to whom all technical questions should 
+be addressed.
+
+HOW DO I GET FilterSD?
+-----------------------
+
+See
+
+  http://www.coin-or.org/projects/filterSD.xml
+
+USING FilterSD WITH CUTEst
+---------------------------
+
+Change directory in to the appropriate './releases/(version)
+within the directory where you have unzipped the .zip file 
+containing the version of filterSD
+
+Compile the files 
+
+   glcpd.f, l1sold.f, schurQR.f, sparseA.f, util.f, filterSD.f and checkd.f 
+
+and put the resulting object (.o) files in either the user-defined directory 
+
+  $FILTERSD 
+
+or in 
+
+  $CUTEST/objects/(architecture)/(precision)/ 
+
+for the architecture and precsion you intend to use.
+
+USING THE FilterSD INTERFACE TOOL
+----------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The FilterSD interface tools require two input files:
+
+	probname.SIF   specifies the problem in SIF format
+	spec.par       sets values for filterSD parameters
+
+The spec.par file should be present in the current directory.
+
+To run with CUTEst, use the runcutest command with the -p filtersd option.
+See the man page for runcutest for more details of other options.
+
+THE spec.par FILE
+-----------------
+
+The file spec.par specifies parameters for filter and 
+has a number of lines of the form
+
+	keyword_list
+
+where
+
+	keyword_list = 	keyword   value
+               		{keyword_list}
+
+Each keyword must be on a new line. keyword is
+one of the following, default values are also given
+
+keyword         default        meaning
+-----------------------------------------------------
+iprint          1              controls printing
+kmax            n/a (-1)       max size of null-space (-ve = n)
+maxf            n/a (50)       max size of filter
+maxiter         1000           max number of iterations
+mlp             n/a (100)      max level of degeneracy
+nout            6 (= screen)   output channel
+rho             1.0            initial TR radius
+htol            1E-6           sum h of constraint feasibilities tolerance
+rgtol           1E-5           reduced gradient l2 norm tolerance
+mxiws           n/a            max size of integer workspace
+mxws            n/a            max size of real workspace
+maxsc           n/a (25)       max size of current Schur complement allowed
+maxgr           n/a (1000000)  maximum number of gradient calls
+ainfty          1D+20          maximum non-infinite bounds on variables
+
+A default file is given in the file spec.par in $CUTEST/src/filtersd
+
+REFERENCE
+---------
+
+R. Fletcher
+"A Sequential Linear Constraint Programming Algorithm for NLP",
+SIAM Journal on Optimization, 22(3), pp. 772-794 (2012).

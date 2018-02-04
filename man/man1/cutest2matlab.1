@@ -1,0 +1,65 @@
+.\" @(#)cutest2matlab v1.0 01/2013;
+.TH cutest2matlab 1 "29 Jan 2013"
+.SH NAME
+cutest2matlab \- CUTEst to Matlab problem interface.
+.SH SYNOPSIS
+\fBcutest2matlab\fP \fIproblem[.SIF]\fP]
+.SH DESCRIPTION
+\fBcutest2matlab\fP builds the interace between a problem described in
+standard input format (SIF) and the CUTEst evaluation tools for Matlab.
+The command is actually a shortcut to a call to the CUTEst script
+
+  \fBruncutest\fP -A ARCH -p matlab -D \fIproblem[.SIF]\fP
+
+where ARCH is the value provided by the environment variable
+MYMATLABARCH (or MYARCH if MYMATLABARCH has not been set).
+Checks are performed to see if ARCH exists, a version of CUTEst
+using the architecture ARCH has been installed and if this
+architecture uses the gfortran compiler required by Matlab's mex
+interface.
+
+A successful run of cutest2matlab will create a binary file
+mcutest.mexglx (32bit Linux), mcutest.mexa64 (64bit Linux)
+mcutest.mexmaci (32bit OSX) or mcutest.mexmaci64 (64bit OSX).
+This must be placed on the Matlab search path before calling
+the Matlab CUTEst tools.
+.SH ENVIRONMENT
+.TP
+.SB CUTEST
+.br
+Directory containing CUTEst.
+.TP
+.SB MYMATLAB
+Directory containing Matlab's mex executable.
+.TP
+.SB MYMATLABARCH
+The default architecture that uses gfortran compatible with Matlab's mex.
+.TP
+.SB MYARCH
+.br
+The default architecture.
+.TP
+.SB MASTSIF
+A pointer to the directory containing the CUTEst problems
+collection. If this variable is not set, the current directory is
+searched for \fIproblem.SIF\fP. If it is set, the current directory is
+searched first, and if \fIproblem.SIF\fP is not found there, $MASTSIF
+is searched.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+runcutest(1).

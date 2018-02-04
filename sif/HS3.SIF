@@ -1,0 +1,76 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          HS3
+
+*   Problem :
+*   *********
+
+*   Source: problem 3 in
+*   W. Hock and K. Schittkowski,
+*   "Test examples for nonlinear programming codes",
+*   Lectures Notes in Economics and Mathematical Systems 187, Springer
+*   Verlag, Heidelberg, 1981.
+
+*   SIF input: A.R. Conn March 1990
+
+*   classification QBR2-AN-2-0
+
+VARIABLES
+
+    X1
+    X2
+
+GROUPS
+
+ N  G1        X2        1.0
+
+ N  G2        X1        -1.0           X2        1.0
+ N  G2        'SCALE'   100000.0
+
+BOUNDS
+
+ FR HS3       'DEFAULT'
+ LO HS3       X2        0.0
+
+START POINT
+
+    HS3       X1        10.0
+    HS3       X2        1.0
+
+GROUP TYPE
+
+ GV L2        GVAR
+
+GROUP USES
+
+ T  G2        L2
+
+OBJECT BOUND
+
+ LO HS3                 0.0
+
+*   Solution
+
+*LO SOLTN               0.0
+
+ENDATA
+
+
+*********************
+* SET UP THE GROUPS *
+* ROUTINE           *
+*********************
+
+GROUPS        HS3
+
+INDIVIDUALS
+
+ T  L2
+
+ F                      GVAR * GVAR
+ G                      GVAR + GVAR
+ H                      2.0
+
+ENDATA

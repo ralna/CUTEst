@@ -1,0 +1,46 @@
+**************************************************
+**** TAO driver to run CUTEst test problems ******
+**************************************************
+
+Requirements: 
+Before you can run the 'sdtao' or 'tao' CUTEst scripts, you must have:
+
+1. TAO 1.10 installed on your system (see http://www.mcs.anl.gov/tao), 
+	which also requires 
+
+2. PETSc 3.1 (http://www.mcs.anl.gov/petsc)
+
+3. and an implementation of MPI (if you don't have any MPI installed, 
+   then you can configure PETSc using --download-mpich=1 option)
+
+
+Installing for CUTEst:
+
+1. Install CUTEst, TAO, PETSc, and MPI according to package directions.
+
+2. Set environment variables TAO_DIR, PETSC_DIR, and PETSC_ARCH (See 
+PETSc and TAO documentation for details)
+
+[old: 3. CUTEst only builds tao scripts if TAO_DIR environment variable is 
+set, so you may need to update/reinstall CUTEst]
+
+4. To run with CUTEst, use the runcutest command with the -p tao option.
+See the man page for runcutest for more details of other options.
+
+For documentation on TAO, see the TAO website 
+
+  http://www.mcs.anl.gov/research/projects/tao/
+
+If you still have questions, email the authors at tao-comments@mcs.anl.gov.
+
+REFERENCE
+---------
+Todd Munson, Jason Sarich, Stefan Wild, Steven Benson and Lois Curfman McInnes,
+"TAO 2.0 Users Manual", Technical Report ANL/MCS-TM-322,
+Mathematics and Computer Science Division, Argonne  National Laboratory, 2012.
+
+
+
+
+
+	

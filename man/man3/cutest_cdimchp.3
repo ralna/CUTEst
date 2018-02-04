@@ -1,0 +1,89 @@
+'\" e  @(#)cutest_cdimchp v1.0 12/2015;
+.TH cutest_cdimchp 3M "23 Dec 2015" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cdimchp \- CUTEst tool to determine the number of nonzeros needed
+to store the products of the Hessian matrices of the constraint functions
+with a specified vector for the problem decoded from a
+SIF file by the script \fIsifdecoder\fP.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cdimchp( status, nnzchp )
+.SH DESCRIPTION
+The CUTEST_cdimchp subroutine determines the number of nonzero elements
+required to store the products of the Hessian matrices of the constraint
+functions with a specified vector for the problem decoded into OUTSDIF.d
+in the constrained minimization case.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable
+and all constraint functions are partially separable.
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_cdimchp are as follows:
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B nnzchp \fP[out] - integer
+the total number of nonzero entries required to store the products of the
+constraint Hessians with a vector.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1).

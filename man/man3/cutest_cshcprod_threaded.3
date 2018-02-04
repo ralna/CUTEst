@@ -1,0 +1,151 @@
+'\" e  @(#)cutest_cshcprod_threaded v1.2 09/2014;
+.TH cutest_cshcprod_threaded 3M "5 Sep 2014" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cshcprod_threaded \- CUTEst tool to form the matrix-vector product of a 
+spaarse vector with the Hessian matrix of the constraint part of the Lagrangian.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cshcprod_threaded( status, n, goth, X, Y,
+nnz_vector, INDEX_nz_vector, VECTOR,
+nnz_result, INDEX_nz_result, RESULT, thread )
+.SH DESCRIPTION
+The CUTEST_cshcprod_threaded subroutine forms the product of a sparse vector 
+with the Hessian matrix of the constraint part of the Lagrangian function 
+.EQ
+ y sup T c(x)
+.EN
+corresponding to the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point
+.EQ
+(x,y) = 
+.EN
+(X,Y).
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable 
+and all constraint functions are partially separable.
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cshcprod_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B goth \fP[in] - logical
+a logical variable that specifies whether the first and second derivatives of
+the groups and elements have already been set (goth = .TRUE.) or if
+they should be computed (goth = .FALSE.),
+.TP
+.B X \fP[in] - real/double precision
+when goth = .FALSE., the derivatives will be evaluated at X. Otherwise
+X is not used.
+.TP
+.B Y \fP[in] - real/double precision
+when goth = .FALSE., the derivatives will be evaluated with Lagrange
+multipliers Y. Otherwise Y is not used,
+.TP
+.B nnz_vector \fP[in] - integer
+the number of nonzeros in the vector whose product with the Hessian 
+is required,
+.TP
+.B INDEX_nz_vector \fP[in] - integer
+an array that gives the indiices of the nonzeros of the vector whose 
+product with the Hessian is required,
+.TP
+.B VECTOR \fP[in] - real/double precision
+an array that gives the vector whose product with the Hessian is
+required; only the nonzeros need be specified,
+.TP
+.B nnz_result \fP[out] - integer
+the number of nonzeros in the result obtained by multiplying the Hessian 
+by VECTOR,
+.TP
+.B INDEX_nz_result \fP[out] - integer
+an array that gives the indiices of the nonzeros in the result obtained by
+multiplying the Hessian by VECTOR,
+.TP
+.B RESULT \fP[out] - real/double precision
+an array that gives the result of multiplying the Hessian by VECTOR; 
+only the nonzeros will be set,
+.TP
+.B thread \fP[out] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH NOTE
+goth should be set to .TRUE. whenever
+.TP 3
+.B (1)\fP
+a call has been made to  CUTEST_cdh_threaded, CUTEST_csh_threaded, 
+CUTEST_cgrdh_threaded or CUTEST_csgrsh_threaded
+at the current point, or
+.TP
+.B (2)\fP
+a previous call to CUTEST_chprod_threaded, CUTEST_cshprod_threaded or
+CUTEST_cshcprod_threaded, with goth = .FALSE., 
+at the current point has been made.
+.TP
+.B \fPOtherwise, it should be set .FALSE.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_chprod_threaded(3M), cutest_cshchprod(3M), sifdecoder(1).

@@ -1,0 +1,121 @@
+.\" @(#)snpma v1.0 11/2000;
+.TH snpma 3M "17 Nov 2000"
+.SH NAME
+snpma \- CUTEr SNOPT test driver
+
+.SH SYNOPSIS
+snpma
+
+.SH DESCRIPTION
+The \fIsnpma\fP main program test drives SNOPT on SIF problems from the
+CUTEr distribution.
+
+The SNOPT package is designed to minimize smooth functions subject to
+constraints, which may include simple bounds, linear constraints, and
+smooth nonlinear constraints.  The software uses a sequential
+quadratic programming algorithm, where bounds, linear constraints and
+nonlinear constraints are treated separately.  SNOPT stores all
+matrices in dense format, and is therefore not intended for large
+sparse problems.
+ 
+SNOPT has been written by Gill, Murray, Saunders and Wright, and is
+available from the Office of Technology Licensing at Stanford
+University.
+
+.SH USAGE
+SNOPT 6.1 provides the library file libcutesnopt.a which should be
+copied to
+
+  $MYCUTER/\fIprecision\fP/lib
+
+or linked to from this directory.
+
+.SH OUTPUT
+The main output from SNOPT is written (by default) in a file named
+fort.9. This file is subsequently renamed to probname.nps by sdnps. If
+this unit number has been changed in the SNOPT source code, then it
+must also be changed in the shell script nps. The unit number may also
+be changed in the SNOPT.SPC file, by adding the following lines (the
+second being optional):
+ 
+  Print file              output_id
+  Print frequency         k     
+ 
+which sends one line of the QP iteration log to the file having descriptor 
+output_id every k-th minor iteration. This requires
+
+  Minor print level
+
+to be positive. It is *not* the case in the default CUTEr spec file.
+
+In addition, SNOPT can create a summary of the problem output.
+By the source code default, this summary is sent to unit 6 (stdout).
+If you wish to direct the summary output elsewhere, you may include the lines,
+the second line being optional
+
+  Summary file		output_id
+  Summary frequency	k
+
+which sends one line of the QP iteration log to the device having descriptor 
+output_id every k-th minor iteration. This requires
+
+  Minor print level
+
+to be positive. It is *not* the case in the default CUTEr spec file.
+
+.SH NOTE
+If no SNOPT.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/snopt/.
+
+The file SNOPT.SPC may be used to set various SNOPT parameters. These
+parameters are described in the chapter 'Optional Input Parameters' in
+the User's Guide for SNOPT.
+
+The CUTEr default version of SNOPT.SPC is as follows
+
+ BEGIN SNOPT Problem
+    Jacobian                   SPARSE
+ 
+    Derivative level                3
+ 
+    Superbasics limit            2000 
+
+    Major iterations             2000
+    Iteration limit           1000000
+
+    Major print level               1
+    Minor print level               0
+
+    Verify level                   -1
+    Solution                       No
+ END SNOPT Problem
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIUser's Guide for SNOPT (Version 4.0):  A Fortran Package
+for Nonlinear Programming\fP,
+P.E. Gill, W. Murray, and M.A. Saunders, 
+Technical Report SOL xx-x, Systems Optimization
+Laboratory, Department of Operations Research,
+Stanford University, Stanford, USA,  January 19xx.
+
+sdsnp(1), snp(1).

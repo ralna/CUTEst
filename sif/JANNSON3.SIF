@@ -1,0 +1,159 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          JANNSON3
+
+*   Problem :
+*   *********
+
+*   Source:  example 3 in
+*   C. Jannson
+*   "Convex-concave extensions"
+*   BIT 40(2) 2000:291-313
+
+*   SIF input: Nick Gould, September 2000
+
+*   classification OQR2-AN-V-3
+
+*IE N                   3              $-PARAMETER
+ IE N                   10000          $-PARAMETER
+
+*   Other parameters
+
+ IE 0                   0
+ IE 1                   1
+ IE 2                   2
+ IM 2N        N         2
+ IM 5N        N         5
+ RE 1.0                 1.0
+ RI 5RN       5N
+ R/ 1/5N      1.0                      5RN
+
+VARIABLES
+
+ DO I         1                        2N
+ X  X(I)
+ ND
+
+GROUPS
+
+ XN G         X2        -1.0
+ XN G0        X1        1.0
+ DO I         1                        2N
+ XN G(I)      X(I)      1.0
+ XE L         X(I)      1.0
+ ND
+ XL Q
+ XL P
+
+CONSTANTS
+
+ X  JANNSON3  G0        1.0
+ DO I         1                        2N
+ X  JANNSON3  G(I)      1.0
+ ND
+ X  JANNSON3  L         1.0
+ X  JANNSON3  Q         0.75
+ Z  JANNSON3  P                        1/5N
+
+BOUNDS
+
+ LO JANNSON3  'DEFAULT' -1.0
+ UP JANNSON3  'DEFAULT' 1.0
+
+ELEMENT TYPE
+
+ EV SQR       X
+ EV PROD      X                        Y
+
+ELEMENT USES
+
+ DO I         1                        2N
+ XT E(I)      SQR
+ ZV E(I)      X                        X(I)
+ ND
+
+ DO I         1                        N
+ I+ N+I       N                        I
+ XT P(I)      PROD
+ ZV P(I)      X                        X(I)
+ ZV P(I)      Y                        X(N+I)
+ ND
+
+GROUP TYPE
+
+ GV L2        GVAR
+ GV L22       GVAR
+
+GROUP USES
+
+ XT G         L22
+ XE G         E(1)
+
+ DO I         0                        2N
+ XT G(I)      L2
+ ND
+
+ DO I         1                        2N
+ XE Q         E(I)
+ ND
+
+ DO I         1                        N
+ XE P         P(I)
+ ND
+
+OBJECT BOUND
+
+*   Least square problems are bounded below by zero
+
+ LO JANNSON3            0.0
+
+*   Solution
+
+*XL SOLUTION             1.99985D+04    $ n = 10000
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      JANNSON3
+
+INDIVIDUALS
+
+ T  SQR
+ F                      X * X
+ G  X                   X + X
+ H  X         X         2.0
+
+ T  PROD
+ F                      X * Y
+ G  X                   Y
+ G  Y                   X
+ H  X         Y         1.0
+
+ENDATA
+
+*********************
+* SET UP THE GROUPS *
+* ROUTINE           *
+*********************
+
+GROUPS        JANNSON3
+
+INDIVIDUALS
+
+ T  L2
+ F                      GVAR * GVAR
+ G                      GVAR + GVAR
+ H                      2.0
+
+ T  L22
+ F                      0.5 * GVAR * GVAR
+ G                      GVAR
+ H                      1.0
+
+ENDATA

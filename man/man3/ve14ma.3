@@ -1,0 +1,93 @@
+.\" @(#)ve14ma v1.0 11/2000;
+.TH ve14ma 3M "17 Nov 2000"
+.SH NAME
+ve14ma \- CUTEr VE14 test driver
+
+.SH SYNOPSIS
+ve14ma
+
+.SH DESCRIPTION
+The \fIve14ma\fP main program test drives VE14 on SIF problems from the
+CUTEr distribution.
+
+VE14 is a subroutine for the solution of the general, large, quadratic
+programming problem within a feasible region defined by simple bound
+constraints. It uses a barrier-type algorithm, and provides a choice
+between the classical log-barrier function, the Jittorntrum-Osborne
+barrier and the Lagrangian barrier of Conn, Gould and Toint.  The
+first two choices only generate feasible points, while the last has
+often proved to be the fastest.
+ 
+VE14 is part of the HARWELL SUBROUTINE LIBRARY, and was written by
+Nick Gould. It is available from the United Kingdom Atomic Energy
+Authority, Harwell, subject to certain license agreements. It is
+copyrighted jointly by the UKAEA and SERC (Science and Engineering
+Research Council).
+
+.SH USAGE
+To build the \fIprecision\fP precision version, the VE14
+\fIprecision\fP subroutine and dependencies should be concatenated in
+a new file called ve14.f. This file should then be compiled (but not
+linked) and the resulting object file ve14.o placed in the direcotory
+$MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no VE14.SPC file is present in the current directory, the default
+version is copied from $CUTER/common/src/pkg/ve14/. Default
+specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+3	ITYPEB,	barrier (1=classical,
+		2=Osborne+Jittorntrum,3=Lagrangian)
+0.00001	STOPG,	projected gradient stopping tolerance
+.fi 
+
+The reader is referred to the papers quoted below, the documentation of the
+routine in the Harwell Subrooutine Library or the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fINonlinear programming: sequential unconstrained
+minimization techniques\fP,
+A. Fiacco and G. McCormick,
+Wiley, New York, 1968.
+
+\fIA modified barrier function method with improved rate of
+convergence for degenerate problems\fP,
+K. Jittorntrum and M. Osborne,
+Journal of the Australian Mathematical Society,
+Series B, vol. 21. pp. 305-329, 1980.
+
+\fIA globally convergent Lagrangian barrier algorithm for
+optimization with general inequality constraints and
+simple bounds\fP,
+A.R. Conn, N. Gould and Ph.L. Toint,
+Mathematics of Computation, to appear, 1996.
+
+\fIA catalogue of subroutines (release 11)\fP,
+Harwell Subroutine Library,
+Advanced Computing Department, Harwell Laboratory,
+Harwell, UK, 1993.
+
+sdve14(1), ve14(1).

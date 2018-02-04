@@ -1,0 +1,19 @@
+ Solving problem: ALLINITC4 
+
+************************ CUTEst statistics ************************
+
+ Package used            :  ALGENCAN
+ Problem                 :  ALLINITC4 
+ # variables             =               5
+ # constraints           =               1
+ # objective functions   =            1.00
+ # objective gradients   =            0.00
+ # constraints functions =            1.00
+ # constraints gradients =            0.00
+ Exit code               =               0
+ Final f                 =   0.1300000E+02
+ Set up time             =            0.00 seconds
+ Solve time              =            0.00 seconds
+
+******************************************************************
+

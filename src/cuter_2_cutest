@@ -1,0 +1,34 @@
+CUTEr -> CUTEst conversion schedule
+
+package      converted     tested
+----------  ----------    --------
+tools       31/12/2012   31/12/2012 
+test        31/12/2012   31/12/2012 
+cg_descent   2/01/2013    4/01/2013
+cgplus       2/01/2013    4/01/2013
+cobyla       3/01/2013    8/01/2013
+derchk       3/01/2013    9/01/2013
+dfo          3/01/2013    7/01/2013
+filter       9/01/2013    9/01/2013
+gen          4/01/2013    4/01/2013
+hrb          7/01/2013    7/01/2013
+ipopt       15/01/2013   15/01/2013
+knitro      15/01/2013
+la04         6/01/2013    6/01/2013
+lbfgs        2/01/2013    4/01/2013
+lbfgsb       2/01/2013    4/01/2013
+loqo        15/01/2013
+matlab 
+minos       14/01/2013   14/01/2013  (n.b. minos has some hardwired sizes)
+nitsol       6/01/2013    7/01/2013
+npsol       11/01/2013   11/01/2013
+pds          5/01/2013    5/01/2013  (n.b, what are dim and imax?)
+praxis       6/01/2013    6/01/2013  (n.b, praxis common stops allocatables)
+snopt       15/01/2013   15/01/2013
+stats        7/01/2013    7/01/2013
+stenmin      7/01/2013    7/01/2013
+tao          2/01/2013
+tenmin       5/01/2013    5/01/2013
+tron         2/01/2013    4/01/2013
+uncmin       5/01/2013    5/01/2013
+vf13         5/01/2013    5/01/2013

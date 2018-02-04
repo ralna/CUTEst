@@ -1,0 +1,108 @@
+'\" e  @(#)cutest_report v1.0 12/2012;
+.TH cutest_creport 3 "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_creport \- CUTEst tool to obtain statistics concerning function
+evaluation and CPU time used.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_creport( status, CALLS, TIME )
+.SH DESCRIPTION
+The CUTEST_creport subroutine obtains statistics concerning function evaluation and CPU
+time used for constrained optimization in a standardized format.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable
+and all constraint functions are partially separable.
+
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_creport are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B CALLS \fP[out] - real array of length 7
+gives the number of calls to the problem functions:
+.TP 3
+CALLS( 1 ): number of calls to the objective function
+.TP
+CALLS( 2 ): number of calls to the objective gradient
+.TP
+CALLS( 3 ): number of calls to the objective Hessian
+.TP
+CALLS( 4 ): number of Hessian times vector products
+.TP
+CALLS( 5 ): number of calls to the constraint functions
+.TP
+CALLS( 6 ): number of calls to the constraint gradients
+.TP
+CALLS( 7 ): number of calls to the constraint Hessians
+
+.TP
+.B TIME \fP[out] - real array of length 2:
+.TP 3
+TIME( 1 ): CPU time (in seconds) for CUTEST_csetup
+.TP
+TIME( 2 ): CPU time (in seconds) since the end of CUTEST_csetup.
+.LP
+.SH NOTE
+Note that CALLS(4), CALLS(5) and CALLS(6) may account for codes which allow the
+evaluation of a selection of constraints only and may thus be much smaller than
+the number of constraints times the number of iterations.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.

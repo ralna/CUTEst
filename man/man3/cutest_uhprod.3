@@ -1,0 +1,91 @@
+'\" e  @(#)cutest_uprod v1.0 12/2012;
+.TH cutest_uhprod 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_uhprod \- CUTEst tool to form the matrix-vector product of a vector with
+the Hessian matrix.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_uhprod( status, n, goth, X, VECTOR, RESULT )
+.SH DESCRIPTION
+The CUTEST_uhprod subroutine forms the product of a vector with the Hessian
+matrix of the objective function of the problem decoded from a SIF file
+by the script \fIsifdecoder\fP at the point X.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to the simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_uhprod are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B goth \fP[in] - logical
+a logical variable which specifies whether the first and second derivatives of
+the groups and elements have already been set (goth = .TRUE.) or if
+they should be computed (goth = .FALSE.),
+.TP
+.B X \fP[in] - real/double precision
+when goth = .FALSE., the derivatives will be evaluated at X. Otherwise
+X is not used.
+.TP
+.B VECTOR \fP[in] - real/double precision
+an array which gives the vector whose product with the Hessian is
+required,
+.TP
+.B RESULT \fP[out] - real/double precision
+an array which gives the result of multiplying the Hessian by VECTOR. 
+.LP
+.SH NOTE
+goth should be set to .TRUE. whenever
+.TP 3
+.B (1)\fP
+a call has been made to CUTEST_udh, CUTEST_ush, CUTEST_ugrdh or CUTEST_ugrsh 
+at the current point, or
+.TP
+.B (2)\fP
+a previous call to CUTEST_uhprod, with goth = .FALSE., at the current 
+point has been made.
+.TP
+.B \fPOtherwise, it should be set .FALSE.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_chprod(3M), sifdecoder(1).

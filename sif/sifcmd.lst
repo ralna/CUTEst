@@ -1,0 +1,338 @@
+NAME          prb-name
+*   classification NUR2-AN-0-0
+ IE ip-name             numerical-vl
+ IR ip-name   rp-name
+ IA ip-name   ip-name   numerical-vl
+ IS ip-name   ip-name   numerical-vl
+ IM ip-name   ip-name   numerical-vl
+ ID ip-name   ip-name   numerical-vl
+ I= ip-name   ip-name
+ I+ ip-name                            ip-name
+ I- ip-name                            ip-name
+ I* ip-name                            ip-name
+ I/ ip-name                            ip-name
+ RE rp-name             numerical-vl
+ RI rp-name   ip-name
+ RA rp-name   rp-name   numerical-vl
+ RS rp-name   rp-name   numerical-vl
+ RM rp-name   rp-name   numerical-vl
+ RD rp-name   rp-name   numerical-vl
+ RF rp-name   f-name    numerical-vl
+ R= rp-name   rp-name
+ R+ rp-name                            rp-name
+ R- rp-name                            rp-name
+ R* rp-name                            rp-name
+ R/ rp-name                            rp-name
+ R( rp-name   f-name                   rp-name
+ AE rpa-name            numerical-vl
+ AI rpa-name  ip-name
+ AA rpa-name  rpa-name  numerical-vl
+ AS rpa-name  rpa-name  numerical-vl
+ AM rpa-name  rpa-name  numerical-vl
+ AD rpa-name  rpa-name  numerical-vl
+ AF rpa-name  f-name    numerical-vl
+ A= rpa-name  rpa-name
+ A+ rpa-name                           rpa-name
+ A- rpa-name                           rpa-name
+ A* rpa-name                           rpa-name
+ A/ rpa-name                           rpa-name
+ A( rpa-name  f-name                   rpa-name
+ DO ip-name   ip-name                  ip-name
+ DI ip-name   ip-name
+ OD ip-name
+ ND
+GROUPS
+ROWS
+CONSTRAINTS
+ N  gr-name
+ N  gr-name   pv-name   numerical-vl
+ N  gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ N  gr-name   'SCALE'   numerical-vl
+ G  gr-name
+ G  gr-name   pv-name   numerical-vl
+ G  gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ G  gr-name   'SCALE'   numerical-vl
+ L  gr-name
+ L  gr-name   pv-name   numerical-vl
+ L  gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ L  gr-name   'SCALE'   numerical-vl
+ E  gr-name
+ E  gr-name   pv-name   numerical-vl
+ E  gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ E  gr-name   'SCALE'   numerical-vl
+ XN gr-name
+ XN gr-name   pv-name   numerical-vl
+ XN gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ XN gr-name   'SCALE'   numerical-vl
+ XG gr-name
+ XG gr-name   pv-name   numerical-vl
+ XG gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ XG gr-name   'SCALE'   numerical-vl
+ XL gr-name
+ XL gr-name   pv-name   numerical-vl
+ XL gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ XL gr-name   'SCALE'   numerical-vl
+ XE gr-name
+ XE gr-name   pv-name   numerical-vl
+ XE gr-name   pv-name   numerical-vl   pv-name    numerical-vl
+ XE gr-name   'SCALE'   numerical-vl
+ ZN gr-name
+ ZN gr-name   pv-name                  rpa-name
+ ZN gr-name   'SCALE'                  rpa-name
+ ZG gr-name
+ ZG gr-name   pv-name                  rpa-name
+ ZG gr-name   'SCALE'                  rpa-name
+ ZL gr-name
+ ZL gr-name   pv-name                  rpa-name
+ ZL gr-name   'SCALE'                  rpa-name
+ ZE gr-name
+ ZE gr-name   pv-name                  rpa-name
+ ZE gr-name   'SCALE'                  rpa-name
+ DN gr-name   gr-name   numerical-vl   
+ DN gr-name   gr-name   numerical-vl   gr-name    numerical-vl
+ DG gr-name   gr-name   numerical-vl   
+ DG gr-name   gr-name   numerical-vl   gr-name    numerical-vl
+ DL gr-name   gr-name   numerical-vl   
+ DL gr-name   gr-name   numerical-vl   gr-name    numerical-vl
+ DE gr-name   gr-name   numerical-vl   
+ DE gr-name   gr-name   numerical-vl   gr-name    numerical-vl
+VARIABLES
+COLUMNS
+    pv-name
+    pv-name   gr-name   numerical-vl
+    pv-name   gr-name   numerical-vl   gr-name    numerical-vl
+    pv-name   'SCALE'   numerical-vl
+ X  pv-name
+ X  pv-name   gr-name   numerical-vl
+ X  pv-name   gr-name   numerical-vl   gr-name    numerical-vl
+ X  pv-name   'SCALE'   numerical-vl
+ Z  pv-name   gr-name                  rpa-name
+ Z  pv-name   'SCALE'                  rpa-name
+CONSTANTS
+RHS
+RHS'
+    c-name    'DEFAULT' numerical-vl
+ X  c-name    'DEFAULT' numerical-vl
+ Z  c-name    'DEFAULT'                rpa-name
+    c-name    gr-name   numerical-vl
+    c-name    gr-name   numerical-vl   gr-name    numerical-vl
+ X  c-name    gr-name   numerical-vl
+ X  c-name    gr-name   numerical-vl   gr-name    numerical-vl
+ Z  c-name    gr-name                  rpa-name
+RANGES
+    r-name    'DEFAULT' numerical-vl
+ X  r-name    'DEFAULT' numerical-vl
+ Z  r-name    'DEFAULT'                rpa-name
+    r-name    gr-name   numerical-vl
+    r-name    gr-name   numerical-vl   gr-name    numerical-vl
+ X  r-name    gr-name   numerical-vl
+ X  r-name    gr-name   numerical-vl   gr-name    numerical-vl
+ Z  r-name    gr-name                  rpa-name
+BOUNDS
+ LO b-name    'DEFAULT' numerical-vl
+ UP b-name    'DEFAULT' numerical-vl
+ FX b-name    'DEFAULT' numerical-vl
+ FR b-name    'DEFAULT' 
+ MI b-name    'DEFAULT' 
+ PL b-name    'DEFAULT' 
+ XL b-name    'DEFAULT' numerical-vl
+ XU b-name    'DEFAULT' numerical-vl
+ XX b-name    'DEFAULT' numerical-vl
+ XM b-name    'DEFAULT' 
+ XP b-name    'DEFAULT' 
+ ZL b-name    'DEFAULT'                rpa-name
+ ZU b-name    'DEFAULT'                rpa-name
+ ZX b-name    'DEFAULT'                rpa-name
+ LO b-name    pv-name   numerical-vl
+ UP b-name    pv-name   numerical-vl
+ FX b-name    pv-name   numerical-vl
+ FR b-name    pv-name   
+ MI b-name    pv-name   
+ PL b-name    pv-name   
+ XL b-name    pv-name   numerical-vl
+ XU b-name    pv-name   numerical-vl
+ XX b-name    pv-name   numerical-vl
+ XR b-name    pv-name   
+ XM b-name    pv-name   
+ XP b-name    pv-name   
+ ZL b-name    pv-name                  rpa-name
+ ZU b-name    pv-name                  rpa-name
+ ZX b-name    pv-name                  rpa-name
+START POINT
+ V  s-name    'DEFAULT' numerical-vl
+ XV s-name    'DEFAULT' numerical-vl
+ ZV s-name    'DEFAULT'                rpa-name
+ M  s-name    'DEFAULT' numerical-vl
+ XM s-name    'DEFAULT' numerical-vl
+ ZM s-name    'DEFAULT'                rpa-name
+    s-name    'DEFAULT' numerical-vl
+ X  s-name    'DEFAULT' numerical-vl
+ Z  s-name    'DEFAULT'                rpa-name
+ V  s-name    pv-name   numerical-vl
+ V  s-name    pv-name   numerical-vl   pv-name   numerical-vl
+ XV s-name    pv-name   numerical-vl
+ XV s-name    pv-name   numerical-vl   pv-name   numerical-vl
+ ZV s-name    pv-name                  rpa-name
+ M  s-name    pv-name   numerical-vl
+ M  s-name    pv-name   numerical-vl   pv-name   numerical-vl
+ XM s-name    pv-name   numerical-vl
+ XM s-name    pv-name   numerical-vl   pv-name   numerical-vl
+ ZM s-name    pv-name                  rpa-name
+    s-name    pv-name   numerical-vl
+    s-name    pv-name   numerical-vl   pv-name   numerical-vl
+    s-name    gr-name   numerical-vl
+    s-name    gr-name   numerical-vl   gr-name   numerical-vl
+    s-name    pv-name   numerical-vl   gr-name   numerical-vl
+    s-name    gr-name   numerical-vl   pv-name   numerical-vl
+ X  s-name    pv-name   numerical-vl
+ X  s-name    pv-name   numerical-vl   pv-name   numerical-vl
+ X  s-name    gr-name   numerical-vl
+ X  s-name    gr-name   numerical-vl   gr-name   numerical-vl
+ X  s-name    pv-name   numerical-vl   gr-name   numerical-vl
+ X  s-name    gr-name   numerical-vl   pv-name   numerical-vl
+ Z  s-name    pv-name                  rpa-name
+ Z  s-name    gr-name                  rpa-name
+ELEMENT TYPE
+ EV et-name   ev-nam
+ EV et-name   ev-nam                   ev-nam
+ IV et-name   iv-nam
+ IV et-name   iv-nam                   iv-nam
+ EP et-name   ep-nam
+ EP et-name   ep-nam                   ep-nam
+ELEMENT USES
+ T  'DEFAULT' et-name 
+ XT 'DEFAULT' et-name
+ T  el-name   et-name
+ XT el-name   et-name
+ V  el-name   ev-nam                   pv-name
+ ZV el-name   ev-nam                   pv-name
+ P  el-name   ep-nam    numerical-vl   
+ P  el-name   ep-nam    numerical-vl   ep-name   numerical-vl
+ XP el-name   ep-nam    numerical-vl   
+ XP el-name   ep-nam    numerical-vl   ep-name   numerical-vl
+ ZP el-name   ep-nam                   rpa-name
+GROUP TYPE
+ GV gt-name   gv-nam
+ GP gt-name   gp-nam
+ GP gt-name   gp-nam                   gp-nam
+GROUP USES
+ T  'DEFAULT' gt-name
+ XT 'DEFAULT' gt-name
+ T  gr-name   gt-name
+ XT gr-name   gt-name
+ E  gr-name   el-name
+ E  gr-name   el-name   numerical-vl
+ E  gr-name   el-name                  el-name
+ E  gr-name   el-name   numerical-vl   el-name
+ E  gr-name   el-name   numerical-vl   el-name   numerical-vl
+ XE gr-name   el-name                  el-name   numerical-vl
+ XE gr-name   el-name
+ XE gr-name   el-name   numerical-vl
+ XE gr-name   el-name                  el-name
+ XE gr-name   el-name   numerical-vl   el-name
+ XE gr-name   el-name   numerical-vl   el-name   numerical-vl
+ XE gr-name   el-name                  el-name   numerical-vl
+ ZE gr-name   el-name                  rpa-name
+ P  gr-name   gp-nam    numerical-vl
+ P  gr-name   gp-nam    numerical-vl   gp-nam    numerical-vl
+ XP gr-name   gp-nam    numerical-vl
+ XP gr-name   gp-nam    numerical-vl   gp-nam    numerical-vl
+ ZP gr-name   gp-name                  rpa-name
+OBJECT BOUND
+ LO o-name              numerical-vl
+ UP o-name              numerical-vl
+ XL o-name              numerical-vl
+ XU o-name              numerical-vl
+ ZL o-name                             rpa-name
+ ZU o-name                             rpa-name
+ENDATA
+
+ELEMENTS      prb-name
+TEMPORARIES
+ I  it-nam
+ R  rt-nam
+ L  lt-nam
+ M  mf-nam
+ F  uf-nam
+GLOBALS
+ A  it-nam              fortran-expression
+ A  rt-nam              fortran-expression
+ A  lt-nam              fortran-expression
+ A+                     fortran-expression
+ I  lt-nam    it-nam    fortran-expression
+ I  lt-nam    rt-nam    fortran-expression
+ I  lt-nam    lt-nam    fortran-expression
+ I+                     fortran-expression
+ E  lt-nam    it-nam    fortran-expression
+ E  lt-nam    rt-nam    fortran-expression
+ E  lt-nam    lt-nam    fortran-expression
+ E+                     fortran-expression
+INDIVIDUALS
+ T  et-name
+ R  iv-nam    ev-nam    numerical-vl   ev-nam    numerical-vl
+ R  iv-nam    ev-nam    numerical-vl
+ A  it-nam              fortran-expression
+ A  rt-nam              fortran-expression
+ A  lt-nam              fortran-expression
+ A+                     fortran-expression
+ I  lt-nam    it-nam    fortran-expression
+ I  lt-nam    rt-nam    fortran-expression
+ I  lt-nam    lt-nam    fortran-expression
+ I+                     fortran-expression
+ E  lt-nam    it-nam    fortran-expression
+ E  lt-nam    rt-nam    fortran-expression
+ E  lt-nam    lt-nam    fortran-expression
+ E+                     fortran-expression
+ F                      fortran-expression
+ F+                     fortran-expression
+ G  iv-nam              fortran-expression
+ G  ev-nam              fortran-expression
+ G+                     fortran-expression
+ H  iv-nam    iv-nam    fortran-expression
+ H  ev-nam    ev-nam    fortran-expression
+ H+                     fortran-expression
+ENDATA
+
+GROUPS        prb-name
+TEMPORARIES
+ I  it-nam
+ R  rt-nam
+ L  lt-nam
+ M  mf-nam
+ F  uf-nam
+GLOBALS
+ A  it-nam              fortran-expression
+ A  rt-nam              fortran-expression
+ A  lt-nam              fortran-expression
+ A+                     fortran-expression
+ I  lt-nam    it-nam    fortran-expression
+ I  lt-nam    rt-nam    fortran-expression
+ I  lt-nam    lt-nam    fortran-expression
+ I+                     fortran-expression
+ E  lt-nam    it-nam    fortran-expression
+ E  lt-nam    rt-nam    fortran-expression
+ E  lt-nam    lt-nam    fortran-expression
+ E+                     fortran-expression
+INDIVIDUALS
+ T  et-name
+ R  iv-nam    ev-nam    numerical-vl   ev-nam    numerical-vl
+ R  iv-nam    ev-nam    numerical-vl
+ A  it-nam              fortran-expression
+ A  rt-nam              fortran-expression
+ A  lt-nam              fortran-expression
+ A+                     fortran-expression
+ I  lt-nam    it-nam    fortran-expression
+ I  lt-nam    rt-nam    fortran-expression
+ I  lt-nam    lt-nam    fortran-expression
+ I+                     fortran-expression
+ E  lt-nam    it-nam    fortran-expression
+ E  lt-nam    rt-nam    fortran-expression
+ E  lt-nam    lt-nam    fortran-expression
+ E+                     fortran-expression
+ F                      fortran-expression
+ F+                     fortran-expression
+ G                      fortran-expression
+ G+                     fortran-expression
+ H                      fortran-expression
+ H+                     fortran-expression
+ENDATA

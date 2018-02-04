@@ -1,0 +1,127 @@
+                      *******************************
+		      *                             *
+                      *  Using SNOPT6.1 with CUTEst *
+		      *                             *
+                      *******************************
+
+              ( Last modified on 19 Jan 2013 at 16:15:00 )
+
+WHAT IS SNOPT?
+--------------
+
+The SNOPT package is designed to minimize smooth functions subject to
+constraints, which may include simple bounds, linear constraints, and smooth
+nonlinear constraints.  The software uses a sequential quadratic programming
+algorithm, where bounds, linear constraints and nonlinear constraints are
+treated separately.  SNOPT stores all matrices in dense format,
+and is therefore not intended for large sparse problems.  
+
+HOW DO I GET SNOPT?
+-------------------
+
+SNOPT has been written by Gill, Murray, Saunders and Wright, and is available
+from the Office of Technology Licensing at Stanford University.
+
+See 
+
+  http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm
+
+** N.B. Up until SNOPT 5.3, the SNOPTB interface was simply known as SNOPT.
+   If you have a 5.3 or earlier version, simply change the name SNOPTB -> SNOPT
+   in snopt_main.f **
+
+CREATING THE OBJECT MODULE FOR SNOPT6.1
+---------------------------------------
+
+Assuming Snopt6.1 was installed under the directory $SNOPT6.1 on your system,
+you should have the following library file
+
+	$SNOPT6.1/lib/libsnopt.a
+
+Note that SNOPT is only available in double precision.
+
+USING THE SNOPT INTERFACE TOOL
+------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The SNOPT interface tools require two input files:
+
+	probname.SIF   specifies the problem in SIF format
+	SNOPT.SPC      sets values for SNOPT parameters
+
+If no SNOPT.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/snopt directory.
+
+The main output from SNOPT is written (by default) in a file named fort.9.
+This file is subsequently renamed to probname.snp by sdsnp. If this unit
+number has been changed in the SNOPT source code, then it must also be changed
+in the shell script (sd)snp. The unit number may also be changed in the
+SNOPT.SPC file, by adding the following lines (the second being optional):
+
+	Print file		output_id
+	Print frequency		k
+
+which sends one line of the QP iteration log to the file having descriptor 
+output_id every k-th minor iteration. This requires
+
+	Minor print level
+
+to be positive. It is *not* the case in the default CUTEst spec file.
+
+In addition, SNOPT can create a summary of the problem output.
+By the source code default, this summary is sent to unit 6 (stdout).
+If you wish to direct the summary output elsewhere, you may include the lines,
+the second line being optional
+
+	Summary file		output_id
+	Summary frequency	k
+
+which sends one line of the QP iteration log to the device having descriptor 
+output_id every k-th minor iteration. This requires
+
+	Minor print level
+
+to be positive. It is *not* the case in the default CUTEst spec file.
+
+To run with CUTEst, use the runcutest command with the -p snopt option.
+See the man page for runcutest for more details of other options.
+
+THE SNOPT SPECIFICATIONS FILE
+-----------------------------
+
+The file SNOPT.SPC may be used to set various SNOPT parameters.
+These parameters are described in the section 'Description of the optional
+parameters' in the User's Guide for SNOPT.
+
+The CUTEst default version of SNOPT.SPC is as follows
+
+ BEGIN SNOPT Problem
+    Jacobian                   SPARSE  * Needed by the CUTE interface
+ 
+    Derivative level                3
+ 
+    Superbasics limit            2000 
+
+    Major iterations             2000
+    Iteration limit           1000000
+
+    Major print level               1
+    Minor print level               0
+
+    Verify level                   -1
+    Solution                       No
+ END SNOPT Problem
+
+REFERENCES
+----------
+
+P. E. Gill, W. Murray and M. A. Saunders.
+SNOPT: An SQP algorithm for large-scale constrained optimization,
+SIAM Review 47(1), 99-131 (2005). 
+
+P.E. Gill, W. Murray, and M.A. Saunders, User's Guide for
+SNOPT (Version 5.3):  A Fortran Package for Large-Scale Nonlinear Programming,
+Technical Report SOL xx-x, Systems Optimization Laboratory, Department
+of Operations Research, Stanford University, Stanford, USA,  December 1998.

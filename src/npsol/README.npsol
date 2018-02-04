@@ -1,0 +1,105 @@
+                      ****************************
+		      *                          *
+                      *  Using NPSOL with CUTEst *
+		      *                          *
+                      ****************************
+
+              ( Last modified on 19 Jan 2013 at 14:55:00 )
+
+
+WHAT IS NPSOL?
+--------------
+
+The NPSOL package is designed to minimize smooth functions subject to
+constraints, which may include simple bounds, linear constraints, and smooth
+nonlinear constraints.  The software uses a sequential quadratic programming
+algorithm, where bounds, linear constraints and nonlinear constraints are
+treated separately.  NPSOL stores all matrices in dense format,
+and is therefore not intended for large sparse problems.  
+
+HOW DO I GET NPSOL?
+-------------------
+
+NPSOL has been written by Gill, Murray, Suanders and Wright, and is available
+from the Office of Technology Licensing at Stanford University.
+
+See 
+
+  http://www.sbsi-sol-optimize.com/asp/sol_product_npsol.htm
+
+
+CREATING THE OBJECT MODULE FOR NPSOL
+------------------------------------
+
+Concatenate the following .f files into a single file named npsol.f:
+
+   chsubs.f   f06subs.f     mcsubs.f      opsubs.f   srsubs.f
+   cmsubs.f   lssolsubs.f   npsolsubs.f   qrsubs.f
+
+Compile (but do not link) npsol.f; the makefile provided with NPSOL will
+do this, but please check that the FORTRAN and FFLAGS variables are correctly
+set for your compiler. The resulting object file npsol.o 
+should then be placed in either the user-defined directory $NPSOL or in 
+$CUTEST/objects/(architecture)/(precision)/ for the architecture and 
+precsion you intend to use.
+
+USING THE NPSOL INTERFACE TOOL
+------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The NPSOL interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   NPSOL.SPC      sets values for NPSOL parameters
+
+If no NPSOL.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/npsol directory.
+
+To run with CUTEst, use the runcutest command with the -p npsol option.
+See the man page for runcutest for more details of other options.
+
+The main output from NPSOL is written (by default) in a file named fort.9, and
+then renamed to NPSOL.LIS by runcutest.  (This file is subsequently renamed to
+probname.nps by runcutest.)  If this unit number has been changed in the NPSOL
+source code, then it must also be changed in the shell script runcutest.
+The unit number may also be changed in the NPSOL.SPC file, by adding the
+following line:
+
+   Print File  n
+
+where n is the new unit number.  Again, if fort.n is to be renamed to
+NPSOL.LIS by runcutest, the unit number must also be changed in runcutest. 
+
+In addition, NPSOL can create a summary of the problem output.
+By the source code default, this summary is sent to unit 0, and thus
+does not appear anywhere.  The CUTEst default version of NPSOL.SPC
+includes the line
+
+   Summary  6 
+
+which means that the summary output is directed to standard output.
+Of course, this line may be changed or deleted from NPSOL.SPC if
+you wish to direct the summary output elsewhere.
+
+
+THE NPSOL SPECIFICATIONS FILE
+-----------------------------
+
+The file NPSOL.SPC may be used to set various NPSOL parameters.
+These parameters are described in the chapter 'Optional Input
+Parameters' in the User's Guide for NPSOL.
+
+The CUTEst default version of NPSOL.SPC includes only one line, to direct
+the summary output to unit 6 (standard output).  All other parameters
+therefore assume their default values.
+
+
+REFERENCES
+----------
+
+P.E. Gill, W. Murray, M.A. Saunders and M.H. Wright, User's Guide for
+NPSOL (Version 4.0):  A Fortran Package for Nonlinear Programming,
+Technical Report SOL 86-2, Systems Optimization Laboratory, Department
+of Operations Research, Stanford University, Stanford, USA,  January 1986.

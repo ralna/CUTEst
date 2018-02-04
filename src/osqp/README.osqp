@@ -1,0 +1,102 @@
+                     *****************************
+                     *                           *
+                     *  USING OSQP WITH CUTEst   *
+                     *                           *
+                     *****************************
+
+              ( Last modified on 15 Dec 2017 at 10:30:00 )
+
+
+WHAT IS OSQP?
+-------------------
+
+The OSQP package is an Operator-Splitting method for large-scale
+convex Quadratic Programming, written by Bartolomeo Stellato,
+Goran Banjac, Paul Goulart (all University of Oxford),
+Nicholas Moehle, Stephen Boyd (both Stanford University) and
+Alberto Bemporad (IMT Lucca).
+
+HOW DO I GET OSQP?
+------------------------
+
+See
+
+  http://osqp.readthedocs.io/en/latest
+
+OSQP is distributed under the Apache 2.0 License.
+
+COMPILING THE OBJECT MODULE FOR OSQP
+------------------------------------------
+
+Follow the instructions in
+
+  http://osqp.readthedocs.io/en/latest/installation/sources.html
+
+Once the package has been installed, set the environment variable
+OSQP to point to main osqp directory (that is the one and for which
+the compiled binary libraries lie in $OSQP/build/out).
+
+USING THE OSQP INTERFACE TOOL
+-----------------------------------
+
+The command to solve a problem in SIF format contained in the file
+probname.SIF is
+
+runcutest -p osqp -D probname.SIF
+
+See the man page for runcutest for more details or other options.
+
+If no OSQP.SPC file is present in the current directory,
+then the default parameter values specified in cg_default are used.
+Optionally, new parameter values to overwrite the default values can
+be stored in a file OSQP.SPC in the directory where the runcutest
+command is executed.  The format of the file OSQP.SPC is the
+parameter name starting in column 1 followed by 1 or more spaces and
+then the parameter value. The parameter names are case sensitive.
+If the parameter value is true or false, then use 1 for true and 0
+for false. The default file is as follows:
+
+rho                    0.1      (ADMM step rho)
+sigma                  0.000001 (ADMM step sigma)
+scaling                10       (data scaling iterations - 0=disabled)
+adaptive_rho           1        (boolean, is rho step size adaptive?)
+adaptive_rho_interval  0        (# iterations between rho adaptations - 0= automatic)
+adaptive_rho_tolerance 5.0      (tolerance for adapting rho)
+adaptive_rho_fraction  0.4      (interval for adapting rho)
+max_iter               4000     (maximum # iterations)
+eps_abs                0.001    (absolute convergence tolerance)
+eps_rel                0.001    (relative convergence tolerance)
+eps_prim_inf           0.0001   (primal infeasibility tolerance)
+eps_dual_inf           0.0001   (dual infeasibility tolerance)
+alpha                  1.6      (relaxation parameter)
+delta                  0.000001 (regularization parameter for polish)
+polish                 0        (boolean, polish ADMM solution)
+polish_refine_iter     3        (iterative refinement steps in polish)
+verbose                1        (boolean, write out progres)
+scaled_termination     0        (boolean, use scaled termination criteria)
+check_termination      25       (check termination interval - 0=disabled)
+warm_start             1        (boolean, warm start)
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+To use the BLAS, specify things like location and threading in both
+$CUTEST/bin/sys/$MYARCH and $CUTEST/makefiles/$MYARCH. For example,
+BLAS = "-L/data/GotoBLAS2 -lpthread"
+
+To run with CUTEst, use the runcutest command with the -p osqp option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+See
+
+  B. Stellato, G. Banjac, P. Goulart, A. Bemporad and S. Boyd,
+  OSQP: An Operator Splitting Solver for Quadratic Programs (2017),
+  ArXiv e-prints http://adsabs.harvard.edu/abs/2017arXiv171108013S
+
+Documentation is available from
+
+  https://media.readthedocs.org/pdf/osqp/latest/osqp.pdf
+

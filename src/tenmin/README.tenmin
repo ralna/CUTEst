@@ -1,0 +1,79 @@
+
+                      ******************************
+		      *                            *
+                      *  USING TENMIN WITH CUTEst  *
+		      *                            *
+                      ******************************
+
+              ( Last modified on 19 Jan 2013 at 11:50:00 )
+
+WHAT IS TENMIN?
+---------------
+
+The TENMIN package is intended for problems where the cost of storing one n by
+n matrix (where n is the number of variables), and factoring it at each
+iteration, is acceptable.  The software allows the user to choose between a
+tensor method for unconstrained optimization, and an analogous standard method
+based upon a quadratic model.  The tensor method bases each iteration upon a
+specially constructed fourth-order model of the objective function that is not
+significantly more expensive to form, store, or solve than the standard
+quadratic model.  
+
+HOW DO I GET TENMIN?
+--------------------
+
+See
+
+   http://www.netlib.org/toms/739
+
+CREATING THE OBJECT MODULE FOR TENMIN
+-------------------------------------
+
+Compile (but do not link) tenmsrd.f. The resulting object file tensrd.o
+should be placed in either the user-defined directory $TENMIN or in 
+$CUTEST/objects/(architecture)/(precision)/ for the architecture and 
+precsion you intend to use.
+
+USING THE TENMIN INTERFACE TOOL
+--------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The TENMIN interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   TENMIN.SPC     sets values for TENMIN run-time parameters
+
+If no TENMIN.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/tenmin directory. 
+This default file is as follows:
+
+      1000    ILIM,    the maximum number of iterations
+   0.00001    GRADTL,  the relative gradient stopping tolerance
+         2    IAGFLG,  the gradient availability and checking flag
+         2    IAHFLG,  the Hessian availability and checking flag
+       1.0    FSCALE,  the typical value of the objective function
+       1.0    TYPX,    the typical value of the problem's variables
+         1    METHOD,  the method used (0 = Newton, 1 = tensor )
+        15    NDIGIT,  the number of accurate digits in function values
+         1    MSG,     the output specifier
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p tenmin option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+R. B. Schnabel and T.-T. Chow,
+"Algorithm 739: A software package for unconstrained optimization using 
+tensor methods",
+ACM Transactions on Mathematical Software, 20(4), pp. 518-530, 1994.
+
+R. B. Schnabel and T.-T. Chow,
+"Tensor methods for unconstrained optimization using second derivatives",
+SIAM Journal on Optimization, vol. 1(3), pp. 293-315, 1991.
+

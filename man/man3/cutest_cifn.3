@@ -1,0 +1,97 @@
+'\" e  @(#)cutest_cifn v1.0 10/2016;
+.TH cutest_cifn 3M "18 Oct 2016" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cifn \- CUTEst tool to evaluate a problem function value.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cifn( status, n, iprob, X, fn )
+.SH DESCRIPTION
+The CUTEST_cifn subroutine evaluates the value of either the
+objective function or a constraint function
+of the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point X, in the constrained minimization case.
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and
+all constraint functions are partially separable.
+
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_cifn are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B iprob \fP[in] - integer
+the number of the problem function to be considered. If iprob = 0, the
+value of the objective function will be evaluated, while if iprob =
+i > 0, that of the i-th constraint will be evaluated,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B fn \fP[out] - real/double precision
+the value of problem function iprob at X.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1)

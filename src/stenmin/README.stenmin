@@ -1,0 +1,118 @@
+                      *******************************
+		      *                             *
+                      *  Using STENMIN with CUTEst  *
+		      *                             *
+                      *******************************
+
+              ( Last modified on 19 Jan 2013 at 14:50:00 )
+
+WHAT is STENMIN?
+----------------
+
+STENMIN is an optimization package which uses tensor methods to minimize a
+nonlinear unconstrained problem where the Hessian is large and sparse. The
+software allows the user to select between a tensor method and a standard
+method based upon a quadratic model.  The tensor method models the objective
+function by a fourth-order model, where the third- and fourth-order terms are
+chosen such that the extra cost of forming and solving the model is small.
+
+STENMIN has been written and is distributed by
+
+       Ali Bouaricha
+       Argonne National Laboratory
+       MCS Division
+       9700 South Cass Avenue
+       Argonne, IL 60439, USA.
+       E-MAIL:  ali@silvaco.com
+
+
+HOW DO I GET STENMIN?
+---------------------
+
+See
+
+  http://www.netlib.org/toms/765
+
+CREATING THE OBJECT MODULE FOR STENMIN
+--------------------------------------
+
+Starting from the files distributed by A. Bouaricha, perform the
+following steps on a UNIX system (or equivalent actions on other systems).
+
+1) Use the makefile supplied in the distribution to obtain the double
+   precision version of the stenmin.f and colmor.f files:
+
+       f77 -o todble todble.f
+       make stenmind.f
+       make colmord.f
+
+2) Concatenate these two files:
+
+       cat colmord.f >> stenmind.f
+
+3) Compile (but do not link) stenmind.f. The resulting object file stenmind.o 
+   should then be placed in either the user-defined directory $STENMIN or in 
+   $CUTEST/objects/(architecture)/double/ for the architecture and 
+   precsion you intend to use.
+
+4) You should also have a compiled double precision version of the Harwell 
+   Subroutine MA27 named ma27d.o in either the user-defined directory $STENMIN 
+   or in $CUTEST/objects/(architecture)/double/ for the architecture and 
+   precsion you intend to use. This subroutine is required by STENMIN.
+
+The steps for obtaining the single precision version of STENMIN are identical,
+except that the following substitutions should be made:
+
+        todble      -->  tosngl
+        stenmind.f  -->  stenmins.f
+        colmord.f   -->  colmors.f
+        DCOPY       -->  SCOPY
+        DNRM2       -->  SNRM2
+        DDOT        -->  SDOT
+        DSCAL       -->  SSCAL
+        stenmind.o  -->  stenmins.o
+        ma27d.o     -->  ma27s.o
+        double      -->  single
+
+Note: If you have the Harwell Subroutine Library already available on your
+system, an additional copy of MA27 is unnecessary.  
+
+USING THE STENMIN INTERFACE TOOL
+--------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The STENMIN interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   STNMIN.SPC     sets values for STNMIN run-time parameters
+
+If no STNMIN.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/stenmin directory. 
+This default file is as follows:
+
+      1000    ILIM,    the maximum number of iterations
+   0.00001    GRADTL,  the relative gradient stopping tolerance
+         2    GRDFLG,  the gradient availability and checking flag
+         2    HSNFLG,  the Hessian availability and checking flag
+       1.0    FSCALE,  the typical value of the objective function
+       1.0    TYPX,    the typical value of the problem's variables
+         1    METHOD,  the method used (0 = Newton, 1 = tensor )
+        15    NDIGIT,  the number of accurate digits in function values
+         1    MSG,     the output specifier
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p stenmin option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE:
+----------
+
+A. Bouaricha, 
+"Algorithm 765: STENMIN — a software package for large, sparse unconstrained 
+optimization using tensor methods"
+ACM Transactions on Mathematical Software, 23(1) 1997, pp. 81-90.
+

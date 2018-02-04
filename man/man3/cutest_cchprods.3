@@ -1,0 +1,138 @@
+'\" e  @(#)cutest_cchprods v1.0 12/2015;
+.TH cutest_cchprods 3M "23 Dec 2015" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cchprods \- CUTEst tool to form the matrix-vector products of a vector
+with each of the Hessian matrices of the constraint functions.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cchprods( status, n, m, goth, X, Y, VECTOR,
+lchp, CHP_val, CHP_ind, CHP_ptr )
+.SH DESCRIPTION
+The CUTEST_cchprods subroutine forms the product of a vector with each of
+the Hessian matrices of the constraint functions
+.EQ
+c(x)
+.EN
+corresponding to the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point
+.EQ
+x =
+.EN
+X.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable
+and all constraint functions are partially separable.
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_cchprods are as follows:
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B goth \fP[in] - logical
+a logical variable which specifies whether the second derivatives of
+the groups and elements, and the indexing information held in
+ CHP_ind and CHP_ptr (see below) have already been set (goth = .TRUE.) or if
+this information should be computed (goth = .FALSE.),
+.TP
+.B X \fP[in] - real/double precision
+when goth = .FALSE., the Hessians will be evaluated at X. Otherwise
+X is not used.
+.TP
+.B VECTOR \fP[in] - real/double precision
+an array which gives the vector whose product with the constraint Hessians is
+required,
+.TP
+.B lchp \fP[in] - integer
+a variable that specifies the declared lengths of CHP_val and CHP_ind.
+The precise length required may be found by calling \fICUTEST_cdimchp\fP prior
+to \fICUTEST_cchprods\fP,
+.TP
+.B CHP_val \fP[out] - real/double precision
+an array that gives the values of the nonzeros in the result obtained by
+multiplying the constraint Hessians by VECTOR. The values for the i-th
+constraint are stored in CHP_val(CHP_ptr(i):CHP_val(i+1)-1),
+.TP
+.B CHP_ind \fP[inout] - integer
+an array that gives the indices of the nonzeros in the result obtained by
+multiplying the constraint Hessians by VECTOR. The indices for the i-th
+constraint are stored in CHP_ind(CHP_ptr(i):CHP_ptr(i+1)-1), and
+match the values stored in  CHP_val,
+.TP
+.B CHP_ptr \fP[inout] - integer
+an array of length m+1 that gives pointers to the starting positions in
+CHP_ind and CHP_val
+for the nonzeros for the product with each Hessian. CHP_ptr(m+1)-1 gives
+the total space required by CHP_ind and CHP_val.
+.LP
+.SH NOTE
+goth should be set to .TRUE. only when
+a previous call to CUTEST_cchprods, with goth = .FALSE., at the current point
+has been made. Otherwise, it should be set .FALSE.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+  I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+  ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_cdimchp(3M), sifdecoder(1).

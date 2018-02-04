@@ -1,0 +1,70 @@
+
+                      *******************************
+		      *                             *
+                      *   USING LINCOA WITH CUTEst  *
+		      *                             *
+                      *******************************
+
+              ( Last modified on 6 Oct 2015 at 15:30:00 )
+
+WHAT IS LINCOA?
+---------------
+
+LINCOA is a nonlinear programming code for unconstrained and constrained
+problems, which only uses function values (no derivatives needed).  
+
+HOW DO I GET LINCOA?
+--------------------
+
+LINCOA was written by M.J.D. Powell, DAMTP, Cambridge University, Silver
+Street, Cambridge (GB). The package may be obtained from 
+  http://ccpforge.cse.rl.ac.uk/gf/project/powell/wiki/
+
+CREATING THE OBJECT MODULE FOR LINCOA
+-------------------------------------
+
+Compile (but do not linek) the files lincoa.f, lincob.f, getact.f, prelim.f, 
+qmstep.f, trstep.f and update.f, and put the resulting object (.o) files in 
+either the user-defined directory $LINCOA or in 
+$CUTEST/objects/(architecture)/(precision)/
+for the architecture and precsion you intend to use.
+
+LINCOA is only available in double precision.
+
+USING THE LINCOA INTERFACE TOOL
+-------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The LINCOA interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   LINCOA.SPC     sets values for LINCOA run-time parameters
+
+If no LINCOA.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/lincoa directory.
+This default file is as follows:
+
+  0.5      RHOBEG  the size of the simplex initially
+  0.00001  RHOEND  the size of the simplex at termination
+  -1       NPT     the number of interpolation conditions; <=0 defaults to 2n+1
+  8000     MAXFUN  the maximum number of function calls allowed 
+  0        IPRINT  controls the amount of printing --- set to 0, 1, 2 or 3
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p lincoa option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+M.J.D. Powell,
+"The NEWUOA software for unconstrained optimization without derivatives",
+in, G. Di Pillo and M. Roma (eds), Large-Scale Nonlinear Optimization,
+volume 83 of Nonconvex Optimization and Its Applications 
+pp 255-297, Springer Verlag, 2006.
+DOI: 10.1007/0-387-30065-1_16.
+

@@ -1,0 +1,109 @@
+                      **************************
+                      *                        *
+                      * Using LOQO with CUTEst *
+                      *                        *
+                      **************************
+
+WHAT IS LOQO?
+------------------
+
+LOQO is an implementation of a linesearch-based primal-dual interior
+point algorithm for solving Nonlinear Optimization Problems (NLPs) of
+the form
+
+min    f(x)                   (1)
+s.t.   h(x) = 0               (2)
+       c_L <= c(x) <= x_U     (3)
+
+The objective function f: R^n ---> R, the equality constraints
+h: R^n ---> R^m and the inequality constraints c: R^n ---> R^p
+(m <=n) are assumed to be twice continuously differentiable and can be
+nonlinear and nonconvex. LOQO was originally designed for linear
+and quadratic programming and subsequently generalized to problems of
+the form (1)--(3).
+
+HOW DO I GET LOQO?
+------------------
+
+See
+
+  http://www.princeton.edu/~rvdb/loqo/LOQO.html
+
+USING LOQO WITH CUTEst
+---------------------
+
+Either by acquiring the official LOQO distribution or retrieving a
+time-limited trial library, follow the instructions to set the
+environment variable LOQODIR and use the password file. You should
+have received (among others) the header files
+
+     loqo.h and myalloc.h
+
+Copy these to the $CUTEST/include directory as loqo.h and loqo_alloc.h;
+the latest versions we know about will already be in $CUTEST/include.
+
+After installation and/or download, place the library libloqo.a in the
+directory $MYCUTEst/double/lib, or alternatively, create a symbolic
+link at that location pointing to the library.
+
+LOQO is only available in double precision.
+
+USING THE LOQO INTERFACE TOOL
+-----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The LOQO interface tools require the input file:
+
+    probname.SIF   specifies the problem in SIF format
+
+To run with CUTEst, use the runcutest command with the -p loqo option.
+See the man page for runcutest for more details of other options.
+
+THE LOQO SPECIFICATIONS FILES
+-----------------------------
+
+The file LOQO.SPC contains algorithmic parameters modifiable by the
+user. Refer to the LOQO documentation for a complete descrption of
+these parameters. The default LOQO.SPC file is as follows.
+
+bndpush        1        * Initial value for slacks.
+convex         F        * Assert that problem is convex.
+dense         -1        * Column density threshold for factorization.
+dual           F        * Assert dual ordering for factorization.
+epsdiag        1.0e-14  * Min value for diagonals in factorization.
+epsnum         0.0      * Min diagonal to declare row dependence.
+epssol         1.0e-6   * Min rhs to declare row dependence.
+honor_bnds     F        * Honor bounds on the problem variables.
+inftol         1.0e-6   * Primal and dual nfeasibility tolerance.
+inftol2        1.0e+5   * Tolerance to declare a problem infeasible.
+iterlim        500      * Iteration limit.
+mindeg         T        * Multiple min degree for symbolic Cholesky.
+minlocfil      F        * Min local fill for symbolic Cholesky.
+mufactor       0.1      * Scale factor for the barrier parameter.
+noreord        F        * Do not reorder cols for symbolic Cholesky.
+pred_corr      F        * Compute a corrector direction.
+primal         F        * Assert primal ordering for fact.
+sigfig         8        * Digits of accuracy in the duality gap.
+steplen        0.95     * Steplength reduction factor.
+verbose        2        * Output level
+
+
+Also relevant to the LOQO interface is the sizing file
+
+     $LOQODIR/choles.h
+
+which contains various algorithmic parameters related to Choleski
+factorization.
+
+REFERENCES
+----------
+
+[1] R. J. Vanderbei and D. F. Shanno 
+    "An Interior-Point Algorithm for Nonconvex Nonlinear Programming", 
+    13 (1-3), pp 231-252, 1999.
+
+[2] R.J. Vanderbei, 
+    "LOQO: An interior point code for quadratic programming," 
+     Optimization Methods and Software, 12, pp. 451-484, 1999.     

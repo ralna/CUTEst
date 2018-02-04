@@ -1,0 +1,157 @@
+                      ****************************
+		      *                          *
+                      *  Using MINOS with CUTEst *
+		      *                          *
+                      ****************************
+
+              ( Last modified on 19 Jan 2013 at 15:55:00 )
+
+
+WHAT IS MINOS?
+-------------
+
+The MINOS package is designed to minimize smooth functions subject to
+constraints, which may include simple bounds, linear constraints, and smooth
+nonlinear constraints.  The nonlinear contributions to the constraints are
+linearized so that linear programming technology can be exploited.  MINOS
+allows matrices to be stored in either dense or sparse format, and is
+therefore suitable for large sparse problems.
+
+HOW DO I GET MINOS?
+-------------------
+
+MINOS is distributed by the Office of Technology Licensing (OTL) at
+Stanford University and is subject to certain license agreements.
+MINOS is copyrighted by Stanford University.
+Contact: Michael Saunders
+(e-mail address: mike@sol-michael.stanford.edu, postal address:
+Department of Operations Research, Stanford, CA 94305-4022, USA).
+
+See
+
+  http://www.sbsi-sol-optimize.com/asp/sol_product_minos.htm
+
+CREATING THE OBJECT MODULE FOR MINOS 5.4 AND MINOS 5.5
+------------------------------------------------------
+
+Copy mi15blas.f into subsblas.f (or another name of your choice).
+(Old: Remove the subroutines daxpy, dcopy, ddot, dnrm2 and dscal from subsblas.f
+to create a new file with a subset of the MINOS BLAS subroutines.  In our
+versions of MINOS 5.4 and MINOS 5.5, this corresponds to deleting lines
+70 to 391 in subsblas.f  CUTEr also used the BLAS subroutines daxpy, dcopy,
+ddot, dnrm2 and dscal.  They are contained in the CUTEr Fortran file named
+linpac.f.  To avoid multiply defined subroutines when MINOS is linked with
+the CUTEr tools, the duplicate BLAS subroutines must be removed from MINOS.)
+
+You should also edit mi10unix.f or mi10vms.f, depending on which operating
+system you are using, so that it runs properly on your machine.  See the
+MINOS documentation for details.
+
+Concatenate the following .f files into a single file named minosd.f:
+
+   mi10unix.f   mi25bfac.f   mi35inpt.f   mi50lp.f     mi65rmod.f   mi80ncon.f
+   mi20amat.f   mi30spec.f   mi40bfil.f   mi60srch.f   mi70nobj.f   subsblas.f
+
+If you have created single precision versions of the MINOS subroutines,
+you may also concatenate the single precision equivalents of the twelve
+subroutines listed above into a single file named minoss.f
+
+Compile (but do not link) minosd.f (minoss.f).
+The resulting object file minosd.o (minoss.o) 
+should then be placed in either the user-defined directory 
+$MINOS or in $CUTEST/objects/(architecture)/(precision)/ for the 
+architecture and precsion you intend to use.
+
+USING THE MINOS INTERFACE TOOL
+------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The MINOS interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   MINOS.SPC      sets values for MINOS run-time parameters
+
+If no MINOS.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/minos directory.
+
+To run with CUTEst, use the runcutest command with the -p minos option.
+See the man page for runcutest for more details of other options.
+
+MINOS.SPC is linked to fort.4.  This link is established because
+MINOS reads the SPECS file from unit 4 (by default).  If this unit
+number has been changed in the MINOS source code, then it must also
+be changed in the shell script runcutest.
+
+An input file containing an old basis for the problem (probname.BASIS) is,
+when it exists, copied to MINOS.BASIS and then linked to fort.11.  If this
+unit number has been changed in the MINOS source code, then it must also be
+changed in the shell script runcutest.
+
+An output file containing the new basis for the problem is written by
+MINOS in fort.12 (by default) and then renamed to MINOS.NEWBASIS in
+runcutest.  This file is subsequently renamed to probname.NEWBASIS by
+runcutest.  If this unit number has been changed in the MINOS source
+code, then it must also be changed in the shell script runcutest.
+
+The main output from MINOS is written (by default) in a file named
+fort.9, and then renamed to MINOS.LIS by runcutest.  This file is
+subsequently renamed to probname.runcutest by runcutest.  If this unit
+number has been changed in the MINOS source code, then it must also be
+changed in the shell script runcutest.
+
+In addition, MINOS sends a summary of the problem output to unit 6 (by default).
+
+THE MINOS SPECIFICATIONS FILE
+-----------------------------
+
+The file MINOS.SPC constitutes the MINOS SPECS file, which sets various
+MINOS run-time parameters.  This SPECS file is used exactly as described
+in the MINOS User's Guide, with the following exception:  MINOS (when
+used by itself, not with CUTEst) requires that the user specify exact numbers
+for the following keywords:
+
+   NONLINEAR CONSTRAINTS
+   NONLINEAR VARIABLES
+
+and optionally also for the following keywords:
+
+   NONLINEAR OBJECTIVE VARIABLES
+   NONLINEAR JACOBIAN VARIABLES
+
+Because the CUTEst tools determine the values of these quantities, the
+values given in MINOS.SPC need not be exact.  Instead, the values given
+in MINOS.SPC should be at least as large as the true values, in order
+to guarantee that sufficient space is allotted to various arrays, but
+they can be much larger than the true values.
+
+A word of caution is in order for the choice of value for NONLINEAR
+CONSTRAINTS when using MINOS 5.3:  Suppose NONLINEAR CONSTRAINTS is set
+to M1 in MINOS.SPC.  If no value is specified for PENALTY PARAMETER
+in MINOS.SPC, then the initial value of the penalty parameter defaults
+to 100 / M1.  Thus, if M1 is significantly larger than the true number
+of nonlinear constraints, the initial value of the penalty parameter may
+be unreasonably low.  To avoid this situation, you should either be
+careful not to set NONLINEAR CONSTRAINTS too high above the true value,
+or explicitly set PENALTY PARAMETER to a reasonable initial value in
+MINOS.SPC.
+
+The default version of MINOS.SPC sets only a few of the run-time
+parameters.  Many more parameters are available.  A full description
+of the available parameters is given in the SPECS file chapter in
+the MINOS User's Guide.
+
+REFERENCES
+----------
+
+B. A. Murtagh and M. A. Saunders.
+A projected Lagrangian algorithm and its implementation for sparse 
+nonlinear constraints,
+Math. Prog. Study 16 (Constrained Optimization), 84-117 (1982). 
+
+B.A. Murtagh and M.A. Saunders, MINOS 5.1 User's Guide, Technical
+Report SOL 83-20R, Systems Optimization Laboratory, Department of Operations
+Research, Stanford University, Stanford, CA 94305, USA, December 1983,
+revised January 1987.
+

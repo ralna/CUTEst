@@ -1,0 +1,46 @@
+#!/bin/bash
+
+helpmsg() {
+
+    echo 'This script fetches source code updates (if any) and rebuilds'
+    echo 'the architectures supplied as arguments. If no architecture'
+    echo 'is passed as argument, $MYARCH is rebuilt. If no architecture'
+    echo 'should be rebuilt, the single argument 'none' should be passed.'
+}
+
+if [[ ! -e ./install_cutest ]]; then
+    echo 'Error: This script must be run from the top-level CUTEst directory.'
+    exit 1
+fi
+. ./bin/cutest_envcheck
+[[ $? != 0 ]] && exit $?
+
+. $ARCHDEFS/bin/helper_functions
+
+to_rebuild="$@"
+if (( $# == 0 )); then
+    [[ ! -z "$MYARCH" ]] && to_rebuild="$MYARCH"
+fi
+if (( $# == 1 )); then
+    if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+        helpmsg
+        exit 1
+    fi
+    [[ "$1" == 'none' ]] && to_rebuild=''
+fi
+
+cd $CUTEST
+message "Fetching updates (if any)"
+svn update >/dev/null 2>&1
+cd src
+fails=0
+for version in $to_rebuild
+do
+    message "Rebuilding version $version"
+    make -s -f $CUTEST/makefiles/$version
+    if [[ $? != 0 ]]; then
+        (( fails++ ))
+        error "Compilation error for version $version"
+    fi
+done
+(( $fails > 0 )) && error "$fails failures." || success "All requested versions rebuilt."

@@ -1,0 +1,80 @@
+.\" @(#)va15ma v1.0 11/2000;
+.TH va15ma 3M "17 Nov 2000"
+.SH NAME
+va15ma \- CUTEr VA15 test driver
+
+.SH SYNOPSIS
+va15ma
+
+.SH DESCRIPTION
+The \fIva15ma\fP main program test drives VA15 on SIF problems from the
+CUTEr distribution.
+
+VA15 is a subroutine for the solution of the large-scale unconstrained
+minimization problem. The routine does not require (nor exploits)
+knowledge about the sparsity structure of the Hessian matrix. It uses
+a limited memory BFGS quasi-Newton method.
+ 
+VA15 is part of the HARWELL SUBROUTINE LIBRARY, and was written by
+J. Nocedal. It is available from the United Kingdom Atomic Energy
+Authority, Harwell, subject to certain license agreements. It is
+copyrighted jointly by the UKAEA and SERC (Science and Engineering
+Research Council).
+
+.SH USAGE
+To build the \fIprecision\fP precision version, the VA15
+\fIprecision\fP subroutine and dependencies should be concatenated in
+a new file called va15.f. This file should then be compiled (but not
+linked) and the resulting object file va15.o placed in the direcotory
+$MYCUTER/\fIprecision\fP/bin/, where \fIprecision\fP is either
+"single" or "double", according to your local installation.
+
+.SH NOTE
+If no VA15.SPC file is present in the current directory, the default
+version is copied from $CUTER/common/src/pkg/va15/. Default
+specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+5	M,	the number of iterations in the memory,
+-1	IPRINT(1)	specifies the frequency of output
+		(<0: no output),
+0	IPRINT(2)	specifies content of output
+		(0: minimal),
+10000	MAXIT,	the maximum number of iterations,
+0.00001	EPS,	the stopping tolerance.
+.fi
+ 
+The reader is referred to the paper quoted below, the documentation of
+the routine in the Harwell Subrooutine Library or the code itself if
+they wish to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIOn the limited memory BFGS method for large-scale
+optimization\fP,
+J. Nocedal,
+Technical report NA-03, Department of Electrical
+Enginnering and Computer Science,
+Northwestern University, Evanston (USA), 1988.
+
+sdva15(1), va15(1).

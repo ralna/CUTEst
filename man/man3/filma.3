@@ -1,0 +1,84 @@
+.\" @(#)filma v1.0 12/2002;
+.TH filma 3M "07 Dec 2002"
+.SH NAME
+filma \- CUTEr FILTER test driver
+
+.SH SYNOPSIS
+filma
+
+.SH DESCRIPTION
+The \fIfilma\fP main program test drives FILTER on SIF problems from the
+CUTEr distribution.
+
+\fIFILTER is a code for solving large-scale nonlinear programs with
+bounds and inequality constraints, based on a trust-region SQP
+approach and globalized by means of a filter.\fP
+
+\fIFILTER was written by R. Fletcher (University of Dundee) and
+S. Leyffer (Argonne National Laboratory).\fP
+
+The object module \fIfilma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Following the instructions in
+$CUTER/common/src/pkg/filter/README.filter, create a static library
+called libfilter.a, to be placed in your library path.
+Launch using fil(1) or sdfil(1).
+
+.SH NOTE
+If no spec.par file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/filter/. The
+default specification file is of the form
+
+.nf
+.ta 1i 2i
+\fIkeyword\fP	\fIvalue\fP
+.fi
+
+and is as follows:
+
+.nf
+.ta 1i 2.5i 3i
+keyword	default	meaning
+\l'5i'
+iprint	1	controls printing
+maxiter	1000	max number of iterations
+nout	6	output channel
+eps	1.0E-6	tolerance
+infty	1.0E+20	infinity
+rho	10.0	initial trust-region radius
+tt	0.125	param f. upper bound on filter
+ubd	100.0	a synonym for tt
+\l'5i'
+.fi
+
+The reader is referred to the paper quoted below and the code itself
+if they wish to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fINonlinear programming without a penalty function\fP,
+R. Fletcher and S. Leyffer,
+Mathematical Programming vol.91 Issue 2, pp.239-269, 2001.
+

@@ -1,0 +1,71 @@
+
+                      *******************************
+		      *                             *
+                      *   USING COBYLA WITH CUTEst  *
+		      *                             *
+                      *******************************
+
+              ( Last modified on 6 Oct 2015 at 15:30:00 )
+
+
+WHAT IS COBYLA?
+---------------
+
+COBYLA is a nonlinear programming code for unconstrained and constrained
+problems, which only uses function values (no derivatives needed).  
+
+HOW DO I GET COBYLA?
+--------------------
+
+COBYLA was written by M.J.D. Powell, DAMTP, Cambridge University, Silver
+Street, Cambridge (GB). The package may be obtained from 
+  http://ccpforge.cse.rl.ac.uk/gf/project/powell/wiki/
+
+CREATING THE OBJECT MODULE FOR COBYLA
+-------------------------------------
+
+Create a file named cobyla.f containing the source code of the package.
+Compile (but do not link) this file.  The resulting object file cobyla.o
+should then be placed in either the user-defined directory $COBYLA or in 
+$CUTEST/objects/(architecture)/(precision)/ for the architecture and 
+precsion you intend to use.
+
+COBYLA is only available in double precision.
+
+USING THE COBYLA INTERFACE TOOL
+-------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The COBYLA interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   COBYLA.SPC     sets values for COBYLA run-time parameters
+
+If no COBYLA.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/cobyla directory.
+This default file is as follows:
+
+  0.5       RHOBEG   the size of the simplex initially
+  0.00001   RHOEND   the size of the simplex at termination
+  8000      MAXFUN   the maximum number of function calls allowed 
+  0         IPRINT   controls the amount of printing --- set to 0, 1, 2 or 3
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p cobyla option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+M.J.D. Powell,
+"A direct search optimization method that models the objective and
+constraint functions by linear interpolation",
+In Advances in optimization and numerical analysis, Proceedings
+of the Sixth workshop on Optimization and Numerical Analysis, Oaxaca,
+Mexico, volume 275 of Mathematics and its Applications, pp 51--67.
+Kluwer Academic Publishers, 1994.
+

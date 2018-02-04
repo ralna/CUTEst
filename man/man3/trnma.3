@@ -1,0 +1,77 @@
+.\" @(#)trnma v1.0 9/2004;
+.TH trnma 3M "03 Sep 2004"
+.SH NAME
+trnma \- CUTEr TRON test driver
+
+.SH SYNOPSIS
+trnma
+
+.SH DESCRIPTION
+The \fItrnma\fP main program test drives TRON on SIF problems from the
+CUTEr distribution.
+
+The TRON package is a trust-region truncated-Newton method for large-scale
+unconstrained or bound-constrained minimization designed by
+Chih-Jen Lin and Jorge More' (Argonne National Labs.).
+
+.SH USAGE
+All of the TRON .f files conmtained in src/tron, src/coloring and src/icf
+should be compiled and the resulting files inserted into a random library 
+libtron_cuter.a. For example, with appropriate fortran 77 compiler $F77 
+and compiler flags $FFLAGS, move into the directory in which you have 
+unpacked the TRON codes and issue the commands
+
+  ( cd src/tron; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron_cuter.a )
+  ( cd src/coloring; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron_cuter.a )
+  ( cd src/icf; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron_cuter.a )
+
+The resulting double precision object file libtron_cuter.a should be placed in
+(or symbolically linked to) the directory $MYCUTER/double/lib.
+
+There is no single-precision version.
+
+.SH NOTE
+If no TRON.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/tron/. Default specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+          5     P        the number of vectors to hold factorization fill-in
+      1000     MAXIT    the maximum number of iterations,
+    0.0D+0     FATOL    the absolute error desired in the function
+   1.0D-12     FRTOL    the relative error desired in the function
+  -1.0D+20     FMIN     a lower bound for the function
+    1.0D-1     CGTOL    the relative CG decrease required per iteration
+    1.0D-5     GTOL     the norm of the projected gradient required
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+N.I.M. Gould, D. Orban and Ph.L. Toint, 
+ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fINewton's method for large bound-constrained optimization problems\fP,
+C. Lin and J. J. More',
+SIAM Journal on Optimization, \fB9\fP:4, pp 1100-1127, 1999.
+
+sdtrn(1), trn(1).

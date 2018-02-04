@@ -1,0 +1,100 @@
+
+                      *********************************
+		      *                               *
+                      *   USING ALGENCAN WITH CUTEst  *
+		      *                               *
+                      *********************************
+
+              ( Last modified on 17 Feb 2013 at 14:10:00 )
+
+WHAT IS ALGENCAN?
+----------------
+
+ALGENCAN is an augmented Lagrangian code for large-scale constrained 
+optimization that does not necessarily use matrix factorization.
+
+HOW DO I GET ALGENCAN?
+---------------------
+
+ALGENCAN was written and maintained by J. M. Martínez 
+
+www.ime.unicamp.br/~martinez 	
+Mailing address: 	Mailing address:
+Department of Applied Mathematics, IMECC
+University of Campinas
+Po Box 6065
+Campinas, SP, Brazil 13081-970
+
+and E. G. Birgin 
+
+www.ime.usp.br/~egbirgin
+Department of Computer Science, IME
+University of São Paulo
+Rua do Matão, 1010, Cidade Universitária
+São Paulo, SP, Brazil 05508-090
+
+It is available from 
+
+http://www.ime.usp.br/~egbirgin/tango/downloads.php
+
+
+CREATING THE OBJECT FILES FOR ALGENCAN
+--------------------------------------
+
+Set the enviroment variable $ALGENCAN to the root directory of
+the downloaded package. Check the Makefile in $ALGENCAN
+to see that variables are set appropriately for you. To compile the
+required files, issue the command
+
+  make algencan-cuter
+
+and don't worry if you get messages about underfined CUTEr components;
+they are not needed. 
+
+Please make sure that the versions of 
+
+  dim.par and hessdat.com 
+
+in $CUTEST/src/algencan agree with those in the ALGENCAN distribution directory
+
+  sources/algencan/
+
+If not, import those from sources/algencan to $CUTEST/src/algencan, move
+to the latter directory and issue the command
+
+  make -s -f $CUTEST/makefiles/[your architecture]
+
+where [your architecture] is the appropriate name from the list of files
+in $CUTEST/makefiles
+
+USING THE ALGENCAN INTERFACE TOOL
+---------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The ALGENCAN interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   ALGENCAN.SPC     sets values for ALGENCAN run-time parameters
+
+If no ALGENCAN.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/ALGENCAN directory.
+
+[Not used at present: This default file is as follows:
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters. ]
+
+To run with CUTEst, use the runcutest command with the -p algencan option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+E. G. Birgin, R. Castillo and J. M. Martinez, 
+"Numerical comparison of Augmented Lagrangian algorithms for nonconvex 
+problems", Computational Optimization and Applications 31, pp. 31-56, 2005
+
+
+

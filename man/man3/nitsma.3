@@ -1,0 +1,98 @@
+.\" @(#)nitsma v1.0 6/2003;
+.TH nitsma 3M "9 Jun 2003"
+.SH NAME
+nitsma \- CUTEr NITSOL test driver
+
+.SH SYNOPSIS
+nitsma
+
+.SH DESCRIPTION
+The \fInitsma\fP main program test drives NITSOL on SIF problems from the
+CUTEr distribution.
+
+NITSOL is a package for the solution of nonlinear systems of
+equations in which key linear systems are approximately
+solved using a variety of Krylov-based methods.
+
+NITSOL has been written and is distributed by
+       
+  Homer F. Walker and Michael Pernice
+  Department of Mathematical Sciences
+  Worcester Polytechnic Institute    
+  Worcester, MA 01609-2280, USA
+  E-mail  walker@wpi.edu
+
+.SH USAGE
+NITSOL is available from
+
+  ftp://ephraim.wpi.edu/pub/nitsol/nitsol.tar.gz
+
+Use the provided Makefile to obtain the library libnitsol.a, and
+move this into your directory $MYCUTER/\fIprecision\fP/lib/.
+If you are unable to provide machine-tuned BLAS and/or LAPACK
+routines, use the same Makefile to obtain libblas.a and/or liblapack.a,
+and move these into $MYCUTER/\fIprecision\fP/lib/.
+
+.SH NOTE
+If no NITSOL.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/nitsol/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+    200    NNIMAX max number of nonlinear iterations 
+      1    IJACV  method for J*v eval. (0 => finite diffs, 1 => analytic)
+      0    IKRYSL Krylov solver: (0 => GMRES 1 => BiCGSTAB, 2 => TFQMR)
+     20    KDMAX  max Krylov subspace dimension when GMRES is used 
+      0    IRPRE  right preconditioning: (0 => no, 1 => yes)
+   1000    IKSMAX max allowable number iterations per call to Krylov solver
+      0    IRESUP residual update for GMRES (0 => combination, 1 => direct)
+      2    IFDORD order of the finite-difference formula (sometimes) used 
+     10    IBTMAX maximum allowable number of backtracks per linesearch
+      0    IETA   flag determining the forcing term eta (0,1,2,3)
+      1    IPLVL  printlevel (0 => nome, => 1 it+f, => 2+ increasing detail)
+      6    IPUNIT printout unit number
+      0    IPSOL  print solution to output unit (0 => no, 1 => yes)
+ 1.0D-6    FTOL   stopping tolerance on the f-norm
+ 1.0D-6    STPTOL stopping tolerance on the steplength
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.   
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fINITSOL: a Newton iterative solver for nonlinear systems\fP,
+M. Pernice and H. F. Walker, Special Issue on Iterative Methods, 
+SIAM J. Sci. Comput., 19 (1998), 302--318.
+
+sdnits(1), nits(1).
+
+
+
+
+
+
+
+
+

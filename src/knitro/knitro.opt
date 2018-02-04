@@ -1,0 +1,247 @@
+
+# KNITRO 5.2.0 Options file
+# http://ziena.com/documentation.html
+
+# Which algorithm to use.
+#   auto   = 0 = let KNITRO choose the algorithm
+#   direct = 1 = use Interior (barrier) Direct algorithm
+#   cg     = 2 = use Interior (barrier) CG algorithm
+#   active = 3 = use Active Set algorithm
+algorithm    auto
+
+# Whether feasibility is given special emphasis.
+#   no       = 0 = no special emphasis on feasibility
+#   stay     = 1 = iterates must honor inequalities
+#   get      = 2 = emphasize first getting feasible before optimizing
+#   get_stay = 3 = implement both options 1 and 2 above
+bar_feasible     no
+
+# Specifies the tolerance for entering the stay feasible mode
+# (only valid when bar_feasible = stay or bar_feasible = get_stay).
+bar_feasmodetol  0.0001
+
+# Initial value for the barrier parameter.
+bar_initmu   0.1
+
+# Whether to use the initial point strategy with barrier algorithms.
+#   auto = 0 = let KNITRO choose the strategy
+#   yes  = 1 = shift the initial point to improve barrier performance
+#   no   = 2 = do not alter the initial point supplied by the user
+bar_initpt   auto
+
+# Maximum allowable number of backtracks during the linesearch of the
+# Interior Direct algorithm before reverting to a CG step.
+# (only used for alg=1).
+bar_maxbacktrack  3
+
+# Maximum number of refactorizations of the KKT system per iteration of the
+# Interior Direct algorithm before reverting to a CG step.
+# (only used for alg=1).
+bar_maxrefactor  0
+
+# Which barrier parameter update strategy.
+#   auto     = 0 = let KNITRO choose the strategy
+#   monotone = 1
+#   adaptive = 2
+#   probing  = 3
+#   dampmpc  = 4
+#   fullmpc  = 5
+#   quality  = 6
+bar_murule   auto
+
+# Whether or not to penalize constraints in the barrier algorithms.
+#   auto     = 0 = let KNITRO choose the strategy
+#   none     = 1 = Do not apply penalty approach to any constraints
+#   all      = 2 = Apply a penalty approach to all general constraints
+bar_penaltycons   auto
+
+# Which penalty parameter update strategy for barrier algorithms.
+#   auto     = 0 = let KNITRO choose the strategy
+#   single   = 1 = use single penalty parameter approach
+#   flex     = 2 = use more tolerant flexible strategy
+bar_penaltyrule   auto
+
+# Which BLAS/LAPACK library to use.  Intel MKL library is only available
+# on some platforms; see the User Manual for details.
+#   knitro  = 0 = use KNITRO version of netlib functions
+#   intel   = 1 = use Intel MKL functions
+#   dynamic = 2 = use dynamic library of functions
+blasoption   knitro
+
+# Specifies debugging level of output.  Debugging output is intended for Ziena
+# developers.  Debugging mode may impact performance and is NOT recommended
+# for production operation.
+#   none      = 0 = no extra debugging
+#   problem   = 1 = help debug solution of the problem
+#   execution = 2 = help debug execution of the solver
+debug        none
+
+# Initial trust region radius scaling factor, used to determine
+# the initial trust region size.
+delta        1
+
+# Specifies the final relative stopping tolerance for the feasibility
+# error. Smaller values of feastol result in a higher degree of accuracy
+# in the solution with respect to feasibility.
+feastol      1e-06
+
+# Specifies the final absolute stopping tolerance for the feasibility error.
+# Smaller values of feastol_abs result in a higher degree of accuracy in the
+# solution with respect to feasibility.
+feastol_abs  0
+
+# How to compute/approximate the gradient of the objective
+# and constraint functions.
+#   exact        = 1 = user supplies exact first derivatives
+#   forward      = 2 = gradients computed by forward finite differences
+#   central      = 3 = gradients computed by central finite differences
+gradopt      exact
+
+# How to compute/approximate the Hessian of the Lagrangian.
+#   exact        = 1 = user supplies exact second derivatives
+#   bfgs         = 2 = KNITRO computes a dense quasi-Newton BFGS Hessian
+#   sr1          = 3 = KNITRO computes a dense quasi-Newton SR1 Hessian
+#   finite_diff  = 4 = KNITRO computes Hessian-vector products by finite differences
+#   product      = 5 = user supplies exact Hessian-vector products
+#   lbfgs        = 6 = KNITRO computes a limited-memory quasi-Newton BFGS Hessian
+hessopt      exact
+
+# Whether to enforce satisfaction of simple bounds at all iterations.
+#   no      = 0 = allow iterations to violate the bounds
+#   always  = 1 = enforce bounds satisfaction of all iterates
+#   initpt  = 2 = enforce bounds satisfaction of initial point
+honorbnds    initpt
+
+# Number of limited memory pairs to store when Hessian choice is lbfgs.
+lmsize       10
+
+# Which LP solver to use in the Active algorithm.
+#   internal = 1 = use internal LP solver
+#   cplex    = 2 = CPLEX (if user has a valid license)
+lpsolver     internal
+
+# Maximum allowable CG iterations per trial step
+# (if 0 then KNITRO determines the best value).
+maxcgit      0
+
+# Maximum number of crossover iterations to allow.
+maxcrossit   0
+
+# Maximum number of iterations to allow.
+maxit        10000
+
+# Maximum allowable CPU time in seconds.
+# If multistart is active, this limits time spent on one start point.
+maxtime_cpu  1e+08
+
+# Maximum allowable real time in seconds.
+# If multistart is active, this limits time spent on one start point.
+maxtime_real 1e+08
+
+# Whether to enable multistart to find a better local minimum.
+#   no   = 0 = KNITRO solves from a single initial point
+#   yes  = 1 = KNITRO solves using multiple start points
+ms_enable    no
+
+# Specifies the maximum range that any variable can vary over when
+# multistart computes new start points.
+ms_maxbndrange 1000
+
+# How many KNITRO solutions to compute if multistart is enabled.
+#   choose any positive integer, or
+#   0 = KNITRO sets it to min{200,10*n}
+ms_maxsolves 0
+
+# Maximum allowable CPU time in seconds for the complete multistart
+# solution.  Use maxtime_cpu to additionally limit time spent per start point.
+ms_maxtime_cpu  1e+08
+
+# Maximum allowable real time in seconds for the complete multistart
+# solution.  Use maxtime_real to additionally limit time spent per start point.
+ms_maxtime_real 1e+08
+
+# How many feasible multistart points to save in file knitro_mspoints.log.
+#   choose any positive integer, or
+#   0 = save none
+ms_num_to_save  0
+
+# Specifies the tolerance for deciding two feasible points are the same.
+# (set to system machine precision by default)
+#ms_savetol    
+
+# Specifies conditions for terminating the multistart procedure.
+#   maxsolves = 0 = terminate after maxsolves
+#   optimal   = 1 = terminate at first local optimum
+#   feasible  = 2 = terminate at first feasible solution estimate
+ms_terminate maxsolves
+
+# Specifies additional action to take after every iteration.
+# Iterations result in a new point that is closer to a solution.
+#   none     = 0 = no additional action
+#   saveone  = 1 = save the latest new point to file knitro_newpoint.log
+#   saveall  = 2 = append the latest new point to file knitro_newpoint.log
+#   user     = 3 = allow a user-specified routine to run after iterations
+newpoint     none
+
+# Valid range of obective values.
+objrange     1e+20
+
+# Specifies the final relative stopping tolerance for the KKT (optimality)
+# error. Smaller values of opttol result in a higher degree of accuracy in
+# the solution with respect to optimality.
+opttol       1e-06
+
+# Specifies the final absolute stopping tolerance for the KKT (optimality)
+# error. Smaller values of opttol_abs result in a higher degree of accuracy
+# in the solution with respect to optimality.
+opttol_abs   0
+
+# Specifies whether to append to output files.
+# This option should be set before calling KTR_init().
+#   no     = 0 = erase existing files when opening
+#   yes    = 1 = append to existing files
+outappend    no
+
+# Directory for all output files.
+# This option should be set before calling KTR_init().
+#outdir       .
+
+# Specifies the verbosity of output.
+#   none         = 0 = nothing
+#   summary      = 1 = only final summary information
+#   iter_10      = 2 = information every 10 iterations is printed
+#   iter         = 3 = information at each iteration is printed
+#   iter_verbose = 4 = more verbose information at each iteration is printed
+#   iter_x       = 5 = in addition, values of solution vector (x) are printed
+#   all          = 6 = in addition, constraints (c) and multipliers (lambda)
+outlev       iter_10
+
+# Where to direct the output.
+#   screen  = 0 = directed to stdout
+#   file    = 1 = directed to a file called knitro.log
+#   both    = 2 = both stdout and file called knitro.log
+outmode      screen
+
+# Specifies the initial pivot threshold used in the factorization routine.
+# The value must be in the range [0 0.5] with higher values resulting
+# in more pivoting (more stable factorization). Values less than 0 will
+# be set to 0 and values larger than 0.5 will be set to 0.5. If pivot
+# is non-positive initially no pivoting will be performed. Smaller values
+# may improve the speed of the code but higher values are recommended for
+# more stability.
+pivot        1e-08
+
+# Whether to perform automatic scaling of the functions.
+#   no     = 0 = no scaling done
+#   yes    = 1 = KNITRO performs automatic scaling
+scale        yes
+
+# Whether to use the Second Order Correction (SOC) option.
+#   no     = 0 = never do second order corrections
+#   maybe  = 1 = SOC steps attempted on some iterations
+#   yes    = 2 = SOC steps always attempted when constraints are nonlinear
+soc          maybe
+
+# Step size tolerance used for terminating the optimization.
+xtol         1e-15
+

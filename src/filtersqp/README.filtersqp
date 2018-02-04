@@ -1,0 +1,119 @@
+                      *******************************
+		      *                             *
+                      * Using FilterSQP with CUTEst *
+		      *                             *
+                      *******************************
+
+              ( Last modified on 19 Jan 2013 at 17:50:00 )
+
+WHAT IS FilterSQP?
+------------------
+
+FilterSQP is a code for solving large-scale nonlinear programming
+problems of the form
+
+  minimize           f(x)
+  subject to  l_x <=   x  <= u_x
+              l_c <= c(x) <= u_c
+
+The code is based on a trust-region SQP approach, and is globalized
+using a filter mechanism. It uses first and second derivatives of the 
+problem functions. 
+
+HOW DO I GET FilterSQP?
+-----------------------
+
+The code was written by Roger Fletcher <fletcher@maths.dundee.ac.uk> and 
+Sven Leyffer  <leyffer@mcs.anl.gov> of the University of Dundee, to whom 
+all technical questions should be addressed.
+
+USING FilterSQP WITH CUTEst
+---------------------------
+
+Change directory in to the appropriate './fil/single' or './fil/double' 
+subdirectory of the untarred filterSQP distribution, depending on
+the version you require. 
+
+** IMPORTANT **
+
+ * FilterSQP uses higer precision for certain key computations. Thus 
+   if your compiler allows extended precision, only the single
+   precision version will be avaqilable to you. *
+
+ * If your compiler does not support the ieee_handler and ieee_flags 
+   packages you will need to remove lines mentioning these calls from 
+   all the .f files in this directory. *
+
+Using the makefile make_NLP found in the directory, issue the command 
+
+  gmake -f make_NLP filter.o filteraux.o QPsolves.o bqpd.o auxil.o sparseL.o \
+    sparseA.o util.o scaling.o FORTRAN='f77'  COPTIONS='-O -c'
+  
+to create the FilterSQP installation procedure creates object files;
+the arguments FORTRAN='f77' and COPTIONS='-O -c' should be adapted to
+your local fortran compiler and its compilation flags. 
+
+[[old - ignore! Having created the object files, now create the random 
+library "libfilter.a" by issuing the command 
+
+  ar rsu libfilter.a filteraux.o QPsolves.o bqpd.o auxil.o \
+    sparseL.o sparseA.o util.o scaling.o CUTEuser.o ]]
+
+USING THE FilterSQP INTERFACE TOOL
+----------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The FilterSQP interface tools require two input files:
+
+	probname.SIF   specifies the problem in SIF format
+	spec.par       sets values for filterSQP parameters
+
+The spec.par file should be present in the current directory.
+
+To run with CUTEst, use the runcutest command with the -p filtersqp option.
+See the man page for runcutest for more details of other options.
+
+THE spec.par FILE
+-----------------
+
+The file spec.par specifies parameters for filter and 
+has a number of lines of the form
+
+	keyword_list
+
+where
+
+	keyword_list = 	keyword   value
+               		{keyword_list}
+
+Each keyword must be on a new line. keyword is
+one of the following, default values are also given
+
+keyword         default        meaning
+-----------------------------------------------------
+iprint          1              controls printing
+kmax            n/a (1000)     max size of null-space
+maxf            n/a (50)       max size of filter
+maxiter         1000           max number of iterations
+mlp             n/a (200)      max level of degeneracy
+mxiwk           n/a            max size of integer workspace
+mxwk            n/a            max size of real workspace
+nout            6 (= screen)   output channel
+nobj            n/a (1)        number of objective 
+eps             n/a (1E-6)     tolerance
+infty           n/a (1E20)     infinity
+rho             10.0           initial TR radius
+stackmax        n/a            stacksize for MINLP
+tt              1.25           violation will be bounded by tt*initial violation
+ubd             100.0          violation will be bounded by ubd
+
+A default file is given in the file spec.par in $CUTEST/src/filtersqp
+
+REFERENCE
+---------
+
+R. Fletcher and S. Leyffer. 
+Nonlinear programming without a penalty function. 
+Mathematical Programming, 91:239–270, 2002. 

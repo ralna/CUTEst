@@ -1,0 +1,108 @@
+.\" @(#)npsma v1.0 11/2000;
+.TH npsma 3M "17 Nov 2000"
+.SH NAME
+npsma \- CUTEr NPSOL test driver
+
+.SH SYNOPSIS
+npsma
+
+.SH DESCRIPTION
+The \fInpsma\fP main program test drives NPSOL on SIF problems from the
+CUTEr distribution.
+
+The NPSOL package is designed to minimize smooth functions subject to
+constraints, which may include simple bounds, linear constraints, and
+smooth nonlinear constraints.  The software uses a sequential
+quadratic programming algorithm, where bounds, linear constraints and
+nonlinear constraints are treated separately.  NPSOL stores all
+matrices in dense format, and is therefore not intended for large
+sparse problems.
+NPSOL has been written by Gill, Murray, Saunders and Wright, and is
+available from the Office of Technology Licensing at Stanford
+University. 
+
+The object module \fInpsma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Concatenate the following .f files into a single file named npsol.f:
+
+.nf
+.ta 1.2i 2i
+chsubs.f	npsolsubs.f
+cmsubs.f	opsubs.f
+f06subs.f	qrsubs.f
+lssolsubs.f	srsubs.f
+mcsubs.f
+.fi
+
+Compile (but do not link) the NPSOL source code and copy the
+resulting object file npsol.o in the directory
+$MYCUTER/\fIprecision\fP/bin. Launch using nps(1) or sdnps(1).
+
+.SH OUTPUT
+The main output from NPSOL is written (by default) in a file named
+fort.9, and then renamed to NPSOL.LIS by nps.  (This file is
+subsequently renamed to probname.nps by sdnps.)  If this unit number
+has been changed in the NPSOL source code, then it must also be
+changed in the shell script nps. The unit number may also be changed
+in the NPSOL.SPC file, by adding the following line:
+ 
+   Print File  n
+ 
+where n is the new unit number.  Again, if fort.n is to be renamed to
+NPSOL.LIS by nps, the unit number must also be changed in nps.
+ 
+In addition, NPSOL can create a summary of the problem output. By the
+source code default, this summary is sent to unit 0, and thus does not
+appear anywhere.  The CUTE default version of NPSOL.SPC includes the
+line
+ 
+   Summary  6
+ 
+which means that the summary output is directed to standard output. Of
+course, this line may be changed or deleted from NPSOL.SPC if you wish
+to direct the summary output elsewhere.
+
+.SH NOTE
+If no NPSOL.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/npsol/.
+
+The file NPSOL.SPC may be used to set various NPSOL parameters. These
+parameters are described in the chapter 'Optional Input Parameters' in
+the User's Guide for NPSOL.
+
+The CUTE default version of NPSOL.SPC includes only one line, to
+direct the summary output to unit 6 (standard output).  All other
+parameters therefore assume their default values.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIUser's Guide for NPSOL (Version 4.0):  A Fortran Package
+for Nonlinear Programming\fP,
+P.E. Gill, W. Murray, M.A. Saunders and M.H. Wright,
+Technical Report SOL 86-2,
+Systems Optimization Laboratory,
+Department  of Operations Research,
+Stanford University, Stanford, USA, January 1986.
+

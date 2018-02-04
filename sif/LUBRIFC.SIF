@@ -1,0 +1,393 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          LUBRIFC
+
+*   Problem :
+*   *********
+
+*   Corrected version of LUBRIF which contained an error
+*   in the definition of the Reynold's equation (ELEMENT USES)
+*   mixing H & P, see line 298ff below (or search for ***).
+*   Fix by: Sven Leyffer, U. Dundee, September 2000
+
+*   The elastodynamic lubrification problem by Kostreva.
+
+*   Source:
+*   M.M. Kostreva,
+*   "Elasto-hydrodynamic lubrification: a non-linear
+*   complementarity problem",
+*   International Journal for Numerical Methods in Fluids,
+*   4: 377-397, 1984.
+
+*   This problem is problem #5 in More's test set.
+
+*   SIF input: Ph. Toint, June 1990.
+
+*   classification QOR2-MN-V-V
+
+*   Number of discretized points per unit length
+
+*IE NN                  10          $-PARAMETER             $ n = 151
+ IE NN                  50          $-PARAMETER             $ n = 751
+
+*   Dimensionless pressure viscosity coefficient
+
+ RE ALPHA               1.838
+
+*   Dimensionless model parameter
+
+ RE LAMBDA              1.642
+
+*   Inlet point (do not change this)
+
+ RE XA                  -3.0
+
+*   Point far downstream (do not change this)
+
+ RE XF                  2.0
+
+*   Number of discretized points -1
+*   ( for an interval of length XF - XA = 5.0 = 2.0 - (-3.0) )
+
+ IM N         NN        5
+
+*   Constants
+
+ IE 0                   0
+ IE 1                   1
+ IE 2                   2
+ IE 3                   3
+ IE 4                   4
+
+ RE PI                  3.1415926535
+
+*   Computed parameters
+
+ IM 2N        N         2
+ IA 2N-2      2N        -2
+ IA 2N-1      2N        -1
+ IA 2N+2      2N        2
+
+ RM -XA       XA        -1.0
+ R+ LEN       XF                       -XA
+ RD 1/PI      PI        1.0
+ RM 1/2PI     1/PI      0.5
+ RI RN        N
+ RD 1/N       RN        1.0
+ R* DX        LEN                      1/N
+ RD 1/DX      DX        1.0
+ R* L/DX      LAMBDA                   1/DX
+ RM -L/DX     L/DX      -1.0
+ R* 1/DX2     1/DX                     1/DX
+ RM -1/DX2    1/DX2     -1.0
+ R* DX/PI     DX                       1/PI
+ RM 2DX/PI    DX/PI     2.0
+ RM DX/2      DX        0.5
+
+VARIABLES
+
+    K
+
+*   Pressures
+
+ DO I         0                        2N
+ DI I         2
+ X  P(I)
+ ND
+
+*   Film thickness
+
+ DO J         1                        2N-1
+ DI J         2
+ X  H(J)
+ ND
+
+*   Discretized Reynolds operator values
+
+ DO I         2                        2N-2
+ DI I         2
+ X  R(I)
+ ND
+
+GROUPS
+
+*   R(0) = 0
+
+ DO I         2                        2N-2
+ DI I         2
+ ZE R(0)      P(I)                     2DX/PI
+ ND
+
+ ZE R(0)      P(2N)                    DX/PI
+
+*   Complementarity equations: SUM_i p(i) * R(i) = 0
+
+ XN COMPL
+
+*   Definition of the R(i) via the Reynolds equation
+
+ DO I         2                        2N-2
+ DI I         2
+ IA I-1       I         -1
+ IA I+1       I         1
+ ZE DR(I)     H(I+1)                   L/DX
+ ZE DR(I)     H(I-1)                   -L/DX
+ XE DR(I)     R(I)      -1.0
+ ND
+
+*    Definition of the h(j)
+*    (uses integration by parts to avoid weak kernel singularity)
+
+ DO J         1                        2N-1
+ DI J         2
+ IM -J        J         -1
+
+ XE DH(J)     K         1.0            H(J)      -1.0
+
+ DO I         2                        2N
+ AE C(I)                0.0
+ OD I
+
+ RI RI-J      -J
+ R* I-JDX     RI-J                     DX/2
+ R( ALN       ABS                      I-JDX
+ R( LN        LOG                      ALN
+ R* T1        I-JDX                    LN
+ R* COEFF     T1                       1/2PI
+ A+ C(2)      C(2)                     COEFF
+
+ IA I-J       -J        2
+ RI RI-J      I-J
+ R* I-JDX     RI-J                     DX/2
+ R( ALN       ABS                      I-JDX
+ R( LN        LOG                      ALN
+ R* T1        I-JDX                    LN
+ R* COEFF     T1                       1/PI
+ A+ C(4)      C(4)                     COEFF
+
+ DO I         4                        2N-2
+ DI I         2
+ IA I-2       I         -2
+ IA I+2       I         2
+ I+ I-J       I                        -J
+ RI RI-J      I-J
+ R* I-JDX     RI-J                     DX/2
+ R( ALN       ABS                      I-JDX
+ R( LN        LOG                      ALN
+ R* T1        I-JDX                    LN
+ R* COEFF     T1                       1/PI
+ A+ C(I+2)    C(I+2)                   COEFF
+ RM -COEFF    COEFF     -1.0
+ A+ C(I-2)    C(I-2)                   -COEFF
+ OD I
+
+ I+ I-J       2N                       -J
+ RI RI-J      I-J
+ R* I-JDX     RI-J                     DX/2
+ R( ALN       ABS                      I-JDX
+ R( LN        LOG                      ALN
+ R* T1        I-JDX                    LN
+ R* COEFF     T1                       1/2PI
+ RM -COEFF    COEFF     -1.0
+ A+ C(2N-2)   C(2N-2)                  -COEFF
+
+ DO I         2                        2N-2
+ DI I         2
+ ZE DH(J)     P(I)                     C(I)
+ ND
+
+CONSTANTS
+
+*   R(0)
+
+ X  LUBRIFC   R(0)      1.0
+
+*   Definition of h(j)
+
+ DO J         1                        2N-1
+ DI J         2
+ RI RJ        J
+ R* JDX       RJ                       DX/2
+ R+ XJ        XA                       JDX
+ R* XJSQ      XJ                       XJ
+ RA XJSQ+1    XJSQ      1.0
+ AM RHS       XJSQ+1    -1.0
+ Z  LUBRIFC   DH(J)                    RHS
+ ND
+
+BOUNDS
+
+ XR LUBRIFC   K
+
+ DO I         2                        2N-2
+ DI I         2
+ XU LUBRIFC   P(I)      3.0
+ XL LUBRIFC   P(I)      0.0
+ ND
+
+ DO I         1                        2N-1
+ DI I         2
+ XR LUBRIFC   H(I)
+ ND
+
+ XX LUBRIFC   P(0)      0.0
+ XX LUBRIFC   P(2N)     0.0
+
+START POINT
+
+ XV LUBRIFC   'DEFAULT' 0.0
+
+ I+ 2NN       NN                       NN
+ IM 4NN       NN        4
+ DO I         2                        4NN
+ DI I         2
+ RI RI        I
+ R* IDX       RI                       DX/2
+ R+ XI        XA                       IDX
+ RM LIN       XI        0.02
+ RA PI0       LIN       0.06
+ Z  LUBRIFC   P(I)                     PI0
+ ND
+ IA 4NN+2     4NN       2
+ IM 8NN       NN        8
+ DO I         4NN+2                    8NN
+ DI I         2
+ RI RI        I
+ R* IDX       RI                       DX/2
+ R+ XI        XA                       IDX
+ R* XISQ      XI                       XI
+ RM -XISQ     XISQ      -1.0
+ RA 1-XISQ    -XISQ     1.0
+ R( PI0       SQRT                     1-XISQ
+ Z  LUBRIFC   P(I)                     PI0
+ ND
+ IA 8NN+2     8NN       2
+ DO I         8NN+2                    2N
+ DI I         2
+ X  LUBRIFC   P(I)      0.0
+ ND
+
+ DO J         1                        2N-1
+ DI J         2
+ RI RJ        J
+ R* JDX       RJ                       DX/2
+ R+ XJ        XA                       JDX
+ R* XJSQ      XJ                       XJ
+ Z  LUBRIFC   H(J)                     XJSQ
+ ND
+
+ELEMENT TYPE
+
+ EV REY       PA                       PB
+ EV REY       H
+ EP REY       A
+
+ EV 2PR       P                        R
+
+ELEMENT USES
+
+*   Elements for the Reynolds equations
+
+ DO J         1                        2N-1
+ DI J         2
+ IA I+        J         1
+ IA I-        J         -1
+ XT ER(J)     REY
+ ZV ER(J)     PA                       P(I-)
+*** mistake in original LUBRIF.SIF: P(I+) & H(J) are mixed up
+*ZV ER(J)     H                        P(I+)
+*ZV ER(J)     PB                       H(J)
+*** corrected version below
+ ZV ER(J)     H                        H(J)
+ ZV ER(J)     PB                       P(I+)
+ ZP ER(J)     A                        ALPHA
+ ND
+
+*   Elements for the complementarity conditions
+
+ DO I         2                        2N-2
+ DI I         2
+ XT EC(I)     2PR
+ ZV EC(I)     P                        P(I)
+ ZV EC(I)     R                        R(I)
+ ND
+
+GROUP USES
+
+*   Complementarity
+
+ DO I         2                        2N-2
+ DI I         2
+ XE COMPL     EC(I)
+ ND
+
+*   Reynolds equations
+
+ DO I         2                        2N-2
+ DI I         2
+ IA I-1       I          -1
+ IA I+1       I          1
+ ZE DR(I)     ER(I-1)                  1/DX2
+ ZE DR(I)     ER(I+1)                  -1/DX2
+ ND
+
+OBJECT BOUND
+
+ LO LUBRIFC              0.0
+
+*   Solution
+
+*LO SOLTN                0.0
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      LUBRIFC
+
+TEMPORARIES
+
+ R  PAMPB
+ R  HCB
+ R  HSQ
+ R  T1
+ R  T2
+ R  EARG
+ R  E
+ R  HA
+ M  EXP
+
+INDIVIDUALS
+
+ T  2PR
+ F                      P * R
+ G  P                   R
+ G  R                   P
+ H  P         R         1.0
+
+ T  REY
+ A  HA                  - 0.5 * A
+ A  EARG                HA * ( PA + PB )
+ A  E                   EXP( EARG )
+ A  PAMPB               PA - PB
+ A  T1                  PAMPB * HA + 1.0
+ A  T2                  PAMPB * HA - 1.0
+ A  HSQ                 H * H
+ A  HCB                 HSQ * H
+ F                      PAMPB * HCB * E
+ G  PA                  T1 * HCB * E
+ G  PB                  T2 * HCB * E
+ G  H                   3.0 * PAMPB * HSQ * E
+ H  PA        PA        HCB * E * HA * ( T1 + 1.0)
+ H  PA        PB        HCB * E * HA * ( T1 - 1.0)
+ H  PA        H         3.0 * T1 * HSQ * E
+ H  PB        PB        HCB * E * HA * ( T2 - 1.0)
+ H  PB        H         3.0 * T2 * HSQ * E
+ H  H         H         6.0 * H * PAMPB * E
+
+ENDATA

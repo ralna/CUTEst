@@ -1,0 +1,242 @@
+.\" @(#)knitma v1.0 11/2000;
+.TH knitma 3M "17 Nov 2000"
+.SH NAME
+knitma \- CUTEr KNITRO test driver
+
+.SH SYNOPSIS
+knitma
+
+.SH DESCRIPTION
+The \fIknitma\fP main program test drives KNITRO on SIF problems from the
+CUTEr distribution.
+
+KNITRO is a code for solving large-scale nonlinear programming problems
+of the form
+
+.nf
+.ta 0.3i 1.5i 3i
+min	\fIf(x)\fP	
+s.t.	\fIh\s-2\di\u\s0(x) = 0\fP,	\fIi=1,...,ne\fP
+	\fIcl(j) \(<= g\s-2\dj\u\s0(x) \(<= cu(j)\fP,	\fIj=ne+1,...,m\fP
+	\fIbl(k) \(<= x(k) \(<= bu(k)\fP,	\fIk=1,...,n\fP.
+.fi
+  
+The code implements an interior-point algorithm with trust-region
+techniques. It uses first and second derivatives of the function and
+constraints.
+
+The library libknitrocuter.a should be stored in
+$MYCUTER/\fIprecision\fP/lib, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Compile (but do not link) the KNITRO source code and copy the
+resulting library libknitrocuter.a in the directory
+$MYCUTER/\fIprecision\fP/lib. Launch using knit(1) or sdknit(1).
+
+.SH VARIABLES USED BY KNITRO
+.TP 7
+.B n
+\fIINTEGER\fP: the number of variables.
+.TP
+.B m
+\fIINTEGER\fP: the number of constraints excluding the equality
+constraints for fixed  variables and the inequality constraints for
+bounded variables.
+.TP
+.B c
+\fIDOUBLE PRECISION array of length m\fP: contains the general
+equality and inequality constraint values (it excludes fixed variables
+and bound constraints).
+.TP
+.B cl
+\fIDOUBLE PRECISION array of length m-num_equal\fP: cl(i) is the
+lower bound of the \fIi\fP-th inequality constraints c(i). If there is
+no such bound, set it to be the large negative number
+-biginf=-1.0d+20.
+.TP
+.B cu
+\fIDOUBLE PRECISION  array of length m-num_equal\fP: cu(i) is the
+upper bound of the \fIi\fP-th inequality constraints c(i). If there is
+no such bound, set it to be the large positive number
+biginf=-1.0d+20.
+.TP
+.B bl
+\fIDOUBLE PRECISION array of length n\fP: bl(i) is the lower
+bound of the \fIi\fP-th variable x(i). If there is no such bound, set
+it to be the large negative number -biginf =-1.0d+20.
+.TP
+.B bu
+\fIDOUBLE PRECISION array of length n\fP: bu(i) is the upper
+bound of the \fIi\fP-th variable x(i). If there is no such bound, set it
+to be the large positive number biginf =1.0d+20.
+.TP
+.B equatn
+\fILOGICAL array of length m\fP: equatn(i) indicates whether the
+\fIi\fP-th constraint is an equality constraint or not.
+.TP
+.B linear
+\fILOGICAL array of length m\fP: linear(i) indicates whether the
+\fIi\fP-th constraint is a linear constraint or not.
+.TP
+.B nnzj
+\fIINTEGER\fP: the number of nonzeros in the Jacobian matrix cjac
+which contains the gradient of the objective function f and the
+constraint gradients A in sparse form.
+.TP
+.B cjac
+\fIDOUBLE PRECISION array of length nnzj\fP: the first part contains
+the nonzero elements of the gradient of the objective function; the
+second part contains the nonzero elements of the Jacobian of the
+constraints.
+.TP
+.B indfun
+\fIINTEGER array of length nnzj\fP: it is the indicator for the
+functions. If indfun(i)=0, it refers to the objective function. If
+indfun(i)=j, it refers to the j-th constraint.
+.TP
+.B indvar
+\fIINTEGER array of length nnzj\fP: it is the index of the
+variables. indfun and indvar determines the row number and the column
+number of Atrans respectively.
+.TP
+.B temp_v
+\fIDOUBLE PRECISION array of length m\fP: contains the Lagrange
+multipliers. The Lagragian function is
+
+.nf
+.ta 1i 2i
+\fIL(x, temp_v)\fP	= \fIf(x) + temp_v\s-2\uT\d\s0 h(x)\fP
+	= \fIf(x) - \(*l\s-2\dE\u\s0\s-2\uT\d\s0 h\s-2\dE\u\s0 - \(*l\s-2\dI\u\s0 (h\s-2\dI\u\s0 - s)\fP
+.fi
+
+Note that we set temp_vE=-\(*l\s-2\dE\u\s0 and temp_vI=-\(*l\s-2\dI\u\s0
+in the barrier solver.
+.TP
+.B nnz_w
+\fIINTEGER\fP: denotes the number of nonzero elements of the upper
+triangle of the Hessian of the Lagrangian function.
+.TP
+.B w
+\fIDOUBLE PRECISION array of dimension nnz_w\fP: contains the Hessian
+of the Lagrangian in sparse form:
+ 
+\fI\(gr\s-2\u2\d\s0\s-2\d\h'-\w'2'u'xx\u\s0 L =
+\(gr\s-2\u2\d\s0\s-2\d\h'-\w'2'u'xx\u\s0 f + temp_vE \(gr\s-2\u2\d\s0\s-2\d\h'-\w'2'u'xx\u\s0 h\s-2\dE\u\s0 + temp_vI \(gr\s-2\u2\d\s0\s-2\d\h'-\w'2'u'xx\u\s0 h\s-2\dI\u\s0\fP
+ 
+Only the upper triangle is stored.
+.TP
+.B w_row
+\fIINTEGER array of length nnz_w\fP: w_row(i) stores the row number
+of the nonzero element w(i).
+.TP
+.B w_col
+\fIINTEGER array of length nnz_w\fP: w_col(i) stores the column number
+of the nonzero element w(i).
+
+.TP
+.B max_num_iterations
+\fIINTEGER\fP: specifies the maximum number of iterations before
+termination.
+ 
+.TP
+.B NLP_tol
+\fIDOUBLE PRECISION\fP: specifies the final stopping tolerance for
+both the KKT error and the feasibility error.
+ 
+.TP
+.B init_delta
+\fIDOUBLE PRECISION\fP: specifies the initial trust-region radius.
+ 
+.TP
+.B pivot_tol
+\fIDOUBLE PRECISION\fP: specifies the initial pivot tolerance used in
+the factorization routine. The value must be in the range [-0.5 0.5]
+with higher values resulting in more pivoting (more stable
+factorization).
+ 
+.TP
+.B mu0
+\fIDOUBLE PRECISION\fP: specifies the initial barrier parameter
+value.
+ 
+.TP
+.B use_SOC
+\fILOGICAL\fP: indicates whether or not to enable the second order
+correction option.
+ 
+.TP
+.B use_feasible
+\fILOGICAL\fP: indicates whether or not to use the feasible version.
+ 
+.TP
+.B Direct_Solver
+\fILOGICAL\fP: indicates whether or not to enable the Direct Solve
+option.
+ 
+.TP
+.B nout
+\fIINTEGER\fP: specifies where to direct the output.
+ 
+.TP
+.B iprint
+\fIINTEGER\fP: controls the level of output.
+
+.SH NOTE
+If no KNITRO.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/knitro/.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+[1]  \fIA trust region method based on interior point
+     techniques for nonlinear programming\fP,
+      R.H. Byrd, J.-C. Gilbert, and J. Nocedal, 
+      Technical Report OTC 96/02,
+      Optimization Technology Center,
+      Northwestern University (1996).
+      Note: provides a global convergence analysis
+
+[2]  \fIAn interior point algorithm for large scale nonlinear
+     programming\fP,
+      R.H. Byrd, M.E. Hribar, and J. Nocedal, 
+      SIAM Journal on Optimization, \fB9\fP:4, (1999) pp.877-900
+      Note: this paper gives a description of the
+      algorithm implemented in KNITRO.
+      Some changes have occurred since then; see [4].
+ 
+[3]  \fIOn the local behavior of an interior point method
+     for nonlinear programming\fP,
+      R.H. Byrd, G. Liu, and J. Nocedal, 
+      Numerical analysis, D.F. Griffiths, D.J. Higham and
+      G.A. Watson eds., Longman, 1997.
+      Note: this paper studies strategies for ensuring a
+      fast local rate of convergence. These have not yet
+      been implemented in the current version of KNITRO.
+ 
+[4]  \fIDesign Issues in Algorithms for Large Scale Nonlinear
+     Programming\fP,
+      G. Liu, PhD thesis, Department of Industrial
+      Engineering and Management Science,
+      Northwestern University, Evanston, Il, USA, 1999
+      Note: this paper describes a number of enhancements
+      implemented in the current version of the code.
+

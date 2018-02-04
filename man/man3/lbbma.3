@@ -1,0 +1,78 @@
+.\" @(#)lbbma v1.0 9/2004;
+.TH lbbma 3M "03 Sep 2004"
+.SH NAME
+lbbma \- CUTEr L-BFGS-B test driver
+
+.SH SYNOPSIS
+lbbma
+
+.SH DESCRIPTION
+The \fIlbbma\fP main program test drives L-BFGS-B on SIF problems from the
+CUTEr distribution.
+
+The L-BFGS-B package is a limited-memory algorithm 
+for bound-constrained minimization by Richard Byrd 
+(U. Colorado at Boulder) and P. Lu, Jorge Nocedal. 
+and. C. Zhu (Northwestern U.)
+
+.SH USAGE
+The L-BFGS-B file routines.f should be edited to remove the
+subroutines TIMER, DNRM2, DAXPY, DCOPY, DDOT and DSCAL, and
+renamed lbfgsb.f. It should then be compiled, and the f
+resulting file lbfgsb.o placed in (or symbolically linked to) 
+the directory $MYCUTER/double/bin.
+
+There is no single-precision version.
+
+.SH NOTE
+If no LBFGSB.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/lbfgsb/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+         5   M,      the maximum number of variable metric corrections
+     10000   MAXIT,  the maximum number of iterations
+        -1   IPRINT  print level (<0,none,=0,one line/iteration,>1,more detail)
+    1.0D+7   FACTR,  the function accuracy tolerence (see hint below)
+    1.0D-5   PGTOL,  the absolute projected gradient decrease required
+.fi
+Hint - the iteration will stop when
+
+         (f^k - f^{k+1})/max{|f^k|,|f^{k+1}|,1} <= factr*epsmch
+
+where epsmch is the machine precision, which is automatically generated 
+by the code. Typical values for factr: 1.D+12 for low accuracy; 1.D+7 
+for moderate accuracy; 1.D+1 for extremely high accuracy.
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+N.I.M. Gould, D. Orban and Ph.L. Toint, 
+ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIAlgorithm 778. L-BFGS-B: Fortran subroutines for large-scale 
+bound constrained optimization\fP,
+C. Zhu, R. H. Byrd, P. Lu and J. Nocedal
+ACM TOMS, \fB23\fP:4, pp.550-560, 1997.
+
+sdlbb(1), lbb(1).

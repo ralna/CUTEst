@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Remove script for cutest
+# version for Bourne/bash shell
+
+# syntax: uninstall_cutest
+
+# N. Gould, D. Orban & Ph. Toint
+# ( Last modified on 20 October 2012 at 11:00 GMT )
+
+if [[ ! -e ./install_cutest ]]; then
+    echo 'Error: This script must be run from the top-level CUTEst directory.'
+    exit 1
+fi
+. ./bin/cutest_envcheck
+[[ $? != 0 ]] && exit $?
+
+. $ARCHDEFS/bin/helper_functions
+
+#  check input arguments (if any)
+
+if [[ $# != 0 ]]; then
+   echo "Use: uninstall_cutest"
+   exit 1
+fi
+
+export CUTEST=`dirs -l`
+export CUTEST=`echo $CUTEST | \sed 's"/tmp_mnt""'`
+
+finished='false'
+while [[ $finished != 'true' ]]; do
+
+#   VERS=( `\ls $CUTEST/versions/*` )
+    VERS=( `\ls $CUTEST/versions/* 2>/dev/null` )
+    NUMBER=${#VERS[@]}
+
+    if [[ $NUMBER == 0 ]]; then
+        warning "No versions of CUTEST are currently installed."
+        exit 1
+    fi
+
+    LIST=( ${VERS[@]} )
+
+    CORRECT_VERSION="false"
+    while [[ $CORRECT_VERSION == "false" ]]; do
+
+	echo -e " The following versions of CUTEST are currently installed.\n"
+	count=0
+	for i  in  ${LIST[@]}; do
+	    (( count++ ))
+	    (( cnt = count-1 )) # 0-based indexing
+	    VERSION="`cat ${VERS[$cnt]}`"
+	    echo "        ($count) ${VERSION}"
+	done
+	echo -e "\n Which do you wish to uninstall: (1-$NUMBER)?"
+
+	read CHOICE
+	(( CHOICE-- ))
+
+	i=0
+	while [[ $i -lt $NUMBER &&  $CORRECT_VERSION == "false" ]]; do
+	    if [[ $CHOICE == $i ]]; then
+		CORRECT_VERSION="true"
+		CHOICE=$i
+	    fi
+	    (( i++ ))
+	done
+	if [[ $CORRECT_VERSION == "true" ]]; then
+	    VERSION=${VERS[$CHOICE]##*/}
+	    VERNAME=`cat ${VERS[$CHOICE]}`
+	else
+	    echo " Please give an integer between 1 and $NUMBER"
+	fi
+    done
+
+    echo " Are you sure you wish to uninstall the version for"
+    yesno_default_yes "  $VERNAME"
+
+    #YESNO=""
+
+    #while [[ $YESNO != 'Y' && $YESNO != 'N' ]]; do
+	#read YESNO
+	#[[  $YESNO == ""  ]] && YESNO="Y"
+	#YESNO=`echo $YESNO | tr a-z A-Z`
+    #done
+
+    #if [[  $YESNO == 'Y'  ]]; then
+    if [[ $? != 0 ]]; then
+        echo " Removing object files and libraries ... "
+        \rm -f -r $CUTEST/objects/$VERSION
+        echo " Removing module information files ... "
+        \rm -f -r $CUTEST/modules/$VERSION
+        echo " Removing non-standard package files ... "
+        \rm -f -r $CUTEST/packages/$VERSION
+        echo " Removing environment information file ... "
+        \rm -f -r $CUTEST/bin/sys/$VERSION
+        echo " Removing make information file ... "
+        \rm -f -r $CUTEST/makefiles/$VERSION
+        echo " Removing version record file ... "
+        \rm -f -r $CUTEST/versions/$VERSION
+        success " Version for
+  $VERNAME
+ successfully removed."
+
+    fi
+
+    yesno_default_no " Do you wish to uninstall another version"
+
+    #YESNO=""
+
+    #while [[ $YESNO != 'Y' && $YESNO != 'N' ]]; do
+	#read YESNO
+	#[[  $YESNO == ""  ]] && YESNO="N"
+	#YESNO=`echo $YESNO | tr a-z A-Z`
+    #done
+
+    #[[  $YESNO == 'N'  ]] && finished='true'
+    [[ $? != 0 ]] && finished='true'
+done
+

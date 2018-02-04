@@ -1,0 +1,11 @@
+1         NX: number of starting points supplied (I10, > 0)
+100       MAXIT: maximum number of iterations (I10, > 0)
+500       MAXNF: maximum number of function evaluations (I10, > 0)
+1         STPCRTR: stopping condition, 1 = small delta, 2 = slow progress (I10)
+1.000D-04 DELMIN: smallest trust-region radius (D10.3, > 0)
+1.000D-03 STPTHR: small step threshold (D10.3, > 0)
+1.000D-05 CNSTOL: feasibility tolerance (D10.3, > 0)
+1.000D+00 DELTA: initial trust-region radius (D10.3, > 0)
+1.000D+01 PP: initial penalty paramter (D10.3, > 0)
+0         SCALE: 0 = no scaling, 1 = automatic scaling (I10)
+1         IPRINT: output level (I10, < 0, 0, 1, 2 or 3).

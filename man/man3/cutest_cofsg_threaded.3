@@ -1,0 +1,121 @@
+'\" e  @(#)cutest_cofsg_threaded v1.0 02/2013;
+.TH cutest_cofsg_threaded 3M "28 Feb 2013" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cofsg_threaded \- CUTEst tool to evaluate function value and possibly 
+gradient.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cofsg_threaded( status, n, X, f,  nnzg, lg, G_val, G_var, grad, thread )
+.SH DESCRIPTION
+The CUTEST_cofsg_threaded subroutine evaluates the value of the objective 
+function of
+the problem decoded from a SIF file by the script \fIsifdecoder\fP
+at the point X, and possibly its gradient.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cofsg_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B f \fP[out] - real/double precision
+the value of the objective function evaluated at X,
+.TP
+.B nnzg \fP[out] - integer
+the number of nonzeros in G_val,
+.TP
+.B lg \fP[in] - integer
+the declared length of G_val and G_var,
+.TP
+.B G_val \fP[out] - real/double precision
+an array which gives the nonzeros of the gradient of the objective
+function evaluated at X. The i-th entry of G_val gives the value
+of the derivative with respect to variable G_var(i) of the objective function,
+.TP
+.B G_var \fP[out] - integer
+an array whose i-th component is the index of the variable with
+respect to which G_val(i) is the derivative,
+.TP
+.B grad \fP[in] - logical
+a logical variable which should be set to .TRUE. if the gradient of
+the objective function is required and .FALSE. otherwise,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP 
+.SH NOTE
+A call to CUTEST_cofsg_threaded is more efficient than two separate calls 
+to CUTEST_cfn_threaded and CUTEST_csgr_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_uofg_threaded(3M), cutest_cofg_threaded(3M), sifdecoder(1).

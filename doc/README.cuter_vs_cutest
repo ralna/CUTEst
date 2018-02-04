@@ -1,0 +1,383 @@
+                  CUTEr vs CUTEst equivalences and changes
+                  ----------------------------------------
+
+We describe the differences between how tools were called 
+in CUTEr and how they are now called in CUTEst via
+
+ CUTEr name and arguments
+-->
+ CUTEst name and arguments
+
+See the man pages for individual packages to find the precise
+meaning of arguments. Generally the argument status has been 
+added to all CUTEst packages to record any error that might 
+occur. While redundant arguments have been removed, and in
+some cases argument list rearranged for consistency, in general
+arguments in CUTEr and CUTEst have the same functionality.
+
+                   -------------------
+                   UNCONSTRAINED TOOLS
+                   -------------------
+
+.............................................................................
+        UDIMEN(         input, n )
+-->
+ CUTEST_udimen( status, input, n )
+.............................................................................
+
+.............................................................................
+
+        USETUP(         input, out,            n, X, X_l, X_u, n )
+-->
+ CUTEST_usetup( status, input, out, io_buffer, n, X, X_l, X_u )
+.............................................................................
+
+.............................................................................
+        UNAMES(         n, p_name, X_names )
+-->
+ CUTEST_unames( status, n, p_name, X_names )
+.............................................................................
+
+.............................................................................
+          PBNAME(      n, p_name )
+-->
+ CUTEST_probname( status, p_name )
+.............................................................................
+
+.............................................................................
+        VARNAMES(         n, X_names )
+-->
+ CUTEST_varnames( status, n, X_names )
+.............................................................................
+
+.............................................................................
+          UVARTY(         n, X_type )
+-->
+ CUTEST_uvartype( status, n, X_type )
+.............................................................................
+
+.............................................................................
+        UFN(         n, X, f )
+-->
+ CUTEST_ufn( status, n, X, f )
+.............................................................................
+
+.............................................................................
+        UGR(         n, X, G )
+-->
+ CUTEST_ugr( status, n, X, G )
+.............................................................................
+
+.............................................................................
+        UOFG(         n, X, f, G, grad )
+-->
+ CUTEST_uofg( status, n, X, f, G, grad )
+.............................................................................
+
+.............................................................................
+        UDH(         n, X, l_h2_1, H2_val )
+-->
+ CUTEST_udh( status, n, X, l_h2_1, H2_val )
+.............................................................................
+
+.............................................................................
+        UGRDH(         n, X, G, l_h2_1, H2_val )
+-->
+ CUTEST_ugrdh( status, n, X, G, l_h2_1, H2_val )
+.............................................................................
+
+.............................................................................
+        UDIMSH(         H_ne )
+-->
+ CUTEST_udimsh( status, H_ne )
+.............................................................................
+
+.............................................................................
+        USH(         n, X, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_ush( status, n, X, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        UGRSH(         n, X, G, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_ugrsh( status, n, X, G, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        UDIMSE(         HE_nel, HE_val_ne, HE_row_ne )
+-->
+ CUTEST_udimse( status, HE_nel, HE_val_ne, HE_row_ne )
+.............................................................................
+
+.............................................................................
+        UEH(         n, X, HE_nel, HE_row, lhe_row, lhe_ptr,               &
+             HE_row_ptr, HE_val, lhe_val, HE_val_ptr, byrows )
+-->
+ CUTEST_ueh( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,                    &
+             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
+.............................................................................
+
+.............................................................................
+        UGREH(         n, X, G, HE_nel, HE_row, lhe_row, lhe_ptr,          &
+               HE_row_ptr, HE_val, lhe_val, HE_val_ptr, byrows )
+-->
+ CUTEST_ugreh( status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr,               &
+               HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
+.............................................................................
+
+.............................................................................
+         UPROD(         n, goth, X, VECTOR, RESULT )
+-->
+ CUTEST_uhprod( status, n, goth, X, VECTOR, RESULT )
+.............................................................................
+
+.............................................................................
+        UBANDH(         n, goth, X, nsemib, H_band, lbandh )
+-->
+ CUTEST_ubandh( status, n,       X, nsemib, H_band, lbandh, maxsbw )
+.............................................................................
+
+.............................................................................
+         UREPRT(         CALLS, CPU )
+-->
+ CUTEST_ureport( status, CALLS, CPU )
+.............................................................................
+
+new tool:
+
+ CUTEST_uterminate( status )
+
+                     -----------------
+                     CONSTRAINED TOOLS
+                     -----------------
+
+.............................................................................
+        CDIMEN(         input, n, m )
+-->
+ CUTEST_cdimen( status, input, n, m )
+.............................................................................
+
+.............................................................................
+        CSETUP(         input, out,            n, m, X, X_l, X_u, n,       &
+                EQUATION, LINEAR, Y, C_l, C_u, m, efirst, lfirst, nvfrst )
+-->
+ CUTEST_csetup( status, input, out, io_buffer, n, m, X, X_l, X_u,          &
+                Y, C_l, C_u, EQUATION, LINEAR,    e_order, l_order, v_order )
+.............................................................................
+
+.............................................................................
+        CNAMES(         n, m, p_name, X_names, C_names )
+-->
+ CUTEST_cnames( status, n, m, p_name, X_names, C_names )
+.............................................................................
+
+.............................................................................
+        CONNAMES(         m, C_names )
+-->
+ CUTEST_connames( status, m, C_names )
+.............................................................................
+
+.............................................................................
+          CVARTY(         n, X_type )
+-->
+ CUTEST_cvartype( status, n, X_type )
+.............................................................................
+
+.............................................................................
+        CFN(         n, m, X, f, m, C )
+-->
+ CUTEST_cfn( status, n, m, X, f,    C )
+.............................................................................
+
+.............................................................................
+         CGR(        n, m, X, grlagf, m, Y, G, jtrans, l_j2_1, l_j2_2, J2_val )
+-->
+ CUTEST_cgr( status, n, m, X, Y, grlagf,    G, jtrans, l_j2_1, l_j2_2, J2_val )
+.............................................................................
+
+.............................................................................
+        COFG(         n, X, f, G, grad )
+-->
+ CUTEST_cofg( status, n, X, f, G, grad )
+.............................................................................
+
+.............................................................................
+        CDIMSJ(         J_ne )
+-->
+ CUTEST_cdimsj( status, J_ne )
+.............................................................................
+
+.............................................................................
+        CSGR(         n, m, grlagf, m, Y, X, J_ne, l_j, J_val, J_var, J_fun )
+-->
+ CUTEST_csgr( status, n, m, X, Y, grlagf,    J_ne, l_j, J_val, J_var, J_fun )
+.............................................................................
+
+.............................................................................
+        CCFG(         n, m, X, m, C, jtrans, l_j2_1, l_j2_2, J2_val, grad )
+-->
+ CUTEST_ccfg( status, n, m, X,    C, jtrans, l_j2_1, l_j2_2, J2_val, grad )
+.............................................................................
+
+.............................................................................
+        CSCFG(         n, m, X, m, C, J_ne, l_j, J_val, J_var, J_fun, grad )
+or equivalently
+        CCFSG(         n, m, X, m, C, J_ne, l_j, J_val, J_var, J_fun, grad )
+-->
+ CUTEST_ccfsg( status, n, m, X,    C, J_ne, l_j, J_val, J_var, J_fun, grad )
+.............................................................................
+
+.............................................................................
+        CCIFG(         n, icon, X, ci, Ji, grad )
+-->
+ CUTEST_ccifg( status, n, icon, X, ci, Ji, grad )
+.............................................................................
+
+.............................................................................
+        CSCIFG(         n, icon, X, ci, Ji_ne, n, Ji, J_var, grad )
+or equivalently
+        CCIFSG(         n, icon, X, ci, Ji_ne, n, Ji, J_var, grad )
+-->
+ CUTEST_ccifsg( status, n, icon, X, ci, Ji_ne, n, Ji, J_var, grad )
+.............................................................................
+
+.............................................................................
+        CDH(         n, m, X, m, Y, l_h2_1, H2_val )
+-->
+ CUTEST_cdh( status, n, m, X,    Y, l_h2_1, H2_val )
+.............................................................................
+
+.............................................................................
+        CIDH(         n, X, iprob, l_h2_1, H2_val )
+-->
+ CUTEST_cidh( status, n, X, iprob, l_h2_1, H2_val )
+.............................................................................
+
+.............................................................................
+        CGRDH(         n, m, X, grlagf, m, Y, G, jtrans,                   &
+               l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
+-->
+ CUTEST_cgrdh( status, n, m, X, Y, grlagf,    G, jtrans,                   &
+               l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
+.............................................................................
+
+.............................................................................
+        CDIMSH(         H_ne )
+-->
+ CUTEST_cdimsh( status, H_ne )
+.............................................................................
+
+.............................................................................
+        CSH(         n, m, X, m, Y, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_csh( status, n, m, X,    Y, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        CSH1(         n, m, X, m, Y, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_cshc( status, n, m, X,    Y, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        CISH(         n, X, iprob, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_cish( status, n, X, iprob, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        CSGRSH(        n, m, X, grlagf, m, Y, J_ne, l_j, J_val,            &
+                J_var, J_fun, H_ne, l_h, H_val, H_row, H_col )
+-->
+ CUTEST_csgrsh( status, n, m, X, Y,   grlagf, J_ne, l_j, J_val,            &
+                J_var, J_fun, H_ne, l_h, H_val, H_row, H_col )
+.............................................................................
+
+.............................................................................
+        CDIMSE(         HE_nel, HE_val_ne, HE_row_ne )
+-->
+ CUTEST_cdimse( status, HE_nel, HE_val_ne, HE_row_ne )
+.............................................................................
+
+.............................................................................
+        CEH(         n, m, X, m, Y, HE_nel, HE_row, lhe_row, lhe_ptr,      &
+             HE_row_ptr, HE_val, lhe_val, HE_val_ptr, byrows )
+-->
+ CUTEST_ceh( status, n, m, X,    Y, HE_nel, lhe_ptr, HE_row_ptr,           &
+             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
+.............................................................................
+
+.............................................................................
+        CSGREH(        n, m, X, grlagf, m, Y, J_ne, l_j,                   &
+                J_val, J_var, J_fun, HE_nel, HE_row, lhe_row, lhe_ptr,     &
+                HE_row_ptr, HE_val, lhe_val, HE_val_ptr, byrows )
+-->
+ CUTEST_csgreh( status, n, m, X, Y, grlagf,    J_ne, l_j,                  &
+                J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,          &
+                HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
+.............................................................................
+
+.............................................................................
+        CPROD(          n, m, goth, X, m, Y, VECTOR, RESULT )
+-->
+ CUTEST_chprod( status, n, m, goth, X,    Y, VECTOR, RESULT )
+.............................................................................
+
+.............................................................................
+        CPROD1(          n, m, goth, X, m, Y, VECTOR, RESULT )
+-->
+ CUTEST_chcprod( status, n, m, goth, X,    Y, VECTOR, RESULT )
+.............................................................................
+
+.............................................................................
+        CJPROD(         n, m, gotj, jtrans, X, VECTOR, n, RESULT, m )
+-->
+ CUTEST_cjprod( status, n, m, gotj, jtrans, X, VECTOR, lvector,           &
+                RESULT, lresult )
+.............................................................................
+
+.............................................................................
+         CREPRT(         CALLS, CPU )
+-->
+ CUTEST_creport( status, CALLS, CPU )
+.............................................................................
+
+new tools:
+
+ CUTEST_clfg( status, n, m, X, Y, f, G, grad )
+
+ CUTEST_cofsg( status, n, X, f, nnzg, lg, G_val, G_var, grad )
+
+ CUTEST_cterminate( status )
+
+ CUTEST_cstats( status, nonlinear_variables_objective,                    &
+                nonlinear_variables_constraints,                          &   
+                equality_constraints, linear_constraints )
+
+New Packages supported
+----------------------
+
+ALGENCAN
+BOBYQA
+Direct Search
+filterSD
+NEWUOA
+NLPQLP
+PENNON
+QL
+SPG
+SQIC
+
+Package support removed
+-----------------------
+
+The following interfaces have been removed for the reasons given:
+
+va15 is equivalent to lbfgs that in turn has been superceded by lbfgsb.
+ve14 has been superceded by GALAHAD's qpb with its own CUTEet interface.
+ve09 is no longer available from HSL.
+hsl_ve12 has been superceded by GALAHAD's qpb with its own CUTEet interface.
+osl was withdran by IBM in 2004 and is no longer available.
+
+

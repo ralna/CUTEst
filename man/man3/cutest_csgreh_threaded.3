@@ -1,0 +1,209 @@
+'\" e  @(#)cutest_csgreh_threaded v1.0 12/2012;
+.TH cutest_csgreh_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_csgreh_threaded \- CUTEst tool to evaluate the constraint gradients, the
+Lagrangian Hessian in finite element format and the gradient of either
+the objective/Lagrangian in sparse format.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_csgreh_threaded( status, n, m, X, Y, grlagf, 
+nnzj, lj, J_val, J_var, J_fun, 
+ne, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, 
+HE_row, lhe_val, HE_val, byrows, thread )
+.SH DESCRIPTION
+The CUTEST_csgreh_threaded subroutine evaluates both the gradients of the 
+general constraint functions and
+the Hessian matrix of the Lagrangian
+function 
+.EQ
+l(x,y) = f(x) + y sup T c(x)
+.EN
+for the problem decoded into OUTSDIF.d at the point 
+.EQ
+(x,y) = 
+.EN
+(X,Y). 
+This Hessian matrix is stored as a sparse matrix in finite element format 
+.ce
+.EQ
+                   H = sum from {e=1} to {ne} H sub e,
+.EN
+where each square symmetric element 
+.EQ 
+H sub e 
+.EN 
+involves a small subset of the
+rows of the Hessian matrix.
+The subroutine also obtains the gradient
+of either the objective function or the Lagrangian function, stored in
+a sparse format.
+
+The problem under consideration
+consists in minimizing (or maximizing) an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and all constraint 
+functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_csgreh_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B Y \fP[in] - real/double precision
+an array which gives the Lagrange multipliers,
+.TP
+.B grlagf \fP[in] - logical
+a logical variable which should be set .TRUE. if the gradient of the
+Lagrangian function is required and .FALSE. if the gradient of the
+objective function is sought,
+.TP
+.B nnzj \fP[out] - integer
+the number of nonzeros in J_val,
+.TP
+.B HE_row \fP[out] - integer
+an array which holds a list of the row indices involved which each
+element. Those for element i directly preceed those for element i+1, i
+= 1, ..., ne-1. Since the elements are symmetric, HE_row is also the
+list of column indices involved with each element.
+.TP
+.B lj  \fP[in] - integer
+the actual declared dimensions of J_val, J_var and J_fun,
+.TP
+.B J_val \fP[out] - real/double precision
+an array which gives the values of the nonzeros of the gradients of
+the objective, or Lagrangian, and general constraint functions
+evaluated at X and Y. The i-th entry of J_val gives the value of the
+derivative with respect to variable J_var(i) of function J_fun(i),
+.TP
+.B J_var \fP[out] - integer
+an array whose i-th component is the index of the variable with
+respect to which J_val(i) is the derivative,
+.TP
+.B J_fun \fP[out] - integer
+an array whose i-th component is the index of the problem function
+whose value J_val(i) is the derivative. J_fun(i) = 0 indicates the
+objective function whenever grlagf is .FALSE. or the Lagrangian
+function when grlagf is .TRUE., while J_fun(i) = j > 0 indicates the
+j-th general constraint function.
+.TP
+.B ne \fP[out] - integer
+the number, ne, of "finite-elements" used,
+.TP
+.B lhe_ptr \fP[in] - integer
+the actual declared dimensions of HE_row_ptr and HE_val_ptr,
+.TP
+.B HE_row_ptr \fP[out] - integer
+HE_row_ptr(i) points to the position in HE_row of the first row index
+involved with element number e: the row indices of element number e
+are stored in HE_row between the indices HE_row_ptr(e) and
+HE_row_ptr(e+1)-1. HE_row_ptr(ne+1) points to the first empty location in
+HE_row,
+.TP
+.B HE_val_ptr \fP[out] - integer
+HE_val_ptr(i) points to the position in HE_val of the first nonzero involved
+with element number i: the values involved in element number e are
+stored in HE_val between the indices HE_val_ptr(e) and
+HE_val_ptr(e+1)-1. HE_val_ptr(ne+1) points to the first empty location in 
+HE_val,
+.TP
+.B lhe_row \fP[in] - integer
+the actual declared dimension of HE_row,
+.TP
+.B HE_row \fP[out] - integer
+an array which holds a list of the row indices involved which each
+element. Those for element e directly preceed those for element e+1, e
+= 1, ..., ne-1. Since the elements are symmetric, HE_row is also the
+list of column indices involved with each element.
+.TP
+.B lhe_val \fP[in] - integer
+the actual declared dimension of HE_val,
+.TP
+.B HE_val \fP[out] - real/double precision
+an array of the nonzeros in the upper triangle of H_e, evaluated at X
+and stored by rows, or by columns. Those for element e directly
+proceed those for element, e+1, i = 1, ..., ne-1. Element number e
+contains the values stored between
+
+HE_val( HE_val_ptr(e) ) and HE_val( HE_val_ptr(e+1)-1 )
+
+and involves the rows/columns stored between
+
+HE_row( HE_row_ptr(e) ) and HE_row( HE_row_ptr(e+1)-1 ).
+.TP
+.B byrows \fP[in] - logical
+must be set to .TRUE. if the upper triangle of each H_i is to be
+stored by rows, and to .FALSE. if it is to be stored by columns,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_ugreh_threaded(3M), sifdecoder(1).

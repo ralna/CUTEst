@@ -1,0 +1,82 @@
+                     *******************************
+                     *                             *
+                     *  USING L-BFGS-B WITH CUTEst *
+                     *                             *
+                     *******************************
+
+              ( Last modified on 4 Sep 2017 at 08:05:00 )
+
+
+WHAT IS L-BFGS-B?
+-----------------
+
+The L-BFGS-B package is a limited-memory algorithm designed
+for unconstrained or bound-constrained minimization by
+Richard Byrd (U. Colorado at Boulder) and P. P. Lu-Chen,
+Jorge Nocedal and Ciyou Zhu, (Northwestern U.).
+
+HOW DO I GET L-BFGS-B?
+----------------------
+
+See
+
+  http://users.eecs.northwestern.edu/~nocedal/lbfgsb.html
+
+COMPILING THE OBJECT MODULE FOR L-BFGS-B
+----------------------------------------
+
+The L-BFGS-B files routine.f, linpack.f and blas.f
+be compiled, and the resulting files routine.o, linpack.o and blas.o
+should then be placed in either the user-defined directory $LBFGSB or in
+$CUTEST/objects/(architecture)/double/ for the architecture you intend to use.
+
+There is no single-precision version.
+
+USING THE L-BFGS-B INTERFACE TOOL
+---------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The L-BFGS-B interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   LBFGSB.SPC     sets values for L-BFGS-B run-time parameters
+
+If no LBFGSB.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/lbfgsb directory.
+This default file is as follows:
+
+         5   M,      the maximum number of variable metric corrections
+     10000   MAXIT,  the maximum number of iterations
+        -1   IPRINT  print level (<0,none,=0,one line/iteration,>1,more detail)
+    1.0D+7   FACTR,  the function accuracy tolerence (see hint below)
+    1.0D-5   PGTOL,  the required norm of the projected gradient
+
+Hint - the iteration will stop when
+
+         (f^k - f^{k+1})/max{|f^k|,|f^{k+1}|,1} <= factr*epsmch
+
+where epsmch is the machine precision, which is automatically generated
+by the code. Typical values for factr: 1.D+12 for low accuracy; 1.D+7
+for moderate accuracy; 1.D+1 for extremely high accuracy.
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p lbfgsb option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+R. H. Byrd, P. Lu, J. Nocedal and C. Zhu,
+ ``A limited memory algorithm for bound constrained optimization'',
+ SIAM J. Scientific Computing 16:5 (1995), 149-185.
+
+C. Zhu, R.H. Byrd, P. Lu, J. Nocedal,
+ ``L-BFGS-B: Fortran subroutines for large-scale bound constrained
+   optimization"
+ ACM Trans. Math. Software 23:4 (1997), 550-560.
+
+

@@ -1,0 +1,77 @@
+                      ***************************
+                      *                         *
+                      *  USING TRON WITH CUTEst *
+                      *                         *
+                      ***************************
+
+              ( Last modified on 19 Jan 2013 at 15:55:00 )
+
+
+WHAT IS TRON?
+-------------
+
+The TRON package is a trust-region Newton method for large-scale
+unconstrained or bound-constrained minimization designed by
+Chih-Jen Lin and Jorge More' (Argonne National Labs.).
+
+HOW DO I GET TRON?
+------------------
+
+See
+
+  http://www.mcs.anl.gov/~more/tron/
+
+COMPILING THE OBJECT MODULE FOR TRON
+------------------------------------
+
+All of the TRON .f files contained in src/tron, src/coloring and src/icf
+should be compiled and the resulting files inserted into a random library 
+libtron.a. For example, with appropriate fortran 77 compiler $F77 
+and compiler flags $FFLAGS, move into the directory in which you have 
+unpacked the TRON codes and issue the commands
+
+  ( cd src/tron; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron.a )
+  ( cd src/coloring; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron.a )
+  ( cd src/icf; make FC=$F77 FFLAGS=$FFLAGS LIB_NAME=../../libtron.a )
+
+The environment variable TRON should then be set to point to the 
+full path of the directory containing the resulting library libtron.a .
+
+There is no single-precision version.
+
+USING THE TRON INTERFACE TOOL
+-----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The TRON interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   TRON.SPC     sets values for TRON run-time parameters
+
+If no TRON.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/tron directory. 
+This default file is as follows:
+
+         5     P        the number of vectors to hold factorization fill-in
+      1000     MAXIT    the maximum number of iterations,
+    0.0D+0     FATOL    the absolute error desired in the function
+   1.0D-12     FRTOL    the relative error desired in the function
+  -1.0D+20     FMIN     a lower bound for the function
+    1.0D-1     CGTOL    the relative CG decrease required per iteration
+    1.0D-5     GTOL     the required norm of the projected gradient
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p tron option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+C. Lin and J. J. More',
+ "Newton's method for large bound-constrained optimization problems",
+ SIAM J. Optimization 9:4 (1999), 1100-1127.
+

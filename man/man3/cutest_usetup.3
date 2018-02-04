@@ -1,0 +1,86 @@
+'\" e  @(#)cutest_usetup v1.0 12/2012;
+.TH cutest_usetup 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_usetup \- CUTEst tool to set up the data structures 
+for unconstrained or bound-constrained minimization.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_usetup( status, input, out, io_buffer, n, X, X_l, X_u )
+.SH DESCRIPTION
+The CUTEST_usetup subroutine sets up the correct data structures for
+subsequent computations in the case where the only possible
+constraints are bound constraints.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to the simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_usetup are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B input \fP[in] - integer
+the unit number for the decoded data; the unit from which OUTSDIF.d is
+read,
+.TP
+.B out \fP[in] - integer
+the unit number for any error messages,
+.TP
+.B io_buffer \fP[in] - integer
+the unit number for any internal input/output,
+.TP
+.B n \fP[inout] - integer
+on input, the declared dimesions of X, X_l and X_u 
+(see argument n in CUTEST_udimen).
+On output, the number of variables for the problem,
+.TP
+.B X \fP[out] - real/double precision
+an array that gives the initial estimate of the solution of the problem,
+.TP
+.B X_l \fP[out] - real/double precision
+an array that gives lower bounds on the variables,
+.TP
+.B  X_u \fP[out] - real/double precision
+an array that gives upper bounds on the variables.
+.LP
+.SH APPLICATION USAGE
+A call to CUTEST_usetup must precede calls to other evaluation tools,
+except CUTEST_udimen, for unconstrained and bound constrained problems.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_csetup(3M), cutest_udimen(3M), sifdecoder(1).

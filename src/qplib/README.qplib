@@ -1,0 +1,230 @@
+QPLIB takes a given CUTEst problem and records the second-order
+Taylor approximation of the objective, and first- or second-order
+approximations to the constraint at a user-supplied point as a
+linear or quadratic program, in a standardized format used in
+the QPlib2014 collection. The format is as follows:
+
+-------------------------------------------------------------------------
+
+For the linear program (LP)
+
+   minimize           g(T) x + f
+
+   subject to     c_l <= A x <= c_u
+                  x_l <= x <= x_u
+
+the linear program with quadratic constraints (QCP)
+
+   minimize           g(T) x + f
+
+   subject to     c_l <= A x + 1/2 vec( x . H_c . x ) <= c_u
+                  x_l <= x <= x_u
+
+the bound-constrained quadratic program (BQP)
+
+   minimize     1/2 x(T) H x + g(T) x + f
+
+   subject to     x_l <= x <= x_u
+
+the quadratic program (QP)
+
+   minimize     1/2 x(T) H x + g(T) x + f
+
+   subject to     c_l <= A x <= c_u
+                  x_l <= x <= x_u
+
+or the quadratic program with quadratic constraints (QCQP)
+
+   minimize     1/2 x(T) H x + g(T) x + f
+
+   subject to     c_l <= A x + 1/2 vec( x . H_c . x ) <= c_u
+                  x_l <= x <= x_u
+
+where vec( x . H_c . x ) is the vector whose ith component is  x(T) H_c x
+for the i-th constraint. Variables may be continuous or integer
+
+------------------------------------------------------------------------
+
+The data is in free format (blanks separate values), but must occur in
+the order given here. Any blank lines, or lines starting with any of the
+characters "!", "%" or "#" are ignored. Each term in "quotes" denotes
+a required value. Any strings beyond those required on a given line will
+be regarded as comments and ignored. Real values may either by in decimal
+or exponential formats; for the latter, the exponent may be preceded by
+either the character D or E, e.g. 12.56D+2 or 12.56E+2.
+
+"problem name"
+"problem type"
+"problem sense" i.e. one of the words minimize or maximize (case irrelevant)
+"number of variables"
+"number of general linear constraints"                                       [1]
+"number of nonzeros in lower triangle of H"                                  [2]
+"row" "column" "value" for each entry of H (if any), one triple on each line
+"default value for entries in g"
+"number of non-default entries in g"
+"index" "value" for each non-default term in g (if any), one pair per line
+"value of f"
+"number of nonzeros in lower triangles of H_c"                             [1,3]
+"constraint" "row" "column" "value" for each entry of H_c (if any),
+   one quadruple on each line
+"number of nonzeros in A"                                                    [1]
+"row" "column" "value" for each entry of A (if any), one triple on each line
+"value for infinity" for bounds - any bound greater than or equal to this
+   in absolute value is infinite
+"default value for entries in c_l"                                           [1]
+"number of non-default entries in c_l"                                       [1]
+"index" "value" for each non-default term in c_l (if any), one pair per line
+"default value for entries in c_u"                                           [1]
+"number of non-default entries in c_u"                                       [1]
+"index" "value" for each non-default term in c_u (if any), one pair per line
+"default value for entries in x_l"                                           [4]
+"number of non-default entries in x_l"                                       [4]
+"index" "value" for each non-default term in x_l (if any), one pair per line [4]
+"default value for entries in x_u"                                           [4]
+"number of non-default entries in x_u"                                       [4]
+"index" "value" for each non-default term in x_u (if any), one pair per line [4]
+"default variable type"  (0 = continuous, 1 = integer, 2 = binary)           [5]
+"number of non-default variables"                                            [5]
+"index" "value" for each non-default variable type (if any), one pair per line
+"default value for starting value for variables x"
+"number of non-default starting entries in x"
+"index" "value" for each non-default term in x (if any), one pair per line
+"default value for starting value for Lagrange multipliers y for constraints"[1]
+"number of non-default starting entries in y"                                [1]
+"index" "value" for each non-default term in y (if any), one pair per line
+"default value for starting value for dual variables z for simple bounds"
+"number of non-default starting entries in z"
+"index" "value" for each non-default term in z (if any), one pair per line
+"number of non-default names of variables" - default for variable i is "xi"
+"index" "name" for each non-default name for variable x_i with index i (if any)
+"number of non-default names of constraints" - default for constraint i is "ci"
+"index" "name" for each non-default name for constraint with index i (if any)
+
+The "problem type" is a string of three characters.
+
+The first character indicates the type of objective function used.
+It must be one of the following:
+
+ L  a linear objective function
+ D  a convex quadratic objective function whose Hessian is a diagonal matrix
+ C  a convex quadratic objective function
+ Q  a quadratic objective function whose Hessian may be indefinite
+
+The second character indicates the types of variables that are present.
+It must be one of the following:
+
+ C  all the variables are continuous
+ B  all the variables are binary (0-1)
+ M  the variables are a mix of continuous and binary
+ I  all the variables are integer
+ G  the variables are a mix of continuous, binary and integer
+
+The third character indicates the type of the (most extreme)
+constraint function used; other constraints may be of a lesser type.
+It must be one of the following:
+
+ N  there are no constraints
+ B  some of the variables lie between lower and upper bounds (box constraints)
+ L  the constraint functions are linear
+ D  the constraint functions are convex quadratics with diagonal Hessians
+ C  the constraint functions are convex quadratics
+ Q  the constraint functions are quadratics whose Hessians may be indefinite
+
+Thus for continuous problems, we would have
+
+  LCL            a linear program
+  LCC or LCQ     a linear program with quadratic constraints
+  CCB or QCB     a bound-constrained quadratic program
+  CCL or QCL     a quadratic program
+  CCC or CCQ or  a quadratic program with quadratic constraints
+  QCC or QCQ
+
+For integer problems, the second character would be I rather than C,
+and for mixed integer problems, the second character would by M or G.
+
+[1] for bound-constrained QPs, these sections are omitted.
+[2] for linear program with quadratic constraints, this section is omitted.
+[3] for problems without quadratic constraints, this section is omitted.
+[4] for purely binary problems, these section are omitted.
+[5] for purely-continuous, purely-binary or purely-integer problems,
+    this section is omitted. Lower and upper bounds on binary variables
+    will be 0 and 1, and this will override any other settings
+
+---------------------------  example ------------------------------------
+
+! ---------------
+! example problem
+! ---------------
+
+QPBAND    problem name (example from QPBAND.SIF with n = 5)
+QCL       # problem is a quadratic program
+Minimize  # minimize the objective function
+5         # variables
+2         # general linear constraints
+
+9         # nonzeros in lower triangle of H
+1 1 2.0   9 lines of row & column index & value of nonzeros in lower triangle H
+2 1 -1.0  |
+2 2 2.0   |
+3 2 -1.0  |
+3 3 2.0   |
+4 3 -1.0  |
+4 4 2.0   |
+5 4 -1.0  |
+5 5 2.0   |
+
+-0.2      default value for entries in g
+4         # non default entries in g
+2 -0.4    4 lines of index & value of non-default values in g
+3 -0.6    |
+4 -0.8    |
+5 -1.0    |
+
+0.0       value of f
+
+4         # nonzeros in A
+1 1 1.0   4 lines of row & column index & value of nonzeros in A
+1 3 1.0   |
+2 2 1.0   |
+2 4 1.0   |
+
+1.0E+20   infinity
+
+1.0       default value for entries in c_l
+0         # non default entries in c_l
+
+1.0E+20   default value for entries in c_u
+0         # non default entries in c_u
+
+0.0       default value for entries in x_l
+0         # non default entries in x_l
+
+2.0       default value for entries in x_u
+0         # non default entries in x_u
+
+0.0       default value for initial values for x
+0         # non default entries in x
+
+0.0       default value for initial values for y
+0         # non default entries in y
+
+0.0       default value for initial values for z
+0         # non default entries in z
+
+0         # non default names for variables
+
+0         # non default names for constraints
+
+USING THE QPLIB INTERFACE TOOL
+------------------------------
+
+The package is controlled by the file QPLIB.SPC. If this file is absent
+from the current directory, a default version is copied from the
+$CUTEST/src/qplib directory. This default file is as follows:
+
+1     problem_type = 1(QP,default), 2,(QCQP), 3(BQP), 4(LP), 5(QCP)
+F     append_dim   = T(append _n_m to name where n,m = problem dims), F(don't)
+F     qplib_wrfile = T(write to a file "probname".qplib), F(write to unit 6)
+
+To run with CUTEst, use the runcutest command with the -p qplib option.
+See the man page for runcutest for more details of other options.

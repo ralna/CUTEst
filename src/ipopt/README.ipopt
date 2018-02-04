@@ -1,0 +1,74 @@
+                      *******************************
+		      *                             *
+                      * Using IPOPT 3.0 with CUTEst *
+		      *                             *
+                      *******************************
+
+WHAT IS IPOPT 3.0?
+------------------
+
+IPOPT is an implementation of a primal-dual interior point algorithm
+for solving Nonlinear Optimization Problems (NLPs) of the form
+
+min    f(x)                   (1)
+s.t.   c(x) = 0               (2)
+       x_L <= x <= x_U        (3)
+
+The objective function f: R^n ---> R and the equality constraints
+c: R^n ---> R^m (m <=n) are assumed to be twice continuously
+differentiable and can be nonlinear and nonconvex.  In (3), not all
+variables need to have lower and upper bounds.
+
+HOW DO I GET IPOPT?
+-------------------
+
+See 
+
+  https://projects.coin-or.org/Ipopt
+
+USING IPOPT 3.0 WITH CUTEst
+--------------------------
+
+Using the makefile found in the 'CUTE_interface' subdirectory, the IPOPT
+installation procedure creates the files
+
+        $IPOPT/OBJECTS/IPOPT/CUTEr_interface/libipoptcuter.a, and
+	$MYCUTER/double/lib/ipopt.liblist
+
+The first contains relevant gateways between CUTEst and IPOPT while the
+second contains all library information corresponding to user settings
+within IPOPT, assuming you installed IPOPT 3.0 in the directory $IPOPT.
+
+IPOPT 2.0 is not available in single precision.
+
+USING THE IPOPT 3.0 INTERFACE TOOL
+----------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The IPOPT 3.0 interface tools require two input files:
+
+	probname.SIF   specifies the problem in SIF format
+	ipopt.liblist  contains library information for the linker.
+
+Please refer to the IPOPT 3.0 documentation for more details.
+
+To run with CUTEst, use the runcutest command with the -p ipopt option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+[1] An Interior Point Algorithm for Large-Scale Nonlinear Optimization
+    with Applications in Process Engineering.
+    A. Wachter. PhD Dissertation, Carnegie Mellon University, Pittsburgh,
+    PA, 2002.
+
+[2]  A. Wächter and L. T. Biegler, 
+     On the Implementation of an Interior-Point Filter Line-Search Algorithm 
+     for Large-Scale Nonlinear Programming, 
+     Mathematical Programming 106(1), pp. 25-57, 2006 
+
+
+

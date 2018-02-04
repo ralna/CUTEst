@@ -1,0 +1,15 @@
+
+************************ CUTEst statistics ************************
+
+ Package used            :  DIRECTSEARCH
+ Problem                 :  ALLINITU  
+ # variables             =               4
+ # objective functions   =            1.00
+ Exit code               =               1
+ Final f                 =   0.1300000E+02
+ # iterations            =               0
+ Set up time             =            0.00 seconds
+ Solve time              =            0.00 seconds
+
+******************************************************************
+

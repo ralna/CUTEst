@@ -1,0 +1,209 @@
+***************************                                           
+* SET UP THE INITIAL DATA *                                           
+***************************                                           
+                                                                      
+NAME          KISSING2                                                 
+                                                                      
+*   Problem: A second formulation of the KISSING NUMBER PROBLEM
+*                                                                   
+*   Source: This problem is associated to the family of Hard-Spheres 
+*   problem. It belongs to the family of sphere packing problems, a 
+*   class of challenging problems dating from the beginning of the 
+*   17th century which is related to practical problems in Chemistry, 
+*   Biology and Physics. Given a fixed unit sphere at the origin in R^n, 
+*   the problem consists of arranging a further m unit spheres so that 
+*   sum of the distances to these spheres is as small as possible.
+*   This problem may be reduced to a nonconvex nonlinear optimization 
+*   problem with a potentially large number of (nonoptimal) points 
+*   satisfying optimality conditions. We have, thus, a class of problems 
+*   indexed by the parameters m and n, that provides a suitable 
+*   set of test problems for evaluating nonlinear programming codes.
+*   After some algebric manipulations, we can formulate this problem as
+*
+*              m
+*    Minimize sum <p_i,p_i> - m n
+*             i=1
+*
+*    subject to
+*       
+*     <p_i - p_j, p_i - p_j> >= 4 for all different pair of indices i, j
+*
+*     and  
+*
+*     <p_i, p_i> >= 4 for all indices i
+*  
+*     as well as n(n-1)/2 normalisation constraints fixing components.
+*
+*     The goal is to find an objective value equal to 0.
+*
+*     [1]  "Sphere Packings, Lattices and Groups", J. H. Conway and 
+*           N. J. C. Sloane, Springer-Verlag, NY, 1988.
+*
+*
+*   SIF input: Nick Gould, September 2000
+
+*   classification QQR2-RN-V-V
+
+***********************************************************************
+
+*   Number of points: m
+
+*IE m                   24          $-PARAMETER
+ IE m                   25          $-PARAMETER
+
+*   Dimension: n
+
+ IE n                    4
+
+*   Other useful parameters.
+
+ IE 1                    1
+ IE 2                    2
+ I- n-1       n                        1
+
+ RI rm        m
+ RI rn        n
+ R+ RM+N      rm                       rn
+ R* mn        rm                       rn                
+ 
+ RF PI/4      ARCTAN    1.0
+ RM PI        PI/4      4.0
+ R/ PI/m      PI                       rm
+ RM 2PI/m     PI/m      2.0
+
+VARIABLES
+
+ DO I         1                        m
+ DO J         1                        n
+ X  P(I,J)
+ ND
+                                                             
+GROUPS
+
+ XN OBJ
+
+ DO I         1                        m
+ DO J         1                        m
+ XG C(I,J)
+ ND
+
+CONSTANTS
+
+ Z  KISSING2  OBJ                      mn
+
+ DO I         1                        m
+ DO J         1                        m
+ X  KISSING2  C(I,J)    4.0              
+ ND
+
+BOUNDS
+
+ DO I         1                        m
+ DO J         1                        n
+ XR KISSING2  P(I,J)
+ ND
+
+ DO I         2                        n
+ DO J         I                        n
+ XX KISSING2  P(I,J)     0.0
+ ND
+
+START POINT
+
+ DO I         1                        m
+ RI RI        I
+ R* 2PIi/m    2PI/m                    RI
+ R( cos       COS                      2PIi/m
+ R( sin       SIN                      2PIi/m
+ R+ cos       cos                      cos
+ R+ sin       sin                      sin
+ Z  KISSING2  P(I,1)                   cos
+ DO J         2                        n-1
+ Z  KISSING2  P(I,J)                   sin
+ ND
+ Z  KISSING2  P(I,n)                   cos
+
+ELEMENT TYPE 
+
+ EV PROD1     P
+ EV PROD2     Q                        R
+ IV PROD2     P
+
+ELEMENT USES
+ 
+ DO I         1                        m
+ IA I-        I          -1
+ IA I+        I          1
+
+ DO J         1                        I-
+ DO K         1                        n
+ XT E(I,J,K)  PROD2
+ ZV E(I,J,K)  Q                        P(I,K)
+ ZV E(I,J,K)  R                        P(J,K)
+ OD K
+ OD J
+
+ DO K         1                        n
+ XT E(I,I,K)  PROD1
+ ZV E(I,I,K)  P                        P(I,K)
+ OD K
+
+ DO J         I+                       m
+ DO K         1                        n
+ XT E(I,J,K)  PROD2
+ ZV E(I,J,K)  Q                        P(I,K)
+ ZV E(I,J,K)  R                        P(J,K)
+ OD K
+ OD J
+ OD I
+
+GROUP USES
+
+ DO I         1                        m
+
+* Objective
+
+ DO K         1                        n
+ XE OBJ       E(I,I,K)
+ OD K
+
+* Inequality constraints.
+
+ DO J         1                        m
+ DO K         1                        n
+ XE C(I,J)    E(I,J,K)
+ OD K
+ OD J
+
+ OD I
+
+OBJECT BOUND
+
+*   Solution
+
+*XL SOLUTION             0.00000D+00   $ n=4, m = 24
+*XL SOLUTION             6.48030D+00   $ n=4, m = 25 one of many local solutions
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      KISSING2
+
+INDIVIDUALS
+
+ T  PROD1
+ F                      P * P
+ G  P                   P + P
+ H  P         P         2.0
+
+ T  PROD2
+ R  P         Q         1.0            R         -1.0
+ F                      P * P
+ G  P                   P + P
+ H  P         P         2.0
+
+ENDATA

@@ -1,0 +1,91 @@
+.\" @(#)vf13ma v1.0 11/2000;
+.TH vf13ma 3M "17 Nov 2000"
+.SH NAME
+vf13ma \- CUTEr VF13 test driver
+
+.SH SYNOPSIS
+vf13ma
+
+.SH DESCRIPTION
+The \fIvf13ma\fP main program test drives VF13 on SIF problems from the
+CUTEr distribution.
+
+VE13 is a subroutine for the solution of the general nonlinear
+programming problem, involving a possibly nonlinear objective function
+and possibly nonlinear inequality and equality constraints. It uses a
+sequential quadratic programming (SQP) approach and allows for a
+non-monotonic decrease of the merit function using safeguards (the
+watchdog technique).
+
+VF13 is part of the HARWELL SUBROUTINE LIBRARY, and was written by
+M.J.D. Powell. It is available from the United Kingdom Atomic
+Energy Authority, Harwell, subject to certain license agreements. It
+is copyrighted jointly by the UKAEA and SERC (Science and Engineering
+Research Council).
+
+.SH USAGE
+To build the \fIprecision\fP precision version, the VF13
+\fIprecision\fP subroutine and dependencies should be concatenated in
+a new file called vf13.f. This file should then be compiled (but not
+linked) and the resulting object file vf13.o placed in the direcotory
+$MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no VF13.SPC file is present in the current directory, the default
+version is copied from $CUTER/common/src/pkg/vf13/. Default
+specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+1000	MAXFUN,	the maximum number of function calls,
+0	IPRINT,	the output specifier
+		(0 = no internal printout),
+0.0000001	ACCREQ,	the accuracy requirement,
+F	DEBUG,	true for maximal printout before
+		and after VF13.
+.fi
+ 
+The reader is referred to the papers quoted below, the documentation of the
+routine in the Harwell Subrooutine Library or the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIExtensions to subroutine VF02\fP,
+M.J.D. Powell,
+in "System Modeling and Optimization", Lectures Notes
+in Control and Information Sciences 38, 
+R.F. Drenick and F. Kozin (eds.), Springer Verlag,
+Heidelberg, pp. 520-538, 1982.
+
+\fIThe watchdog technique for forcing convergence in 
+algorithms for constrained optimization\fP,
+R.M. Chamberlain, C. Lemarechal, H.C. Pedersen and
+M.J.D. Powell,
+Mathematical Programming Study 16, pp. 1-17, 1982.
+
+\fIOn the quadratic programming algorithm of Goldfarb and
+Idnani\fP, 
+M.J.D. Powell,
+Mathematical Programming Study 25, pp. 46-61, 1985.
+
+sdvf13(1), vf13(1).

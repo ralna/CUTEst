@@ -1,0 +1,91 @@
+
+                    ********************************
+      	            *                              *
+                    *   USING NLPQLP WITH CUTEst   *
+                    *                              *
+                    ********************************
+
+              ( Last modified on 20 Feb 2013 at 11:50:00 )
+
+WHAT IS NLPQLP?
+--------------
+
+NLPQLP is an quasi-Newton SQP method for small-scale constrained optimization 
+
+HOW DO I GET NLPQLP?
+--------------------
+
+NLPQLP was written and maintained by 
+
+Klaus Schittkowski
+ Siedlerstr. 3, D-95488 Eckersdorf, Germany
+ http://www.klaus-schittkowski.de/home.htm
+
+It is available from 
+
+ http://www.klaus-schittkowski.de/nlpqlp.htm
+
+
+CREATING THE OBJECT FILES FOR NLPQLP
+------------------------------------
+
+Having obtained the files QL.zip and NLPQLP.zip, create two
+directories, say, ql and nlpqlp, and set environment variables
+$QL and $NLPQLP to point to them. Now issue the commands
+
+  cd $QL ; gfortran -c -O QL.FOR
+  cd $NLPQLP ; gfortran -c -O NLPQLP.FOR
+
+substituting your favourite fortran compiler, and additional 
+optimizations, for gfortran if desired. This will produce the 
+object files QL.o and NLPQLP.o in $QL and $NLPQLP (respectively).
+These may be moved if desired to $CUTEST/objects/(architecture)/(precision)/ 
+for the architecture and precsion you intend to use;
+binary files here will be chosen in preference to anything in
+$QL and $NLPQLP.
+
+NLPQLP is only available in double precision.
+
+USING THE NLPQLP INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The NLPQLP interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   NLPQLP.SPC     sets values for NLPQLP run-time parameters
+
+If no NLPQLP.SPC file is present in the current directory, the default version 
+is copied from the $CUTEST/src/NLPQLP directory. This default contains the 
+following:
+
+2         iprint  controls output level (0 = no print)
+1.0D-8    acc     desired final accuracy
+1.0D-12   accqp   QP accuracy tolerance
+1.0D-10   stpmin  minimum step length when using parallel line searches
+100       maxit   maximum number of iterations
+10        maxfun  maximum number of function evaluations during line search
+10        maxnm   history length for non-monotone line search
+0.0D0     rho     scaling for initial QN Hessian approximation
+1         l_par   number of parallel systems
+T         lql     true if the QP is solved with a full QN approximation
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p nlpqlp option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+K. Schittkowski, "NLPQLP: A Fortran implementation of a sequential
+quadratic programming algorithm with distributed and non-monotone line search", 
+Report, Department of Computer Science, University of Bayreuth (2010) 
+ http://www.klaus-schittkowski.de/nlpqlp_rep.htm
+
+K. Schittkowski "NLPQL: A FORTRAN subroutine solving constrained
+nonlinear programming problems", Annals of Operations Research, Vol. 5,
+485-500 (1986)

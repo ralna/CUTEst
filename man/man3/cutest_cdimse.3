@@ -1,0 +1,104 @@
+'\" e  @(#)cutest_cdimse v1.0 12/2012;
+.TH cutest_cdimse 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cdimse \- CUTEst tool to determine the number of nonzeros 
+required to store the Hessian of the Lagrangian.
+.SH SYNOPSIS
+CALL CUTEST_cdimse( status, ne, he_val_ne, he_row_ne )
+.SH DESCRIPTION
+The CUTEST_cdimse subroutine determines the number of nonzero elements
+required to store the Hessian matrix of the Lagrangian function for
+the problem decoded from a SIF file by the script \fIsifdecoder\fP.
+The matrix is stored in sparse "finite element" format
+.ce
+.EQ
+                   H = sum from {e=1} to {ne} H sub e,
+.EN
+where each square symmetric element 
+.EQ 
+H sub e 
+.EN 
+involves a small subset of the
+rows of the Hessian matrix.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and all 
+constraint functions are partially separable.
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cdimse are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B ne \fP[out] - integer
+the number of "finite-elements" used,
+.TP
+.B he_val_ne \fP[out] - integer
+the dimension of the array needed to store the real values of the
+Hessian, taking all the elements into account (i.e. the dimension of
+the array HE_val).
+.TP
+.B he_row_ne \fP[out] - integer
+ the dimension of the array needed to store the integer values of the
+Hessian (i.e. the dimension of the array HE_row).
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_ceh(3M), cutest_csgreh(3M), sifdecoder(1).

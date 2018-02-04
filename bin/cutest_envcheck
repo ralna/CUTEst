@@ -1,0 +1,41 @@
+#!/bin/bash -f
+#  ( Last modified on Thu Jan 17 13:38:02 MET 2013 )
+#
+# envcheck: check CUTEst environment variables
+#
+
+#  locate the archdefs directory
+
+if [[ -z "$ARCHDEFS" ]]; then
+  if [[ ! -d "$PWD/../archdefs" ]]; then
+    echo -e '\nThe environment variable ARCHDEFS is not set and the directory
+ ../../archdefs does not exist. Install the archdefs package,
+ set $ARCHDEFS to the archdefs directory and re-run.\n'
+    exit 6
+  else
+    export ARCHDEFS=$PWD/../archdefs
+  fi
+#else
+#  export ARCH=${ARCHDEFS}
+fi
+
+if [[ ${CUTEST+set} != 'set' ]]; then
+    echo ' CUTEst is not set.'
+    echo ' It should point to the directory where you installed CUTEst.'
+    echo ' Set it to the appropriate value and re-run.'
+    echo ''
+    exit 7
+fi
+
+#if [[ ! -e ${CUTEST}/versions/${ARCH} ]]; then
+#    echo ' CUTEst architecture ${ARCH} has not been installed.'
+#    echo ' Install it to the appropriate value and re-run.'
+#    echo ''
+#    exit 8
+#fi
+
+if [[ ${MASTSIF+set} != 'set' ]]; then
+    echo ' MASTSIF is not set.'
+    echo ' It should point to your main SIF repository.'
+    echo ''
+fi

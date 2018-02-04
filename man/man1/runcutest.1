@@ -1,0 +1,545 @@
+.\" @(#)runcutest v1.0 01/2013;
+.AM
+.TH runcutest 1 "18 Feb 2013"
+.SH NAME
+runcutest \- CUTEst interface to solvers.
+.SH SYNOPSIS
+\fBruncutest\fP --package \fIpack\fP [\-\-architecture \fIarch\fP]  [\-\-single] [\-\-help] [\-\-keep] [\-\-rebuild] [\-\-stash] [\-\-output \fI0|1\fP] [\-\-limit \fIsecs\fP] [\-\-cfortran] [\-\-debug] [\-\-uncons] [\-L\fIpath/to/lib\fP] [\-\-blas \fIkeyword\fP] [\-\-lapack \fIkeyword\fP] [\-\-command] [\-\-config] [\-\-decode \fIproblem[.SIF]\fP]
+.SH DESCRIPTION
+\fBruncutest\fP is the CUTEst interface to solvers. It replaces its
+predecessor CUTEr's combination of \fBrunpackage\fP, \fIpkg\fP and
+\fBsd\fP\fIpkg\fP. The command accepts options in short or long form.
+Any option that is not directly recognized is passed unchanged to the
+SIF decoder, sifdecoder(1).
+
+\fBruncutest\fP reads suitable architecture-dependent environment variables
+and then compiles and
+links all the relevant source files and libraries to form an executable
+of the package \fIpackage\fP running on problem \fIproblem\fP.
+
+The user has the opportunity to run commands before and after the run if
+need be. \fBruncutest\fP executes the script \fIpackage\fP_pre, if it
+exists, before the run. Similarly, it executes the script
+\fIpackage\fP_post, if it exists, after completion of the run.
+
+.LP
+.SH runcutest Options
+You can start runcutest with the following options. An option can be used either in short or long form.
+.TP 5
+.B \-p, \-\-package \fIpack\fP
+Specifies the package or solver, \fIpack\fP
+to use. See the section \fBCurrently Supported Packages\fP below.
+This is the only mandatory option.
+.TP
+.B \-A, \-\-architecture \fIarch\fP
+Run the decoder using the architecture \fIarch\fP; the architeture
+is a string of the form machine.system.compiler as specified in the
+directory $CUTEST/versions. If no \-A option is given, a valid
+architecture given by the environment variable $MYARCH will be
+used, but if $MYARCH is invalid or empty the decoder will terminate.
+.TP
+.B \-sp, \-\-single
+Run \fIpackage\fP in single-precision mode if available. Double
+precision is the default.
+.TP
+.B \-h, \-\-help
+Print a short help message with the available command-line options.
+.TP
+.B \-k, \-\-keep
+Keep the generated executable after use. May be useful when solving a
+particular problem with the same solver with different
+parameters. Deleting the executable after use is the default.
+This option is incompatible with \-S.
+.TP
+.B \-r, \-\-rebuild
+Force recompilation of the test problem. Default is to reuse object files.
+.TP
+.B \-S, \-\-stash
+Stash problem files (code and data) away in a temporary directory so as not
+to pollute the working directory. This option is incompatible with \-k.
+.TP
+.B \-o, \-\-output \fI0|1\fP
+Regulates the output level. Verbose mode is \fB-o\fP 1, silent mode is
+\fB-o\fP 0. Silent mode is the default.
+.TP
+.B \-l, \-\-limit \fIsecs\fP
+Sets a limit of \fIsecs\fP second on the \fIpackage\fP runtime.
+Unlimited cputime is the default.
+.TP
+.B \-c, \-\-cfortran
+Causes specialized compiler options to be used to specify that the main
+subroutine of \fIpackage\fP is written in C. This is necessary with some
+compilers, such as the Intel Fortran Compiler.
+.TP
+.B \-L\fIpath/to/lib\fP
+This option is passed directly to the linker and causes the path
+\fIpath/to/lib\fP to be searched for libraries. Useful to specify custom
+BLAS and LAPACK libraries.
+.TP
+.B \-b, \-\-blas \fIkeyword\fP
+Overrides usage of the default \fIlinpack\fP library packaged with
+CUTEst. Instead, use the BLAS library specified by \fIkeyword\fP. The
+keyword \fIkeyword\fP has one of two forms. The first, \fI-lmyblas\fP
+causes the linker to search for BLAS subprograms in the libmyblas.a
+library. The second, \fInone\fP, causes the linker to skip inclusion of
+any external BLAS. Use the first option if an optimized BLAS library is
+available on the host system, e.g., the ATLAS BLAS. The second option is
+useful for packages which already include the necessary BLAS
+subprograms. Use of \fInone\fP may be useful if \fIpackage\fP already
+includes the BLAS subroutines on which it relies.
+.TP
+.B \-K, \-\-lapack \fIkeyword\fP
+Overrides usage of the default \fIlinpack\fP library packaged with
+CUTEst. Instead, use the LAPACK library specified by \fIkeyword\fP. The
+keyword \fIkeyword\fP has one of two forms. The first, \fI-lmylapack\fP
+causes the linker to search for LAPACK subroutines in the libmylapack.a
+library. The second, \fInone\fP, causes the linker to skip inclusion of
+any external LAPACK. Use the first option if an optimized LAPACK library
+is available on the host system. The second option is useful for
+packages which already include the necessary LAPACK subprograms. Use of
+\fInone\fP may be useful if \fIpackage\fP already includes the LAPACK
+subroutines on which it relies.
+.TP
+.B \-\-command
+Displays the compilation commands used.
+.TP
+.B \-\-config
+Displays the current configuration settings.
+.TP
+.B \-D, \-\-decode \fIproblem[.SIF]\fP
+Applies the SIF decoder to the problem \fIproblem.SIF\fP to produce the
+OUTSDIF.d file and the problem-dependant Fortan subroutines. If this
+flag is not specified, \fBruncutest\fP assumes that the problem has been
+decoded prior to the call.
+.TP
+.B "additional command-line options"
+Any command-line option not documented in this manual page and/or in the
+help message of \fBruncutest\fP is passed unchanged to the SIF
+decoder. See the \fBsifdecode\fP manual page for more information.
+
+.SH CURRENTLY SUPPORTED PACKAGES
+There are currently interfaces to the following packages:
+.TP 5
+.B \fIalgencan\fP
+See
+E. G. Birgin, R. Castillo and J. M. Martinez,
+\fINumerical comparison of Augmented Lagrangian algorithms for nonconvex
+problems\fP,
+Computational Optimization and Applications 31, 31-56 (2005).
+
+http://www.ime.usp.br/~egbirgin/tango/codes.php
+
+.TP
+.B \fIbobyqa\fP
+See
+M.J.D. Powell,
+\fIThe BOBYQA algorithm for bound constrained optimization without
+derivatives\fP,
+Technical report NA2009/06
+Department of Applied Mathematics and Theoretical Physics, Cambridge England,
+(2009).
+
+.TP
+.B \fIcg_descent\fP
+See W. W. Hager and H. Zhang,
+\fIAlgorithm 851: CG_DESCENT, A conjugate gradient method with guaranteed
+descent\fP, ACM Transactions on Mathematical Software, 32, 113-137 (2006).
+
+http://www.math.ufl.edu/~hager/papers/CG/
+
+.TP
+.B \fIcgplus\fP
+The CG+ package is a nonlinear conjugate-gradient algorithm
+designed for unconstrained minimization by G. Liu, Jorge
+Nocedal and Richard Waltz (Northwestern U.).
+
+http://users.eecs.northwestern.edu/~nocedal/CG+.html
+
+.TP
+.B \fIcobyla\fP
+See
+M.J.D. Powell,
+\fIA direct search optimization method that models the objective and
+constraint functions by linear interpolation\fP,
+In Advances in optimization and numerical analysis, Proceedings
+of the Sixth workshop on Optimization and Numerical Analysis, Oaxaca,
+Mexico, volume 275 of Mathematics and its Applications, pp 51--67.
+Kluwer Academic Publishers (1994).
+
+.TP
+.B \fIderchk\fP
+This package checks the dervatives supplied in the problem SIF file, and
+is due to Dominique Orban from Ecole Polytechnique de Montreal.
+
+.TP
+.B \fIdfo\fP
+.br
+See A. R. Conn, K. Scheinberg and Ph.L. Toint,
+\fIOn the convergence of derivative-free methods for unconstrained
+optimization\fP,
+Approximation Theory and Optimization: Tributes to M. J. D. Powell ,
+Eds. A. Iserles and M. Buhmann, 83-108, Cambridge University Press (1997).
+
+https://projects.coin-or.org/Dfo
+
+.TP
+.B \fIdirestsearch\fP
+The Direct Search suite provides a variety of pattern-search methods for
+derivative-free optimization and was written by Liz Dolan, Adam Gurson,
+Anne Shepherd, Chris Siefert, Virginia Torczon and Amy Yates.
+
+http://www.cs.wm.edu/~va/software/DirectSearch/direct_code/
+
+.TP
+.B \fIfiltersd\fP
+See
+R. Fletcher
+\fIA sequential linear constraint programming algorithm for NLP\fP,
+SIAM Journal on Optimization, 22(3), pp. 772-794 (2012).
+
+http://www.coin-or.org/projects/filterSD.xml
+
+.TP
+.B \fIfiltersqp\fP
+FilterSQP is a filter-based SQP method for large-scale nonlinear programming
+by Roger Fletcher and Sven Leyffer from the University of Dundee.
+
+.TP
+.B \fIgen77\fP, \fIgen90\fP, \fIgenc\fP
+.br
+These packages simply illustrates how CUTEst tools may be called in fortran 77,
+fortran 90 and C; the result is of no consequence.
+
+.TP
+.B \fIhrb\fP
+.br
+This package writes the matrix data for the given problem in Harwell or
+Rutherford-Boeing sparse matrix forrmat, and was provded by Nick Gould
+from the Rutherford Appleton Laboratory.
+
+.TP
+.B \fIipopt\fP
+See A. Wächter and L. T. Biegler,
+\fIOn the Implementation of an Interior-Point Filter Line-Search Algorithm
+for Large-Scale Nonlinear Programming\fP,
+Mathematical Programming 106(1) 25-57 (2006).
+
+https://projects.coin-or.org/Ipopt
+
+.TP
+.B \fIknitro\fP
+See R. H. Byrd, J. Nocedal, and R. A. Waltz,
+\fIKNITRO: An Integrated Package for Nonlinear Optimization\fP in
+Large-Scale Nonlinear Optimization, G. di Pillo and M. Roma, eds,
+pp. 35-59 (2006), Springer-Verlag.
+
+http://www.ziena.com/knitro.htm
+
+.TP
+.B \fIla04\fP
+.br
+LA04 is a steepest-edge simplex method for linear programming by John Reid
+frm the Rutherford Appleton Laboratory.
+
+http://www.hsl.rl.ac.uk/catalogue/la04.xml
+
+.TP
+.B \fIlbfgs\fP
+See D.C. Liu and J. Nocedal,
+\fIOn the Limited Memory Method for Large Scale Optimization\fP
+Mathematical Programming B, 45(3) 503-528 (1989).
+
+http://users.eecs.northwestern.edu/~nocedal/lbfgs.html
+
+.TP
+.B \fIlbfgsb\fP
+See C. Zhu, R. H. Byrd and J. Nocedal.
+\fIL-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound
+constrained optimization\fP
+ACM Transactions on Mathematical Software, 23(4) 550-560 (1997).
+
+http://users.eecs.northwestern.edu/~nocedal/lbfgsb.html
+
+.TP
+.B \fIlinuoa\fP
+See
+M.J.D. Powell,
+\fIThe LINUOA software for linearly unconstrained optimization without derivatives\fP,
+
+http://www.netlib.org/na-digest-html/13/v13n42.html#2
+
+.TP
+.B \fIloqo\fP
+.br
+See R. J. Vanderbei and D. F. Shanno
+\fIAn Interior-Point Algorithm for Nonconvex Nonlinear Programming\fP,
+13 (1-3) pp 231-252 (1999).
+
+http://www.princeton.edu/~rvdb/loqo/LOQO.html
+
+.TP
+.B \fImatlab\fP
+Creates a Matlab binary to allow CUTEst calls from Matlab.
+See $CUTEST/src/matlab/README.matlab to see how to use the binary with Matlab.
+Note that there is a simplified interface \fBcutest2matlab\fP that may be
+used in preference. The environment variable MYMATLAB must be set to point to
+the directory containing Matlab's mex executable.
+
+.TP
+.B \fIminos\fP
+See
+B. A. Murtagh and M. A. Saunders.
+\fIA projected Lagrangian algorithm and its implementation for sparse
+nonlinear constraints\fP,
+Mathematical Programming Study 16, 84-117 (1982).
+
+http://www.sbsi-sol-optimize.com/asp/sol_product_minos.htm
+
+.TP
+.B \fInitsol\fP
+See M. Pernice and H. F. Walker,
+\fINITSOL: a Newton iterative solver for nonlinear systems\fP,
+Special Issue on Iterative Methods, SIAM J. Sci. Comput., 19, 302-318 (1998).
+
+http://users.wpi.edu/~walker/NITSOL/
+
+.TP
+.B \fInlpqlp\fP
+See K. Schittkowski, \fINLPQLP: A Fortran implementation of a sequential
+quadratic programming algorithm with distributed and non-monotone line
+search\fP,
+Report, Department of Computer Science, University of Bayreuth (2010).
+
+http://www.klaus-schittkowski.de/nlpqlp.htm
+
+.TP
+.B \fInomad\fP
+A derivative-free code for constrained and unconstrained
+optimization implementing the mesh-adaptive direct-search framework
+written by
+Sebastien Le Digabel, Charles Audet and others from Ecole Polytechnique
+de Montreal.
+
+http://www.gerad.ca/nomad
+
+.TP
+.B \fInpsol\fP
+A linesearch SQP method for constrained optimization by Philip Gill,
+Walter Murray, Michael Saunders and Margaret Wright from Stanford University.
+
+http://www.sbsi-sol-optimize.com/asp/sol_product_npsol.htm
+
+.TP
+.B \fInewuoa\fP
+See
+M.J.D. Powell,
+\fIThe NEWUOA software for unconstrained optimization without derivatives\fP,
+in, G. Di Pillo and M. Roma (eds), Large-Scale Nonlinear Optimization,
+volume 83 of Nonconvex Optimization and Its Applications
+pp 255-297, Springer Verlag, 2006.
+
+.TP
+.B \fIosqp\fP
+See
+B. Stellato, G. Banjac, P. Goulart, A. Bemporad and S. Boyd,
+\fIOSQP: An Operator Splitting Solver for Quadratic Programs\fP,
+ArXiv e-prints http://adsabs.harvard.edu/abs/2017arXiv171108013S (2017).
+
+http://osqp.readthedocs.io/en/latest/
+
+.TP
+.B \fIpds\fP
+.br
+Direct search methods for unconstrained optimization on either sequential or
+parallel machines by Virginia Torczon from The College of William and Mary.
+
+.TP
+.B \fIpennlp\fP
+See
+M. Ko\*[v]cvara and M. Stingl,
+\fIPENNON - a code for convex nonlinear and semidefinite programming\fP,
+Optimization Methods and Software, 8(3):317–333 (2003).
+
+http://www.penopt.com
+
+.TP
+.B \fIpraxis\fP
+Brent's multi-dimensional direct search unconstrained minimization algorithm,
+as implemented by John Chandler, Sue Pinsk and Rosalee Taylor from
+Oklahoma State University.
+
+http://people.sc.fsu.edu/~jburkardt/f_src/praxis/praxis.html
+
+.TP
+.B \fIql\fP
+.br
+See K. Schittkowski,
+\fIQL: A Fortran code for convex quadratic programming - User's guide, Version
+2.11\fP, Report, Department of Mathematics, University of Bayreuth (2005).
+
+http://www.klaus-schittkowski.de/ql.htm
+
+.TP
+.B \fIqplib\fP
+.br
+This packages converts the data into QPlib2014 format as required
+by the QPlib2014 quadratic programming test set.
+
+http://www.lamsade.dauphine.fr/QPlib2014
+
+.TP
+.B \fIsnopt\fP
+See P. E. Gill, W. Murray and M. A. Saunders,
+\fISNOPT: An SQP algorithm for large-scale constrained optimization\fP,
+SIAM Review 47(1) 99-131 (2005).
+
+http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm
+
+.TP
+.B \fIspg\fP
+.br
+See E. G. Birgin, J. M. Martinez and M. Raydan,
+\fIAlgorithm 813: SPG - software for convex-constrained optimization\fP,
+ACM Transactions on Mathematical  Software 27 340-349, (2001).
+
+http://www.ime.usp.br/~egbirgin/tango/codes.php
+
+.TP
+.B \fIsqic\fP
+.br
+See
+P. E. Gill and E. Wong,
+\fIMethods for Convex and General Quadratic Programming\fP,
+Technical Report NA 10-1, Dept. of Mathematics, University of California,
+San Diego (latest version 2013).
+
+.TP
+.B \fIstats\fP
+The package collects statistics about the types of variables and constraints
+involved in a given problem, and was written by Dominique Orban from
+Ecole Polytechnique de Montreal.
+
+.TP
+.B \fIstenmin\fP
+See A. Bouaricha,
+\fIAlgorithm 765: STENMIN \- a software package for large, sparse unconstrained
+optimization using tensor methods\fP,
+ACM Transactions on Mathematical Software, 23(1) 81-90 (1997).
+
+http://www.netlib.org/toms/765
+
+.TP
+.B \fItao\fP
+.br
+TAO is an object-oriented package for large-scale optimization written by
+Todd Munson, Jason Sarich, Stefan Wild, Steven Benson and Lois Curfman McInnes,
+
+http://www.mcs.anl.gov/research/projects/tao/
+
+.TP
+.B \fItenmin\fP
+See R.B. Schnabel and T.-T. Chow,
+R. B. Schnabel and T.-T. Chow,
+\fIAlgorithm 739: A software package for unconstrained optimization using
+tensor methods\fP,
+ACM Transactions on Mathematical Software, 20(4) 518-530 (1994).
+
+http://www.netlib.org/toms/739
+
+.TP
+.B \fItest\fP
+.br
+This package makes calls to all of the appropriate
+CUTEst tools to check for errors.
+
+.TP
+.B \fItron\fP
+.br
+See C. Lin and J. J. More',
+\fINewton's method for large bound-constrained optimization problems\fP,
+SIAM J. Optimization 9(4) 1100-1127 (1999).
+
+  http://www.mcs.anl.gov/~more/tron/
+
+.TP
+.B \fIuncmin\fP
+See J. E. Koontz, R.B. Schnabel, and B.E. Weiss,
+\fIA modular system of algorithms for unconstrained minimization\fP,
+ACM Transactions on Mathematical Software, 11(4) 419-440 (1985).
+
+.TP
+.B \fIvf13\fP
+.br
+VF13 is a line-search SQP method for constrained optimization by Mike Powell
+from the University of Cambridge.
+
+http://www.hsl.rl.ac.uk/archive/index.html
+
+.TP
+.B \fIworhp\fP
+See C. Bueskens and D. Wassel,
+\fIThe ESA NLP Solver WORHP\fP, in G. Fasano and J.D. Pinter, eds,
+Modeling and Optimization in Space Engineering, volume 73 of
+Springer Optimization and Its Applications, pp 85-110 (2013),
+Springer-Verlag.
+
+http://www.worhp.de
+
+.LP
+Interfaces to the obsolete packages
+\fIhsl_ve12\fP, \fIosl\fP, \fIva15\fP, \fIve09\fP and \fIve14\fP
+previously supported in CUTEr have been withdrawn.
+
+The packages
+\fIderchk\fP,  \fIgen77/90/c\fP, \fIhrb\fP, \fIstats\fP and \fItest\fP
+are supplied
+as part of the CUTEst distribution and should work "as is".
+Anyone wishing to use one of remaining packages will need to download
+and install it first. See the
+README in the relevant subdirectory of $CUTEST/src for further
+instructions.
+
+A file with each of supported package's name may be found
+in the directory $CUTEST/packages/ and indicates default
+locations for the package's binary and options files.
+These files may be edited if necessary, or copied into
+$CUTEST/packages/(arrchitecture)/(precision)/
+(and made executable using \fBchmod\fP a+x)
+to allow for architecture or precision
+specfic settings; \fBruncutest\fP will use the architecture/precision
+specfic directory version, if any, in preference to the default version.
+.SH ENVIRONMENT
+.TP
+.SB CUTEST
+ Directory containing CUTEst.
+.TP
+.SB SIFDECODE
+Directory containing SIFDecode.
+.TP
+.SB MYARCH
+ The default architecture.
+.TP
+.SB MASTSIF
+A pointer to the directory containing the CUTEst problems
+collection. If this variable is not set, the current directory is
+searched for \fIproblem.SIF\fP. If it is set, the current directory is
+searched first, and if \fIproblem.SIF\fP is not found there, $MASTSIF
+is searched.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1), cutest2matlab(1).

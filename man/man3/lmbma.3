@@ -1,0 +1,87 @@
+.\" @(#)lmbma v1.0 11/2000;
+.TH lmbma 3M "17 Nov 2000"
+.SH NAME
+lmbma \- CUTEr L-BFGS-B test driver
+
+.SH SYNOPSIS
+lmbma
+
+.SH DESCRIPTION
+The \fIlmbma\fP main program test drives L-BFGS-B on SIF problems from the
+CUTEr distribution.
+
+L-BFGS-B is a nonlinear programming code for unconstrained or bound
+constrained problems, using the limited memory BFGS quasi-Newton
+update.
+ 
+L-BFGS-B was written by C. Zhu, R.H. Byrd, P. Lu and J. Nocedal. It is
+available from J. Nocedal, Department of Electrical Engineering and
+Computer Sciences, Nothwestern University, Evanston IL 60201, USA
+(email: nocedal@venus.eecs.nwu.edu).
+
+The object module \fIlmbma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+To avoid multiply defined subroutines when LBFGS is linked with the
+CUTEr tools, the duplicate BLAS subroutines daxpy, dcopy, ddot and
+dscal must be removed from the file routines.f in the LBFGS
+distribution.
+
+Compile (but do not link) the resulting L-BFGS-B source code and copy the
+resulting object file lbfgsb.o in the directory
+$MYCUTER/\fIprecision\fP/bin. Launch using lmb(1) or sdlmb(1).
+
+.SH NOTE
+If no LBFGSB.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/lbfgsb/. The
+default specifications are
+
+.nf
+.ta 1i 2i 3i
+5	M	maximum number of variable metric
+		 corrections
+0.0	FACTR	factor in built-in stopping test
+0.00001	GTOL	termination criterion on infinity
+		 norm of the gradient
+0	IPRINT	output specifier
+1	ISBMIN	minimization method in the subspace
+10000	MAXIT	maximum number of iterations
+10000	MAXCLL	maximum number of function calls 
+.fi
+
+The reader is referred to the papers quoted below if they wishe to
+modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIA limited memory algorithm for bound constrained
+optimization\fP,
+R. H. Byrd, P. Lu, J. Nocedal and C. Zhu, 
+SIAM J. Scientific Computing \fB16\fP (1995), no. 5.
+ 
+\fIL-BFGS-B: a limited memory FORTRAN code for solving
+bound constrained optimization problems\fP,
+C. Zhu, R.H. Byrd, P. Lu, J. Nocedal, Tech. Report,
+EECS Department, Northwestern University, 1994.
+

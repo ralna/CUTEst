@@ -1,0 +1,61 @@
+
+                      *********************************
+		      *                               *
+                      *   USING RAL_NLLS WITH CUTEst  *
+		      *                               *
+                      *********************************
+
+              ( Last modified on 6 Oct 2015 at 15:20:00 )
+
+WHAT IS RAL_NLLS?
+-----------------
+
+RAL_NLLS is a nonlinear least-squares code for data fitting involving
+a modest number of parameters; dense numerical-linear algebra is used.
+
+HOW DO I GET RAL_NLLS?
+----------------------
+
+RAL_NLLS was written by the NA Group at the Rutherford Appleton Laboratory.
+The package may be obtained from 
+  http://ccpforge.cse.rl.ac.uk/gf/project/ral_nlls/
+
+CREATING THE OBJECT MODULE FOR RAL_NLLS
+---------------------------------------
+
+Compile (but do not link) the files nlls.f90, and put the resulting object 
+(.o) files in either the user-defined directory $RAL_NLLS or in 
+$CUTEST/objects/(architecture)/(precision)/
+for the architecture and precsion you intend to use.
+
+RAL_NLLS is only available in double precision.
+
+USING THE RAL_NLLS INTERFACE TOOL
+---------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The RAL_NLLS interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   RAL_NLLS.SPC   sets values for RAL_NLLS run-time parameters
+
+If no RAL_NLLS.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/ral_nlls directory.
+This default file is as follows:
+
+  0        IPRINT  controls the amount of printing --- set to 0, 1, 2 or 3
+
+To be written
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p ral_nlls option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+To be written

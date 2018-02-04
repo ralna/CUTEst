@@ -1,0 +1,90 @@
+
+                      **************************************
+		      *                                    *
+                      *   USING DIRECT SEARCH WITH CUTEst  *
+		      *                                    *
+                      **************************************
+
+              ( Last modified on 16 Feb 2013 at 16:40:00 )
+
+WHAT IS DIRECT SEARCH?
+---------------------
+
+Direct Search is a suite of C++ derivative-free codes for unconstrained 
+optimization supporting many well-known methods. The package was written
+by Liz Dolan, Adam Gurson, Anne Shepherd, Chris Siefert, Virginia Torczon, 
+and Amy Yates. 
+
+HOW DO I GET DIRECT SEARCH?
+--------------------------
+
+Download the Direct Search tarball 
+
+ http://www.cs.wm.edu/~va/software/DirectSearch/direct_code/DirectSearch.tar.gz
+
+from the website, and untar it in a new directory. Download the SearchWrappers 
+tarball
+
+ http://www.cs.wm.edu/~va/software/DirectSearch/wrappers/SearchWrappers.tar
+
+and untar this file in the directory with the direct search classes. 
+
+CREATING THE OBJECT MODULE FOR DIRECT SEARCH
+--------------------------------------------
+
+Edit the file Makefile.linux.f to set your GNU compilers and flags; 
+we needed to reset the following
+
+ CFLAGS = -Wall -g -DDOLD_ALLOC -DOLD_LIBC -fpermissive
+ LIBS = -lf2c -lgfortran
+ F = gfortran
+
+for the latest GCC suite.
+
+Now issue the command
+
+ make -f Makefile.linux.f libsearch.a
+
+to create the required Direct Search object library.
+
+USING THE DIRECT SEARCH INTERFACE TOOL
+--------------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The DIRECT SEARCH interface tools require two input files:
+
+   probname.SIF  specifies the problem in SIF format
+   DIRECTSEARCH.SPC sets values for DIRECT SEARCH run-time parameters
+
+If no DIRECTSEARCH.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/directsearch directory.
+This default file is as follows:
+
+7       search type (1=Coord,2=Compass,3=NLess,4=H&J,5=H&J+,6=SN&H,7=NM,8=SMS)
+100     maximum evaluations allowed (-ve = no maximum)
+0.25    initial step size for pattern search (-ve = 0.25)
+2       chose initial simplex edge lengths (1 = ask me, other = 2.0 for each)
+10E-8   final step length for search (-ve = 10E-8)
+1       simplex type (2 = regular, other = right)
+2       stopping criteria based on (2 = delta, other =  standard deviation)
+-1      NM shrinking coefficient (-ve = default = 0.5.)
+-1      NM reflection coefficient (-ve uses a default = 1.0.)
+-1      NM contraction coefficient (-ve uses a default = 0.5.)
+-1      NM expansion coefficient (-ve uses a default = 2.0.)
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p directsearch option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+See
+
+ http://www.cs.wm.edu/~va/software/DirectSearch/direct_code/
+
+for references

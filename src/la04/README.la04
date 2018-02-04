@@ -1,0 +1,80 @@
+
+                      *****************************
+		      *                           *
+                      *   USING LA04 WITH CUTEst  *
+		      *                           *
+                      *****************************
+
+              ( Last modified on 19 Jan 2013 at 15:40:00 )
+
+WHAT IS  LA04?
+--------------
+
+LA04 is a subroutine for the solution of the general, large, linear
+programming problem within a feasible region defined by simple bound
+and linear equality constraints. It uses a steepest-edge simplex approach in
+which the variables are partitioned into free and fixed variables, the
+latter being fixed at one of their bounds. The status of each variable
+is revised after every iteration.
+
+HOW DO I GET LA04?
+------------------
+
+LA04 is part of HSL (formerly the Harwell Subroutine Library), and was written 
+by John Reid. It is available from Hyprotech UK Ltd, subject to certain 
+license agreements. It is copywritten jointly by CCLRC and Hyprotech UK.
+
+See 
+
+  http://www.hsl.rl.ac.uk/catalogue/la04.xml
+
+CREATING THE OBJECT MODULE FOR LA04
+-----------------------------------
+
+For building the double precision version, the LA04 double precision
+subroutine and dependencies should be concatenated in a new file called
+la04d.f. This file should then be compiled (but not linked) and the resulting
+object file la04d.o should then be placed in either the user-defined directory 
+$LA04 or in $CUTEST/objects/(architecture)/double/ for the architecture 
+you intend to use.
+
+The procedure is identical for the single precision, except that the names
+la04d.f, la04d.o and double are replaced by la04s.f and la04s.o and single, 
+respectively.
+
+USING THE LA04 INTERFACE TOOL
+-----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The LA04 interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   LA04.SPC       sets values for LA04 run-time parameters
+
+If no LA04.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/la04 directory. This default
+file is as follows:
+
+      1000    MAXIT,   the maximum number of iterations.
+         6    IOUNIT   output unit ( <= 0 to supress )
+         T    WRITES,  write the solution to an output file?
+
+The commands to use this package are the two scripts sdla04 and la04.
+
+The reader is referred to the paper quoted below, the documentation of the
+routine in HSL or the code itself if he or she wishes to modify these 
+parameters.
+
+To run with CUTEst, use the runcutest command with the -p la04 option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+J.K. Reid,
+LA04, a Fortran 77 code for steepest-edge simplex linear programming.
+Report RAL TR-2001-???, Rutherford Appleton Laboratory, 2001
+
+

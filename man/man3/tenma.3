@@ -1,0 +1,90 @@
+.\" @(#)tenma v1.0 11/2000;
+.TH tenma 3M "17 Nov 2000"
+.SH NAME
+tenma \- CUTEr TENMIN test driver
+
+.SH SYNOPSIS
+tenma
+
+.SH DESCRIPTION
+The \fItenma\fP main program test drives TENMIN on SIF problems from the
+CUTEr distribution.
+
+The TENMIN package is intended for problems where the cost of storing
+one n by n matrix (where n is the number of variables), and factoring
+it at each iteration, is acceptable. The software allows the user to
+choose between a tensor method for unconstrained optimization, and an
+analogous standard method based upon a quadratic model. The tensor
+method bases each iteration upon a specially constructed fourth-order
+model of the objective function that is not significantly more
+expensive to form, store, or solve than the standard quadratic model.
+ 
+TENMIN is available via anonymous ftp from ftp.cs.colorado.edu, in the
+directory pub/cs/distribs/tensor.  Any questions about this software
+should be addressed to eskow@cs.colorado.edu.
+
+.SH USAGE
+
+Copy the TENMIN source code, distributed in the file tensrd.f, into a
+new file named tenmin.f. In tenmin.f, remove or comment out the BLAS
+subroutines DCOPY, DDOT, and DSCAL. In our version of the TENMIN
+source, this corresponds to deleting or commenting out lines 2675 to
+2814 at the end of the file. (CUTEr also uses the BLAS subroutines
+DCOPY, DDOT, and DSCAL. They are contained in the CUTEr Fortran file
+named linpac.f To avoid multiply defined subroutines when TENMIN is
+linked with the CUTEr tools, the duplicate BLAS subroutines must be
+removed from TENMIN.)
+
+Compile (but do not link) tenmin.f. The resulting object file tenmin.o
+should be placed in your directory $MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no TENMIN.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/tenmin/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+1000	ILIM,	maximum number of iterations
+0.00001	GRADTL,	relative gradient stopping tolerance
+2	IAGFLG,	gradient availability & checking flag
+2	IAHFLG,	Hessian availability & checking flag
+1.0	FSCALE,	typical value of objective function
+1.0	TYPX,	typical value of the problem variables
+1	METHOD,	method used (0=Newton, 1=tensor )
+15	NDIGIT,	# accurate digits in function values
+1	MSG,	output specifier
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fITensor methods for unconstrained optimization using
+second derivatives\fP,
+R.B. Schnabel and T.-T. Chow,
+SIAM Journal on Optimization, vol. 1(3),
+pp. 293-315, 1991. 
+
+sdten(1), ten(1).

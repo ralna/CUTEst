@@ -1,0 +1,103 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          ROSENBR
+
+*   Problem :
+*   *********
+
+*   The ever famous 2 variables Rosenbrock "banana valley" problem
+
+*   Source:  problem 1 in
+*   J.J. More', B.S. Garbow and K.E. Hillstrom,
+*   "Testing Unconstrained Optimization Software",
+*   ACM Transactions on Mathematical Software, vol. 7(1), pp. 17-41, 1981.
+
+*   SIF input: Ph. Toint, Dec 1989, Corrected July 1993.
+
+*   classification SUR2-AN-2-0
+
+VARIABLES
+
+    X1
+    X2
+
+GROUPS
+
+ N  G1        X2        1.0
+ N  G1        'SCALE'   0.01
+ N  G2        X1        1.0
+
+CONSTANTS
+
+    ROSENBR   G2        1.0
+
+BOUNDS
+
+ FR ROSENBR   'DEFAULT'
+
+START POINT
+
+    ROSENBR   X1        -1.2
+    ROSENBR   X2         1.0
+
+ELEMENT TYPE
+
+ EV SQ        V1
+
+ELEMENT USES
+
+ T  E1        SQ
+ V  E1        V1                       X1
+
+GROUP TYPE
+
+ GV L2        GVAR
+
+GROUP USES
+
+ T  'DEFAULT' L2
+ XE G1        E1         -1.0
+
+OBJECT BOUND
+
+ LO ROSENBR              0.0
+
+*   Solution
+
+*LO SOLTN                0.0
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      ROSENBR
+
+INDIVIDUALS
+
+ T  SQ
+ F                      V1 * V1
+ G  V1                  V1 + V1
+ H  V1        V1        2.0
+
+ENDATA
+
+*********************
+* SET UP THE GROUPS *
+* ROUTINE           *
+*********************
+
+GROUPS        ROSENBR
+
+INDIVIDUALS
+
+ T  L2
+ F                      GVAR * GVAR
+ G                      GVAR + GVAR
+ H                      2.0
+
+ENDATA

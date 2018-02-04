@@ -1,0 +1,244 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          CONT6-QQ
+
+*   Problem :
+*   *********
+
+*   A quadratic-quadratic control problem as suggested by
+
+*   K. Schittkowski, 
+*   ``Numerical solution of a time-optimal parabolic boundary-value 
+*     control problem'', J. Optim. Theory Appl., vol. 27, pp. 271-290, 1979,
+
+*   H. Goldberg and F. Troltzsch, 
+*   ``On a Lagrange-Newton method for a nonlinear parabolic boundary control 
+*    problem'', Optim. Meth. Software, vol. 8, pp. 225-247, 1998. 
+
+*   and
+
+*   H. D. Mittelmann, 
+*   ``Verification of Second-Order Sufficient Optimality Conditions 
+*     for Semilinear Elliptic and Parabolic Control Problems'', 
+*    to appear in Comp. Optim. Applic. 2000.
+
+*   See also Hans Mittelmann's WWW article 
+
+*    http://plato.la.asu.edu/papers/paper90/paper.html
+
+*   SIF input: Nick Gould, September 2000
+
+*   classification QQR2-AN-V-V
+
+*   Number of nodes in x direction
+
+ IE n                   100
+*IE n                   200
+*IE n                   400
+*IE n                   600
+*IE n                   800
+
+*   Other useful parameters
+
+ RE ub                  6.09
+ RF pi/4      ARCTAN    1.0
+ RM 2pi       pi/4      8.0
+ RE r                   1.4
+ RE d                   1.6
+
+ IE 0                   0
+ IE 1                   1
+ RE one                 1.0
+
+ IA n1        n         -1
+ RI rn        n
+
+ R/ h         one                      rn
+ R* h2        h                        h
+ RM -h2       h2        -1.0
+ R* 2pih2     2pi                      h2
+
+VARIABLES
+
+ DO j         0                        n
+ DO i         0                        n
+ X  u(i,j)
+ ND
+
+ DO j         1                        n1
+ DO i         1                        n1
+ X  f(i,j)
+ ND
+
+GROUPS
+
+* objective function (see later)
+
+ N  ff
+
+* constraints
+
+* linear part of p{i in 1..n1, j in 1..n1}:
+*    4*u[i,j] - u[i-1,j] - u[i,j-1] - u[i+1,j] - u[i,j+1]
+*    - u[i,j] * (a[i,j] - f[i,j] - b*u[i,j])*h2 == 0;
+
+ DO j         1                        n1
+ IA j+1       j         1
+ IA j-1       j         -1
+ DO i         1                        n1
+ IA i+1       i         1
+ IA i-1       i         -1
+ XE p(i,j)    u(i,j)    4.0
+ XE p(i,j)    u(i+1,j)  -1.0           u(i-1,j)  -1.0
+ XE p(i,j)    u(i,j-1)  -1.0           u(i,j+1)  -1.0
+ ND
+
+* bc1 {i in 1..n1}: u[i,0] - u[i,1] + h*u[i,1] = 0
+
+ DO i         1                        n1
+ XE bc1(i)    u(i,0)    1.0            u(i,1)    -1.0 
+ ZE bc1(i)    u(i,1)                   h
+ ND
+
+* bc2 {j in 1..n1}: u[0,j] - u[1,j] + h*u[1,j] = 0
+
+ DO j         1                        n1
+ XE bc2(j)    u(0,i)    1.0            u(1,i)    -1.0 
+ ZE bc2(j)    u(1,j)                   h
+ ND
+
+* bc3 {i in 1..n1}: u[i,n] - u[i,n1] = 0;
+
+ DO i         1                        n1
+ XE bc3(i)    u(i,n)    1.0            u(i,n1)   -1.0 
+ ND
+
+* bc4 {j in 1..n1}: u[n,j] - u[n1,j] = 0;
+
+ DO j         1                        n1
+ XE bc4(j)    u(n,j)    1.0            u(n1,j)   -1.0 
+ ND
+
+BOUNDS
+
+ DO j         0                        n
+ DO i         0                        n
+ ZU CONT6-QQ  u(i,j)                   ub
+ ND
+
+ DO j         1                        n1
+ DO i         1                        n1
+ ZL CONT6-QQ  f(i,j)                   r
+ ZU CONT6-QQ  f(i,j)                   d
+ ND
+
+START POINT
+
+ DO j         0                        n
+ DO i         0                        n
+ X  CONT6-QQ  u(i,j)    6.0
+ ND
+
+ DO j         1                        n1
+ DO i         1                        n1
+ X  CONT6-QQ  f(i,j)    1.5
+ ND
+
+ELEMENT TYPE
+
+ EV OBJ       F                        U
+ EV NLC       F                        U
+ EP NLC       A
+
+ELEMENT USES
+
+ DO j         1                        n1
+ RI rj        j
+ DO i         1                        n1
+ RI ri        i
+
+*  f[i,j]*(sm*f[i,j] - sk*u[i,j])
+
+ XT o(i,j)    OBJ
+ ZV o(i,j)    F                        f(i,j)
+ ZV o(i,j)    U                        u(i,j)
+
+*  u[i,j] * (a[i,j] - f[i,j] - b*u[i,j])
+*   where a[i,j] := 7 + 4 * sin(2*pi*h2*i*j);
+
+ R* ij        ri                       rj
+ R* 2pih2ij   2pih2                    ij
+ R( sin       SIN                      2pih2ij
+ RM 4sin      sin       4.0
+ RA a         4sin      7.0
+ XT c(i,j)    NLC
+ ZV c(i,j)    F                        f(i,j)
+ ZV c(i,j)    U                        u(i,j)
+ ZP c(i,j)    A                        a
+ ND
+
+GROUP USES
+
+ DO j         1                        n1
+ DO i         1                        n1
+
+* ff: h2*sum{i in 1..n1, j in 1..n1} f[i,j]*(sm*f[i,j] - sk*u[i,j])
+
+ ZE ff        o(i,j)                   h2
+
+* nonlinear part of p{i in 1..n1, j in 1..n1}:
+*    4*u[i,j] - u[i-1,j] - u[i,j-1] - u[i+1,j] - u[i,j+1]
+*    - u[i,j] * (a[i,j] - f[i,j] - b*u[i,j])*h2 == 0
+
+ ZE p(i,j)    c(i,j)                   -h2
+
+ ND
+
+OBJECT BOUND
+
+*   Solution
+
+*XL SOLUTION            -4.32546D+00    $ n = 100
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      CONT6-QQ
+
+TEMPORARIES
+
+ R  SK
+ R  SM
+ R  B
+
+INDIVIDUALS
+
+*  f * (sm * f - sk * u )
+
+ T  OBJ
+ A  SK                  0.8
+ A  SM                  1.0
+ F                      F * ( SM * F - SK * U )
+ G  F                   2.0 * SM * F - SK * U
+ G  U                   - SK * F
+ H  F         F         2.0 * SM
+ H  F         U         - SK
+
+*  u * (a - f - b*u)
+
+ T  NLC
+ A  B                   1.0
+ F                      U * ( A - F - B * U )
+ G  U                   A - F - 2.0 * B * U
+ G  F                   - U
+ H  U         U         - 2.0 * B
+ H  F         U         - 1.0
+
+ENDATA
+

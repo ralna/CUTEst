@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config
+    Name="Xcode with Clang"
+    ShortName="Clang"
+    Manufacturer="Apple"
+    Version=""
+    Language="C"
+    Priority="A"
+    Location="$XCODE_DIR" >
+    <Details
+    CompilerExecutable="$CC"
+    CompilerDefines="$DEFINES"
+    CompilerFlags="$CFLAGS"
+    OptimizationFlags="$COPTIMFLAGS"
+    DebugFlags="$CDEBUGFLAGS"
+    IncludeFlags="$INCLUDE"
+    LinkerLibraries="$LINKLIBS"
+    LinkerOptimizationFlags="$LDOPTIMFLAGS"
+    LinkerDebugFlags="$LDDEBUGFLAGS"
+    
+    CompilerDefineFormatter="-D%s"
+    LinkerLibrarySwitchFormatter="-l%s"
+    LinkerPathFormatter="-L%s"
+    />
+    <vars
+    CMDLINE100="$CC -c $DEFINES $INCLUDE $CFLAGS $OPTIM $SRC -o $OBJ"
+    CMDLINE200="$LD $LDFLAGS $OBJS $LINKOPTIM $LINKEXPORT $CLIBS $LINKLIBS -o $EXE"
+    
+    CC="$XCRUN_DIR/xcrun -sdk macosx$SDKVER clang"
+    DEFINES="$MATLABMEX"
+    MATLABMEX="-DMATLAB_MEX_FILE"
+    CFLAGS="-fno-common -arch x86_64 -mmacosx-version-min=$SDKVER -fexceptions -isysroot $ISYSROOT"
+    INCLUDE="-I&quot;$MATLABROOT/extern/include&quot; -I&quot;$MATLABROOT/simulink/include&quot;"
+    COPTIMFLAGS="-O2 -fwrapv -DNDEBUG"
+    CDEBUGFLAGS="-g"
+    
+    LD="$CC"
+    LDFLAGS="-Wl,-twolevel_namespace -undefined dynamic_lookup -arch x86_64 -mmacosx-version-min=$SDKVER -Wl,-syslibroot,$ISYSROOT $LDBUNDLE $LINKEXPORT"
+    LDBUNDLE="-bundle "
+    LINKEXPORT="-Wl,-exported_symbols_list,&quot;$MATLABROOT/extern/lib/maci64/mexFunction.map&quot;"
+    LINKLIBS="-L&quot;$MATLABROOT/bin/maci64&quot; -lmx -lmex -lmat -lc++"
+    LDOPTIMFLAGS="-O"
+    LDDEBUGFLAGS="-g"
+    
+    OBJEXT=".o"
+    LDEXT=".mexmaci64"
+    SETENV="CC=&quot;$CC&quot;
+CXX=&quot;$CC&quot;
+CFLAGS=&quot;$CFLAGS $DEFINES&quot;
+CXXFLAGS=&quot;$CFLAGS $DEFINES&quot;
+COPTIMFLAGS=&quot;$COPTIMFLAGS&quot;
+CXXOPTIMFLAGS=&quot;$COPTIMFLAGS&quot;
+CDEBUGFLAGS=&quot;$CDEBUGFLAGS&quot;
+CXXDEBUGFLAGS=&quot;$CDEBUGFLAGS&quot;
+LD=&quot;$LD&quot;
+LDXX=&quot;$LD&quot;
+LDFLAGS=&quot;$LDFLAGS $LINKLIBS $LINKEXPORT&quot;
+LDDEBUGFLAGS=&quot;$LDDEBUGFLAGS&quot;"
+    />
+    <client>
+        <engine
+        LINKLIBS="$LINKLIBS -leng"
+        LDBUNDLE=""
+        LINKEXPORT=""
+        LDEXT=""
+        />
+       <mbuild
+          CMDLINE150="$MATLABROOT/bin/maci64/macbundle $EXENAME &quot;$EXEDIR&quot;"
+		  CMDLINE200="$LD $LDFLAGS $OBJS $LINKOPTIM $LINKEXPORT $CLIBS $LINKLIBS -o &quot;$EXEDIR$EXENAME.app/Contents/MacOS/$EXENAME&quot;"
+          
+          CFLAGS="-fno-common -arch x86_64 -mmacosx-version-min=$SDKVER -isysroot $ISYSROOT"
+		  DEFINES="-DUNIX -DX11"
+		  LDFLAGS="-arch x86_64 -mmacosx-version-min=$SDKVER -Wl,-syslibroot,$ISYSROOT $LDTYPE $LINKEXPORT -framework CoreFoundation -bind_at_load"
+          LINKEXPORT=""
+          LINKLIBS="-L&quot;$MATLABROOT/runtime/maci64&quot; -lmwmclmcrrt"
+		  MATLABMEX=""
+          LDEXT=".app" 
+		  LDTYPE=""
+        />  
+    </client>
+    <locationFinder>
+        <!--Check for faulty DEVELOPER_DIR environment variable -->
+    	<DEVELOPER_DIR_CHECK> 
+        	<or> 
+        		<not> 
+        			<envVarExists name="DEVELOPER_DIR" /> 
+       			</not> 
+         			<dirExists name="$$" diagnostic="The environment variable DEVELOPER_DIR indicates a folder that does not exist. Please correct or delete this variable before using MEX." /> 
+   		   </or> 
+	</DEVELOPER_DIR_CHECK>
+         <!-- User needs to run "!sudo xcode-select -switch /Applications/Xcode.app/"
+         to configure xcrun.  This creates the file /usr/share/xcode-select/xcode_dir_path -->
+    <XCODE_DIR>
+            <and diagnostic="Xcode appears to be installed, but it has not been configured.  Run &quot;&lt;a href=&quot;matlab:system(['osascript -e ''do shell script ' char(34) 'xcode-select -switch /Applications/Xcode.app' char(34) ' with administrator privileges'''])&quot;&gt;osascript -e 'do shell script &quot;xcode-select -switch /Applications/Xcode.app&quot; with administrator privileges'&lt;/a&gt;&quot; to configure Xcode.  You must be an administrator of this computer to complete this action." >
+                <cmdReturns name="xcode-select -print-path" />
+                <dirExists name="$$" />
+            </and>
+        </XCODE_DIR>
+        <XCRUN_DIR>
+            <and>
+                <cmdReturns name="which xcrun" />
+                <dirExists name="$$" />
+            </and>
+        </XCRUN_DIR>
+        <!-- User needs to agree to license of the version (or higher) that we support -->
+        <!-- <XCODE_AGREED_VERSION>
+            <and diagnostic="Xcode is installed, but its license has not been accepted. Run Xcode and accept its license agreement." >
+                <or>
+                    <cmdReturns name="defaults read com.apple.dt.Xcode IDEXcodeVersionForAgreedToGMLicense"/>
+                    <cmdReturns name="defaults read /Library/Preferences/com.apple.dt.Xcode IDEXcodeVersionForAgreedToGMLicense"/>
+                </or>
+                <cmdReturns name="&#10;agreed=$$ &#10; if echo $agreed | grep -E '[\.\&quot;]' >/dev/null; then &#10; lhs=`expr &quot;$agreed&quot; : '\([0-9]*\)[\.].*'` &#10;  rhs=`expr &quot;$agreed&quot; : '[0-9]*[\.]\(.*\)$'` &#10; if echo $rhs | grep -E '[\.&quot;]' >/dev/null; then &#10; rhs=`expr &quot;$rhs&quot; : '\([0-9]*\)[\.].*'` &#10; fi &#10; if [ $lhs -gt 4 ] || ( [ $lhs -eq 4 ] &amp;&amp; [ $rhs -ge 3 ] ); then &#10; echo $agreed &#10; else &#10; exit 1&#10; fi &#10; fi" />
+            </and>
+        </XCODE_AGREED_VERSION> -->
+        <ISYSROOT>
+            <and>
+                <cmdReturns name="xcode-select -print-path"/>
+                <or>
+                    <dirExists name="$$/SDKs/MacOSX10.9.sdk" />
+                    <dirExists name="$$/SDKs/MacOSX10.10.sdk" />
+					<dirExists name="$$/SDKs/MacOSX10.11.sdk" /> 
+					<dirExists name="$$/SDKs/MacOSX10.12.sdk" /> 
+                    <cmdReturns name="find $$ -name MacOSX10.9.sdk" />
+                    <cmdReturns name="find $$ -name MacOSX10.10.sdk" />
+					<cmdReturns name="find $$ -name MacOSX10.11.sdk" />
+					<cmdReturns name="find $$ -name MacOSX10.12.sdk" />
+                </or>
+            </and>
+        </ISYSROOT>
+        <SDKVER>
+            <and>
+                <and>
+                    <cmdReturns name="xcode-select -print-path"/>
+                    <or>
+                        <dirExists name="$$/SDKs/MacOSX10.9.sdk" />
+                        <dirExists name="$$/SDKs/MacOSX10.10.sdk" />
+						<dirExists name="$$/SDKs/MacOSX10.11.sdk" /> 
+						<dirExists name="$$/SDKs/MacOSX10.12.sdk" /> 
+                        <cmdReturns name="find $$ -name MacOSX10.9.sdk" />
+                        <cmdReturns name="find $$ -name MacOSX10.10.sdk" />
+						<cmdReturns name="find $$ -name MacOSX10.11.sdk" />
+						<cmdReturns name="find $$ -name MacOSX10.12.sdk" />
+                    </or>
+                </and>
+                <cmdReturns name="echo $$ | rev | cut -c1-10 | rev | egrep -oh '[0-9]+\.[0-9]+'" />
+            </and>
+        </SDKVER>
+    </locationFinder>
+</config>

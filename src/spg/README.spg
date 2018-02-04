@@ -1,0 +1,96 @@
+
+                      *****************************
+		      *                           *
+                      *   USING SPG WITH CUTEst   *
+		      *                           *
+                      *****************************
+
+              ( Last modified on 18 Feb 2013 at 11:50:00 )
+
+WHAT IS SPG?
+-----------
+
+SPG is a sprectral projected gradient code for large-scale bound-constrained
+optimization that does not necessarily use matrix factorization.
+
+HOW DO I GET SPG?
+----------------
+
+SPG was written and maintained by J. M. Martínez 
+
+www.ime.unicamp.br/~martinez 	
+Mailing address: 	Mailing address:
+Department of Applied Mathematics, IMECC
+University of Campinas
+Po Box 6065
+Campinas, SP, Brazil 13081-970
+
+and E. G. Birgin 
+
+www.ime.usp.br/~egbirgin
+Department of Computer Science, IME
+University of São Paulo
+Rua do Matão, 1010, Cidade Universitária
+São Paulo, SP, Brazil 05508-090
+
+It is available from 
+
+http://www.ime.usp.br/~egbirgin/tango/downloads.php
+
+
+CREATING THE OBJECT FILES FOR SPG
+----------------------------------
+
+Set the enviroment variable $SPG to the root directory of the downloaded 
+package. To compile the required file, move to this directory and issue the 
+command
+
+  gfortran -c spg.f
+
+(substitute your required fortran compiler for gfortran). This will
+produce the object file spg.o and should reside in $SPG or by
+preference in $CUTEST/objects/(architecture)/(precision)/ 
+for the architecture and precsion you intend to use.
+
+SPG is only available in double precision.
+
+USING THE SPG INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The SPG interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   SPG.SPC     sets values for SPG run-time parameters
+
+If no SPG.SPC file is present in the current directory, the default version is
+copied from the $CUTEST/src/SPG directory. This default contains the following:
+
+ 1         iprint  controls output level (0 = no print)
+ 50000     maxit   maximum number of iterations
+ 500000    maxfc   maximum number of function evaluations
+ 1.0d-06   epsopt  tolerance for the convergence criterion
+
+The reader is referred to the paper quoted below and the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p spg option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+E. G. Birgin, J. M. Martinez and M. Raydan, "Nonmonotone spectral projected 
+gradient methods on convex sets", SIAM Journal on Optimization 10, 
+pp. 1196-1211, 2000.
+
+E. G. Birgin, J. M. Martinez and M. Raydan, "Algorithm 813: SPG - software for 
+convex-constrained optimization", ACM Transactions on Mathematical Software 27,
+pp. 340-349, 2001.
+
+E. G. Birgin and J. M. Martinez, 
+"Large-scale active-set box-constrained optimization method with spectral 
+projected gradients", Computational Optimization and Applications 23, 
+pp. 101-125, 2002.

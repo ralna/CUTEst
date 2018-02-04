@@ -1,0 +1,73 @@
+.\" @(#)ve09ma v1.0 11/2000;
+.TH ve09ma 3M "17 Nov 2000"
+.SH NAME
+ve09ma \- CUTEr VE09 test driver
+
+.SH SYNOPSIS
+ve09ma
+
+.SH DESCRIPTION
+The \fIve09ma\fP main program test drives VE09 on SIF problems from the
+CUTEr distribution.
+
+VE09 is a subroutine for the solution of the general, large, quadratic
+programming problem within a feasible region defined by simple bound
+and linear equlaity constraints. It uses an active set approach in
+which the variables are partitioned into free and fixed variables, the
+latter being fixed at one of their bounds. The status of each variable
+is revised after every iteration.
+ 
+VE09 is part of the HARWELL SUBROUTINE LIBRARY, and was written by
+Nick Gould. It is available from the United Kingdom Atomic Energy
+Authority, Harwell, subject to certain license agreements. It is
+copyrighted jointly by the UKAEA and SERC (Science and Engineering
+Research Council).
+
+.SH USAGE
+To build the \fIprecision\fP precision version, the VE09
+\fIprecision\fP subroutine and dependencies should be concatenated in
+a new file called ve09.f. This file should then be compiled (but not
+linked) and the resulting object file ve09.o placed in the direcotory
+$MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no VE09.SPC file is present in the current directory, the default
+version is copied from $CUTER/common/src/pkg/ve09/. Default
+specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+1000	MAXIT,	the maximum number of iterations,
+F	CONVEX,	the indicator for convexity of the QP.
+.fi
+
+The reader is referred to the paper quoted below, the documentation of
+the routine in the Harwell Subrooutine Library or the code itself if
+he or she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+N.I.M. Gould,
+CSS Report 204,
+Harwell Laboratory, A.E.R.E., Harwell, 1986.
+
+sdve09(1), ve09(1).

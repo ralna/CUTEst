@@ -1,0 +1,26 @@
+#!/bin/bash
+# Definitions for the BOBYQA package in Fortran 90/95
+# N. Gould, D. Orban & Ph. Toint, January 27th, 2013
+
+# The name of the package
+export PACKAGE=bobyqa
+
+# Subdirectory of ${CUTEST}/src where the package lives
+export PACKDIR=bobyqa
+
+# Precision for which the package was written
+# Valid values are "single", "double", "single double" and "double single"
+export PACK_PRECISION="single double"
+
+# Define the name of any package object files used; any object file without
+# a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/
+export PACKOBJS="${BOBYQA}/bobyqa.o ${BOBYQA}/bobyqb.o ${BOBYQA}/altmov.o ${BOBYQA}/prelim.o ${BOBYQA}/rescue.o ${BOBYQA}/trsbox.o ${BOBYQA}/update.o"
+
+# Define package and system libraries using -llibrary to include library.a
+# or library.so together with any nonstandard library paths using -L(path)
+export PACKLIBS=""
+
+# Define the name of the package specification file if any. This possibly
+# precision-dependent file must either lie in the current directory or in
+# ${CUTEST}/src/${PACKDIR}
+export SPECS="BOBYQA.SPC"

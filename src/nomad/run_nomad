@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [[ ${CUTEST+set} != 'set' ]]; then
+    echo "The CUTEST environment variable is not defined."
+    echo "Exiting."
+    exit -1
+fi
+
+. $CUTEST/bin/cutest_envcheck
+[[ $? != 0 ]] && exit $?
+
+. $ARCHDEFS/bin/helper_functions
+
+BLACKBOX='nomad_main'
+X0FILE='x0.txt'
+PARAMETERFILE='NOMAD.SPC'
+
+if [[ ! -x $BLACKBOX ]]; then
+    error "compile black box first."
+    exit -2
+fi
+
+if [[ "$PWD" == "$CUTEST/src/nomad" ]]; then
+    error "run from a different directory."
+    exit -3
+fi
+
+# Obtain number of variables.
+nvar=`./$BLACKBOX --nvar`
+
+# If an initial guess has not been specified, obtain the default guess.
+[[ ! -e $X0FILE ]] && ./$BLACKBOX --x0 > $X0FILE
+
+# Create simple parameters file.
+if [[ ! -e $PARAMETERFILE ]]; then
+    echo "DIMENSION          $nvar" > $PARAMETERFILE
+    echo "BB_EXE             $BLACKBOX" >> $PARAMETERFILE
+    cat $CUTEST/src/nomad/NOMAD.SPC >> $PARAMETERFILE
+fi
+
+# Run NOMAD on current problem.
+nomad $PARAMETERFILE
+exit $?

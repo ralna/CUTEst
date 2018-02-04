@@ -1,0 +1,16 @@
+#!/bin/csh
+
+foreach pack ( runcutest cutest2matlab )
+#foreach pack ( cutest2matlab )
+#foreach pack ( runcutest )
+
+  echo "    " $pack
+  echo "      .. making pdf"
+  pdfroff -e -m man $pack.1 > ../../doc/pdf/$pack.pdf
+  echo "      .. making html"
+  groff -e -m man -T html -P "-Istem $pack-" -P "-i150" $pack.1 \
+    > ${CUTEST}/doc/html/$pack.html
+  mv *.png ${CUTEST}/doc/html
+end
+
+

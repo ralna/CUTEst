@@ -1,0 +1,36 @@
+'\" e  @(#)cutest_cterminate v1.0 12/2012;
+.TH cutest_cterminate 3M "30 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cterminate \- CUTEst tool to remove all workspace used.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cterminate( status )
+.SH DESCRIPTION
+The CUTEST_uterminate subroutine deallocates all workspace arrays created
+since the last call to CUTEST_csetup.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cterminate are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array deallocation error.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Technical Report, Rutherford Appleton Laboratory, 2013.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_csetup(3M), cutest_uterminate(3M), sifdecoder(1).

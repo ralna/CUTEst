@@ -1,0 +1,116 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          ROSENMMX
+
+*   Problem :
+*   *********
+
+*   A nonlinear minmax problem in four variables by Rosen.
+
+*   Source: 
+*   M.M. Makela,
+*   "Nonsmooth optimization",
+*   Ph.D. thesis, Jyvaskyla University, 1990
+
+*   SIF input: Ph. Toint, Nov 1993.
+
+*   classification  LQR2-AN-5-4
+
+VARIABLES
+
+    X1
+    X2
+    X3
+    X4
+    U
+
+GROUPS
+
+ XN OBJ       U         1.0
+
+ XL F1        U         -1.0
+ XL F1        X1        -5.0           X2        -5.0
+ XL F1        X3        -21.0          X4        7.0
+
+ XL F2        U         -1.0 
+ XL F2        X1        5.0            X2        -15.0
+ XL F2        X3        -11.0          X4        -3.0
+
+ XL F3        U         -1.0 
+ XL F3        X1        -15.0          X2        -5.0
+ XL F3        X3        -21.0          X4        -3.0
+
+ XL F4        U         -1.0 
+ XL F4        X1        15.0           X2        -15.0
+ XL F4        X3        -21.0          X4        -3.0
+
+CONSTANTS
+
+    ROSENMMX  F2        80.0
+    ROSENMMX  F3        100.0
+    ROSENMMX  F4        50.0
+
+BOUNDS
+
+*   All variables are free
+
+ FR ROSENMMX  'DEFAULT'
+
+ELEMENT TYPE
+
+ EV SQ        V
+
+ELEMENT USES
+
+ T  X1SQ      SQ
+ V  X1SQ      V                        X1
+
+ T  X2SQ      SQ
+ V  X2SQ      V                        X2
+
+ T  X3SQ      SQ
+ V  X3SQ      V                        X3
+
+ T  X4SQ      SQ
+ V  X4SQ      V                        X4
+
+GROUP USES
+
+ E  F1        X1SQ                     X2SQ
+ E  F1        X3SQ      2.0            X4SQ
+
+ E  F2        X1SQ      11.0           X2SQ      11.0
+ E  F2        X3SQ      12.0           X4SQ      11.0
+
+ E  F3        X1SQ      11.0           X2SQ      21.0
+ E  F3        X3SQ      12.0           X4SQ      21.0
+
+ E  F4        X1SQ      11.0           X2SQ      11.0
+ E  F4        X3SQ      12.0           X4SQ
+
+OBJECT BOUND
+
+*   Solution
+
+*LO SOLTN               -44.0
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      ROSENMMX
+
+INDIVIDUALS
+
+ T  SQ
+ F                      V * V
+ G  V                   V + V
+ H  V         V         2.0
+
+ENDATA
+

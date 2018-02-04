@@ -1,0 +1,188 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          GAUSSELM
+*   Problem :
+*   *********
+
+*   Maximum pivot growth in Gaussian elimination with
+*   complete pivoting.
+
+*   SIF input: Ph.Toint and N. Gould, Dec 1989.
+
+*   classification LOR2-AN-V-V
+
+*   Size of the matrices = n
+
+ IE N                    3          $-PARAMETER
+*IE N                   11          $-PARAMETER
+*IE N                   12          $-PARAMETER
+*IE N                   13          $-PARAMETER
+*IE N                   14          $-PARAMETER
+*IE N                   16          $-PARAMETER
+
+*   other parameter definitions
+
+ IE 1                   1
+ IE 2                   2
+ IA N-1       N         -1
+ RI RN        N
+ RM 2RN       RN        2
+ RM 3RN       RN        3
+
+VARIABLES
+
+ DO K         1                        N
+ DO J         K                        N
+ DO I         K                        N
+ X  X(I,J,K)
+ ND
+
+GROUPS
+
+*  objective function
+
+ DO K         N                        N
+ XN OBJ       X(K,K,K)  -1.0
+ ND
+
+*   elimination constraints
+
+ DO K         1                        N-1
+ IA L         K         1
+ DO I         L                        N
+ DO J         L                        N
+ XE E(I,J,K)  X(I,J,L)  1.0            X(I,J,K)  -1.0
+ ND
+
+*   complete pivoting constraints (submatrices 2 to n-1)
+
+ DO K         2                        N-1
+ IA L         K         1
+ DO I         L                        N
+ XL M(I,K,K)  X(I,K,K)  1.0            X(K,K,K)  -1.0
+ XG P(I,K,K)  X(I,K,K)  1.0            X(K,K,K)  1.0
+ XL M(K,I,K)  X(K,I,K)  1.0            X(K,K,K)  -1.0
+ XG P(K,I,K)  X(K,I,K)  1.0            X(K,K,K)  1.0
+ DO J         L                        N
+ XL M(I,J,K)  X(I,J,K)  1.0            X(K,K,K)  -1.0
+ XG P(I,J,K)  X(I,J,K)  1.0            X(K,K,K)  1.0
+ ND
+
+BOUNDS
+
+ FR GAUSSELM  'DEFAULT'
+
+*   complete pivoting constraints (submatrix 1)
+
+ DO I         1                        N
+ DO J         1                        N
+ XL GAUSSELM  X(I,J,1)  -1.0
+ XU GAUSSELM  X(I,J,1)  1.0
+ ND
+
+*   ensure pivotal elements are nonnegative
+
+ DO K         1                        N
+ XL GAUSSELM  X(K,K,K)  0.0
+ ND
+
+*   normalize first pivot
+
+ FX GAUSSELM  X1,1,1    1.0
+
+START POINT
+
+*   default value for starting point component
+
+ V  GAUSSELM  'DEFAULT' 0.01
+
+ DO K         1                        N
+ DO I         K                        N
+ I+ I+K       I                        K
+ RI RI+K      I+K
+ R/ R         RI+K                     2RN
+ Z  GAUSSELM  X(I,I,K)                 R
+ ND
+
+ DO K         1                        N
+ DO J         K                        N
+ DO I         K                        N
+ I+ I+J       I                        J
+ I+ I+J+K     I+J                      K
+ RI RI+J+K    I+J+K
+ R/ R         RI+J+K                   3RN
+ Z  GAUSSELM  X(I,J,K)                 R
+ ND
+
+ELEMENT TYPE
+
+ EV ELIM      V1                       V2
+ EV ELIM      V3
+
+ELEMENT USES
+
+ T  'DEFAULT' ELIM
+
+ DO K         1                        N-1
+ IA L         K         1
+ DO I         L                        N
+ DO J         L                        N
+ ZV A(I,J,K)  V1                       X(I,K,K)
+ ZV A(I,J,K)  V2                       X(K,J,K)
+ ZV A(I,J,K)  V3                       X(K,K,K)
+ ND
+
+GROUP USES
+
+ DO K         1                        N-1
+ IA L         K         1
+ DO I         L                        N
+ DO J         L                        N
+ XE E(I,J,K)  A(I,J,K)
+ ND
+
+OBJECT BOUND
+
+*   Solutions
+
+*LO SOLTN11             -1.06974D+01
+*LO SOLTN12             -1.18817D+01
+*LO SOLTN14             -1.45949D+01
+*LO SOLTN15             -1.61109D+01
+*LO SOLTN16             -1.80598D+01
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      GAUSSELM
+
+TEMPORARIES
+
+ R  VALUE
+ R  V3SQ
+
+INDIVIDUALS
+
+ T  ELIM
+
+ A  VALUE               V1 * V2 / V3
+ A  V3SQ                V3 * V3
+
+ F                      VALUE
+
+ G  V1                  V2 / V3
+ G  V2                  V1 / V3
+ G  V3                  - VALUE / V3
+
+ H  V1        V2        1.0 / V3
+ H  V1        V3        - V2 / V3SQ
+ H  V2        V3        - V1 / V3SQ
+ H  V3        V3        2.0 * VALUE / V3SQ
+
+ENDATA

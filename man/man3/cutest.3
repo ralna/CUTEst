@@ -1,0 +1,427 @@
+'\" e  @(#)cutest v1.3 12/2015;
+.TH cutest 3 "23 Dec 2015" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEst \- a Constrained and Unconstrained Testing Environment
+for optimization software using Safe Threads.
+
+.SH SYNOPSIS
+CUTEst is an evolution of the earlier Fortran 77 package CUTEer
+that avoids the latter's use of thread-unsafe common. CUTEst is written
+in Fortran 2003, but the Fortran 77-style subroutine interfaces mean
+that it may be easily called from other languages such as C and
+packages such as Matlab; hooks to Matlab are available.
+
+Interfaces to a number of popular optimization packages are provided.
+
+.SH DESCRIPTION
+CUTEST provides a user-callable interface to any optimization problem
+written in Standard Input Format (SIF) and subsequently decoded
+from its SIF file by the script \fIsifdecode\fP.
+The problem under consideration is to minimize or maximize an
+objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject perhaps to general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function in SIF is group-partially separable and
+all constraint functions are partially separable, but the user
+need not be aware of this. The user will be able to compute
+function, gradient and Hessian values at a specfied point for a
+variety of relevant functions including the Lagrangian function
+.EQ
+l(x,y) = f(x) + y sup T c(x).
+.EN
+Matrices may be rquested in
+dense, sparse and finite-element formats, and matrix-vector products
+between these matrices and user-provided vectors may be obtained.
+Evaluations may be performed in parallel on shared-memory machines if
+required.
+
+.LP
+.SH TOOLS AVAILABLE
+Separate evaluation tools are provided for unconstrained and constrained
+problems. Both unthreaded and threaded versions are available
+when this is relevant.
+
+Unconstrained problems:
+.TP 3
+.B cutest_udimen \fP(both threaded and unthreaded)
+determine the number of variables.
+.TP
+.B cutest_usetup \fP(unthreaded) and \fBcutest_usetup_threaded \fP(threaded)
+setup internal data structures and determine variable bounds.
+.TP
+.B cutest_unames \fP(both threaded and unthreaded)
+determine the names of the problem and the variables.
+.TP
+.B cutest_uvartype \fP(both threaded and unthreaded)
+determine whether the variables are continuous or discrete.
+.TP
+.B cutest_udimsh \fP(both threaded and unthreaded)
+determine the number of nonzeros in the sparse Hessian.
+.TP
+.B cutest_udimse \fP(both threaded and unthreaded)
+determine the number of nonzeros in the finite-element Hessian.
+.TP
+.B cutest_ufn \fP(unthreaded) and \fBcutest_ufn_threaded \fP(threaded)
+evaluate the objective function value.
+.TP
+.B cutest_ugr \fP(unthreaded) and \fBcutest_ugr_threaded \fP(threaded)
+evaluate the gradient of the objective function.
+.TP
+.B cutest_uofg \fP(unthreaded) and \fBcutest_uofg_threaded \fP(threaded)
+evaluate both the values and gradients of the objective function.
+.TP
+.B cutest_udh \fP(unthreaded) and \fBcutest_udh_threaded \fP(threaded)
+evaluate the Hessian of the objective function as a dense matrix.
+.TP
+.B cutest_ugrdh \fP(unthreaded) and \fBcutest_ugrdh_threaded \fP(threaded)
+evaluate the objective gradient and dense Hessian.
+.TP
+.B cutest_ushp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of the Hessian of the objective function.
+.TP
+.B cutest_ush \fP(unthreaded) and \fBcutest_ush_threaded \fP(threaded)
+evaluate the Hessian of the objective function as a sparse matrix.
+.TP
+.B cutest_ugrsh \fP(unthreaded) and \fBcutest_ugrsh_threaded \fP(threaded)
+evaluate the objective gradient and sparse Hessian.
+.TP
+.B cutest_ueh \fP(unthreaded) and \fBcutest_ueh_threaded \fP(threaded)
+evaluate the Hessian of the objective function as a finite-element matrix.
+.TP
+.B cutest_ugreh \fP(unthreaded) and \fBcutest_ugreh_threaded \fP(threaded)
+evaluate the objective gradient and finite-element Hessian.
+.TP
+.B cutest_uhprod \fP(unthreaded) and \fBcutest_uhprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the objective function with a vector.
+.TP
+.B cutest_ushprod \fP(unthreaded) and \fBcutest_ushprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the objective function with a
+sparse vector.
+.TP
+.B cutest_ubandh \fP(unthreaded) and \fBcutest_ubandh_threaded \fP(threaded)
+obtain the part of the Hessian of the objective that lies within
+a specified band.
+.TP
+.B cutest_ureport \fP(unthreaded) and \fBcutest_ureport_threaded \fP(threaded)
+discover how many evaluations have occured and how long this has taken.
+.TP
+.B cutest_uterminate \fP(both unthreaded and threaded)
+remove internal data structures when they are no longer needed.
+
+.LP
+Constrained problems:
+.TP
+.B cutest_cdimen \fP(both threaded and unthreaded)
+determine the number of variables and constraints.
+.TP
+.B cutest_csetup \fP(unthreaded) and \fBcutest_csetup_threaded \fP(threaded)
+setup internal data structures and determine variable and constraint bounds.
+.TP
+.B cutest_cnames \fP(both threaded and unthreaded)
+determine the names of the problem, the variables and the constraints.
+.TP
+.B cutest_connames \fP(both threaded and unthreaded)
+determine the names of the constraints.
+.TP
+.B cutest_cvartype \fP(both threaded and unthreaded)
+determine whether the variables are continuous or discrete.
+.TP
+.B cutest_cdimsj \fP(both threaded and unthreaded)
+determine the number of nonzeros in sparse constraint Jacobian.
+.TP
+.B cutest_cdimsh \fP(both threaded and unthreaded)
+determine the number of nonzeros in the sparse Hessian.
+.TP
+.B cutest_cdimse \fP(both threaded and unthreaded)
+determine the number of nonzeros in the finite-element Hessian.
+.TP
+.B cutest_cdimschp \fP(both threaded and unthreaded)
+determine the total number of nonzeros in the products of all
+the constraint Hessians with a vector.
+.TP
+.B cutest_cfn \fP(unthreaded) and \fBcutest_cfn_threaded \fP(threaded)
+evaluate the objective function and constraint values.
+.TP
+.B cutest_cgr \fP(unthreaded) and \fBcutest_cgr_threaded \fP(threaded)
+evaluate the gradients of the objective function and constraints.
+.TP
+.B cutest_cofg \fP(unthreaded) and \fBcutest_cofg_threaded \fP(threaded)
+evaluate both the value and gradient of the objective function.
+.TP
+.B cutest_cofsg \fP(unthreaded) and \fBcutest_cofsg_threaded \fP(threaded)
+evaluate both the value and sparse gradient of the objective function.
+.TP
+.B cutest_csgrp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of the gradients of the objective function
+and constraints
+.TP
+.B cutest_csgr \fP(unthreaded) and \fBcutest_csgr_threaded \fP(threaded)
+evaluate the sparse gradients of the objective function and constraints.
+.TP
+.B cutest_ccfg \fP(unthreaded) and \fBcutest_ccfg_threaded \fP(threaded)
+evaluate the values and gradients of the constraints.
+.TP
+.B cutest_ccfsg \fP(unthreaded) and \fBcutest_ccfsg_threaded \fP(threaded)
+evaluate the values and sparse gradients of the constraints.
+.TP
+.B cutest_clfg \fP(unthreaded) and \fBcutest_clfg_threaded \fP(threaded)
+evaluate both the value and gradient of the Lagrangian function.
+.TP
+.B cutest_ccifg \fP(unthreaded) and \fBcutest_ccifg_threaded \fP(threaded)
+evaluate the value and gradient of an individual constraint.
+.TP
+.B cutest_ccifsg \fP(unthreaded) and \fBcutest_ccifsg_threaded \fP(threaded)
+evaluate the value and sparse gradient of an individual constraint.
+.TP
+.B cutest_cdh \fP(unthreaded) and \fBcutest_cdh_threaded \fP(threaded)
+evaluate the Hessian of the Lagrangian function as a dense matrix.
+.TP
+.B cutest_cdhc \fP(unthreaded) and \fBcutest_cdhc_threaded \fP(threaded)
+evaluate the Hessian of the Lagrangian function not including the
+objective as a dense matrix.
+.TP
+.B cutest_cidh \fP(unthreaded) and \fBcutest_cidh_threaded \fP(threaded)
+evaluate the Hessian of the objective function or
+an individual constraint as a dense matrix.
+.TP
+.B cutest_cgrdh \fP(unthreaded) and \fBcutest_cgrdh_threaded \fP(threaded)
+evaluate the constraint Jacobian and Hessian of the Lagrangian function
+as dense matrices.
+.TP
+.B cutest_cshp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of the Hessian of the Lagrangian function.
+.TP
+.B cutest_csh \fP(unthreaded) and \fBcutest_csh_threaded \fP(threaded)
+evaluate the Hessian of the Lagrangian function as a sparse matrix.
+.TP
+.B cutest_cshc \fP(unthreaded) and \fBcutest_cshc_threaded \fP(threaded)
+evaluate the Hessian of the Lagrangian function not
+including the objective as a sparse matrix.
+.TP
+.B cutest_cish \fP(unthreaded) and \fBcutest_cish_threaded \fP(threaded)
+evaluate the Hessian of the objective function or
+an individual constraint as a sparse matrix.
+.TP
+.B cutest_csgrshp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of the gradients of the objective function
+and constraints and the Hessian of the Lagrangian function
+.TP
+.B cutest_csgrsh \fP(unthreaded) and \fBcutest_csgrsh_threaded \fP(threaded)
+evaluate the constraint Jacobian and Hessian of the Lagrangian function
+as sparse matrices.
+.TP
+.B cutest_ceh \fP(unthreaded) and \fBcutest_ceh_threaded \fP(threaded)
+evaluate the Hessian of the Lagrangian function as a finite-element matrix.
+.TP
+.B cutest_csgreh \fP(unthreaded) and \fBcutest_csgreh_threaded \fP(threaded)
+evaluate the constraint Jacobian as a sparse matrix and the
+Hessian of the Lagrangian function as a finite-element matrix.
+.TP
+.B cutest_chprod \fP(unthreaded) and \fBcutest_chprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the Lagrangian function with a vector.
+.TP
+.B cutest_cshprod \fP(unthreaded) and \fBcutest_cshprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the Lagrangian function with a
+sparse vector.
+.TP
+.B cutest_chcprod \fP(unthreaded) and \fBcutest_chcprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the Lagrangian function not
+including the objective with a vector.
+.TP
+.B cutest_cshcprod \fP(unthreaded) and \fBcutest_cshcprod_threaded \fP(threaded)
+evaluate the product of the Hessian of the Lagrangian function not
+including the objective with a sparse vector.
+.TP
+.B cutest_cjprod \fP(unthreaded) and \fBcutest_cjprod_threaded \fP(threaded)
+evaluate the product of the constraint Jacobian or its transpose with a vector.
+.TP
+.B cutest_csjprod \fP(unthreaded) and \fBcutest_csjprod_threaded \fP(threaded)
+evaluate the product of the constraint Jacobian or its transpose with a
+sparse vector.
+.TP
+.B cutest_cchprodsp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern needed when computing the products of the
+constraint Hessians with a vector.
+.TP
+.B cutest_cchprods \fP(unthreaded) and \fBcutest_cchprods_threaded \fP(threaded)
+evaluate the products of the constraint Hessians with a vector.
+.TP
+.B cutest_creport \fP(unthreaded) and \fBcutest_creport_threaded \fP(threaded)
+discover how many evaluations have occured and how long this has taken.
+.TP
+.B cutest_cterminate \fP(both unthreaded and threaded)
+remove internal data structures when they are no longer needed.
+
+.LP
+Both unconstrained problems and constrained problems:
+
+.TP
+.B cutest_pname \fP(both threaded and unthreaded)
+determine the name of the problem before initialization
+calls to cutest_u/csetup[_threaded]
+.TP
+.B cutest_probname \fP(both threaded and unthreaded)
+determine the name of the problem.
+.TP
+.B cutest_varnames \fP(both threaded and unthreaded)
+determine the names of the variables.
+.SH APPLICATION USAGE
+A call to cutest_u/csetup[_threaded] must precede calls to any other
+evaluation tool with the exception of cutest_pname and cutest_u/cdimen.
+Once cutest_u/cterminate[_threaded].
+has been called, no further calls should be made without first recalling
+cutest_u/csetup[_threaded].
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecode(1),
+cutest_udimen(3M),
+cutest_usetup(3M),
+cutest_usetup_threaded(3M),
+cutest_unames(3M),
+cutest_uvartype(3M),
+cutest_udimsh(3M),
+cutest_udimse(3M),
+cutest_ufn(3M),
+cutest_ufn_threaded(3M),
+cutest_ugr(3M),
+cutest_ugr_threaded(3M),
+cutest_uofg(3M),
+cutest_uofg_threaded(3M),
+cutest_udh(3M),
+cutest_udh_threaded(3M),
+cutest_ugrdh(3M),
+cutest_ugrdh_threaded(3M),
+cutest_ush(3M),
+cutest_ush_threaded(3M),
+cutest_ugrsh(3M),
+cutest_ugrsh_threaded(3M),
+cutest_ueh(3M),
+cutest_ueh_threaded(3M),
+cutest_ugreh(3M),
+cutest_ugreh_threaded(3M),
+cutest_uhprod(3M),
+cutest_uhprod_threaded(3M),
+cutest_ushprod(3M),
+cutest_ushprod_threaded(3M),
+cutest_ubandh(3M),
+cutest_ubandh_threaded(3M),
+cutest_ureport(3M),
+cutest_ureport_threaded(3M),
+cutest_uterminate(3M),
+cutest_cdimen(3M),
+cutest_csetup(3M),
+cutest_csetup_threaded(3M),
+cutest_cnames(3M),
+cutest_connames(3M),
+cutest_cvartype(3M),
+cutest_cdimsj(3M),
+cutest_cdimsh(3M),
+cutest_cdimse(3M),
+cutest_cdimchp(3M),
+cutest_cfn(3M),
+cutest_cfn_threaded(3M),
+cutest_cgr(3M),
+cutest_cgr_threaded(3M),
+cutest_cofg(3M),
+cutest_cofg_threaded(3M),
+cutest_cofsg(3M),
+cutest_cofsg_threaded(3M),
+cutest_csgr(3M),
+cutest_csgr_threaded(3M),
+cutest_ccfg(3M),
+cutest_ccfg_threaded(3M),
+cutest_ccfsg(3M),
+cutest_ccfsg_threaded(3M),
+cutest_ccifg(3M),
+cutest_ccifg_threaded(3M),
+cutest_ccifsg(3M),
+cutest_ccifsg_threaded(3M),
+cutest_cdh(3M),
+cutest_cdh_threaded(3M),
+cutest_cdhc(3M),
+cutest_cdhc_threaded(3M),
+cutest_cidh(3M),
+cutest_cidh_threaded(3M),
+cutest_cgrdh(3M),
+cutest_cgrdh_threaded(3M),
+cutest_csh(3M),
+cutest_csh_threaded(3M),
+cutest_cshc(3M),
+cutest_cshc_threaded(3M),
+cutest_cish(3M),
+cutest_cish_threaded(3M),
+cutest_csgrsh(3M),
+cutest_csgrsh_threaded(3M),
+cutest_ceh(3M),
+cutest_ceh_threaded(3M),
+cutest_csgreh(3M),
+cutest_csgreh_threaded(3M),
+cutest_chprod(3M),
+cutest_chprod_threaded(3M),
+cutest_cshprod(3M),
+cutest_cshprod_threaded(3M),
+cutest_chcprod(3M),
+cutest_chcprod_threaded(3M),
+cutest_cshcprod(3M),
+cutest_cshcprod_threaded(3M),
+cutest_cjprod(3M),
+cutest_cjprod_threaded(3M),
+cutest_csjprod(3M),
+cutest_csjprod_threaded(3M),
+cutest_cchprods(3M),
+cutest_cchprods_threaded(3M),
+cutest_creport(3M),
+cutest_creport_threaded(3M),
+cutest_cterminate(3M),
+cutest_probname(3M),
+cutest_varnames(3M).

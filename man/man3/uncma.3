@@ -1,0 +1,93 @@
+.\" @(#)uncma v1.0 11/2000;
+.TH uncma 3M "17 Nov 2000"
+.SH NAME
+uncma \- CUTEr UNCMIN test driver
+
+.SH SYNOPSIS
+uncma
+
+.SH DESCRIPTION
+The \fIuncma\fP main program test drives UNCMIN on SIF problems from the
+CUTEr distribution.
+
+The UNCMIN package is designed for unconstrained minimization and has
+options that include both line search and trust region approaches. The
+provided options include analytic gradients or difference
+approximations with analytic Hessians or finite difference Hessians
+(from analytic or finite difference gradients) or secant methods
+(BFGS).
+
+.SH USAGE
+For correct performance, IEEE flags should be set for the compiler,
+wherever appropriate.  (Otherwise, the machine precision EPSM may not
+be calculated correctly by UNCMIN.)  On an RS/6000, for example, the
+UNCMIN source should be compiled with at least the following flags:
+ 
+xlf -qrndsngl -c uncmins.f
+ 
+where uncmins.f is the file containing the single precision UNCMIN source.
+Of course, you may wish to use additional flags for optimization, debugging,
+etc.
+
+The resulting object file uncmins.o should be placed in your directory
+$MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no UNCMIN.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/uncmin/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+1.0	TYPX	typical size for each component of X
+1.0	FSCALE	estimate of scale of minimization
+		 function
+1	METHOD	algorithm to use to solve minimization
+		 problem
+0	IEXP	=0 if minimization function not
+		 expensive to evaluate (0/1)
+8	MSG	message to inhibit certain automatic
+		 checks + output
+-1	NDIGIT	number of good digits in minimization
+		 function (-1 = all)
+1000	ITNLIM	maximum number of allowable iterations
+1	IAGFLG	=0 if analytic gradient not supplied
+1	IAHFLG	=0 if analytic hessian  not supplied
+-1.0	DLT	initial trust region radius
+		 (-1 = uncmin chooses)
+0.00001	GRADTL	gradient tolerance for convergence
+0.00001	STEPL	minimum steplength
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIA modular system of algorithms for unconstrained
+minimization\fP,
+J.E. Koontz, R.B. Schnabel, and B.E. Weiss,
+ACM Transactions on Mathematical Software,
+vol. 11, pp. 419-440, 1985.
+
+sdunc(1), unc(1).

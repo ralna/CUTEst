@@ -1,0 +1,512 @@
+#!/bin/bash
+###############################################################################
+#
+# runcutest: the new and improved runpackage
+#
+# N. Gould, D. Orban & Ph. Toint for GOT Productions, 2006, 2013
+#
+###############################################################################
+
+if [[ ${CUTEST+set} != 'set' ]]; then
+    echo 'The environment variable CUTEST is not set. Aborting.'
+    exit 1
+fi
+
+. $CUTEST/bin/cutest_envcheck
+[[ $? != 0 ]] && exit $?
+. $ARCHDEFS/bin/helper_functions
+
+# Default settings
+
+Initialize_Settings() {
+
+    # Architecture to use
+    ARCH=''
+    let architecture_set=0
+
+    # Package to run
+    PKG=''
+    let package_set=0
+
+    # Problem to decode
+    PROBLEM=''
+    let problem_set=0
+
+    # If there are compiled, library versions of the level-1 blas (basic linear
+    # algebra subprograms), set BLAS to a list of names of the object library
+    # suffix -lx, where the object library libx.a contains relevant blas. For
+    # instance if the blas are shared between object libraries libblas1.a and
+    # libblas2.a, BLAS should be set to "-lblas1 -lblas2", noting that those in
+    # libblas1.a will take precedence over those in libblas2.a. If compiled
+    # blas are unavailable, BLAS should be set to ""
+    BLAS=""
+    MYBLAS=""
+    let blas_set=0
+    LAPACK=""
+    MYLAPACK=""
+    let lapack_set=0
+
+    # directory for the main executable file
+    EXEC=${PWD}
+
+    # PRECISION = single (single precision), = double (double precision)
+    PRECISION="double"
+
+    # KEEP = 0 (discard f load module after use), = 1 (keep it)
+    let KEEP=0
+
+    # RECOMPILE = 0 (by default, do not recompile the test problem)
+    # RECOMPILE = 1 -> force recompilation
+    let RECOMPILE=0
+
+    # stash = 0 (by default, place intermediate files in current dir)
+    # stash = 1 -> stash them in temporary dir
+    let stash=0
+
+    # DEBUG = 0 (normal execution),
+    # DEBUG = 1 (keep the load module and do *not* execute it)
+    let DEBUG=0
+
+    # PROFILE = 0 (normal execution)
+    # PROFILE = 1 (instrument code for profiling)
+    let PROFILE=0
+
+    # OUTPUT = 0 (summary output), = 1 (detailed output from decoder)
+    let OUTPUT=0
+
+    # LIMIT = 0 (no cputime limit)
+    let LIMIT=0
+
+    # Specify alternate library paths
+    ALT_LIB_PATH=' '
+
+    # Specify extra libraries
+    XTRALIBS=''
+
+    # Specify constrained or unconstrained problem (for Matlab interface)
+    # This option is now deprecated
+    export constraint_flag=''
+
+    # Specify whether or not to display compilation commands
+    let show_commands=0
+
+    # Specify whether or not to display current settings
+    let show_config=0
+
+    # Options to pass to sifdecoder
+    sd_opts=( )
+
+    # default ls
+    LS=/bin/ls
+}
+
+###############################################################################
+
+# Display help
+
+Display_Usage() {
+
+    printf "Syntax: ${thisprog} -A architecture -p pkg [options...]\n"
+    printf 'Here is a summary of the available options.\n'
+    printf 'See the man page for further details.\n\n'
+    printf '  -A  or --architecture \tspecify architecture to use\n'
+    printf '  -p  or --package      \tspecify package name\n'
+    printf '  -sp or --single       \trun single precision version of package\n'
+    printf '  -h  or --help         \tdisplay this help message\n'
+    printf '  -k  or --keep         \tkeep executable after run is over\n'
+    printf '  -r  or --rebuild      \tforce recompilation of problem subroutines\n'
+    printf '  -S  or --stash        \tstash problem files quietly\n'
+    printf '  -o  or --output       \tset verbosity level\n'
+    printf '  -t  or --limit        \tset a time limit on the run\n'
+    printf '  -c  or --cfortran     \tcompile mixed C/Fortran source code\n'
+    printf '  -b  or --blas         \tspecify BLAS library\n'
+    printf '  -K  or --lapack       \tspecify LAPACK library\n'
+    printf '  -g  or --debug        \tcompile debug version of executable\n'
+    printf '  -pg or --profile      \tinstrument code for profiling\n'
+    printf '  -D  or --decode       \tspecify problem to decode and compile\n'
+    printf '  -u  or --uncons       \tspecify unconstrained problem (Matlab---deprecated)\n'
+    printf '  -Lpath                \tadd path to libraries path\n'
+    printf '  -lrary                \tlink in library.a or library.so\n'
+    printf '        --command       \tdisplay compilation commands\n'
+    printf '        --config        \tdisplay current settings\n'
+    printf 'All other options are passed unchanged to sifdecoder\n'
+}
+
+###############################################################################
+
+# Read command-line arguments
+
+Parse_Arguments() {
+
+    while [[ $# > 0 ]]; do
+        case "$1" in
+            -A|--architecture)  ARCH="$2"
+                           let architecture_set=1
+                           shift
+                           ;;
+            -p|--package)  PKG="$2"
+                           let package_set=1
+                           shift
+                           ;;
+            -sp|--single)  PRECISION="single"
+                           ;;
+            -h|--help)     Display_Usage
+                           exit 0
+                           ;;
+            -k|--keep)     let KEEP=1
+                           ;;
+            -r|--rebuild)  let RECOMPILE=1
+                           ;;
+            -S|--stash)    let stash=1
+                           ;;
+            -o|--output)   OUTPUT=$2
+                           shift
+                           ;;
+            -t|--limit)    let LIMIT=$2
+                           shift
+                           ;;
+            -c|--cfortran) FFLAGS="${FFLAGS[@]} ${CCFFLAGS[@]}"
+                           # Used to mix C and Fortran code
+                           ;;
+            -b|--blas)     [[ "$2" != 'none' ]] && MYBLAS="$2"
+                           # Note: This allows to set BLAS to nothing
+                           let blas_set=1
+                           shift
+                           ;;
+            -K|--lapack)   [[ "$2" != 'none' ]] && MYLAPACK="$2"
+                           let lapack_set=1
+                           shift
+                           ;;
+            -g|--debug)    let NEW=1
+                           let KEEP=1
+                           let DEBUG=1
+                           FFLAGS=${FDEBUGFLAGS[@]}
+                           ;;
+            -pg|--profile) let NEW=1
+                           let PROFILE=1
+                           FFLAGS="${FFLAGS[@]} ${FPROFILEFLAGS[@]}"
+                           ;;
+            -D|--decode)   PROBLEM="$2"
+                           let problem_set=1
+                           shift
+                           ;;
+            -u|--uncons)   export constraint_flag='unconstrained'
+                           ;;
+            -L*)           ALT_LIB_PATH=( "${ALT_LIB_PATH[@]}" "$1" )
+                           ;;
+            -l*)           XTRALIBS=( "${XTRALIBS[@]}" "$1" )
+                           ;;
+            --command)     let show_commands=1
+                           ;;
+            --config)      let show_config=1
+                           ;;
+            *)             # Pass this option unchanged to sifdecoder
+                           sd_opts=( ${sd_opts[@]} "$1" )
+                           ;;
+        esac
+        shift
+    done
+}
+
+###############################################################################
+
+# Decode problem
+
+Decode_Problem() {
+    # Problem name is passed as argument #1
+    # Temporary working dir is passed as argument #2
+    cd $2
+    ${RM} ${EXEC}/run_${PACKAGE}
+    ${RM} ELFUN.f GROUP.f RANGE.f EXTER.f
+    ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
+    if [[ ${SIFDECODE+set} == 'set' ]]; then
+        echo "sifdecoder -A ${ARCH} -st ${START} ${sd_opts[@]} $1"
+        ${SIFDECODE}/bin/sifdecoder -A ${ARCH} ${sd_opts[@]} $1
+        cd - 2>&1 >/dev/null
+        [[ $? != 0 ]] && exit $?
+    else
+        error "${thisprog}: environment variable SIFDECODE not set."
+        cd -
+        exit 7
+    fi
+}
+
+###############################################################################
+
+# Run specified package
+
+Run_Package() {
+
+    (( OUTPUT )) && printf "\nRunning run_${PACKAGE} on current test problem ...\n"
+    (( LIMIT  )) && ulimit -t ${LIMIT}
+    ${EXEC}/run_${PACKAGE}
+
+    # Tidy up the current directory, deleting all junk.
+    (( KEEP == 0 )) && ${RM} ${EXEC}/run_${PACKAGE}
+}
+
+###############################################################################
+
+# Run pre script
+
+Run_Pre() {
+
+    # Run package-dependent commands before solving if any were defined
+    [[ -e ${CUTEST}/bin/${PACKAGE}_pre ]] && . ${CUTEST}/bin/${PACKAGE}_pre
+}
+
+###############################################################################
+
+# Run post script
+
+Run_Post() {
+
+    # Run post-solving package-dependent commands if any were defined
+    [[ -e ${CUTEST}/bin/${PACKAGE}_post ]] && . ${CUTEST}/bin/${PACKAGE}_post
+}
+
+###############################################################################
+
+# Clean up after run
+
+Clean_Up() {
+
+    # Tidy up the current directory, deleting all junk.
+    if (( KEEP == 0 )); then
+        ${RM} ${EXEC}/run_${PACKAGE}
+        ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
+    fi
+}
+
+###############################################################################
+
+# Perform requested operations
+
+thisprog=`basename $0`
+
+# Initialize default settings
+Initialize_Settings
+
+# Parse command-line options
+Parse_Arguments "$@"
+
+# Check that environment is correctly defined
+. ${CUTEST}/bin/cutest_envcheck
+[[ $? != 0 ]] && exit $?
+
+if [[ -z "$ARCH" ]]; then
+  if [[ -z "$MYARCH" ]]; then
+    error ' no architecture specified and environment variable MYARCH is unset.
+ Either specificy architecture with -A option or set variable MYARCH.
+ and re-run.'
+    exit 2
+  else
+    ARCH=${MYARCH}
+  fi
+fi
+
+# Initialize architecture-dependent parts
+if [[ ! -e ${CUTEST}/bin/sys/${ARCH} ]]; then
+    error "ARCH=${ARCH} but ${CUTEST}/bin/sys/${ARCH} does not exist."
+    exit 3
+fi
+. ${CUTEST}/bin/sys/${ARCH}
+
+(( $blas_set == 1 )) && BLAS=$MYBLAS
+(( $lapack_set == 1 )) && LAPACK=$MYLAPACK
+
+if (( show_config )); then
+    printf '========================\n'
+    printf "  F77 compile:   ${FORTRAN}\n"
+    printf "  General flags: ${FFLAGS}\n"
+    printf "  Joint F77/C flags: ${CCFFLAGS}\n"
+    printf "  Debug flags:   ${FDEBUGFLAGS}\n"
+    printf "  Profile flags: ${FPROFILEFLAGS}\n"
+    printf '\n'
+    printf "  Libraries:     ${SPECIALLIBS}\n"
+    printf '========================\n'
+    printf '\n'
+fi
+
+# Ensure that a package was specified
+if (( package_set == 0 )); then
+    error "Please specify a package to run using -p
+Try $0 --help for more information"
+    exit 1
+fi
+
+# If -D is not specified, problem is in current dir. Do not stash.
+(( problem_set == 0 )) && let stash=0
+(( stash )) && WorkingDir=`mktemp -d -t cutestXXXXXXXX` || WorkingDir=${PWD}
+if (( show_config )); then
+  echo "Working in $WorkingDir"
+fi
+
+# Decode problem if required
+(( problem_set )) && Decode_Problem ${PROBLEM} $WorkingDir
+
+# Source package definitions
+
+if [[ -x ${CUTEST}/packages/${ARCH}/${PRECISION}/${PKG} ]]; then
+   . ${CUTEST}/packages/${ARCH}/${PRECISION}/${PKG}
+elif [[ -x ${CUTEST}/packages/defaults/${PKG} ]]; then
+   . ${CUTEST}/packages/defaults/${PKG}
+else
+   error "Cannot find a ${PKG} definitions file in
+ ${CUTEST}/packages/${ARCH}/${PRECISION}
+or
+ ${CUTEST}/packages/defaults"
+   exit 9
+fi
+[[ $? != 0 ]] && exit $?
+
+# Main driver for the package
+DRIVER=${PACKAGE}_main
+
+# Check that the required precision is available
+PACK_PRECISION=( "${PACK_PRECISION}" )
+let precision_ok=0
+for prec in ${PACK_PRECISION}
+do
+    if [[ $prec == ${PRECISION} ]]; then
+        let precision_ok=1
+        break
+    fi
+done
+if (( precision_ok == 0 )); then
+    echo "Package ${PACKAGE} is not available in ${PRECISION} precision"
+    exit 6
+fi
+
+Run_Pre
+
+# Ensure CUTEst library is present
+LIBDIR=${CUTEST}/objects/${ARCH}/${PRECISION}
+if [[ ! -e ${LIBDIR}/libcutest.a  ]]; then
+    [[ -w $LIBDIR ]] && let writable=1 || let writable=0
+    if (( writable )); then
+        cd ${LIBDIR}
+        ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} cutest_silent
+        cd ${WorkingDir}
+    else
+        error "${LIBDIR}/libcutest.a does not exist and
+You do not have write permissions to $LIBDIR"
+        exit 8
+    fi
+fi
+
+# Make sure package is up to date
+[[ -w ${CUTEST}/objects ]] && let writable=1 || let writable=0
+if (( writable )); then
+    cd ${CUTEST}/src/${PKG}
+    ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} tools ${PKG}
+else
+    warning "You do not have write permissions to ${CUTEST}/objects
+Attempting to continue..."
+fi
+
+cd ${WorkingDir}
+# If needed, use the package spec file
+if [[ ${SPECS} != "" ]]; then
+  if [[ ! -e ~/.cutest/specs ]] ; then
+    mkdir -p ~/.cutest/specs
+    chmod 755 -Rf ~/.cutest
+  fi
+  if [[ ! -e ${SPECS} ]]; then
+     if [[ -e ${CUTEST}/src/${PACKDIR}/${SPECS} ]]; then
+       if [[ ! -e ~/.cutest/specs/${SPECS} ]]; then
+         cp ${CUTEST}/src/${PACKDIR}/${SPECS} ~/.cutest/specs/${SPECS}
+       fi
+       ${LN} -fs ~/.cutest/specs/${SPECS} ${SPECS}
+     else
+        warning "Cannot find spec file ${SPECS}---skipping"
+     fi
+  fi
+fi
+
+# Ensure that the current test problem has been compiled.
+(( OUTPUT )) && printf '\nCompiling current test problem if necessary ...\n'
+(( RECOMPILE )) && ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
+for i in  ELFUN GROUP RANGE
+do
+    if [[ ! -e ${i}.o  ]]; then
+        ${CP} ${i}.f ${i}.f90
+        command="${FORTRAN} ${PROBFLAGS} ${i}.f90"
+        (( show_commands )) && echo $command
+        $command
+        [[ $? != 0 ]] && exit $?
+        ${RM} ${i}.f90
+    fi
+done
+
+EXTER=""
+[[ -e EXTER.f && ! -s EXTER.f ]] && ${RM} EXTER.f
+if [[ -e EXTER.f ]]; then
+    ${CP} EXTER.f EXTER.f90
+    command="${FORTRAN} ${PROBFLAGS} EXTER.f90"
+    (( show_commands )) && echo $command
+    $command
+    [[ $? != 0 ]] && exit $?
+    ${RM} EXTER.f90
+    [[ -e EXTER.o && -z EXTER.o ]] && ${RM} EXTER.o || EXTER="EXTER.o"
+fi
+
+# The package-dependent object files are either fully in full-specified
+# indididual directories or in ${CUTEST}/${PRECISION}/bin
+PACKOBJS=( ${PACKOBJS} )
+nobjs=${#PACKOBJS[@]}
+for (( i = 0; i < nobjs ; i++ ))
+do
+    [[ ! -e ${PACKOBJS[$i]} ]] && PACKOBJS[$i]=${CUTEST}/objects/${ARCH}/${PRECISION}/${PACKOBJS[$i]}
+done
+cd ${WorkingDir}
+
+# If user requested Matlab, the procedure is special
+if [[ ${PKG} == "matlab" ]]; then
+    if [[ ${MYMATLAB+set} != 'set' ]]; then
+        error "${thisprog}: environment variable MYMATLAB not set"
+        exit 10
+    fi
+    MEXFORTRAN=${MYMATLAB}/bin/mex
+    if [[ ! -x ${MEXFORTRAN} ]]; then
+        error "Mex command ${MEXFORTRAN} does not exist or is not executable"
+        exit 11
+    fi
+    (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
+    outputName=mcutest
+    command="${MEXFORTRAN} -cxx -I${CUTEST}/include -output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -lgfortran -g"
+    (( show_commands )) && echo "$command"
+    $command
+    Run_Post
+    Clean_Up
+    exit $?
+elif [[ ${PKG} == "nomad" ]]; then
+    # Link all the PACK and tools files together.
+    (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
+    command="${FORTRAN} ${FFLAGS} -o ${DRIVER} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${BLAS} ${LAPACK} ${XTRALIBS[@]}"
+    (( show_commands )) && echo "$command"
+    $command
+    command="$CP $CUTEST/src/nomad/run_nomad ./"
+    (( show_commands )) && echo "$command"
+    $command
+    let KEEP=1
+else
+    # Link all the PACK and tools files together.
+    (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
+    command="${FORTRAN} ${FFLAGS} -o run_${PACKAGE} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${BLAS} ${LAPACK} ${XTRALIBS[@]}"
+    (( show_commands )) && echo "$command"
+    $command
+fi
+
+[[ ${PWD} != ${EXEC} ]] && ${MV} run_${PACKAGE} ${EXEC}/run_${PACKAGE}
+
+#  run PACK on the current test problem unless -debug is set.
+
+if (( DEBUG )); then
+    echo '  debug enabled, load module is in '${EXEC}'/'
+else
+    Run_Package
+    Run_Post
+    Clean_Up
+fi
+exit 0

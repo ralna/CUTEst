@@ -1,0 +1,129 @@
+.\" @(#)stnma v1.0 11/2000;
+.TH stnma 3M "17 Nov 2000"
+.SH NAME
+stnma \- CUTEr STENMIN test driver
+
+.SH SYNOPSIS
+stnma
+
+.SH DESCRIPTION
+The \fIstnma\fP main program test drives STENMIN on SIF problems from the
+CUTEr distribution.
+
+STENMIN is an optimization package which uses tensor methods to
+minimize a nonlinear unconstrained problem where the Hessian is large
+and sparse. The software allows the user to select between a tensor
+method and a standard method based upon a quadratic model.  The tensor
+method models the objective function by a fourth-order model, where
+the third- and fourth-order terms are chosen such that the extra cost
+of forming and solving the model is small.
+
+STENMIN has been written and is distributed by
+
+       Ali Bouaricha
+       Argonne National Laboratory
+       MCS Division
+       9700 South Cass Avenue
+       Argonne, IL 60439, USA.
+       E-MAIL:  ali@silvaco.com ????
+
+.SH USAGE
+Compile (but do not link) stenmin.f. The resulting object file stenmin.o
+should be placed in your directory $MYCUTER/\fIprecision\fP/bin/.
+
+Starting from the files distributed by A. Bouaricha, perform the
+following steps on a UNIX system (or equivalent actions on other systems).
+
+1) Use the makefile supplied in the distribution to obtain the double
+   precision version of the stenmin.f and colmor.f files:
+ 
+       f77 -o todble todble.f
+       make stenmind.f
+       make colmord.f
+
+2) Concatenate these two files:
+ 
+       cat colmord.f >> stenmind.f
+
+3) In the resulting stenmind.f, remove the BLAS functions DCOPY, DNRM2, DDOT and DSCAL. (CUTEr also uses these BLAS subroutines. They are contained in the CUTEr Fortran file named linpac.f. To avoid multiply defined subroutines when STENMIN is linked with the CUTE tools, the duplicate BLAS subroutines must be removed from STENMIN.)
+
+4) Compile (but do not link) stenmind.f. The resulting object file stenmind.o should be placed in your directory $MYCUTER/\fIprecision\fP/bin/.
+ 
+5) You should also have a compiled double precision version of the Harwell Subroutine MA27 named ma27d.o in your directory $MYCUTER/\fIprecision\fP/bin/. This subroutine is requested by STENMIN.
+ 
+The steps for obtaining the single precision version of STENMIN are identical,
+except that the following substitutions should be made:
+
+.nf
+.ta 1.5i 2i 3i
+todble	-->	tosngl
+stenmind.f	-->	stenmins.f
+colmord.f	-->	colmors.f
+DCOPY	-->	SCOPY
+DNRM2	-->	SNRM2
+DDOT	-->	SDOT
+DSCAL	-->	SSCAL
+stenmind.o	-->	stenmins.o
+ma27d.o	-->	ma27s.o
+.fi
+ 
+Note: If you have the Harwell Subroutine Library already available on your
+system, an additional copy of MA27 is unnecessary.  You should edit the file
+$MYCUTER/bin/stn to set the BLAS variable adequately.
+
+.SH NOTE
+If no STENMIN.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/stenmin/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+1000	ILIM,	maximum number of iterations
+0.00001	GRADTL,	relative gradient stopping tolerance
+2	GRDFLG,	gradient availability & checking flag
+2	HSNFLG,	Hessian availability & checking flag
+1.0	FSCALE,	typical value of objective function
+1.0	TYPX,	typical value of problem variables
+1	METHOD,	method used (0=Newton, 1=tensor )
+15	NDIGIT,	# accurate digits in function values
+1	MSG,	output specifier
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.   
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fISTENMIN: A software package for large, sparse
+unconstrained optimization using tensor methods\fP,
+A. Bouaricha,
+Preprint MCS-P451-0794, Argonne National Laboratory,
+Argonne, Illinois, 1994.
+
+\fITensor methods for large, sparse unconstrainted
+optimization using tensor methods\fP,
+A. Bouaricha,
+Preprint MCS-P452-0794, Argonne National Laboratory,
+Argonne, Illinois, 1994.
+
+sdstn(1), stn(1).

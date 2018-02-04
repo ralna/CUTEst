@@ -1,0 +1,117 @@
+'\" e  @(#)cutest_cdhc_threaded v1.3 10/2015;
+.TH cutest_cdhc_threaded 3M "7 Oct 2015" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cdhc_threaded \- CUTEst tool to evaluate 
+the Hessian of the constraint part of the Lagrangian.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cdhc_threaded( status, n, m, X, Y, lh1, H_val, thread )
+.SH DESCRIPTION
+The CUTEST_cdhc_threaded subroutine evaluates 
+the Hessian matrix of the constraint part of the Lagrangian function 
+.EQ
+y sup T c(x)
+.EN
+for the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point 
+.EQ
+(x,y) = 
+.EN
+(X,Y).
+The matrix is stored as a dense matrix. 
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable 
+and all constraint functions are partially separable.
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cdhc_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B Y \fP[in] - real/double precision
+an array which gives the Lagrange multipliers,
+.TP
+.B lh1 \fP[in] - integer
+the actual declared size of the leading dimension of H_val (with lh1 no
+smaller than n),
+.TP
+.B H_val \fP[out] - real/double precision
+a two-dimensional array which gives the value 
+of the Hessian matrix of the constraint part
+of the Lagrangian function evaluated at X and Y,
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_cdh_threaded(3M), sifdecoder(1)

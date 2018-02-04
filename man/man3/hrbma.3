@@ -1,0 +1,41 @@
+.\" @(#)hrbma v1.0 11/2000;
+.TH hrbma 3M "17 Nov 2000"
+.SH NAME
+hrbma \- write out CUTEr data into Harwell-Boeing/Rutherford-Boeing
+format.
+
+.SH SYNOPSIS
+hrbma
+
+.SH DESCRIPTION
+The \fIhrbma\fP main program converts a decoded SIF problem to
+Harwell-Boeing or Rutherford-Boeing format.
+
+The object module \fIhrbma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Launch sdhrb(1) or hrb(1).
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+

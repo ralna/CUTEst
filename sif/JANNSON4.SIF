@@ -1,0 +1,147 @@
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          JANNSON4
+
+*   Problem :
+*   *********
+
+*   Source:  example 4 in
+*   C. Jannson
+*   "Convex-concave extensions"
+*   BIT 40(2) 2000:291-313
+
+*   SIF input: Nick Gould, September 2000
+
+*   classification OQR2-AN-V-2
+
+*IE N                   3              $-PARAMETER
+ IE N                   10000          $-PARAMETER
+
+*   Other parameters
+
+ IE 0                   0
+ IE 1                   1
+ IE 2                   2
+
+VARIABLES
+
+ DO I         1                        N
+ X  X(I)
+ ND
+
+GROUPS
+
+ XN G         X2        -1.0
+ XN G0        X1        1.0
+ DO I         1                        N
+ XN G(I)      X(I)      1.0
+ ND
+ XL Q
+ XL P
+
+CONSTANTS
+
+ X  JANNSON4  G0        1.0
+ DO I         1                        N
+ X  JANNSON4  G(I)      1.0
+ ND
+ X  JANNSON4  Q         1.0
+ X  JANNSON4  P         0.1
+
+BOUNDS
+
+ LO JANNSON4  'DEFAULT' -1.0
+ UP JANNSON4  'DEFAULT' 1.0
+
+ELEMENT TYPE
+
+ EV SQR       X
+ EV PROD      X                        Y
+
+ELEMENT USES
+
+ DO I         1                        N
+ XT E(I)      SQR
+ ZV E(I)      X                        X(I)
+ ND
+
+ XT P         PROD
+ ZV P         X                        X1
+ ZV P         Y                        X2
+
+GROUP TYPE
+
+ GV L2        GVAR
+ GV L22       GVAR
+
+GROUP USES
+
+ XT G         L22
+ XE G         E(1)
+
+ DO I         0                        N
+ XT G(I)      L2
+ ND
+
+ DO I         1                        N
+ XE Q         E(I)
+ ND
+
+ XE P         P
+
+OBJECT BOUND
+
+*   Least square problems are bounded below by zero
+
+ LO JANNSON4            0.0
+
+*   Solution
+
+*XL SOLUTION             9.80197D+03    $ n=10000
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      JANNSON4
+
+INDIVIDUALS
+
+ T  SQR
+ F                      X * X
+ G  X                   X + X
+ H  X         X         2.0
+
+ T  PROD
+ F                      X * Y
+ G  X                   Y
+ G  Y                   X
+ H  X         Y         1.0
+
+ENDATA
+
+*********************
+* SET UP THE GROUPS *
+* ROUTINE           *
+*********************
+
+GROUPS        JANNSON4
+
+INDIVIDUALS
+
+ T  L2
+ F                      GVAR * GVAR
+ G                      GVAR + GVAR
+ H                      2.0
+
+ T  L22
+ F                      0.5 * GVAR * GVAR
+ G                      GVAR
+ H                      1.0
+
+ENDATA

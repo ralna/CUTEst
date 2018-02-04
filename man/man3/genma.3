@@ -1,0 +1,47 @@
+.\" @(#)genma v1.0 11/2000;
+.TH genma 3M "17 Nov 2000"
+.SH NAME
+genma \- CUTEr generic test driver
+
+.SH SYNOPSIS
+genma
+
+.SH DESCRIPTION
+The \fIgenma\fP main program is a generic test driver for SIF problems
+from the CUTEr distribution.
+
+The object module \fIgenma.o\fP is stored in
+$MYCUTER/\fIprecision\fP/bin, where \fIprecision\fP is either "single"
+or "double", according to your local installation.
+
+.SH USAGE
+Compile (but do not link) the generic solver source code and copy the
+resulting object file in the directory
+$MYCUTER/\fIprecision\fP/bin. Launch using your own modification of
+gen(1) or sdgen(1).
+
+.SH NOTE
+If no GEN.SPC file is present in the current directory,
+the default version is copied from $CUTER/common/src/pkg/gen/.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+

@@ -1,0 +1,71 @@
+.\" @(#)la04ma v1.0 12/2002;
+.TH la04ma 3M "13 Dec 2002"
+.SH NAME
+la04ma \- CUTEr LA04 test driver
+
+.SH SYNOPSIS
+la04ma
+
+.SH DESCRIPTION
+The \fIla04ma\fP main program test drives LA04 on SIF problems from the
+CUTEr distribution.
+
+LA04 is a subroutine for the solution of the general, large, linear
+programming problem within a feasible region defined by simple bound
+and linear equlaity constraints. It uses a steepest-edge simplex approach in
+which the variables are partitioned into free and fixed variables, the
+latter being fixed at one of their bounds. The status of each variable
+is revised after every iteration.
+ 
+LA04 is part of HSL (formerly the Harwell Subroutine Library), and was written 
+by John Reid. It is available from Hyprotech UK Ltd, subject to certain 
+license agreements. It is copywritten jointly by CCLRC and Hyprotech UK.
+
+.SH USAGE
+To build the \fIprecision\fP precision version, the LA04
+\fIprecision\fP subroutine and dependencies should be concatenated in
+a new file called la04.f. This file should then be compiled (but not
+linked) and the resulting object file la04.o placed in the direcotory
+$MYCUTER/\fIprecision\fP/bin/.
+
+.SH NOTE
+If no LA04.SPC file is present in the current directory, the default
+version is copied from $CUTER/common/src/pkg/la04/. Default
+specifications are as follows:
+
+.nf
+.ta 1i 2i 3i
+1000	MAXIT,  the maximum number of iterations.
+6	IOUNIT, output unit ( <= 0 to supress )
+T	WRITES, write the solution to a file?
+.fi
+
+The reader is referred to the paper quoted below, the documentation of
+the routine in HSL or the code itself if he or she wishes to modify these 
+parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fILA04, a Fortran 77 code for steepest-edge simplex linear programming\fP, 
+J.K. Reid, Report RAL TR-2001-???, Rutherford Appleton Laboratory, 2001.
+   
+sdla04(1), la04(1).

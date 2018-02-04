@@ -1,0 +1,91 @@
+
+                      *****************************
+		      *                           *
+                      *   USING VF13 WITH CUTEst  *
+		      *                           *
+                      *****************************
+
+              ( Last modified on 19 Jan 2013 at 14:40:00 )
+
+WHAT IS  VF13?
+--------------
+
+VF13 is a subroutine for the solution of the general nonlinear programming
+problem, involving a possibly nonlinear objective function and possibly
+nonlinear inequality and equality constraints.  It uses a sequential quadratic
+programming (SQP) approach and allows for a non-monotonic decrease of the
+merit function using safeguards (the watchdog technique).
+
+HOW DO I GET VF13?
+------------------
+
+VF13 is part of the HARWELL SUBROUTINE LIBRARY, and was written by
+M.J.D. Powell. It is available without charge and is copyrighted
+jointly by the UKAEA and SERC (Science and Engineering Research Council).
+
+See 
+
+  http://www.hsl.rl.ac.uk/archive/index.html
+
+
+CREATING THE OBJECT MODULE FOR VF13
+-----------------------------------
+
+For building the double precision version, the VF13 double precision
+subroutine and dependencies should be concatenated in a new file called
+vf13d.f. This file should then be compiled (but not linked) and the resulting
+object file vf13d.o should then be placed in either the user-defined directory 
+$VF13 or in $CUTEST/objects/(architecture)/double/ for the architecture 
+you intend to use.
+
+The procedure is identical for the single precision, except that the names
+vf13d.f, vf13d.o and double are replaced by vf13s.f and vf13s.o and single, 
+respectively.
+
+
+USING THE VF13 INTERFACE TOOL
+-----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The VF13 interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   VF13.SPC       sets values for VF13 run-time parameters
+
+If no VF13.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/vf13 directory. 
+This default file is as follows:
+
+      1000    MAXFUN, the maximum number of function calls,
+         0    IPRINT, the output specifier (0 = no internal printout),
+ 0.0000001    ACCREQ, the accuracy requirement,
+         F    DEBUG,  true for maximal printout before and after VF13.
+
+The reader is referred to the papers quoted below, the documentation of the
+routine in the Harwell Subrooutine Library or the code itself if he or 
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p vf13 option.
+See the man page for runcutest for more details of other options.
+
+
+REFERENCES
+----------
+
+M.J.D. Powell,
+"Extensions to subroutine VF02",
+in "System Modeling and Optimization", Lectures Notes in Control and
+Information Sciences 38, R.F. Drenick and F. Kozin (eds.), Springer Verlag,
+Heidelberg, pp. 520-538, 1982.
+
+R.M. Chamberlain, C. Lemarechal, H.C. Pedersen and M.J.D. Powell,
+"The watchdog technique for forcing convergence in algorithms for constrained
+optimization",
+Mathematical Programming Study 16, pp. 1-17, 1982.
+
+M.J.D. Powell,
+"On the quadratic programming algorithm of Goldfarb and Idnani",
+Mathematical Programming Study 25, pp. 46-61, 1985.
+

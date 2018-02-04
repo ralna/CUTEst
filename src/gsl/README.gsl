@@ -1,0 +1,83 @@
+                     **************************
+                     *                        *
+                     *  USING GSL WITH CUTEst *
+                     *                        *
+                     **************************
+
+              ( Last modified on 2 Dec 2015 at 14:50:00 )
+
+WHAT IS GSL?
+------------
+
+The GNU Scientific Library (GSL) is a numerical library for C and C++
+programmers. It is free software under the GNU General Public License.
+
+CUTEst provides an interface specifically to the GSL least-squares fitting
+package, multifit_nlin. See
+
+https://www.gnu.org/software/gsl/manual/html_node/Least_002dSquares-Fitting.html
+
+
+HOW DO I GET GSL?
+-----------------
+
+See
+
+  http://www.gnu.org/software/software.html
+
+GSL is available as a dowloadable installed package libgsl0ldbl with most Linux
+distributions.
+
+COMPILING THE OBJECT MODULE FOR GSL
+------------------------------------------
+
+The GSL file gsl_main.c should be compiled, and the resulting
+file gsl_main.o should be placed in either the user-defined directory
+$GSL or in $CUTEST/objects/(architecture)/double/ for the architecture
+you intend to use.
+
+There is no single-precision version.
+
+USING THE GSL INTERFACE TOOL
+-----------------------------------
+
+The command to solve a problem in SIF format contained in the file
+probname.SIF is
+
+runcutest -p gsl -D probname.SIF
+
+See the man page for runcutest for more details or other options.
+
+If no GSL.SPC file is present in the current directory,
+then the default parameter values specified by GSL are used.
+Optionally, new parameter values to overwrite the default values can
+be stored in a file GSL.SPC in the directory where the runcutest
+command is executed.  The default file is as follows:
+
+200                   maximum number of iterations
+1e-12		      absolute tolerance
+1e-8                  relative tolerance
+1                     stopping test (1=our own, 2=delta_x, 3=gsl grad)
+1                     write summary? (not 1 == don't write)
+GSL.sum               summary file (max 20 characters)
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p gsl option.
+See the man page for runcutest for more details of other options.
+
+REFERENCE
+---------
+
+The GSL Reference Manual is available online,
+
+ http://www.gnu.org/software/gsl/manual/html_node/  (HTML)
+ http://www.gnu.org/software/gsl/manual/gsl-ref.pdf (PDF)
+
+The manual has been published as a printed book (under the GNU Free
+Documentation License), the latest edition is
+
+ GNU Scientific Library Reference Manual - Third Edition (January 2009),
+ M. Galassi et al, ISBN 0954612078 (paperback) RRP $39.95.
+

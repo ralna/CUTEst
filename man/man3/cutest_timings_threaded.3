@@ -1,0 +1,122 @@
+'\" e  @(#)cutest_timings v1.0 03/2016;
+.TH cutest_timings_threaded 3 "3 Mar 2016" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_timings_threaded \- CUTEst tool to find the CPU time used by a CUTEst evaluation
+subrotine.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_timings_threaded( status, name, time, thread )
+.SH DESCRIPTION
+The CUTEST_timings_threaded subroutine obtains the CPU time used by an individual
+CUTEst evaluation subroutine.
+
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_timings_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 26 for a call to an unknown
+evaluation routine,
+
+.TP 5
+.B name \fP[in] - character variable of variable length that either contains
+the name of a CUTEst subroutine, or one of the words 'start' or 'stop'.
+Supported values are:
+
+.TP 6
+ 'start' starts to record timings for the CUTEst evaluation tools -
+    recordings are initially turned off
+.TP
+ 'stop' pauses the recording until another 'start' occurs
+.TP
+ name is the name of a CUTEst evaluation tool,
+ where name is one of strings
+ 'cutest_ccfg', 'cutest_ccfsg', 'cutest_cch',
+ 'cutest_cchprods', 'cutest_ccifg', 'cutest_ccifsg',
+ 'cutest_cdh', 'cutest_cdhc', 'cutest_cdimchp',
+ 'cutest_ceh', 'cutest_cfn', 'cutest_cgr',
+ 'cutest_cgrdh', 'cutest_chcprod', 'cutest_chprod',
+ 'cutest_cidh', 'cutest_cish', 'cutest_cjprod',
+ 'cutest_clfg', 'cutest_cofg', 'cutest_cofsg',
+ 'cutest_csgr', 'cutest_csgreh', 'cutest_csgrsh',
+ 'cutest_csh', 'cutest_cshc', 'cutest_cshcprod',
+ 'cutest_cshp', 'cutest_cshprod', 'cutest_csjprod',
+ 'cutest_ubandh', 'cutest_udh', 'cutest_ueh',
+ 'cutest_ufn', 'cutest_ugr', 'cutest_ugrdh',
+ 'cutest_ugreh', 'cutest_ugrsh', 'cutest_uhprod',
+ 'cutest_uofg', 'cutest_ush', 'cutest_ushp' or
+ 'cutest_ushprod',
+.TP 5
+.B time \fP[out] - real that gives the recorded time for the named tool
+ (or 0.0 if name is 'start', 'stop' or an unrecognised tool).
+.TP
+.B thread \fP[in] - integer
+statistics are for the specified thread; threads are numbered
+from 1 to the value threads set when calling CUTEST_usetup_threaded or
+CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecode(1),
+cutest(3M),
+cutest_ccfg_threaded(3M),
+cutest_ccfsg_threaded(3M),
+cutest_cch_threaded(3M),
+cutest_cchprods_threaded(3M),
+cutest_ccifg_threaded(3M),
+cutest_ccifsg_threaded(3M),
+cutest_cdh_threaded(3M),
+cutest_cdhc_threaded(3M),
+cutest_cdimchp_threaded(3M),
+cutest_ceh_threaded(3M),
+cutest_cfn_threaded(3M),
+cutest_cgr_threaded(3M),
+cutest_cgrdh_threaded(3M),
+cutest_chcprod_threaded(3M),
+cutest_chprod_threaded(3M),
+cutest_cifn_threaded(3M),
+cutest_cigr_threaded(3M),
+cutest_cisgr_threaded(3M),
+cutest_cidh_threaded(3M),
+cutest_cish_threaded(3M),
+cutest_cjprod_threaded(3M),
+cutest_clfg_threaded(3M),
+cutest_cofg_threaded(3M),
+cutest_cofsg_threaded(3M),
+cutest_csgr_threaded(3M),
+cutest_csgreh_threaded(3M),
+cutest_csgrsh_threaded(3M),
+cutest_csh_threaded(3M),
+cutest_cshc_threaded(3M),
+cutest_cshcprod_threaded(3M),
+cutest_cshp_threaded(3M),
+cutest_cshprod_threaded(3M),
+cutest_csjprod_threaded(3M),
+cutest_ubandh_threaded(3M),
+cutest_udh_threaded(3M),
+cutest_ueh_threaded(3M),
+cutest_ufn_threaded(3M),
+cutest_ugr_threaded(3M),
+cutest_ugrdh_threaded(3M),
+cutest_ugreh_threaded(3M),
+cutest_ugrsh_threaded(3M),
+cutest_uhprod_threaded(3M),
+cutest_uofg_threaded(3M),
+cutest_ush_threaded(3M),
+cutest_ushp_threaded(3M),
+cutest_ushprod_threaded(3M)

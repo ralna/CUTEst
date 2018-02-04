@@ -1,0 +1,121 @@
+'\" e  @(#)cutest_cish_threaded v1.0 12/2012;
+.TH cutest_cish_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cish_threaded \- CUTEst tool to evaluate the Hessian of an individual 
+problem function, in sparse format.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cish_threaded( status, n, X, iprob, 
+nnzh, lh, H_val, H_row, H_col, thread )
+.SH DESCRIPTION
+The CUTEST_cish_threaded subroutine evaluates the Hessian of a particular 
+constraint function or the objective function for the problem decoded
+from a SIF file by the script \fIsifdecoder\fP at the point X, and
+possibly its gradient. The matrix is stored in sparse format.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_cish_threaded are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error, 4 for an out-of-range thread,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP 
+.B iprob \fP[in] - integer
+the number of the problem function to be considered. If iprob = 0, the
+Hessian of the objective function will be evaluated, while if iprob =
+i > 0, that of the i-th constraint will be evaluated.
+.TP
+.B nnzh \fP[out] - integer
+the number of nonzeros in H_val,
+.TP
+.B lh \fP[in] - integer
+the actual declared dimensions of H_val, H_row and H_col,
+.TP
+
+.B H_val \fP[out] - real/double precision
+an array which gives the values of the Hessian matrix of the required
+problem function evaluated at X. The i-th entry of H_val gives
+the value of the nonzero in row H_row(i) and column H_col(i). Only the
+upper triangular part of the Hessian is stored,
+.TP
+.B H_row \fP[out] - integer
+an array which gives the row indices of the nonzeros of the required Hessian
+matrix evaluated at X,
+.TP
+.B H_col \fP[out] - integer
+an array which gives the column indices of the nonzeros of the required Hessian
+matrix evaluated at X, and
+.TP
+.B thread \fP[in] - integer
+thread chosen for the evaluation; threads are numbered
+from 1 to the value threads set when calling CUTEST_csetup_threaded.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1).

@@ -1,0 +1,89 @@
+
+***************************
+* SET UP THE INITIAL DATA *
+***************************
+
+NAME          HS21
+
+*   Problem :
+*   *********
+
+*   Source: problem 21 in
+*   W. Hock and K. Schittkowski,
+*   "Test examples for nonlinear programming codes",
+*   Lectures Notes in Economics and Mathematical Systems 187, Springer
+*   Verlag, Heidelberg, 1981.
+
+*   SIF input: A.R. Conn, April 1990
+
+*   classification QLR2-AN-2-1
+
+VARIABLES
+
+    X1
+    X2
+
+GROUPS
+
+ N  OBJ
+
+ G  CON1      X1        10.0           X2        -1.0
+
+CONSTANTS
+
+    HS21      OBJ       100.0
+    HS21      CON1      10.0
+
+BOUNDS
+
+ LO HS21      X1        2.0
+ UP HS21      X1        50.0
+ LO HS21      X2        -50.0
+ UP HS21      X2        50.0
+
+START POINT
+
+    HS21      X1        -1.0
+    HS21      X2        -1.0
+
+ELEMENT TYPE
+
+ EV SQ        V1
+
+ELEMENT USES
+
+ XT 'DEFAULT' SQ
+
+ V  E1        V1                       X1
+ V  E2        V1                       X2
+
+GROUP USES
+
+ E  OBJ       E1        0.01           E2
+
+OBJECT BOUND
+
+ LO HS21                -100.0
+
+*   Solution
+
+*LO SOLTN               -99.96
+
+ENDATA
+
+***********************
+* SET UP THE FUNCTION *
+* AND RANGE ROUTINES  *
+***********************
+
+ELEMENTS      HS21
+
+INDIVIDUALS
+
+ T  SQ
+ F                      V1 * V1
+ G  V1                  V1 + V1
+ H  V1        V1        2.0
+
+ENDATA
+

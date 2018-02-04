@@ -1,0 +1,29 @@
+CUTEst packages/defaults README file.			    January 2013
+
+========================================================================
+
+  Please read this file prior to any modification in this directory.
+
+========================================================================
+
+This directory contains a file  for each supported external package that
+provides  values   for  the  environment   variables  PACKAGE,  PACKDIR,
+PACK_PRECISION, PACKOBJS,  PACKLIBS and SPECS  that are required  by the
+CUTEst  script runcutest.  Precise  definitions of  these variables  are
+given in  the file ./example. If  a user wishes to  override the default
+value for  a particular  package, she should  copy the  relevant package
+file  into  the  directory  ../(architecture/(precision)/ and  edit  the
+required entries  in the newly-created file. The  runcutest package will
+check   $CUTEST/packages/(architecture/(precision)/  in   precedence  to
+$CUTEST/packages/defaults/ when assigning environment variables.
+
+========================================================================
+
+			      Good luck!
+
+Nicholas I.M. Gould,	  		        nick.gould@stfc.ac.uk,
+Dominique Orban,				     orban@cerfacs.fr,
+Philippe L. Toint.			    philippe.toint@fundp.ac.be
+
+========================================================================
+

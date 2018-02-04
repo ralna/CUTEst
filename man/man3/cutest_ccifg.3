@@ -1,0 +1,104 @@
+'\" e  @(#)cutest_ccifg v1.0 12/2012;
+.TH cutest_ccifg 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_ccifg \- CUTEst tool to evaluate a single constraint function value and
+possibly its gradient.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_ccifg( status, n, icon, X, ci, GCI_val, grad )
+.SH DESCRIPTION
+The CUTEST_ccifg subroutine evaluates the value of a particular constraint
+function of the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point X, and
+possibly its gradient in the constrained minimization case.
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and
+all constraint functions are partially separable.
+
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_ccifg are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B icon \fP[in] - integer
+the index of the constraint function to be evaluated,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B ci \fP[out] - real/double precision
+the value of constraint function icon at X,
+.TP
+.B GCI_val \fP[out] - real/double precision
+an array which gives the gradient of constraint function icon
+evaluated at X,
+.TP
+.B grad \fP[in] - logical
+a logical variable which should be set .TRUE. if the gradient of the
+constraint functions are required and .FALSE. otherwise.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+sifdecoder(1), cutest_ccifsg(3)

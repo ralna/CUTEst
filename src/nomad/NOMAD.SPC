@@ -1,0 +1,5 @@
+BB_OUTPUT_TYPE     OBJ
+X0                 x0.txt
+INITIAL_MESH_SIZE  1
+MAX_BB_EVAL        100
+DISPLAY_STATS      %5dBBE  %8.1eOBJ

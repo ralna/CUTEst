@@ -1,0 +1,262 @@
+CUTEst is the latest evolution of CUTE, the constrained and
+unconstrained testing environment for numerical optimization.
+
+To get CUTEst working, here is what you need to do:
+
+0. If are reading this, you have probably got this far, but in any case ...
+
+   To use CUTEst, you will need to install three packages, ARCHDefs, SIFDecode
+   and CUTEst, as well as yor desired subset of the CUTEst test problems in
+   SIF format.
+
+   To download ARCHDefs, issue the command
+
+      svn checkout --username anonymous \
+        http://ccpforge.cse.rl.ac.uk/svn/cutest/archdefs/trunk ./archdefs
+
+    in a directory you can write to; use a blank password if prompted.
+
+   To download SIFDecode, issue the command
+
+      svn checkout --username anonymous \
+        http://ccpforge.cse.rl.ac.uk/svn/cutest/sifdecode/trunk ./sifdecode
+
+    in the same directory.
+
+    To download CUTEst,
+
+        svn checkout --username anonymous \
+          http://ccpforge.cse.rl.ac.uk/svn/cutest/cutest/trunk ./cutest
+
+    in the same directory.
+
+    This will produce three sub-directories
+
+    ./archdefs
+    ./sifdecode
+    ./cutest
+
+    To obtain problems from the CUTEr/st and related test sets, see
+
+       http://tracsvn.mathappl.polymtl.ca/trac/cuter/wiki/ProblemCollections
+
+    or
+
+       http://www.cuter.rl.ac.uk/Problems/mastsif.shtml
+
+1.  Now set the three environment variables $ARCHDEFS, $SIFDECODE and $CUTEST
+    to point at the directories ./archdefs, ./sifdecode and ./cutest
+    respectively. For example, if archdefs lies in the directory /home/rsimpson
+    and you use the C (csh) or TC (tcsh) shell, issue the command
+
+      setenv ARCHDEFS /home/rsimpson/archdefs  (etc)
+
+    while if you have the Bourne (sh) or Bash (bash) shell, use
+
+      export ARCHDEFS="/home/rsimpson/archdefs"  (etc).
+
+    To make these permanent, place them in your ~/.cshrc or ~/.bashrc
+    shell startup file.
+
+2.  Now, move to the ./cutest directory, enter the command
+
+     $ARCHDEFS/install_optsuite
+
+    and follow the instructions. You may install as many machine/os/compiler
+    combinations (architectures) as you wish, and you will have access to each
+    independently of the others.
+
+    After each installation, read the instructions provided to set
+    further envioronment variables as required.
+
+       ARCHDEFS      <- full path to./archdefs
+       SIFDECODE     <- full path to ./sifdecode
+       CUTEST        <- full path to ./cutest
+       MYARCH        <- the "architecture" you wish to use by default
+       MASTSIF       <- the directory containing your SIF test examples
+
+    and optionally (for Matlab use)
+
+       MYMATLAB      <- your system Matlab installation directory
+       MYMATLABARCH  <- the "architecture" you wish to use with Matlab (if any)
+
+    as indicated by the installation scripts, to ensure that
+
+       $SIFDECODE/bin and $CUTEST/bin
+
+    are on your search path ($PATH$) and that
+
+       $SIFDECODE/man and $CUTEST/man
+
+    are on your man path ($MANPATH$). See README.csh (for C-shell users)
+    and README.sh (for Bourne, bash and korn shell users).
+
+3.  To test that the installation works, issue the commands
+
+      cd $SIFDECODE/src ; make -f $SIFDECODE/makefiles/$MYARCH test
+      cd $CUTEST/src ; make -f $CUTEST/makefiles/$MYARCH test
+
+4.  Both SIFDecode and CUTEst will be updated whenever we fix a bug or
+    add a new interface. From time to time you may wish to check this by
+    issuing the commands
+
+      cd $SIFDECODE ; update_sifdecode [arch]
+      cd $CUTEST ; update_cutest [arch]
+
+    This will fetch all the updates and recompile both packages for the
+    specified architecture, if any, or for $MYARCH if it has been defined.
+
+    To update on a non-default installed version, set 'arch' in the
+    above two lines to a string of the form
+
+        machine.os.compiler
+
+    that corresponds to your desired architecture - a list of all
+    installed architectures can be found by issuing the command
+
+       ls -1 $SIFDECODE/versions
+
+    for SIFdecode and
+
+       ls -1 $CUTEST/versions
+
+    for CUTEst.
+
+5.  You may change compiler flags and the like by editing the files
+
+       $CUTEST/makefiles/$MYARCH
+       $CUTEST/bin/sys/$MYARCH
+
+    (and the same for $SIFDECODE), and then issuing the commands
+
+       cd $SIFDECODE/src ; make -f $SIFDECODE/makefiles/$MYARCH cleanall
+       make -f $SIFDECODE/makefiles/$MYARCH
+       cd $CUTEST/ src ; make -f $CUTEST/makefiles/$MYARCH cleanall
+       make -f $CUTEST/makefiles/$MYARCH
+
+    For non-defaults installations, substiture "machine.os.compiler"
+    for $MYARCH.
+
+6.  CUTEst contains interfaces to, ** BUT NOT THE SOURCE CODE FOR ** ,
+    a number of popular linear and nonlinear optimization packages.
+    To see which, enter the command
+
+      ls -1 $CUTEST/package
+
+    The package "pack" has relevant information recorded in two places
+
+    1. the directory $CUTEST/src/"pack"
+    2. the file $CUTEST/package/"pack"
+
+    The first contains
+
+      * the fortran or C interface between CUTEst and the package
+        ("pack"_main.f/f90/c),
+      * a dummy call to the package that serves as a test example
+        ("pack"_test.f/f90/c),
+      * a list of options in a file marked "PACK".SPC, where PACK
+        is the capitalized package name,
+      * a README."pack" that gives details of how to obtain the external
+        package, how and where to install it, and what the options in
+        "PACK".SPC actually mean, and
+      * a makefile component (makemaster).
+
+    The second lists five variables that must be set to use the
+    external package. The user should check that these make sense,
+    and if necessary edit them to be consistent with the installed version
+    of the package as described in the aforementioned README."pack".
+
+7.  Once the package has been installed, it should simply be a matter
+    of issuing the command
+
+       runcutest -p "pack" -D problem
+
+    where problem.SIF is any example from the current directory (by
+    default) or $MASTSIF (if the problem is not in the current directory).
+    The runcutest command has a number of options, see
+
+       man runcutest
+
+8.  If you wish to use CUTEst with Matlab, you will need to use a
+    mex interface between CUTEst, Matlab and the SIF problem file you
+    wish to evaluate. To create this link, issue the command
+
+       cutest2matlab problem
+
+    for your desired problem.SIF file. This will create a a  binary file
+    mcutest.mexglx (32bit Linux), mcutest.mexa64 (64bit Linux) mcutest.mex-
+    maci (32bit OSX) or mcutest.mexmaci64 (64bit OSX).
+
+    Once you have started Matlab, you must add the mcutest.mex* binary
+    and the contents of the directory $CUTEST/src/matlab to your Matlab
+    search path. Then consult
+
+       help cutest
+
+    to find the range of CUTEst Matlab tools available.
+
+9.  If you wish to add an interace to your own package, "mypack",
+     you will need to create a directory
+
+       $CUTEST/src/"mypack"
+
+    along with files
+
+       $CUTEST/packages/defaults/"mypack"
+       $CUTEST/src/"mypack"/"mypack"_main.[f|f90|c]
+       $CUTEST/src/"mypack"/"mypack"_test.[f|f90|c]
+       $CUTEST/src/"mypack"/"MYPACK".SPC
+       $CUTEST/src/"mypack"/makemaster
+
+    and optionally
+
+       $CUTEST/src/"mypack"/README."pack"
+
+    The simplest way to do this is to pick an existing package that
+    has rouighly the same functionality, to copy its data to the
+    above destinations, and to modify it for your needs.
+
+    To help you, have a look at
+
+       man cutest
+
+    and the man pages that are referred to to see which evaluation tools
+    are available. You can conult the examples in the directory
+
+       $CUTEST/src/test
+
+    to see how each CUTEST tool is called, and those in
+
+       $CUTEST/src/gen
+
+    and 
+
+       $CUTEST/packages/defaults/gen77
+       $CUTEST/packages/defaults/gen90
+       $CUTEST/packages/defaults/genc
+
+    as examples of fortran 77, 90 and C calls and linking instructions
+
+    If you have further questions, please contact us. And if you would
+    like us to include your interface in the distribution for others to
+    use, we would be delighted to help you.
+
+10. Aside from the man pages, PDF documentation for each tool and the
+    runcutest, cutest2matlab and sifdecoder scripts is avalable in
+    the directories $SIFDECODE/doc/pdf/ and $CUTEST/doc/pdf.
+
+11. Refer to the CUTEst Wiki
+
+      http://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki/
+
+    for updates/bug fixes/news.
+
+Best of luck
+
+Nick Gould
+Dominique Orban
+Philippe Toint
+
+For GALAHAD productions
+30 January 2013
+This version: 12 June 2013

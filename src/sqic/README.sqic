@@ -1,0 +1,74 @@
+
+                    ********************************
+      	            *                              *
+                    *   USING SQIC WITH CUTEst     *
+                    *                              *
+                    ********************************
+
+              ( Last modified on 26 Feb 2013 at 08:50:00 )
+
+WHAT IS SQIC?
+-------------
+
+SQIC is a package for solving large-scale convex and nonconvex 
+quadratic programming problems.
+
+HOW DO I GET SQIC?
+--------------------
+
+SQIC was written and is maintained by 
+
+Philip Gill (pgill@ucsd.edu) and Elizabeth Wong (elwong@ucsd.edu)
+from the University of California, San Diego.
+
+CREATING THE OBJECT FILES FOR SQIC
+------------------------------------
+
+Having obtained the file SQIC.zip, create the directories, say, SQIC, 
+and set an environment variable $SQIC to point to this. Now issue the command
+
+  cd $SQIC ;  ./configure ; make install
+
+optimizations, for gfortran if desired. This will produce the 
+object librariues in $SQIC/lib. These may be moved if desired to 
+ $CUTEST/objects/(architecture)/(precision)/ 
+for the architecture and precsion you intend to use;
+binary files here will be chosen in preference to anything in $SQIC/lib.
+
+USING THE SQIC INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The SQIC interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   SQIC.SPC     sets values for SQIC run-time parameters
+
+If no SQIC.SPC file is present in the current directory, the default version 
+is copied from the $CUTEST/src/SQIC directory. This default contains the 
+following:
+
+Begin SQIC
+*   Iterations               100
+   Print level                1
+   Print   frequency          1
+   Summary frequency          1
+End SQIC
+
+Lines starting with a "*   " are disabled. There are many other options, see 
+the software documentation.
+
+To run with CUTEst, use the runcutest command with the -p sqic option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+P. E. Gill and E. Wong,
+"Methods for Convex and General Quadratic Programming",
+Technical Report NA 10-1, Dept. of Mathematics, University of California, 
+San Diego (latest version 2013).
+
+

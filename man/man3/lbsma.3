@@ -1,0 +1,67 @@
+.\" @(#)lbsma v1.0 9/2004;
+.TH lbsma 3M "03 Sep 2004"
+.SH NAME
+lbsma \- CUTEr L-BFGS test driver
+
+.SH SYNOPSIS
+lbsma
+
+.SH DESCRIPTION
+The \fIlbsma\fP main program test drives L-BFGS on SIF problems from the
+CUTEr distribution.
+
+The L-BFGS package is a limited-memory algorithm designed for 
+unconstrained minimization by Jorge Nocedal (Northwestern U.). 
+
+.SH USAGE
+The L-BFGS file lbfgs.f should be edited to remove the
+subroutines DAXPY and DDOT. It should then be
+compiled, and the resulting file lbfgs.o placed in
+(or symbolically linked to) the directory $MYCUTER/double/bin.
+
+There is no single-precision version.
+
+.SH NOTE
+If no LBFGS.SPC file is present in the current directory,
+the default version is copied from
+$CUTER/common/src/pkg/lbfgs/. Default specifications are as
+follows:
+
+.nf
+.ta 1i 2i 3i
+         5    M         specifies the number of iterations in the memory
+        -1    IPRINT(1) specifies the frequency of output (<0: no output)
+         0    IPRINT(2) specifies content of output (0: minimal)
+     10000    MAXIT     specifies the maximum number of iterations
+   0.00001    EPS       specifies the required gradient accuracy
+.fi
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+.SH ENVIRONMENT
+.TP
+.SB CUTER
+Parent directory for CUTEr
+.TP
+.SB MYCUTER
+Home directory of the installed CUTEr distribution.
+
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+N.I.M. Gould, D. Orban and Ph.L. Toint, 
+ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+\fIUpdating quasi-{N}ewton matrices with limited storage\fP,
+J. Nocedal,
+Mathematics of Computation, \fB35\fP, pp 773--782, 1980.
+
+sdlbs(1), lbs(1).

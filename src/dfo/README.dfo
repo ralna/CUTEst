@@ -1,0 +1,46 @@
+Quick instructions
+==================
+
+1. Download the IPOPT source code:
+   http://www.coin-or.org/download/source/Ipopt-Fortran
+
+   It is very important to note that DFO requires the pre-3 FORTRAN version
+   of IPOPT and will not work with the newer flavor of Ipopt 3.x.
+
+   Follow the instructions to build the IPOPT libraries for CUTEst. This should
+   create a file named ipopt.liblist in 
+   $CUTEST/objects/(architecture)/(precision)/. Note that the
+   newer Ipopt 3.x creates a file names ipo.liblist in 
+   $CUTEST/objects/(architecture)/(precision)/
+   that cannot be used in place of ipopt.liblist.
+
+2. Download the DFO source code:
+   svn co https://projects.coin-or.org/svn/Dfo/trunk dfo
+
+   Change to the dfo directory and follow the instructions to build
+   libdfo_ipopt.a and ranlux.o.
+
+   Place libdfo_ipopt.a in a place where the linker can find it
+   (e.g., in your $LD_LIBRARY_PATH, $LIBPATH or in 
+   $CUTEST/objects/(architecture)/(precision) .
+
+   Similarly, place ranlux.o in user-defined directory $DFO or in
+   $CUTEST/objects/(architecture)/(precision) .
+
+To run with CUTEst, use the runcutest command with the -p dfo option.
+See the man page for runcutest for more details of other options.
+
+References:
+----------
+
+A. R. Conn, K. Scheinberg and Ph.L. Toint, 
+On the convergence of derivative-free methods for unconstrained optimization. 
+Approximation Theory and Optimization: Tributes to M. J. D. Powell , 
+Eds. A. Iserles and M. Buhmann, (1997), pp. 83-108, Cambridge University Press. 
+
+A. R. Conn, K. Scheinberg and Ph.L. Toint, 
+A derivative free optimization algorithm in practice,
+in Proceedings of 7th AIAA/USAF/NASA/ISSMO Symposium on Multidisciplinary 
+Analysis and Optimization, St. Louis, MO, 1998. 
+
+https://projects.coin-or.org/Dfo
