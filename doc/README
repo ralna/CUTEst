@@ -60,7 +60,7 @@ To get CUTEst working, here is what you need to do:
 
 2.  Now, move to the ./cutest directory, enter the command
 
-     $ARCHDEFS/install_optsuite
+     $ARCHDEFS/install_optrove
 
     and follow the instructions. You may install as many machine/os/compiler
     combinations (architectures) as you wish, and you will have access to each
@@ -229,7 +229,7 @@ To get CUTEst working, here is what you need to do:
 
        $CUTEST/src/gen
 
-    and 
+    and
 
        $CUTEST/packages/defaults/gen77
        $CUTEST/packages/defaults/gen90
