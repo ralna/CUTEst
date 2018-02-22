@@ -1,18 +1,14 @@
-'\" e  @(#)cutest_csgrp v1.5 03/2017;
-.TH cutest_csgrp 3M "30 Mar 2017" "CUTEst user documentation" "CUTEst user documentation"
+'\" e  @(#)cutest_csjp v1.6 03/2018;
+.TH cutest_csjp 3M "22 Feb 2018" "CUTEst user documentation" "CUTEst user documentation"
 .SH NAME
-CUTEST_csgrp \- CUTEst tool to evaluate the sparsity pattern of the
-constraints gradients and gradient of objective/Lagrangian function.
+CUTEST_csjp \- CUTEst tool to evaluate the sparsity pattern of the
+Jacobian of constraints gradients.
 .SH SYNOPSIS
 .HP 1i
-CALL CUTEST_csgrp( status, n, nnzj, lj, J_var, J_fun )
+CALL CUTEST_csjp( status, nnzj, lj, J_var, J_con )
 .SH DESCRIPTION
-The CUTEST_csgrp subroutine evaluates the sparsity pattern used when storing the
-gradients of the general constraints and of either the objective function
-or the Lagrangian function
-.EQ
-l(x,y) = f(x) + y sup T c(x)
-.EN
+The CUTEST_csjp subroutine evaluates the sparsity pattern used when storing the
+Jacobian matrix of gradients of the general constraints
 corresponding to the problem decoded from a SIF file by the script
 \fIsifdecoder\fP.
 
@@ -60,31 +56,26 @@ The objective function is group-partially separable and
 all constraint functions are partially separable.
 .LP
 .SH ARGUMENTS
-The arguments of CUTEST_csgrp are as follows
+The arguments of CUTEST_csjp are as follows
 .TP 5
 .B status \fP[out] - integer
 the outputr status: 0 for a succesful call, 1 for an array
 allocation/deallocation error, 2 for an array bound error,
 3 for an evaluation error,
 .TP
-.B n \fP[in] - integer
-the number of variables for the problem,
-.TP
 .B nnzj \fP[out] - integer
-the number of nonzeros in J_var and J_fun,
+the number of nonzeros in J_var and J_con,
 .TP
 .B lj \fP[in] - integer
-the actual declared dimensions of J_var and J_fun,
+the actual declared dimensions of J_var and J_con,
 .TP
 .B J_var \fP[out] - integer
 an array whose i-th component is the index of the variable with
 respect to which the derivative is taken,
 .TP
-.B J_fun \fP[out] - integer
-an array whose i-th component is the index of the problem function
-whose derivative is taken. J_fun(i) = 0 indicates the
-objective or Lagrangian function, while J_fun(i) = j > 0 indicates the
-j-th general constraint function.
+.B J_con \fP[out] - integer
+an array whose i-th component is the index of the constraint function
+whose derivative is taken.
 .LP
 .SH AUTHORS
 I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint

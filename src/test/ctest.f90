@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.3 - 07/10/2015 AT 08:20 GMT.
+! THIS VERSION: CUTEST 1.6 - 22/02/2018 AT 15:40 GMT.
 
 !-*- C U T E S T  t e s t _ c o n s t r a i n e d _ t o o l s  P R O G R A M -*-
 
@@ -252,6 +252,13 @@
       IF ( alloc_stat /= 0 ) GO TO 990
 
 !  compute the sparsity pattern of the Jacobian
+
+      WRITE( out, "( ' Call CUTEST_csjp' )" )
+      CALL CUTEST_csjp( status, J_ne, l_j, J_var, J_fun )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+
+!  compute the sparsity pattern of the Jacobian and objective gradient
 
       WRITE( out, "( ' Call CUTEST_csgrp' )" )
       CALL CUTEST_csgrp( status, n, J_ne, l_j, J_var, J_fun )

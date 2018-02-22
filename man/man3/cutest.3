@@ -186,6 +186,9 @@ evaluate both the value and gradient of the objective function.
 .B cutest_cofsg \fP(unthreaded) and \fBcutest_cofsg_threaded \fP(threaded)
 evaluate both the value and sparse gradient of the objective function.
 .TP
+.B cutest_csjp \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of the Jacobian of gradients of the constraints
+.TP
 .B cutest_csgrp \fP(both unthreaded and threaded)
 evaluate the sparsity pattern of the gradients of the objective function
 and constraints
@@ -341,6 +344,7 @@ cutest_udh(3M),
 cutest_udh_threaded(3M),
 cutest_ugrdh(3M),
 cutest_ugrdh_threaded(3M),
+cutest_ushp(3M),
 cutest_ush(3M),
 cutest_ush_threaded(3M),
 cutest_ugrsh(3M),
@@ -376,6 +380,8 @@ cutest_cofg(3M),
 cutest_cofg_threaded(3M),
 cutest_cofsg(3M),
 cutest_cofsg_threaded(3M),
+cutest_csjp(3M),
+cutest_csgrp(3M),
 cutest_csgr(3M),
 cutest_csgr_threaded(3M),
 cutest_ccfg(3M),
@@ -394,6 +400,7 @@ cutest_cidh(3M),
 cutest_cidh_threaded(3M),
 cutest_cgrdh(3M),
 cutest_cgrdh_threaded(3M),
+cutest_cshp(3M),
 cutest_csh(3M),
 cutest_csh_threaded(3M),
 cutest_cshc(3M),

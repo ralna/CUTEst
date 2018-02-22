@@ -24,7 +24,7 @@
 
       INTEGER, PARAMETER :: input = 55
       INTEGER, PARAMETER :: out = 6
-      INTEGER, PARAMETER :: buffer = 77 
+      INTEGER, PARAMETER :: buffer = 77
       REAL ( KIND = wp ), PARAMETER :: one = 1.0_wp
 
 !--------------------------------
@@ -59,13 +59,14 @@
 !  decide whether this problem has general constraints
 
       CALL CUTEST_cdimen( status, input, n, m )
-      only_print_small = n <= 5 .AND. m <= 5 
+      only_print_small = n <= 5 .AND. m <= 5
+!     only_print_small = .TRUE.
 
       IF ( m == 0 ) THEN
 
 !  ======================== Test unconstrained tools ==========================
 
-        WRITE( out, "( /, ' This problem is unconstrained', / )" ) 
+        WRITE( out, "( /, ' This problem is unconstrained', / )" )
 
 !  allocate basic arrays
 
@@ -334,7 +335,7 @@
 !  ========================= Test constrained tools ===========================
 
       ELSE
-        WRITE( out, "( /, ' This problem is constrained', / )" ) 
+        WRITE( out, "( /, ' This problem is constrained', / )" )
 
 !  allocate basic arrays
 
@@ -353,7 +354,7 @@
         IF ( alloc_stat /= 0 ) GO TO 990
         ALLOCATE( H2_val( l_h2_1, n ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
-        l_j2_1 = MAX( m, n ) ; l_j2_2 = l_j2_1      
+        l_j2_1 = MAX( m, n ) ; l_j2_2 = l_j2_1
         ALLOCATE( J2_val( l_j2_1, l_j2_2 ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
 

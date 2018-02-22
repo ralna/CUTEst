@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.0 - 06/02/2013 AT 20:20 GMT.
+! THIS VERSION: CUTEST 1.6 - 22/02/2018 AT 15:15 GMT.
 
 !-*-*-*-*-*-*-*-  C U T E S T    I N T E R F A C E   M O D U L E  -*-*-*-*-*-*-
 
@@ -293,6 +293,13 @@
        INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
        INTEGER, INTENT( OUT ) :: cutest_status, nnzj
        END SUBROUTINE CUTEST_cdimsj
+
+       SUBROUTINE CUTEST_csjp( status, nnzj, lj, J_var, J_fun )
+       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
+       INTEGER, INTENT( IN ) :: lj
+       INTEGER, INTENT( OUT ) :: nnzj, status
+       INTEGER, INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
+       END SUBROUTINE CUTEST_csjp
 
        SUBROUTINE CUTEST_csgrp( status, n, nnzj, lj, J_var, J_fun )
        INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
@@ -1088,5 +1095,3 @@
 !  End of module CUTEst_interface_double
 
    END MODULE CUTEst_interface_double
-
-

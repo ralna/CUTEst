@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.5 - 10/10/2016 AT 15:00 GMT.
+! THIS VERSION: CUTEST 1.6 - 22/02/2018 AT 15:15 GMT.
 
 !-*-*-*-*-*-*-*-*-*-*-*-*-*- C U T E S T   M O D U l E -*-*-*-*-*-*-*-*-*-*-*-*-
 
@@ -170,6 +170,7 @@
         REAL ( KIND = wp ) :: time_cofsg = 0.0_wp
         REAL ( KIND = wp ) :: time_csgr = 0.0_wp
         REAL ( KIND = wp ) :: time_csgrp = 0.0_wp
+        REAL ( KIND = wp ) :: time_csjp = 0.0_wp
         REAL ( KIND = wp ) :: time_csgreh = 0.0_wp
         REAL ( KIND = wp ) :: time_csgrsh = 0.0_wp
         REAL ( KIND = wp ) :: time_csgrshp = 0.0_wp
@@ -4189,4 +4190,3 @@
 !  end of module CUTEST
 
    END MODULE CUTEST
-

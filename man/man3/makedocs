@@ -8,7 +8,7 @@
 #               cutest_cnames cutest_cofg cutest_cofsg cutest_clfg \
 #               cutest_cifn cutest_cigr cutest_cisgr \
 #               cutest_connames cutest_creport cutest_cshp \
-#               cutest_csgrp cutest_csgrshp cutest_cchprodsp \
+#               cutest_csjp cutest_csgrp cutest_csgrshp cutest_cchprodsp \
 #               cutest_csetup cutest_cstats cutest_csetup cutest_csgr \
 #               cutest_csgreh cutest_csgrsh cutest_csh cutest_cshc \
 #               cutest_cvartype cutest_probname cutest_ubandh cutest_udh \
@@ -46,8 +46,8 @@
 #               cutest_timings \
 #               cutest )
 
-foreach pack ( cutest_cshp cutest_csgrp cutest_csgrshp cutest_cchprodsp cutest )
-
+foreach pack ( cutest_csjp cutest )
+#foreach pack ( cutest_cshp cutest_csgrp cutest_csgrshp cutest_cchprodsp cutest )
 #foreach pack ( cutest_cdimchp cutest_cchprods cutest_cchprods_threaded )
 #foreach pack ( cutest_timings cutest_timings_threaded )
 
@@ -173,5 +173,3 @@ foreach pack ( cutest_cshp cutest_csgrp cutest_csgrshp cutest_cchprodsp cutest )
     > ${CUTEST}/doc/html/$pack.html
   mv *.png ${CUTEST}/doc/html
 end
-
-
