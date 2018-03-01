@@ -2086,11 +2086,9 @@ mexErrMsgTxt("stop\n");
      * causes bugs and eventually deadly crashes in Matlab. */
 
     for (j = 0; j < ncol; j++)
-/*    quicksortFollow(ir, (double*)pr, jptr[j], jptr[j+1]-1); */
-    if ( jptr[j] > jptr[j+1]-1) {
-      quicksort_cutest(ir, (double*)pr, jptr[j], jptr[j+1]-1);
-    }
-    /*   mexPrintf("out %-d\n", nnz); */
+      /* sort row indices in column j if it is nonempty */
+      if ( jptr[j] < jptr[j+1]-1)
+        quicksort_cutest(ir, (double*)pr, jptr[j], jptr[j+1]-1);
 
     return matrix;
   }
