@@ -2078,7 +2078,7 @@ mexErrMsgTxt("stop\n");
       }
 
     /* Restore jptr */
-    for (j = ncol-1; j >= 1; j--) jptr[j] = jptr[j-1];
+    for (j = ncol; j >= 1; j--) jptr[j] = jptr[j-1];
     jptr[0] = (mwIndex)0;
 
     /* Sort each segment of ir in ascending order (a silly Matlab thing).
@@ -2087,7 +2087,7 @@ mexErrMsgTxt("stop\n");
 
     for (j = 0; j < ncol; j++)
       /* sort row indices in column j if it is nonempty */
-      if ( jptr[j] < jptr[j+1]-1)
+      if ( jptr[j]+1 < jptr[j+1])
         quicksort_cutest(ir, (double*)pr, jptr[j], jptr[j+1]-1);
 
     return matrix;
