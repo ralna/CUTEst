@@ -26,7 +26,8 @@ CRUNFFLAGS = $(OPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include $(CCFFLAGS)
 
 MFFLAGS   = $(MBASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES)
 #MFFLAGS   = $(OPTIMIZATION) $(DEBUG) $(MODULES)
-MFLAGS    = CC='$(CC)' FC='$(FORTRAN)' FFLAGS='$(MFFLAGS) $(OPENMP)' \
+MFLAGS    = CC='$(CC)' FC='$(FORTRAN)' GCC='$(CC)' \
+            FFLAGS='$(MFFLAGS) $(OPENMP)' \
             LD='$(FORTRAN) $(MFFLAGS) $(OPENMP)' \
             -g -largeArrayDims $(MATLABINC)
 

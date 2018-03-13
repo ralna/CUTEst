@@ -94,7 +94,7 @@
  *                                         D. Orban, Montreal, January 2007
  *                                        CUTEst version additions:
  *                                         Nick Gould, January 2013
- *                                        This version, June 17 2013 11:45 GMT
+ *                                        This version, March 13 2018 16:00 GMT
  */
 
 /* -------------------------------------------------------------------------- */
@@ -107,10 +107,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* For versions of the Matlab API prior to 7.3 */
+/* For versions of the Matlab API prior to 7.3 - 
+   depricatd as Matlab no longer has the MX_API_VER preprocessor macro ... duh!
 #if (MX_API_VER < 0x07030000)
 typedef int mwSize;
 typedef int mwIndex;
+#endif
+*/
+
+#ifndef MWSIZE_MAX
+    #define  mwIndex        int
+    #define  mwSignedIndex  int
+    #define  mwSize         int
 #endif
 
 /* Safeguard against C++ symbol mangling */
