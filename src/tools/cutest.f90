@@ -1590,10 +1590,12 @@
 
 !  restore the starting addresses
 
-      DO i = n - 1, 1, - 1
-        ROW_start( i + 1 ) = ROW_start( i )
-      END DO
-      ROW_start( 1 ) = 1
+      IF ( .NOT. use_band ) THEN
+        DO i = n - 1, 1, - 1
+          ROW_start( i + 1 ) = ROW_start( i )
+        END DO
+        ROW_start( 1 ) = 1
+      END IF
 
 !  ---------------------------------------
 !  For debugging, print the nonzero values
