@@ -69,6 +69,7 @@ eps_rel                0.001    (relative convergence tolerance)
 eps_prim_inf           0.0001   (primal infeasibility tolerance)
 eps_dual_inf           0.0001   (dual infeasibility tolerance)
 alpha                  1.6      (relaxation parameter)
+linsys_solver          0        (solver - 1=pardiso,other=suitesparse)
 delta                  0.000001 (regularization parameter for polish)
 polish                 0        (boolean, polish ADMM solution)
 polish_refine_iter     3        (iterative refinement steps in polish)
@@ -76,6 +77,7 @@ verbose                1        (boolean, write out progres)
 scaled_termination     0        (boolean, use scaled termination criteria)
 check_termination      25       (check termination interval - 0=disabled)
 warm_start             1        (boolean, warm start)
+time_limit             0.0      (maximum time (secs) allowed - 0=disabled)
 
 The reader is referred to the paper quoted below and the code itself if he or
 she wishes to modify these parameters.
@@ -99,4 +101,3 @@ See
 Documentation is available from
 
   https://media.readthedocs.org/pdf/osqp/latest/osqp.pdf
-

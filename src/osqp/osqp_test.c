@@ -54,6 +54,9 @@ void set_default_settings(OSQPSettings * settings) {
     settings->scaled_termination = SCALED_TERMINATION;
     settings->check_termination = CHECK_TERMINATION;
     settings->warm_start = WARM_START;
+#ifdef PROFILING
+    settings->time_limit = TIME_LIMIT;
+#ifdef PROFILING
 }
 
 /* dummy setup */

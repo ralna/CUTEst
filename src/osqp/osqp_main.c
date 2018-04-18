@@ -645,6 +645,15 @@ int MAINENTRY(void) {
                settings->warm_start = i_string ;
                continue ;
            }
+#ifdef PROFILING
+           sl = strlen("time_limit") ;
+           if (strncmp (s, "time_limit", sl) == 0)
+           {
+             sscanf (s+sl, "%lg", &r_string );
+               settings->time_limit = r_string ;
+               continue ;
+           }
+#endif // Profiling
        }
        fclose (spec) ;
     }
@@ -928,5 +937,3 @@ void getinfo( integer n, integer m, doublereal *xl, doublereal *xu,
 #ifdef __cplusplus
 }    /* Closing brace for  extern "C"  block */
 #endif
-
-
