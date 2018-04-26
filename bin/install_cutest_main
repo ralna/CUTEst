@@ -18,6 +18,8 @@ cutest_compile () {
     if (( $DRYRUN )) ; then
       echo "$MAKE $OPTIONS all all_matlab $MACROS"
     else
+      echo " compiling in $CUTEST/src with the comand"
+      echo " $MAKE $OPTIONS all all_matlab"
       $MAKE $OPTIONS all all_matlab $MACROS
       [[ $? != 0 ]] && exit 2
     fi
@@ -25,6 +27,8 @@ cutest_compile () {
     if (( $DRYRUN )) ; then
       echo "$MAKE $OPTIONS all $MACROS"
     else
+      echo " compiling in $CUTEST/src with the comand"
+      echo " $MAKE $OPTIONS all"
       $MAKE $OPTIONS all $MACROS
       [[ $? != 0 ]] && exit 2
     fi
@@ -203,4 +207,3 @@ if [[ $? != 0 ]]; then
 fi
 
 #exit 0
-
