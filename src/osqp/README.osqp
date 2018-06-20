@@ -4,15 +4,15 @@
                      *                           *
                      *****************************
 
-              ( Last modified on 15 Dec 2017 at 10:30:00 )
+              ( Last modified on 20 Jun 2018 at 13:30:00 )
 
 
 WHAT IS OSQP?
 -------------------
 
 The OSQP package is an Operator-Splitting method for large-scale
-convex Quadratic Programming, written by Bartolomeo Stellato,
-Goran Banjac, Paul Goulart (all University of Oxford),
+convex Quadratic Programming, written by Bartolomeo Stellato (MIT),
+Goran Banjac (ETH Zurich), Paul Goulart (University of Oxford),
 Nicholas Moehle, Stephen Boyd (both Stanford University) and
 Alberto Bemporad (IMT Lucca).
 
@@ -21,7 +21,7 @@ HOW DO I GET OSQP?
 
 See
 
-  http://osqp.readthedocs.io/en/latest
+  https://osqp.org
 
 OSQP is distributed under the Apache 2.0 License.
 
@@ -30,7 +30,7 @@ COMPILING THE OBJECT MODULE FOR OSQP
 
 Follow the instructions in
 
-  http://osqp.readthedocs.io/en/latest/installation/sources.html
+  https://osqp.org/docs/installation/sources.html
 
 Once the package has been installed, set the environment variable
 OSQP to point to main osqp directory (that is the one and for which
@@ -100,4 +100,4 @@ See
 
 Documentation is available from
 
-  https://media.readthedocs.org/pdf/osqp/latest/osqp.pdf
+  https://osqp.org/docs/
