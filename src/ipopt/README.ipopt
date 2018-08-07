@@ -1,11 +1,11 @@
-                      *******************************
-		      *                             *
-                      * Using IPOPT 3.0 with CUTEst *
-		      *                             *
-                      *******************************
+                      **********************************
+		      *                                *
+                      * Using IPOPT >= 3.0 with CUTEst *
+		      *                                *
+                      **********************************
 
-WHAT IS IPOPT 3.0?
-------------------
+WHAT IS IPOPT?
+--------------
 
 IPOPT is an implementation of a primal-dual interior point algorithm
 for solving Nonlinear Optimization Problems (NLPs) of the form
@@ -22,24 +22,23 @@ variables need to have lower and upper bounds.
 HOW DO I GET IPOPT?
 -------------------
 
-See 
+See
 
-  https://projects.coin-or.org/Ipopt
+  https://www.coin-or.org/Ipopt/documentation
 
-USING IPOPT 3.0 WITH CUTEst
---------------------------
+USING IPOPT 3.0 AND ABOVE WITH CUTEst
+-------------------------------------
 
-Using the makefile found in the 'CUTE_interface' subdirectory, the IPOPT
-installation procedure creates the files
+Follow the instructions on the installation page above. In particular,
+get the code, download the external codes and compile and
+install. Set your environment variable IPOPTBUILD to point at the
+directory $IPOPTDIR/build that you have installed your version of ipopt
+into. If you are using gfortran, that should be sufficient.
 
-        $IPOPT/OBJECTS/IPOPT/CUTEr_interface/libipoptcuter.a, and
-	$MYCUTER/double/lib/ipopt.liblist
-
-The first contains relevant gateways between CUTEst and IPOPT while the
-second contains all library information corresponding to user settings
-within IPOPT, assuming you installed IPOPT 3.0 in the directory $IPOPT.
-
-IPOPT 2.0 is not available in single precision.
+If you are using a different compiler, you need to discover the
+compiler flags suited to your installation. Look at the file
+$CUTEST/packages/defaults/ipopt, particularly the variable PACKLIBS
+and edit as necessary.
 
 USING THE IPOPT 3.0 INTERFACE TOOL
 ----------------------------------
@@ -47,10 +46,11 @@ USING THE IPOPT 3.0 INTERFACE TOOL
 Suppose you wish to solve the problem written in SIF format contained
 in the file probname.SIF.
 
-The IPOPT 3.0 interface tools require two input files:
+The IPOPT 3.0 interface tools require one (and optionally two) input files:
 
 	probname.SIF   specifies the problem in SIF format
-	ipopt.liblist  contains library information for the linker.
+	ipopt.opt      optionally specifies solver options (see
+            https://www.coin-or.org/Ipopt/documentation/node35.html )
 
 Please refer to the IPOPT 3.0 documentation for more details.
 
@@ -65,10 +65,7 @@ REFERENCES
     A. Wachter. PhD Dissertation, Carnegie Mellon University, Pittsburgh,
     PA, 2002.
 
-[2]  A. Wächter and L. T. Biegler, 
-     On the Implementation of an Interior-Point Filter Line-Search Algorithm 
-     for Large-Scale Nonlinear Programming, 
-     Mathematical Programming 106(1), pp. 25-57, 2006 
-
-
-
+[2]  A. Wächter and L. T. Biegler,
+     On the Implementation of an Interior-Point Filter Line-Search Algorithm
+     for Large-Scale Nonlinear Programming,
+     Mathematical Programming 106(1), pp. 25-57, 2006

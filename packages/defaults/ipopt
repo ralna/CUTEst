@@ -1,6 +1,6 @@
 #!/bin/bash
 # Definitions for the IPOPT package
-# N. Gould, D. Orban & Ph. Toint, January 19th, 2013
+# N. Gould, D. Orban & Ph. Toint, August 7th, 2018
 
 # The name of the package
 export PACKAGE=ipopt
@@ -18,8 +18,8 @@ export PACKOBJS=""
 
 # Define package and system libraries using -llibrary to include library.a
 # or library.so together with any nonstandard library paths using -L(path)
-#export PACKLIBS="-lipopt -L${IPOPT}/lib -lblas -llapack /usr/local/lib/libcoinhsl.so -ldl -L/usr/local/lib -lmetis"
-export PACKLIBS="-lipopt -L${IPOPT}/lib -lblas -llapack /usr/local/lib/libcoinhsl.so -ldl -L/usr/local/lib -lmetis"
+##  version for gfortran ... edit for other compilers (to be automated)
+export PACKLIBS="-L${IPOPTBUILD}/lib -lipopt -lblas -llapack -lm -ldl -lstdc++ -lm -Wl,--rpath -Wl,${IPOPTBUILD}/lib"
 
 # Define the name of the package specification file if any. This possibly
 # precision-dependent file must either lie in the current directory or in
