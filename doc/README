@@ -88,8 +88,8 @@ To get CUTEst working, here is what you need to do:
 
        $SIFDECODE/man and $CUTEST/man
 
-    are on your man path ($MANPATH$). See README.csh (for C-shell users)
-    and README.sh (for Bourne, bash and korn shell users).
+    are on your man path ($MANPATH$). See README.cshrc (for C-shell users)
+    and README.bashrc (for Bourne, bash and korn shell users).
 
 3.  To test that the installation works, issue the commands
 
