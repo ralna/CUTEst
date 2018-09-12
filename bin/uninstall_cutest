@@ -76,16 +76,8 @@ while [[ $finished != 'true' ]]; do
     echo " Are you sure you wish to uninstall the version for"
     yesno_default_yes "  $VERNAME"
 
-    #YESNO=""
+    if [[ $? == 1 ]]; then
 
-    #while [[ $YESNO != 'Y' && $YESNO != 'N' ]]; do
-	#read YESNO
-	#[[  $YESNO == ""  ]] && YESNO="Y"
-	#YESNO=`echo $YESNO | tr a-z A-Z`
-    #done
-
-    #if [[  $YESNO == 'Y'  ]]; then
-    if [[ $? != 0 ]]; then
         echo " Removing object files and libraries ... "
         \rm -f -r $CUTEST/objects/$VERSION
         echo " Removing module information files ... "
@@ -105,16 +97,5 @@ while [[ $finished != 'true' ]]; do
     fi
 
     yesno_default_no " Do you wish to uninstall another version"
-
-    #YESNO=""
-
-    #while [[ $YESNO != 'Y' && $YESNO != 'N' ]]; do
-	#read YESNO
-	#[[  $YESNO == ""  ]] && YESNO="N"
-	#YESNO=`echo $YESNO | tr a-z A-Z`
-    #done
-
-    #[[  $YESNO == 'N'  ]] && finished='true'
     [[ $? != 0 ]] && finished='true'
 done
-
