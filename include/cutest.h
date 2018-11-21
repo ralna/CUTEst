@@ -222,7 +222,8 @@ void CUTEST_ush     ( integer *status, const integer *n, const doublereal *x,
 void CUTEST_ueh     ( integer *status, const integer *n, const doublereal *x,
                       integer *ne, const integer *le, integer *iprnhi,
                       integer *iprhi, const integer *lirnhi, integer *irnhi,
-                      const integer *lhi, doublereal *hi, logical *byrows );
+                      const integer *lhi, doublereal *hi,
+                      const logical *byrows );
 void CUTEST_ugrdh   ( integer *status, const integer *n, const doublereal *x,
                       doublereal *g, const integer *lh1, doublereal *h);
 void CUTEST_ugrsh   ( integer *status, const integer *n, const doublereal *x,
@@ -247,17 +248,17 @@ void CUTEST_ubandh  ( integer *status, const integer *n, const doublereal *x,
 void CUTEST_cfn     ( integer *status,  const integer *n, const integer *m,
                       const doublereal *x, doublereal *f, doublereal *c );
 void CUTEST_cofg    ( integer *status, const integer *n, const doublereal *x,
-                      doublereal *f, doublereal *g, logical *grad );
+                      doublereal *f, doublereal *g, const logical *grad );
 void CUTEST_cofsg   ( integer *status, const integer *n, const doublereal *x,
                       doublereal *f, integer *nnzg, const integer *lg,
-                      doublereal *sg, integer *ivsg, logical *grad );
+                      doublereal *sg, integer *ivsg, const logical *grad );
 void CUTEST_ccfg    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, doublereal *c, const logical *jtrans,
                       const integer *lcjac1, const integer *lcjac2,
-   	              doublereal *cjac, logical *grad );
+                      doublereal *cjac, const logical *grad );
 void CUTEST_clfg    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y, doublereal *f,
-                      doublereal *g, logical *grad );
+                      doublereal *g, const logical *grad );
 void CUTEST_cgr     ( integer *status,  const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y,
                       const logical *grlagf, doublereal *g,
