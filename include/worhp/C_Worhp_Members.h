@@ -42,14 +42,15 @@ typedef enum {
   WORHP_INT_T,
   WORHP_NO_T,      /* no type (default or invalid answer) */
   WORHP_SINGLE_T,
-  WORHP_SIZE_T
+  WORHP_SIZE_T,
+  WORHP_CONST_C_STRING_T
 } WorhpType;
 
 #include "C_std.h"
 #include "C_Worhp_Data.h"
 
 /* Get total number of parameters */
-DLL_PUBLIC int WorhpGetParamCount();
+DLL_PUBLIC int WorhpGetParamCount(void);
 
 /* Get parameter name by index in {1, ..., WorhpGetParamCount()}
  * Returns empty string for invalid indices. */

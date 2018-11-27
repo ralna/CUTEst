@@ -15,9 +15,10 @@ enum {
   WORHP_PRINT_BOLD            = 8,
   WORHP_PRINT_GREEN           = 16,
   WORHP_PRINT_BLUE            = 32,
-  WORHP_PRINT_CONTINUED_START = 64,
-  WORHP_PRINT_CONTINUED_END   = 128,
-  WORHP_PRINT_CONTINUED       = 192
+  WORHP_PRINT_CONTINUE_NEXT   = 64,
+  WORHP_PRINT_CONTINUE_PREV   = 128,
+  WORHP_PRINT_CONTINUE_BOTH   = 192,
+  WORHP_PRINT_RED             = 256
 };
 
 typedef void (*worhp_print_t) (int mode, const char s[]);
@@ -101,6 +102,78 @@ DLL_PUBLIC void StatusMsgString(OptVar* o, Workspace* w, Params* p, Control* c, 
  */
 DLL_PUBLIC void Status2String(int status, char str[]);
 
+/**
+ * Prints a message that gives some information about issues that might be the
+ * reason for WORHP not terminating successfully.
+ */
+DLL_PUBLIC void ErrorOutput(OptVar*, Workspace*, Params*, Control*);
+
+
+/**
+ * Structure containing information that can be
+ * used for printing the major iteration message.
+ */
+typedef struct MajorIterNoticeStruct {
+  /* OptVar information */
+  double F;
+  /* Workspace information */
+  bool AcceptFeasible;
+  bool AcceptOptimal;
+  bool Feasible;
+  bool FeasRest;
+  bool Optimal;
+  bool UseId;
+  int aresId;
+  int CurrentFeasMode;
+  int Line_AcceptMethod;
+  int Line_AcceptPhase;
+  int TerminationMetSKKTiter;
+  counter MajorIter;
+  counter MinorIter;
+  counter RefineFeasIter;
+  double ArmijoAlpha;
+  double BettsValue;
+  double ComplMax;
+  double FeasMax;
+  double eps;
+  double IP_Barrier;
+  double IP_BarrierShift;
+  double IP_PenaltyFeas;
+  double IP_PenaltyObj;
+  double IP_RegTau;
+  double IP_RegTauC;
+  double Line_AlphaX;
+  double Norm2_DX;
+  double NormMax_CV;
+  double OptiMax;
+  double penMaxVal;
+  double relaxMaxVal;
+  double ScaleObj;
+  /* Parameter information */
+  bool FidifHM;
+  bool RelaxCon;
+  bool ScaledKKT;
+  bool ScaledObj;
+  bool UserHM;
+  int Algorithm;
+  int LineSearchMethod;
+  int MaxIter;
+  int NLPprint;
+  int RefineFeasibility;
+  /* Control information */
+  double time;
+} MajorIterNotice;
+
+/**
+ * Create a MajorIterNotice, containing information about the current major
+ * iteration that can be used for printing.
+ */
+DLL_PUBLIC MajorIterNotice CreateMajorIterNotice(OptVar*, Workspace*, Params*, Control*);
+
+/**
+ * Print a message for the major iteration based on the MajorIterNotice
+ */
+DLL_PUBLIC void MajorIterOutput(MajorIterNotice const *notice);
 
 /**
  * Prints the iteration output.
@@ -113,6 +186,11 @@ DLL_PUBLIC void IterationOutput(OptVar*, Workspace*, Params*, Control*);
  */
 DLL_PUBLIC void StageMsg(OptVar*, Workspace*, Params*, Control*);
 
+/**
+ * Writes a sparse Matrix to a Matlab .m file.
+ * @author mja
+ */
+DLL_PUBLIC void WriteMatrixMatlab(const char *name, int *row, int *col, double *val, int nrow, int ncol, int nnz);
 
 #ifdef __cplusplus
 }
