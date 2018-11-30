@@ -5,11 +5,7 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER) && (_MSC_VER < 1800)
-/* Use our replacement stdbool.h for Visual Studio < 2013 */
-#include "stdbool.h"
-#else
-/* Use system stdbool.h everywhere else */
+#if !defined(_MSC_VER) || (_MSC_VER >= 1800)
 #include <stdbool.h>
 #endif
 #include <stdlib.h>
@@ -68,6 +64,7 @@ enum {
 typedef void* (*worhpMallocFunction) (size_t size);
 typedef void* (*worhpCallocFunction) (size_t num, size_t size);
 typedef void* (*worhpReallocFunction) (void* ptr, size_t size);
+typedef void* (*worhpMemcpyFunction) (void* dest, const void* src, size_t size);
 typedef void  (*worhpFreeFunction) (void* ptr);
 
 DLL_PUBLIC void SetWorhpMallocFunction(worhpMallocFunction f);
@@ -78,6 +75,7 @@ DLL_PUBLIC void SetWorhpFreeFunction(worhpFreeFunction f);
 DLL_PUBLIC void* wMalloc(size_t size);
 DLL_PUBLIC void* wCalloc(size_t num, size_t size);
 DLL_PUBLIC void* wRealloc(void* ptr, size_t size);
+DLL_PUBLIC void* wMemcpy(void* dest, void* src, size_t size);
 DLL_PUBLIC void  wFree(void* ptr);
 
 /**

@@ -135,7 +135,8 @@ void WorhpFree(OptVar*, Workspace*, Params*, Control*);
 void WorhpFidif(OptVar*, Workspace*, Params*, Control*);
 void WorhpInit(OptVar*, Workspace*, Params*, Control*);
 void WorhpRestart(OptVar*, Workspace*, Params*, Control*);
-void ReadParams(int*, char[], Params*);
+void WorhpCrossover(OptVar*, Workspace*, Params*, Control*);
+void ReadParams(int*, const char[], Params*);
 
 /*
  *  Worhp Zen
@@ -154,7 +155,7 @@ void ZenUpdate(OptVar*, Workspace*, Params*, Control*,
                const double *dr, const double *dq,
                const double *db, const int *order);
 void ZenQP2Diff(OptVar*, Workspace*, Params*, Control*);
-int  ZenN(OptVar*, const char *var_pert);
+int  ZenN(const OptVar*, const char *var_pert);
 bool ZenIsVar(const char *var_pert);
 bool ZenIsPert(const char *var_pert);
 

@@ -55,19 +55,21 @@ typedef struct LeqsolWorkspaceStruct {
 
   bool solve_blas3;
   bool solve_mf;
+  bool action;
 
-#ifdef WITH_MA97
   bool initsymb;
   bool initlu;
 
   double *valsave;
   double *diag;
+  double *perm;
+  double *buf;
+  double *d;
 
   void *akeep;
   void *fkeep;
   void *control;
   void *info;
-#endif  /*WITH_MA97*/
 } LeqsolWorkspace;
 
 #ifdef __cplusplus

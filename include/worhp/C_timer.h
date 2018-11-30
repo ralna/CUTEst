@@ -7,13 +7,6 @@ extern "C" {
 
 #include "C_std.h"
 
-#ifdef WIN32
-# include <time.h>
-#else
-# include <sys/time.h>
-# include <sys/resource.h>
-#endif
-
 enum {
   TIMER_STOPPED = 0,
   TIMER_STARTED = 1
@@ -38,8 +31,8 @@ typedef struct {
 DLL_PUBLIC void StartTimer(TimerType *T);
 DLL_PUBLIC void ResetTimer(TimerType *T);
 DLL_PUBLIC void  StopTimer(TimerType *T);
-DLL_PUBLIC double GetTimer(TimerType *T);
-DLL_PUBLIC double GetTimerCont(TimerType *T);
+DLL_PUBLIC double GetTimer(TimerType const *T);
+DLL_PUBLIC double GetTimerCont(TimerType const *T);
 
 void GetDate(DateType *D);
 
