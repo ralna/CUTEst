@@ -55,6 +55,9 @@ To get CUTEst working, here is what you need to do:
 
       export ARCHDEFS="/home/rsimpson/archdefs"  (etc).
 
+    ** If you plan to use Matlab **, you must also set $MYMATLAB to
+    your system Matlab installation directory
+
     To make these permanent, place them in your ~/.cshrc or ~/.bashrc
     shell startup file.
 
