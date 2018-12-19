@@ -254,6 +254,17 @@ To get CUTEst working, here is what you need to do:
 
     for updates/bug fixes/news.
 
+12. To uninstall a particular architecture in CUTEst, execute the
+    script
+
+      $CUTEST/bin/uninstall_cutest
+
+    and follow the instructions
+
+13. To completely remove CUTEst, execute the command
+
+      rm -rf $CUTEST ~/.cutest
+
 Best of luck
 
 Nick Gould
@@ -262,4 +273,4 @@ Philippe Toint
 
 For GALAHAD productions
 30 January 2013
-This version: 12 June 2013
+This version: 19 Decemeber 2018
