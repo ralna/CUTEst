@@ -246,7 +246,7 @@
 !  include the contributions from the nonlinear elements
 
             DO j = data%ISTADG( ig ), data%ISTADG( ig + 1 ) - 1
-               ftt = ftt + data%ESCALE( j ) *  &
+               ftt = ftt + data%ESCALE( j ) *                                  &
                       work%FUVALS( data%IELING( j ) )
             END DO
             work%FT( ig ) = ftt
@@ -310,7 +310,8 @@
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE, &
                work%ISTAJC, work%W_ws, work%W_el, RANGE )
       END IF
-      work%firstg = .FALSE.
+!     work%firstg = .FALSE.
+      work%firstg = .TRUE.
 
 !  assemble the Hessian
 

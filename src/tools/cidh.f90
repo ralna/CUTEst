@@ -310,7 +310,8 @@
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE, &
                work%ISTAJC, work%W_ws, work%W_el, RANGE )
       END IF
-      work%firstg = .FALSE.
+!     work%firstg = .FALSE.
+      work%firstg = .TRUE.
 
 !  assemble the Hessian
 
