@@ -208,7 +208,7 @@
       INTEGER :: i, j, iel, k, ig, ii, ig1, l, jj, ll, icon, ifstat, igstat
       INTEGER :: nin, nvarel, nelow, nelup, istrgv, iendgv
       REAL ( KIND = wp ) :: ftt, gi, scalee, gii
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       LOGICAL :: nontrv
       EXTERNAL :: RANGE
 

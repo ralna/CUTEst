@@ -184,7 +184,7 @@
       INTEGER :: l, iel, nvarel, nin
       INTEGER :: ifstat, igstat
       REAL ( KIND = wp ) :: ftt, prod, scalee
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

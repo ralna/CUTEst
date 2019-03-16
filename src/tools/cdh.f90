@@ -128,7 +128,7 @@
       INTEGER :: i, ig, j, k, nnzh, ifstat, igstat, alloc_status
       REAL ( KIND = wp ) :: ftt
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

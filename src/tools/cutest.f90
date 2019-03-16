@@ -143,57 +143,57 @@
         INTEGER :: lh_col = lmin
         INTEGER :: lh_val = lmin
         INTEGER :: io_buffer = io_buffer
-        REAL ( KIND = wp ) :: time_ccfg = 0.0_wp
-        REAL ( KIND = wp ) :: time_ccfsg = 0.0_wp
-        REAL ( KIND = wp ) :: time_cch = 0.0_wp
-        REAL ( KIND = wp ) :: time_cchprods = 0.0_wp
-        REAL ( KIND = wp ) :: time_cchprodsp = 0.0_wp
-        REAL ( KIND = wp ) :: time_ccifg = 0.0_wp
-        REAL ( KIND = wp ) :: time_ccifsg = 0.0_wp
-        REAL ( KIND = wp ) :: time_cdh = 0.0_wp
-        REAL ( KIND = wp ) :: time_cdhc = 0.0_wp
-        REAL ( KIND = wp ) :: time_cdimchp = 0.0_wp
-        REAL ( KIND = wp ) :: time_ceh = 0.0_wp
-        REAL ( KIND = wp ) :: time_cfn = 0.0_wp
-        REAL ( KIND = wp ) :: time_cgr = 0.0_wp
-        REAL ( KIND = wp ) :: time_cgrdh = 0.0_wp
-        REAL ( KIND = wp ) :: time_chcprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_chprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_cifn = 0.0_wp
-        REAL ( KIND = wp ) :: time_cigr = 0.0_wp
-        REAL ( KIND = wp ) :: time_cisgr = 0.0_wp
-        REAL ( KIND = wp ) :: time_cidh = 0.0_wp
-        REAL ( KIND = wp ) :: time_cish = 0.0_wp
-        REAL ( KIND = wp ) :: time_cjprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_clfg = 0.0_wp
-        REAL ( KIND = wp ) :: time_cofg = 0.0_wp
-        REAL ( KIND = wp ) :: time_cofsg = 0.0_wp
-        REAL ( KIND = wp ) :: time_csgr = 0.0_wp
-        REAL ( KIND = wp ) :: time_csgrp = 0.0_wp
-        REAL ( KIND = wp ) :: time_csjp = 0.0_wp
-        REAL ( KIND = wp ) :: time_csgreh = 0.0_wp
-        REAL ( KIND = wp ) :: time_csgrsh = 0.0_wp
-        REAL ( KIND = wp ) :: time_csgrshp = 0.0_wp
-        REAL ( KIND = wp ) :: time_csh = 0.0_wp
-        REAL ( KIND = wp ) :: time_cshc = 0.0_wp
-        REAL ( KIND = wp ) :: time_cshcprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_cshp = 0.0_wp
-        REAL ( KIND = wp ) :: time_cshprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_csjprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_cconst = 0.0_wp
-        REAL ( KIND = wp ) :: time_ubandh = 0.0_wp
-        REAL ( KIND = wp ) :: time_udh = 0.0_wp
-        REAL ( KIND = wp ) :: time_ueh = 0.0_wp
-        REAL ( KIND = wp ) :: time_ufn = 0.0_wp
-        REAL ( KIND = wp ) :: time_ugr = 0.0_wp
-        REAL ( KIND = wp ) :: time_ugrdh = 0.0_wp
-        REAL ( KIND = wp ) :: time_ugreh = 0.0_wp
-        REAL ( KIND = wp ) :: time_ugrsh = 0.0_wp
-        REAL ( KIND = wp ) :: time_uhprod = 0.0_wp
-        REAL ( KIND = wp ) :: time_uofg = 0.0_wp
-        REAL ( KIND = wp ) :: time_ush = 0.0_wp
-        REAL ( KIND = wp ) :: time_ushp = 0.0_wp
-        REAL ( KIND = wp ) :: time_ushprod = 0.0_wp
+        REAL :: time_ccfg = 0.0
+        REAL :: time_ccfsg = 0.0
+        REAL :: time_cch = 0.0
+        REAL :: time_cchprods = 0.0
+        REAL :: time_cchprodsp = 0.0
+        REAL :: time_ccifg = 0.0
+        REAL :: time_ccifsg = 0.0
+        REAL :: time_cdh = 0.0
+        REAL :: time_cdhc = 0.0
+        REAL :: time_cdimchp = 0.0
+        REAL :: time_ceh = 0.0
+        REAL :: time_cfn = 0.0
+        REAL :: time_cgr = 0.0
+        REAL :: time_cgrdh = 0.0
+        REAL :: time_chcprod = 0.0
+        REAL :: time_chprod = 0.0
+        REAL :: time_cifn = 0.0
+        REAL :: time_cigr = 0.0
+        REAL :: time_cisgr = 0.0
+        REAL :: time_cidh = 0.0
+        REAL :: time_cish = 0.0
+        REAL :: time_cjprod = 0.0
+        REAL :: time_clfg = 0.0
+        REAL :: time_cofg = 0.0
+        REAL :: time_cofsg = 0.0
+        REAL :: time_csgr = 0.0
+        REAL :: time_csgrp = 0.0
+        REAL :: time_csjp = 0.0
+        REAL :: time_csgreh = 0.0
+        REAL :: time_csgrsh = 0.0
+        REAL :: time_csgrshp = 0.0
+        REAL :: time_csh = 0.0
+        REAL :: time_cshc = 0.0
+        REAL :: time_cshcprod = 0.0
+        REAL :: time_cshp = 0.0
+        REAL :: time_cshprod = 0.0
+        REAL :: time_csjprod = 0.0
+        REAL :: time_cconst = 0.0
+        REAL :: time_ubandh = 0.0
+        REAL :: time_udh = 0.0
+        REAL :: time_ueh = 0.0
+        REAL :: time_ufn = 0.0
+        REAL :: time_ugr = 0.0
+        REAL :: time_ugrdh = 0.0
+        REAL :: time_ugreh = 0.0
+        REAL :: time_ugrsh = 0.0
+        REAL :: time_uhprod = 0.0
+        REAL :: time_uofg = 0.0
+        REAL :: time_ush = 0.0
+        REAL :: time_ushp = 0.0
+        REAL :: time_ushprod = 0.0
         LOGICAL :: record_times = .FALSE.
         LOGICAL :: array_status = .FALSE.
         LOGICAL :: hessian_setup_complete = .FALSE.

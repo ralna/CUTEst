@@ -171,7 +171,7 @@
       INTEGER :: i, j, iel, k, ig, ii, ig1, l, ll, neling
       INTEGER :: nin, nvarel, nelow, nelup, istrgv, iendgv, ifstat, igstat
       REAL ( KIND = wp ) :: ftt, gi, scalee
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       LOGICAL :: nontrv
       INTEGER, DIMENSION( 1 ) :: ICALCG
       EXTERNAL :: RANGE

@@ -279,7 +279,7 @@
       INTEGER :: i, j, ifstat, igstat, ig, alloc_status
       INTEGER :: lhe_row_int, lhe_val_int
       REAL ( KIND = wp ) :: ftt
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       EXTERNAL :: RANGE
 

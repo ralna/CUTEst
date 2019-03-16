@@ -187,7 +187,7 @@
       INTEGER :: i, ic, iel, iell, ielhst, ifstat, igstat, ig, ii, irow
       INTEGER :: ijhess, j, jcol, k, l, ll, ls, lthvar, nvarel, nin
       REAL ( KIND = wp ) :: ftt, gdash, g2dash, gi, pi, prod, scalee
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       LOGICAL :: nullwk
       EXTERNAL :: RANGE
 

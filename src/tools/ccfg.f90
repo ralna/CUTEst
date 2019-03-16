@@ -205,7 +205,7 @@
       INTEGER :: i, j, iel, k, ig, ii, ig1, l, ll, icon, nin, nvarel, nelow
       INTEGER :: icnt, ifstat, igstat, nelup, istrgv, iendgv
       REAL ( KIND = wp ) :: ftt, gi, scalee
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

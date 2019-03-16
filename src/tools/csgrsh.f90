@@ -259,7 +259,7 @@
       REAL ( KIND = wp ) :: ftt, gi, scalee, gii
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       LOGICAL :: nontrv
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

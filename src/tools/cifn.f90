@@ -111,7 +111,7 @@
 
       INTEGER :: i, j, iel, ig, ii, ncalcg, neling, ifstat, igstat
       REAL ( KIND = wp ) :: ftt
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       INTEGER, DIMENSION( 1 ) :: ICALCG
       EXTERNAL :: RANGE
 
