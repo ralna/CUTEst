@@ -108,7 +108,7 @@
 
       INTEGER :: i, j, ig, ifstat, igstat
       REAL ( KIND = wp ) :: ftt, one, zero
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       PARAMETER ( zero = 0.0_wp, one = 1.0_wp )
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

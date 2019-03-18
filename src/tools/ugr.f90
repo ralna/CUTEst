@@ -105,7 +105,7 @@
 
       INTEGER :: i, j, ig, ifstat, igstat
       REAL ( KIND = wp ) :: ftt
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

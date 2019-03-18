@@ -64,7 +64,7 @@
 !  local variables
 
       INTEGER :: alloc_status
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

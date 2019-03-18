@@ -86,7 +86,7 @@
       INTEGER :: i, j, ig, ig1, icon, alloc_status
       INTEGER :: nin, nvarel, istrgv
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 

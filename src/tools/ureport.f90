@@ -128,7 +128,7 @@
 
 !  local variable
 
-      REAL ( KIND = wp ) :: time_now
+      REAL :: time_now
 
       CALL CPU_TIME( time_now )
 

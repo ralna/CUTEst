@@ -254,7 +254,7 @@
       INTEGER :: i, j, iel, k, ig, ii, ig1, l, jj, ll, nnzh, iendgv, icon
       INTEGER :: nin, nvarel, nelow, nelup, istrgv, ifstat, igstat, alloc_status
       REAL ( KIND = wp ) :: ftt, gi, gii, scalee
-      REAL ( KIND = wp ) :: time_in, time_out
+      REAL :: time_in, time_out
       LOGICAL :: nontrv
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       EXTERNAL :: RANGE
