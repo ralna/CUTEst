@@ -11,6 +11,7 @@
       INTEGER, PARAMETER :: input = 55, out = 6, inspec = 56
       INTEGER, PARAMETER :: io_buffer = 11
       DOUBLE PRECISION :: biginf, eps, fopt
+      DOUBLE PRECISION, PARAMETER :: tiny = 1.0D-6
       CHARACTER ( LEN = 10 ) :: pname
       DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: JBOUND
@@ -99,17 +100,17 @@
         ALLOCATE( JBOUND( n ), STAT = status )
         IF ( status /= 0 ) GO TO 990
         DO i = 1, n
-          IF ( BL( i ) > - biginf ) THEN
-            IF ( BU( i ) < biginf ) THEN
-              JBOUND( i ) = 0
-            ELSE
-              JBOUND( i ) = 1
-            END IF
-          ELSE
-            IF ( BU( i ) < biginf ) THEN
-              JBOUND( i ) = 2
-            ELSE
+          IF ( BL( i ) > - biginf ) THEN  ! finite lower bound
+            IF ( BU( i ) < biginf ) THEN  ! finite upper bound
               JBOUND( i ) = 3
+            ELSE  ! infinite upper bound
+              JBOUND( i ) = 2
+            END IF
+          ELSE  ! infinite lower bound
+            IF ( BU( i ) < biginf ) THEN  ! finite upper bound
+              JBOUND( i ) = 1
+            ELSE  ! infinite upper bound
+              JBOUND( i ) = 0
             END IF
           END IF
         END DO
@@ -122,13 +123,13 @@
 
       IF ( derivs <= 0 ) THEN
         CALL curvif( CURVI_evalf, n, X, fopt, eps,                             &
-                     ibound, jbound, BL, BU, WA, nf, nit, idiff, kmax, ier )
+                     ibound, JBOUND, BL, BU, WA, nf, nit, idiff, kmax, ier )
       ELSE IF ( derivs == 1 ) THEN
         CALL curvig( CURVI_evalf, CURVI_evalg, n, X, fopt, eps,                &
-                     ibound, jbound, BL, BU, WA, nf, ng, nit, ier )
+                     ibound, JBOUND, BL, BU, WA, nf, ng, nit, ier )
       ELSE
         CALL curvih( CURVI_evalf, CURVI_evalg, CURVI_evalh, n, X, fopt, eps,   &
-                     itrid, ibound, jbound, BL, BU, WA, nf, ng, nh, nit, ier )
+                     itrid, ibound, JBOUND, BL, BU, WA, nf, ng, nh, nit, ier )
       END IF
 
 !  output solution
@@ -136,11 +137,13 @@
       CALL CUTEST_ureport( status, CALLS, CPU )
       IF ( status /= 0 ) GO TO 910
 
-      g = 4 * n
+      g = n + n*n
       gnorm = MAXVAL( ABS( WA( g + 1 : g + n ) ) )
-      WRITE( out, "( /, '                 X         G ' )" )
+      WRITE( out, "( /, '                XL          X',                      &
+     &                  '           XU        PROJ(G)' )" )
       DO i = 1, n
-        WRITE( out, "(  A10, 2ES12.4 )" ) XNAMES( i ), X( i ), WA( g + i )
+        WRITE( out, "(  A10, 4ES12.4 )" )                                      &
+          XNAMES( i ), BL( i ), X( i ), BU( i ), WA( g + i )
       END DO
       WRITE ( out, "( /, 24('*'), ' CUTEst statistics ', 24('*') //,           &
      &         ' Code used               :  CURVI',   /,                       &
