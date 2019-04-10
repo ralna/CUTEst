@@ -1,0 +1,93 @@
+
+                      *****************************
+		      *                           *
+                      *  USING CURVI WITH CUTEst  *
+		      *                           *
+                      *****************************
+
+              ( Last modified on 9 Apr 2019 at 09:30:00 )
+
+WHAT IS CURVI?
+------------
+
+CURVI is a curvilinear search algorithm for small-scaled bound-constrained
+minimization using no, first or first-and-second derivatives as available.
+
+HOW DO I GET CURVI?
+-----------------
+
+CURVI was written and maintained by Hugo D. Scolnik
+
+ web: www.dc.uba.ar
+ Computer Science Department
+ School of Sciences
+ University of Buenos Aires
+
+and others. It is available from
+
+ https://www.dropbox.com/sh/9lhkdugqau07cyw/AACN4g8HyWp47n8o18yLMyeka?dl=0
+
+Extract into a suitable download director and rename all of the .FOR files
+to be lower case and with a .f suffix, e.g.,
+
+ mv RUT.FOR rut.f
+ mv RUTF.FOR rutf.f
+ mv RUTGH.FOR rutgh.f
+ mv CURVIF.FOR curvif.f
+ mv CURVIG.FOR curvig.f
+ mv CURVIH.FOR curvih.f
+
+NB. You may need to edit the files to change from DOS to Unix
+end of line charachters, and to remove the  character at the
+end of each file
+
+CREATING THE OBJECT FILES FOR CURVI
+-----------------------------------
+
+Set the enviroment variable $CURVI to the root directory of the downloaded
+package. To compile the required file, move to this directory and issue the
+command
+
+  gfortran -c rut.f rutf.f rutgh.f curvif.f curvig.f curvih.f
+
+(substitute your required fortran compiler for gfortran). This will
+produce the object files rut.o rutf.o rutgh.o curvif.o curvig.o and
+curvih.o and  should reside in $CURVI or by preference in
+$CUTEST/objects/(architecture)/(precision)/
+for the architecture and precsion you intend to use.
+
+USING THE CURVI INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The CURVI interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   CURVI.SPC     sets values for CURVI run-time parameters
+
+If no CURVI.SPC file is present in the current directory, the default version
+is copied from the $CUTEST/src/CURVI directory. This default contains the
+following:
+
+         2    DERIVS,  Derivatives available (<=0 none, 1 1st, >=2 1st and 2nd)
+   1.0D+18    BIGINF,  Bounds larger than biginf in magnitude are infinite
+   0.00001    EPS,     Stopping tolerance
+         0    NF,      Maximum number of function evaluations (0 -> 1000*n)
+         1    IDIFF,   Forward (<=1) or central (>=2) differences
+         3    KMAX,    Hessian recomputation interval
+
+The reader is referred to the paper quoted below and the code itself if he or
+she wishes to modify these parameters.
+
+To run with CUTEst, use the runcutest command with the -p curvi option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+John E. Dennis Jr., Nelida E. Echebest, M. T. Guardarucci, José Mario Martinez,
+Hugo D. Scolnik and M. C. Vacchino, "A Curvilinear Search Using Tridiagonal
+Secant Updates for Unconstrained Optimization", SIAM Journal on Optimization
+1(3): 333-357 (1991).

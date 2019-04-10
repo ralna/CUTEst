@@ -1,7 +1,7 @@
                   CUTEr vs CUTEst equivalences and changes
                   ----------------------------------------
 
-We describe the differences between how tools were called 
+We describe the differences between how tools were called
 in CUTEr and how they are now called in CUTEst via
 
  CUTEr name and arguments
@@ -9,8 +9,8 @@ in CUTEr and how they are now called in CUTEst via
  CUTEst name and arguments
 
 See the man pages for individual packages to find the precise
-meaning of arguments. Generally the argument status has been 
-added to all CUTEst packages to record any error that might 
+meaning of arguments. Generally the argument status has been
+added to all CUTEst packages to record any error that might
 occur. While redundant arguments have been removed, and in
 some cases argument list rearranged for consistency, in general
 arguments in CUTEr and CUTEst have the same functionality.
@@ -352,7 +352,7 @@ new tools:
  CUTEST_cterminate( status )
 
  CUTEST_cstats( status, nonlinear_variables_objective,                    &
-                nonlinear_variables_constraints,                          &   
+                nonlinear_variables_constraints,                          &
                 equality_constraints, linear_constraints )
 
 New Packages supported
@@ -360,6 +360,7 @@ New Packages supported
 
 ALGENCAN
 BOBYQA
+CURVI
 Direct Search
 filterSD
 NEWUOA
@@ -379,5 +380,3 @@ ve14 has been superceded by GALAHAD's qpb with its own CUTEet interface.
 ve09 is no longer available from HSL.
 hsl_ve12 has been superceded by GALAHAD's qpb with its own CUTEet interface.
 osl was withdran by IBM in 2004 and is no longer available.
-
-

@@ -4,13 +4,13 @@ C     ( Last modified on 18 Feb 2013 at 13:00:00 )
 
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-C     Driver for running the Spectral Projected Gradient (SPG) method 
+C     Driver for running the Spectral Projected Gradient (SPG) method
 C     on CUTEst problems.
 C
 C     Derived from SPG spgma.f and cuterwrapper.f from the TANGO home page
 C       www.ime.usp.br/~egbirgin/tango/
 C     CUTEst evolution February 2013, Nick Gould
-C     
+C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 C  Set up parameters, variables and arrays required by unconstrained tools
@@ -36,7 +36,7 @@ C  compute problem dimensions
 C  close input so that inip can open it again!
       CLOSE( input )
 
-C  allocate space 
+C  allocate space
 
       ALLOCATE( X( n ), STAT = status )
       IF ( status /= 0 ) GO TO 990
@@ -62,14 +62,14 @@ C  initialize data
 
 C  call the optimizer
 
-      CALL spg( n, X, epsopt, maxit, maxfc, iprint, f, gpsupn, iter, 
+      CALL spg( n, X, epsopt, maxit, maxfc, iprint, f, gpsupn, iter,
      *          fcnt, spginfo, inform)
 
 C  output information
 
       CALL CUTEST_ureport( status, CALLS, CPU )
       CALL CUTEST_probname( status, pname )
-      IF ( out .GT. 0 ) WRITE ( out, 2000 ) pname, n, CALLS( 1 ), 
+      IF ( out .GT. 0 ) WRITE ( out, 2000 ) pname, n, CALLS( 1 ),
      *       CALLS( 2 ), inform, f, CPU( 1 ), CPU( 2 )
 
       DEALLOCATE( X, STAT = status )
@@ -77,7 +77,7 @@ C  output information
       STOP
 
   910 CONTINUE
-      WRITE( out, "( ' CUTEst error, status = ', i0, ', stopping' )") 
+      WRITE( out, "( ' CUTEst error, status = ', i0, ', stopping' )")
      *   status
       STOP
 
@@ -92,7 +92,7 @@ C  Non-executable statements
      *    ,' Problem                 :  ', A10,    /
      *    ,' # variables             =      ', I10 /
      *    ,' # objective functions   =        ', F8.2 /
-     *    ,' # objective gradients   =        ', F8.2 / 
+     *    ,' # objective gradients   =        ', F8.2 /
      *    ,' Exit code               =      ', I10 /
      *    ,' Final f                 = ', E15.7 /
      *    ,' Set up time             =      ', 0P, F10.2, ' seconds' /
@@ -135,7 +135,7 @@ C     EXTERNAL SUBROUTINES
 
       call CUTEST_usetup(status,input,iout,io_buffer,n,x,l,u)
       if ( status .ne. 0 ) then
-        write( 6, "( ' CUTEst error, status = ', i0, ', stopping' )") 
+        write( 6, "( ' CUTEst error, status = ', i0, ', stopping' )" )
      *     status
         stop
       end if
