@@ -483,7 +483,7 @@ if [[ ${PKG} == "matlab" ]]; then
 elif [[ ${PKG} == "nomad" ]]; then
     # Link all the PACK and tools files together.
     (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
-    command="${FORTRAN} ${FFLAGS} -o ${DRIVER} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${BLAS} ${LAPACK} ${XTRALIBS[@]}"
+    command="${FORTRAN} ${FFLAGS} -o ${DRIVER} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${XTRALIBS[@]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
     $command
     command="$CP $CUTEST/src/nomad/run_nomad ./"
@@ -493,7 +493,7 @@ elif [[ ${PKG} == "nomad" ]]; then
 else
     # Link all the PACK and tools files together.
     (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
-    command="${FORTRAN} ${FFLAGS} -o run_${PACKAGE} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${BLAS} ${LAPACK} ${XTRALIBS[@]}"
+    command="${FORTRAN} ${FFLAGS} -o run_${PACKAGE} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${XTRALIBS[@]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
     $command
 fi
