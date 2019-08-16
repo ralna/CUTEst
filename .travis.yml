@@ -19,7 +19,7 @@ env:
 
 before_install:
   - export ARCHDEFS_VERSION=2.0.2
-  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get update -qq; sudo apt-get install -qq wget gfortran; fi
+  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get update -qq; sudo apt-get install -qq wget gfortran libblas-dev liblapack-dev; fi
   - if [[ $TRAVIS_OS_NAME == "osx" ]]; then brew update; brew cask uninstall oclint; brew install gcc; fi
   - mkdir -p $HOME/archdefs
   - cd $HOME/archdefs
@@ -63,3 +63,6 @@ script:
   - ./bin/runcutest --single -p genc
   - ./bin/runcutest --single -p gen90
   - ./bin/runcutest --single -p stats
+  - ./bin/runcutest -p gen77 -b -lblas -K -llapack -D ROSENBR
+  - ./bin/runcutest -p gen77 -lblas -D ROSENBR
+
