@@ -17,6 +17,7 @@
       INTEGER, INTENT( OUT ) :: status
       CHARACTER ( LEN = * ), INTENT( IN ) :: name
       REAL, INTENT( out ) :: time
+
 !  ---------------------------------------------------------------------------
 !  return the total CPU time spent in the cutest evaluation tool called 'name'
 !  while the CPU monitor was turned on (see cutest_set_monitor). Timings are

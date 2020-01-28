@@ -22,7 +22,7 @@
 !  compute the spasity pattern of the Jacobian matrix of gradients of
 !  the general constraints of a group partially separable function.
 
-!  The Jacobianis stored as a sparse matrix in coordinate form.
+!  The Jacobian is stored as a sparse matrix in coordinate form.
 !  The i-th entry of this matrix represents the derivative of constraint
 !  J_con(i) with respect to variable J_var(i) for  i = 1,...,nnzj
 !  ----------------------------------------------------------------------
