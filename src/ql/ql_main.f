@@ -19,7 +19,7 @@ C  Set up parameters, variables and arrays required by constrained tools
       DOUBLE PRECISION :: f, eps, t
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0, half = 5.0D-1
       DOUBLE PRECISION, PARAMETER :: infinity = 1.0D+19
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       CHARACTER * 10   pname
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: IWORK
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X, X_l, X_u, X0

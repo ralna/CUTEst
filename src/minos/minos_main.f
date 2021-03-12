@@ -29,7 +29,7 @@ C  ---------------------------------------------------------------------
       INTEGER :: NAME1( 1 ), NAME2( 1 )
       DOUBLE PRECISION :: objadd, sinf, obj, atemp, f
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0, big = 1.0D+20
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       CHARACTER ( LEN = 8 ) :: start, NAMES( 5 )
       CHARACTER ( LEN = 10 ) :: pname
       INTEGER * 4, ALLOCATABLE, DIMENSION( : ) :: HA, HS

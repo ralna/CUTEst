@@ -60,7 +60,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 	integer e_order = 0, l_order = 0, v_order = 0;
 	logical constrained = FALSE_;
 
-	doublereal calls[7], cpu[2];
+	doublereal calls[7], cpu[4];
 	integer nlin = 0, nbnds = 0, neq = 0;
 	doublereal dummy;
 	integer ExitCode;

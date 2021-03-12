@@ -25,7 +25,7 @@
       CHARACTER ( LEN = 20 ) :: summary_file = REPEAT( ' ', 20 )
       CHARACTER ( LEN = 20 ) :: iter_summary_file = REPEAT( ' ', 20 )
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: VNAMES, CNAMES
-      REAL( c_double ), DIMENSION( 2 ) :: CPU
+      REAL( c_double ), DIMENSION( 4 ) :: CPU
       REAL( c_double ), DIMENSION( 7 ) :: CALLS
       INTEGER :: io_buffer = 11
       INTEGER :: summary_unit, iter_summary_unit, iores

@@ -85,7 +85,7 @@ double cg_valgrad
         logical     efirst = FALSE_, lfirst = FALSE_, nvfrst = FALSE_, grad;
         logical     constrained = FALSE_;
 
-        doublereal  calls[7], cpu[2];
+        doublereal  calls[7], cpu[4];
         integer     nlin = 0, nbnds = 0, neq = 0;
         integer     ExitCode;
         int         i, status_cg_descent ;

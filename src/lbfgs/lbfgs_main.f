@@ -19,7 +19,7 @@ C
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: XNAMES
       EXTERNAL LB2
       COMMON / LB3 / MP, LP, GTOL, STPMIN, STPMAX
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
 C     
 C  Open the Spec file for the method.
 C

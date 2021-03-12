@@ -66,9 +66,6 @@ See the man page for runcutest for more details of other options.
 REFERENCES
 ----------
 
-P. E. Gill and E. Wong,
-"Methods for Convex and General Quadratic Programming",
-Technical Report NA 10-1, Dept. of Mathematics, University of California, 
-San Diego (latest version 2013).
-
-
+P. E. Gill and E. Wong.
+"Methods for convex and general quadratic programming".
+Mathematical Programming Computation, 7(1): 71--112, 2015.

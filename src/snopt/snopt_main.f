@@ -13,7 +13,7 @@
      &                     neG, inform, nS, nInf, nNames
       integer           :: j, jslack, neq, nlc, status
 
-      double precision  :: ObjAdd, sInf, Obj, cpu(2), calls(7)
+      double precision  :: ObjAdd, sInf, Obj, cpu(4), calls(7)
 
 
       integer,          allocatable :: iu(:), iw(:)

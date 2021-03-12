@@ -63,7 +63,7 @@ C  Local variables
      *                TGRDH, TSH, TGRSH, TPROD, TBANDH, TDIMEN,
      *                TDIMSH, TVARTY, TREPRT
       CHARACTER * 150 msg
-      REAL * 8        CALLS( 4 ), TIME( 2 )
+      REAL * 8        CALLS( 4 ), TIME( 4 )
 
 C  External functions
 
@@ -730,7 +730,7 @@ C  Check number of input and output arguments.
 
 C  Call CUTEST_ureport
 
-	 CALL CUTEST_ureport( status, TIME, CALLS )
+	 CALL CUTEST_ureport( status, CALLS, TIME )
          IF ( status .NE. 0 ) GO TO 910
 
 C  Make room for output - only report CALLS

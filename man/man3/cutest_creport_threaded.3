@@ -81,11 +81,16 @@ CALLS( 6 ): number of calls to the constraint gradients
 CALLS( 7 ): number of calls to the constraint Hessians,
 
 .TP
-.B TIME \fP[out] - real array of length 2:
+.B TIME \fP[out] - real array of length 4:
 .TP 3
 TIME( 1 ): CPU time (in seconds) for CUTEST_csetup_threaded
 .TP
-TIME( 2 ): CPU time (in seconds) since the end of CUTEST_csetup_threaded,
+TIME( 2 ): CPU time (in seconds) since the end of CUTEST_csetup_threaded
+.TP
+TIME( 3 ): elapsed system clock time (in seconds) for CUTEST_csetup_threaded
+.TP
+TIME( 4 ): elapsed system clock time (in seconds) since the end of CUTEST_csetup_threaded,
+
 .TP
 .B thread \fP[in] - integer
 statistics are for the specified thread; threads are numbered

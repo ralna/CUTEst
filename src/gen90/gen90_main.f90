@@ -17,7 +17,7 @@ PROGRAM GEN90_main
   INTEGER, PARAMETER :: inspec = 46, input = 47, out = 6
   REAL ( KIND = wp ) :: DUMMY
   REAL ( KIND = wp ), Dimension( : ), Allocatable :: X, BL, BU, V, CL, CU, C
-  REAL ( KIND = wp ), DIMENSION( 2 ) :: CPU( 2 )
+  REAL ( KIND = wp ), DIMENSION( 2 ) :: CPU( 4 )
   REAL ( KIND = wp ), DIMENSION( 7 ) :: CALLS( 7 )
   CHARACTER( LEN = 10 ) ::  PNAME
   CHARACTER( LEN = 10 ), Dimension( : ), Allocatable :: VNAMES, GNAMES

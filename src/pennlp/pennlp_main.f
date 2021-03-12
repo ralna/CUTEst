@@ -21,7 +21,7 @@ C  Set up parameters, variables and arrays required by constrained tools
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0, half = 5.0D-1
       DOUBLE PRECISION, PARAMETER :: cutest_inf = 1.0D+19
       DOUBLE PRECISION, PARAMETER :: pennlp_inf = 2.0D+38
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       DOUBLE PRECISION :: DOPTIONS( 13 ), DRESULTS( 5 )
       CHARACTER * 10 :: pname
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X_l, X_u, X

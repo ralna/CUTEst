@@ -22,7 +22,7 @@
   integer(ip)   :: INFO, n, m, nm, nnH, ncObj, neA, lenA, neH, neH2, lenH, nS
   integer(ip)   :: iObj, nName, status, alloc_stat, j, nInf
   real(rp)      :: Obj, ObjAdd, sInf
-  real(rp)      :: CPU( 2 ), CALLS( 7 )
+  real(rp)      :: CPU( 4 ), CALLS( 7 )
   character(8)  :: Names(1)
   character(10) :: Prob
   character(20) :: filename

@@ -14,7 +14,7 @@ C
       INTEGER :: nlin, neq, nbnds, exitcode
       LOGICAL :: constrained
       CHARACTER ( LEN = 10 ) :: PNAME
-      DOUBLE PRECISION dummy, CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION dummy, CPU( 4 ), CALLS( 7 )
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X, BL, BU
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: V, CL, CU
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: VNAMES

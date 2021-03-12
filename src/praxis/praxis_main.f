@@ -18,7 +18,7 @@ C Nick - stupid use of common does not allow allocatable arrays
       DOUBLE PRECISION :: small, t, xldt, xm2, xm4, dseed, scbd
       DOUBLE PRECISION, PARAMETER :: one = 1.0D0
       CHARACTER ( LEN = 10 ) :: pname
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       DOUBLE PRECISION, DIMENSION( nmax ) :: X, D, Q0, Q1
       DOUBLE PRECISION, DIMENSION( nmax, nmax ) :: V
       CHARACTER ( LEN = 10 ), DIMENSION( nmax )  :: XNAMES

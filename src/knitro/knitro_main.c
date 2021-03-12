@@ -237,7 +237,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     doublereal *c, f;
 
-    doublereal calls[7], cpu[2];
+    doublereal calls[7], cpu[4];
     integer nlin = 0, nbnds = 0, neq = 0;
     doublereal dummy;
     integer ExitCode;

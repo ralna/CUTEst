@@ -198,7 +198,7 @@
        INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
        INTEGER, INTENT( OUT ) :: cutest_status
        REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CALLS
-       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 2 ) :: CPU
+       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CPU
        END SUBROUTINE CUTEST_ureport
 
        SUBROUTINE CUTEST_uterminate( cutest_status )
@@ -619,7 +619,7 @@
        INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
        INTEGER, INTENT( OUT ) :: cutest_status
        REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 7 ) :: CALLS
-       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 2 ) :: CPU
+       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CPU
        END SUBROUTINE CUTEST_creport
 
        SUBROUTINE CUTEST_cstats( cutest_status, nonlinear_variables_objective, &
@@ -778,7 +778,7 @@
        INTEGER, INTENT( IN ) :: thread
        INTEGER, INTENT( OUT ) :: cutest_status
        REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CALLS
-       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 2 ) :: CPU
+       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CPU
        END SUBROUTINE CUTEST_ureport_threaded
 
 !  Interface block for threaded constrained tools
@@ -1087,7 +1087,7 @@
        INTEGER, INTENT( IN ) :: thread
        INTEGER, INTENT( OUT ) :: cutest_status
        REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 7 ) :: CALLS
-       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 2 ) :: CPU
+       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( 4 ) :: CPU
        END SUBROUTINE CUTEST_creport_threaded
 
      END INTERFACE

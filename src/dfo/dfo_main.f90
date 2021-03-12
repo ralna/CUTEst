@@ -30,7 +30,7 @@ Program DFO_main
 !      LOGICAL IFINTV
   Real(Kind = wp) :: DELMIN, DELTA, CNSTOL, PP, STPTHR
 !     - Variables for CUTEst report
-  Real(Kind = wp) :: CPU(2), CALLS(7)
+  Real(Kind = wp) :: CPU(4), CALLS(7)
 !     - Variables for working space
   Integer :: LDA
   Integer :: IT, NF, INFO

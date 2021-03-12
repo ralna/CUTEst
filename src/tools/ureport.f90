@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.0 - 29/12/2012 AT 16:20 GMT.
+! THIS VERSION: CUTEST 1.7 - 12/03/2021 AT 13:40 GMT.
 
 !-*-*-*-*-*-*-  C U T E S T    U R E P O R T    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -16,7 +16,7 @@
 
       INTEGER, INTENT( OUT ) :: status
       REAL ( KIND = wp ), DIMENSION( 4 ):: CALLS
-      REAL ( KIND = wp ), DIMENSION( 2 ):: TIME
+      REAL ( KIND = wp ), DIMENSION( 4 ):: TIME
 
 !  ------------------------------------------------------------------------
 !  return the values of counters maintained by the CUTEst tools. 
@@ -29,6 +29,8 @@
 
 !    TIME( 1 ): CPU time (in seconds) for USETUP
 !    TIME( 2 ): CPU time ( in seconds) since the end of USETUP
+!    TIME( 3 ): elapsed system clock time (in seconds) for USETUP
+!    TIME( 4 ): elapsed system clock time (in seconds) since the end of USETUP
 !  ------------------------------------------------------------------------
 
       CALL CUTEST_ureport_threadsafe( CUTEST_data_global,                      &
@@ -57,7 +59,7 @@
       INTEGER, INTENT( IN ) :: thread
       INTEGER, INTENT( OUT ) :: status
       REAL ( KIND = wp ), DIMENSION( 4 ):: CALLS
-      REAL ( KIND = wp ), DIMENSION( 2 ):: TIME
+      REAL ( KIND = wp ), DIMENSION( 4 ):: TIME
 
 !  ------------------------------------------------------------------------
 !  return the values of counters maintained by the CUTEst tools. 
@@ -70,6 +72,8 @@
 
 !    TIME( 1 ): CPU time (in seconds) for USETUP
 !    TIME( 2 ): CPU time ( in seconds) since the end of USETUP
+!    TIME( 3 ): elapsed system clock time (in seconds) for USETUP
+!    TIME( 4 ): elapsed system clock time (in seconds) since the end of USETUP
 !  ------------------------------------------------------------------------
 
 !  check that the specified thread is within range
@@ -106,12 +110,13 @@
       TYPE ( CUTEST_data_type ) :: data
       TYPE ( CUTEST_work_type ) :: work
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
+      INTEGER, PARAMETER :: sp = KIND( 1.0 )
 
 !  Dummy arguments
 
       INTEGER, INTENT( OUT ) :: status
       REAL ( KIND = wp ), DIMENSION( 4 ):: CALLS
-      REAL ( KIND = wp ), DIMENSION( 2 ):: TIME
+      REAL ( KIND = wp ), DIMENSION( 4 ):: TIME
 
 !  ------------------------------------------------------------------------
 !  return the values of counters maintained by the CUTEst tools. 
@@ -124,16 +129,23 @@
 
 !    TIME( 1 ): CPU time (in seconds) for USETUP
 !    TIME( 2 ): CPU time ( in seconds) since the end of USETUP
+!    TIME( 3 ): elapsed system clock time (in seconds) for USETUP
+!    TIME( 4 ): elapsed system clock time (in seconds) since the end of USETUP
 !  ------------------------------------------------------------------------
 
 !  local variable
 
-      REAL :: time_now
+      INTEGER :: count, count_rate
+      REAL :: cpu_time_now, time_now
 
-      CALL CPU_TIME( time_now )
+      CALL CPU_TIME( cpu_time_now )
+      CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
+      time_now = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
 
-      TIME( 1 ) = data%sutime
-      TIME( 2 ) = time_now - data%sttime
+      TIME( 1 ) = data%su_cpu_time
+      TIME( 2 ) = cpu_time_now - data%st_cpu_time
+      TIME( 3 ) = data%su_time
+      TIME( 4 ) = time_now - data%st_time
 
       CALLS( 1 ) = work%nc2of
       CALLS( 2 ) = work%nc2og

@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.2 - 05/09/2014 AT 08:00 GMT.
+! THIS VERSION: CUTEST 1.7 - 12/03/2021 AT 13:40 GMT.
 
 !-*-*-*-*-*-*-  C U T E S T    U S E T U P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -162,6 +162,7 @@
                                            io_buffer, n, X, X_l, X_u )
       USE CUTEST
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
+      INTEGER, PARAMETER :: sp = KIND( 1.0 )
 
 !  dummy arguments
 
@@ -178,7 +179,7 @@
 
 !  local variables
 
-      INTEGER :: i, ialgor, neltyp, ngrtyp, alloc_status
+      INTEGER :: i, ialgor, neltyp, ngrtyp, count, count_rate, alloc_status
       LOGICAL :: debug
       INTEGER, PARAMETER :: lmin = 10000
       REAL ( KIND = wp ), DIMENSION( 2 ) :: OBFBND
@@ -186,7 +187,9 @@
       CHARACTER ( LEN = 10 ) :: chtemp
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
 
-      CALL CPU_TIME( data%sutime )
+      CALL CPU_TIME( data%su_cpu_time )
+      CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
+      data%su_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
       data%out = out
       work%io_buffer = io_buffer
       debug = .FALSE.
@@ -640,8 +643,11 @@
       work%nc2cf = 0 ; work%nc2cg = 0 ; work%nc2ch = 0 ; work%nhvpr = 0
       work%njvpr = 0 ; work%pnc = 0
 
-      CALL CPU_TIME( data%sttime )
-      data%sutime = data%sttime - data%sutime
+      CALL CPU_TIME( data%st_cpu_time )
+      data%su_cpu_time = data%st_cpu_time - data%su_cpu_time
+      CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
+      data%st_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
+      data%su_time = data%st_time - data%su_time
 
       status = 0
       RETURN

@@ -57,7 +57,7 @@
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: J2_val
       LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATION, LINEAR
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names, C_names
-      REAL ( KIND = wp ) :: CPU( 2 ), CALLS( 7 )
+      REAL ( KIND = wp ) :: CPU( 4 ), CALLS( 7 )
 
 !  open the problem data file
 
@@ -779,12 +779,12 @@
 !     WRITE( out, "( ' CALL CUTEST_creport for thread 1' )" )
 !     CALL CUTEST_creport_threaded( status, CALLS, CPU, 1 )
 !     WRITE( out, "( ' CALLS(1-7) =', 7( 1X, I0 ) )" ) INT( CALLS( 1 : 7 ) )
-!     WRITE( out, "( ' CPU(1-2) =', 2F7.2 )" ) CPU( 1 : 2 )
+!     WRITE( out, "( ' CPU(1-4) =', 4F7.2 )" ) CPU( 1 : 4 )
 
       WRITE( out, "( ' CALL CUTEST_creport for thread ', I0 )" ) thread
       CALL CUTEST_creport_threaded( status, CALLS, CPU, thread )
       WRITE( out, "( ' CALLS(1-7) =', 7( 1X, I0 ) )" ) INT( CALLS( 1 : 7 ) )
-      WRITE( out, "( ' CPU(1-2) =', 2F7.2 )" ) CPU( 1 : 2 )
+      WRITE( out, "( ' CPU(1-4) =', 4F7.2 )" ) CPU( 1 : 4 )
 
 !  terminal exit
 

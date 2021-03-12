@@ -20,7 +20,7 @@ C  Set up parameters, variables and arrays required by constrained tools
       INTEGER :: ioptns, iprint, nclin, ncnln, inform, iter, status, lda
       DOUBLE PRECISION :: f
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       LOGICAL :: debug
       CHARACTER ( LEN= 10 ) :: cbgbnd
       CHARACTER * 10   pname

@@ -141,7 +141,7 @@ static int spec = 0;
         logical grad;
 	char *pname, *vnames, *gnames;
 	doublereal f, cmax;
-	doublereal calls[7], cpu[2];
+	doublereal calls[7], cpu[4];
 
 	int *iA=NULL, *kA=NULL, *iQ=NULL, *kQ=NULL, *iAt=NULL, *kAt=NULL;
 

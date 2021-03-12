@@ -32,7 +32,7 @@ C  Dominique Orban, July 2007
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: XNAMES
       CHARACTER ( LEN = 17 ), PARAMETER :: cgparm = 'cg_descent_f.parm'
       CHARACTER ( LEN = 15 ) :: spcdat
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       EXTERNAL :: CG_DESCENT_EVALF, CG_DESCENT_EVALG
 
 C  Open the Spec file for the method.

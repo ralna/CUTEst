@@ -23,7 +23,7 @@ C  ------------------------------------------------------
       DOUBLE PRECISION ftol, stptol, final, f
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0
       DOUBLE PRECISION, PARAMETER :: biginf = 9.0D+19
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       CHARACTER ( LEN = 10 ) :: pname
       LOGICAL :: bound, inequality
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: IPAR

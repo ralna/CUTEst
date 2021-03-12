@@ -30,7 +30,7 @@ C  --------------------------------------------------------------------
       DOUBLE PRECISION, PARAMETER :: one = 1.0D+0, zero = 0.0D+0
       DOUBLE PRECISION, PARAMETER :: biginf = 9.0D+19
       DOUBLE PRECISION :: vl, vu, vx, vm, objf
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       DOUBLE PRECISION :: CNTL( 15 ), RINFO( 40 )
       LOGICAL :: writes, pnamee
       CHARACTER ( LEN = 5 ) :: state

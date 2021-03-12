@@ -20,7 +20,7 @@ C  Revised for CUTEst, January 2013
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: XNAMES
       COMMON / CGDD /  mp, lp
       COMMON / RUNINF / iter, nfun
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
 C
 C  Open the Spec file for the method.
 

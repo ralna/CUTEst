@@ -16,7 +16,7 @@ C  Revised for CUTEst, Nick Gould, January 2013
       DOUBLE PRECISION, PARAMETER :: biginf = 9.0D+19, zero = 0.0D+0
       LOGICAL :: bounds
       CHARACTER ( LEN = 10 ) :: pname
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: IWRK
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X, TYPSIZ
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: XPLS, GPLS

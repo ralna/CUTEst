@@ -22,7 +22,7 @@ C  Set up parameters, variables and arrays required by constrained tools
       DOUBLE PRECISION :: nlpsupn, snorm
       LOGICAL :: checkder
       CHARACTER * 10 :: pname
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       LOGICAL :: CODED( 11 )
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X, X_l, X_u
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: LAMBDA

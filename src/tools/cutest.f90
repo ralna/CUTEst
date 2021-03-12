@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.6 - 22/02/2018 AT 15:15 GMT.
+! THIS VERSION: CUTEST 1.7 - 12/03/2021 AT 15:15 GMT.
 
 !-*-*-*-*-*-*-*-*-*-*-*-*-*- C U T E S T   M O D U l E -*-*-*-*-*-*-*-*-*-*-*-*-
 
@@ -90,7 +90,7 @@
         INTEGER :: l_link_e_u_v, lfuval, lelvar, maxsel, maxsin
         INTEGER :: lfxi, lgxi, lhxi, lggfx, ldx, lgrjac, lnguvl, lnhuvl
         INTEGER :: meq, mlin, nnov, nnjv, numvar, numcon, threads
-        REAL :: sutime, sttime
+        REAL :: su_time, st_time, su_cpu_time, st_cpu_time
         LOGICAL :: alllin, altriv
         CHARACTER ( LEN = 10 ) :: pname
         INTEGER, ALLOCATABLE, DIMENSION( : ) :: ISTADG

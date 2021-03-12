@@ -27,6 +27,8 @@ all_single: tools_single
                    dfo  PRECIS=single PWD=$(PWD)/dfo )
 	( cd directsearch ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    directsearch  PRECIS=single PWD=$(PWD)/directsearch )
+	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   e04nqf  PRECIS=single PWD=$(PWD)/e04nqf )
 	( cd filtersd  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    filtersd  PRECIS=single PWD=$(PWD)/filtersd )
 	( cd filtersqp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -112,6 +114,8 @@ all_double: tools_double
                    dfo  PRECIS=double PWD=$(PWD)/dfo )
 	( cd directsearch ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    directsearch  PRECIS=double PWD=$(PWD)/directsearch )
+	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   e04nqf  PRECIS=double PWD=$(PWD)/e04nqf )
 	( cd filtersd  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    filtersd  PRECIS=double PWD=$(PWD)/filtersd )
 	( cd filtersqp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -291,6 +295,8 @@ run_test_single: tools_single test_single
 #             run_test PRECIS=single PWD=$(PWD)/derchk )
 	( cd dfo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=single PWD=$(PWD)/dfo )
+	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+             run_test  PRECIS=single PWD=$(PWD)/e04nqf )
 	( cd filtersd  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test  PRECIS=single PWD=$(PWD)/filtersd )
 	( cd filtersqp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -371,6 +377,8 @@ run_test_double: tools_double test_double
 #             run_test PRECIS=double PWD=$(PWD)/derchk )
 	( cd dfo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=double PWD=$(PWD)/dfo )
+	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+             run_test  PRECIS=double PWD=$(PWD)/e04nqf )
 	( cd filtersd  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test  PRECIS=double PWD=$(PWD)/filtersd )
 	( cd filtersqp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \

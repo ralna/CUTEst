@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.2 - 05/09/2014 AT 08:00 GMT.
+! THIS VERSION: CUTEST 1.7 - 12/03/2021 AT 13:40 GMT.
 
 !-*-*-*-*-  C U T E S T  C I N T _  C S E T U P    S U B R O U T I N E  -*-*-*-
 
@@ -225,6 +225,7 @@
                                 EQUATN, LINEAR, e_order, l_order, v_order )
       USE CUTEST
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
+      INTEGER, PARAMETER :: sp = KIND( 1.0 )
 
 !  dummy arguments
 
@@ -244,7 +245,7 @@
 
 !  local variables
 
-      INTEGER :: ialgor, i, ig, j, jg, mend, mmax
+      INTEGER :: ialgor, i, ig, j, jg, mend, mmax, count, count_rate
       INTEGER :: ii, k, iel, jwrk, kndv, nnlin, nend, neltyp, ngrtyp, itemp
       INTEGER :: alloc_status
       LOGICAL :: debug, ltemp
@@ -255,7 +256,9 @@
       INTEGER, PARAMETER :: lmin = 10000
       REAL ( KIND = wp ), DIMENSION( 2 ) :: OBFBND
 
-      CALL CPU_TIME( data%sutime )
+      CALL CPU_TIME( data%su_cpu_time )
+      CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
+      data%su_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
       data%out = out
       work%io_buffer = io_buffer
       debug = .FALSE.
@@ -1412,8 +1415,11 @@
       work%nc2cf = 0 ; work%nc2cg = 0 ; work%nc2ch = 0 ; work%nhvpr = 0
       work%njvpr = 0 ; work%pnc = m
 
-      CALL CPU_TIME( data%sttime )
-      data%sutime = data%sttime - data%sutime
+      CALL CPU_TIME( data%st_cpu_time )
+      data%su_cpu_time = data%st_cpu_time - data%su_cpu_time
+      CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
+      data%st_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
+      data%su_time = data%st_time - data%su_time
 
       status = 0
       RETURN

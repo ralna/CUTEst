@@ -49,14 +49,19 @@ CALLS( 2 ): number of calls to the objective gradient
 .TP
 CALLS( 3 ): number of calls to the objective Hessian
 .TP
-CALLS( 4 ): number of Hessian times vector products,
+CALLS( 4 ): number of Hessian times vector products
 
 .TP
-.B TIME \fP[out] - real array of length 2:
+.B TIME \fP[out] - real array of length 4:
 .TP 3
 TIME( 1 ): CPU time (in seconds) for CUTEST_usetup_threaded
 .TP
-TIME( 2 ): CPU time (in seconds) since the end of CUTEST_usetup_threaded,
+TIME( 2 ): CPU time (in seconds) since the end of CUTEST_usetup_threaded
+.TP
+TIME( 3 ): elapsed system clock time (in seconds) for CUTEST_usetup_threaded
+.TP
+TIME( 4 ): elapsed system clock time (in seconds) since the end of CUTEST_usetup_threaded
+
 .TP
 .B thread \fP[in] - integer
 statistics are for the specified thread; threads are numbered

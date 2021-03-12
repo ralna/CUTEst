@@ -21,7 +21,7 @@ C
       PARAMETER      ( ZERO = 0.0D0, ONE = 1.0D0, INFTY = 1.0D+19 )
       CHARACTER ( LEN = 10 ) :: PNAME, SPCDAT
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: XNAMES
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       EXTERNAL         SETULB
 C
 C  Open the Spec file for the method.

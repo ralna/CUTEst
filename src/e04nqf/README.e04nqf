@@ -1,0 +1,124 @@
+
+                    ********************************
+      	            *                              *
+                    *   USING E04NQF WITH CUTEst   *
+                    *                              *
+                    ********************************
+
+              ( Last modified on 11 Mar 2021 at 12:00:00 )
+
+WHAT IS E04NQF?
+-------------
+
+E04NQF is a package for solving large-scale convex quadratic programming 
+problems.
+
+HOW DO I GET E04NQF?
+--------------------
+
+E04NQF is available as part of the NAG Library. See
+
+https://www.nag.com/numeric/fl/nagdoc_fl26.0/html/e04/e04nqf.html
+
+The code was originally written by Philip Gill, Walter Murray and 
+Michael Saunders as SQOPT.
+
+CREATING THE OBJECT FILES FOR E04NQF
+------------------------------------
+
+You will need to have installed the NAG library, and have set the
+standard NAG environment variables by executing the nagvars.sh/nagvars.csh
+scripts that NAG provides. Remember that the NAG library that you have 
+installed is most likely for a specific compiler, so be careful that you 
+use the correct architecture.
+
+The flags as set work for ifort. If you are using a different compiler, you 
+may need to discover the compiler flags suited to your installation. Look 
+at the file $CUTEST/packages/defaults/e04nqf, particularly the variable 
+PACKLIBS and edit as necessary.
+
+USING THE E04NQF INTERFACE TOOL
+----------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The E04NQF interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   E04NQF.SPC     sets values for E04NQF run-time parameters
+
+If no E04NQF.SPC file is present in the current directory, the default version 
+is copied from the $CUTEST/src/E04NQF directory. This default contains the 
+following:
+
+Begin E04NQF
+  Check Frequency             = 60
+  Crash Option                = 3
+  Crash Tolerance             = 0.1
+  Dump File                   = 0
+  Load File                   = 0
+  Elastic Mode                = 1
+  Elastic Objective           = 1
+  Elastic Weight              = 1.0
+  Expand Frequency            = 10000
+  Factorization Frequency     = 50
+  Feasibility Tolerance       = 1.0E-6
+  Infinite Bound Size         = 1.0E+19
+  Iterations Limit            = - 1
+  LU Density Tolerance        = 0.6 
+  LU Singularity Tolerance    = 0.0
+  LU Factor Tolerance         = 100.0
+  LU Update Tolerance         = 10.0
+  LU Partial Pivoting   
+* LU Complete Pivoting                
+* LU Rook Pivoting            
+  Minimize
+* Maximize            
+  Feasible Point                
+  New Basis File              = 0
+  Backup Basis File           = 0
+  Save Frequency              = 100
+  Nolist
+* List                
+  Old Basis File              = 0
+  Optimality Tolerance        = 1.0E-6
+  Partial Price               = 1
+  Pivot Tolerance             = 1.0E-10
+  Print File                  = 0
+  Print Frequency             = 100
+  Punch File                  = 0
+  Insert File                 = 0
+  QPSolver Cholesky
+* QPSolver CG         
+* QPSolver QN         
+  Reduced Hessian Dimension   = ​2000
+  Scale Option                = 2
+  Scale Tolerance             = 0.9
+  Scale Print   
+  Solution Yes  
+* Solution No  
+  Solution File               = 0
+  Summary File                = 0
+  Summary Frequency           = 100
+* Superbasics Limit           = ​MIN( nh + 1, n )
+  System Information No
+* System Information Yes               
+  Timing Level                = 0
+  Unbounded Step Size         = 0.0
+End E04NQF
+
+Lines starting with a "*   " are disabled. There are other options, see 
+the software documentation.
+
+To run with CUTEst, use the runcutest command with the -p e04nqf option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+P. E. Gill, W. Murray and M. A. Saunders M A
+Users' guide for SQOPT 7: a Fortran package for large-scale linear 
+and quadratic programming Report NA 05-1 (2005)
+Department of Mathematics, University of California, San Diego 
+http://www.ccom.ucsd.edu/~peg/papers/sqdoc7.pdf

@@ -18,7 +18,7 @@
       REAL( KIND = wp ) :: rhobeg, rhoend
       REAL( KIND = wp ), PARAMETER :: infty = 1.0D+19
       REAL( KIND = wp ), DIMENSION(:), ALLOCATABLE :: W
-      REAL( KIND = wp ), DIMENSION( 2 ) :: CPU
+      REAL( KIND = wp ), DIMENSION( 4 ) :: CPU
       REAL( KIND = wp ), DIMENSION( 7 ) :: CALLS
       INTEGER :: io_buffer = 11
       INTEGER, PARAMETER :: input = 55, indr = 46, out = 6

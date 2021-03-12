@@ -40,7 +40,7 @@ c *** for statistical information
       integer          nfree, nbind, iter
       double precision f,gnorm,ff,cnorm,xdiff
       real calls(4)
-      real time(2)
+      real time(4)
 
       integer          i,info,nnzh,reason,na
       integer          its(100000)

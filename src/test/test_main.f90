@@ -50,7 +50,7 @@
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: J2_val
       LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATION, LINEAR
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names, C_names
-      REAL ( KIND = wp ) :: CPU( 2 ), CALLS( 7 )
+      REAL ( KIND = wp ) :: CPU( 4 ), CALLS( 7 )
 
 !  open the problem data file
 

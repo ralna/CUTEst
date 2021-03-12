@@ -18,7 +18,7 @@
       REAL( KIND = wp ) :: sigma, alpha, beta, gamma, stepi, stepf
       REAL( KIND = wp ), PARAMETER :: infty = 1.0D+19
       REAL( KIND = wp ), DIMENSION( : ), ALLOCATABLE :: X0, SSTEPI, AUX
-      REAL( KIND = wp ), DIMENSION( 2 ) :: CPU
+      REAL( KIND = wp ), DIMENSION( 4 ) :: CPU
       REAL( KIND = wp ), DIMENSION( 4 ) :: CALLS
       CHARACTER ( len = 10 ) :: pname
       INTEGER :: io_buffer = 11

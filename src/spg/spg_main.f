@@ -20,7 +20,7 @@ C  Set up parameters, variables and arrays required by unconstrained tools
       INTEGER :: status
       DOUBLE PRECISION :: epsopt, f, gpsupn
       CHARACTER * 10 :: pname
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X
 
 C  Open the relevant file

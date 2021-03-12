@@ -23,7 +23,7 @@ CMED  INTEGER, PARAMETER :: dim  = 20, imax = 4000
       CHARACTER ( LEN = 10 ) :: pname
       LOGICAL :: bounds
       INTEGER :: SCHEME( limit ), LIST( limit ), INDEX( limit )
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 4 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 4 )
       DOUBLE PRECISION WORK( dim ), S( dim * ( dim + 1 ) )
       DOUBLE PRECISION WORK1( - 3 : dim + 1 ), WORK2( - 3 : dim + 1 )
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X, BL, BU

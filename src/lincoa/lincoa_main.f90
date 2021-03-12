@@ -17,7 +17,7 @@
       LOGICAL, DIMENSION( : ), ALLOCATABLE  :: EQUATN, LINEAR
       CHARACTER ( LEN = 10 ) :: pname
       CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: VNAMES, CNAMES
-      REAL( KIND = wp ), DIMENSION( 2 ) :: CPU
+      REAL( KIND = wp ), DIMENSION( 4 ) :: CPU
       REAL( KIND = wp ), DIMENSION( 4 ) :: CALLS
       INTEGER :: io_buffer = 11
       INTEGER, PARAMETER :: input = 55, indr = 46, out = 6

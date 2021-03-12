@@ -48,7 +48,7 @@
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: VECTOR, RESULT
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: H2_val, H_band
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names
-      REAL ( KIND = wp ) :: CPU( 2 ), CALLS( 4 )
+      REAL ( KIND = wp ) :: CPU( 4 ), CALLS( 4 )
 
 !  open the problem data file
 
@@ -300,12 +300,12 @@
 !     WRITE( out, "( ' CALL CUTEST_ureport for thread 1' )" )
 !     CALL CUTEST_ureport_threaded( status, CALLS, CPU, 1 )
 !     WRITE( out, "( ' CALLS(1-4) =', 4( 1X, I0 ) )" ) INT( CALLS( 1 : 4 ) )
-!     WRITE( out, "( ' CPU(1-2) =', 2F7.2 )" ) CPU( 1 : 2 )
+!     WRITE( out, "( ' CPU(1-4) =', 4F7.2 )" ) CPU( 1 : 4 )
 
       WRITE( out, "( ' CALL CUTEST_ureport for thread ', I0 )" ) thread
       CALL CUTEST_ureport_threaded( status, CALLS, CPU, thread )
       WRITE( out, "( ' CALLS(1-4) =', 4( 1X, I0 ) )" ) INT( CALLS( 1 : 4 ) )
-      WRITE( out, "( ' CPU(1-2) =', 2F7.2 )" ) CPU( 1 : 2 )
+      WRITE( out, "( ' CPU(1-4) =', 4F7.2 )" ) CPU( 1 : 4 )
 
 !  terminal exit
 

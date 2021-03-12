@@ -22,7 +22,7 @@ C  Set up parameters, variables and arrays required by constrained tools
       LOGICAL :: lql
       DOUBLE PRECISION, PARAMETER :: zero = 0.0D+0, half = 5.0D-1
       DOUBLE PRECISION, PARAMETER :: infinity = 1.0D+19
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       CHARACTER * 10 :: pname
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: KWA
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: X_l, X_u, F

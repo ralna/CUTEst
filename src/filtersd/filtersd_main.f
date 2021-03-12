@@ -31,7 +31,7 @@ C  Revised for CUTEst, Nick Gould, January 2013
       DOUBLE PRECISION :: rho, htol, rgtol, ainfty, fmin, f, h, ubd
       DOUBLE PRECISION :: dnorm, rgnorm, hJt, eps, tol, emin, hJ, vstep
       DOUBLE PRECISION :: v( mbar )
-      DOUBLE PRECISION :: CPU( 2 ), CALLS( 7 )
+      DOUBLE PRECISION :: CPU( 4 ), CALLS( 7 )
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: x, bl, bu, al
       DOUBLE PRECISION, ALLOCATABLE, DIMENSION( : ) :: ws
       CHARACTER, allocatable, dimension( : ) :: cstype
