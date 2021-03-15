@@ -2,7 +2,7 @@
 
   PROGRAM E04NQF_main
 
-!  main program for the NAG convex qp package E04NQF
+!  main program for the NAG convex QP package E04NQF
 
 !  Nick Gould, March 2021
 
@@ -26,24 +26,32 @@
 !  local variables
 
   INTEGER :: status, n, m, nea, neh, nname, lenc, ncolh, iobj, ns, ninf, ifail
-  REAL ( KIND = wp ) :: f, sinf, obj, TIMES( 4 ), CALLS( 7 )
+  INTEGER :: i, j, l, iter
+  REAL ( KIND = wp ) :: f, sinf, obj, val, res_p, res_d, TIMES( 4 ), CALLS( 7 )
+  LOGICAL :: filexst
   CHARACTER ( LEN = 1 ) :: start, c_dummy( 1 )
   CHARACTER ( LEN = 8 ) :: prob
   CHARACTER ( LEN = 10 ) :: p_name
   INTEGER, ALLOCATABLE, DIMENSION( : ) :: HELAST, HS, I_w, I_user
   INTEGER, ALLOCATABLE, DIMENSION( : ) :: A_ptr, A_row, H_ptr, H_row
   REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: G, X_0, X, X_l, X_u
-  REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: Z, Y, C_l, C_u
+  REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: Z, Y, C_l, C_u, C, G_l
   REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: B_l, B_u, R_w, R_user
   REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: A_val, H_val
   CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : )  :: X_names, C_names
   CHARACTER ( LEN = 8 ), ALLOCATABLE, DIMENSION( : )  :: C_w, C_user
   EXTERNAL :: E04NQF_QPHX
 
-  OPEN( input, file = 'OUTSDIF.d', form = 'FORMATTED', status = 'OLD' )
-  REWIND( input )
+!  results summary output if required (set output_summary > 10) 
+
+! INTEGER :: output_summary = 0
+  INTEGER :: output_summary = 47
+  CHARACTER ( LEN = 10 ) :: summary_filename = 'E04NQF.res'
 
 !  build the QP using column storage
+
+  OPEN( input, file = 'OUTSDIF.d', form = 'FORMATTED', status = 'OLD' )
+  REWIND( input )
 
   CALL CUTEST_LQP_create( status, input, io_buffer, out, n, m, f, G, X_0,      &
                           X_l, X_u, Z, Y, C_l, C_u, p_name, X_names, C_names,  &
@@ -59,6 +67,26 @@
 !  check that there are constraints
 
   IF ( m <= 0 ) GO TO 920
+
+!  append a summary of the results to a file if required
+
+  IF ( output_summary > 10 ) THEN
+    INQUIRE( FILE = summary_filename, EXIST = filexst )
+    IF ( filexst ) THEN
+       OPEN( output_summary, FILE = summary_filename,                          &
+             FORM = 'FORMATTED', STATUS = 'OLD', POSITION = 'APPEND',          &
+             IOSTAT = status )
+    ELSE
+       OPEN( output_summary, FILE = summary_filename,                          &
+             FORM = 'FORMATTED', STATUS = 'NEW', IOSTAT = status )
+    END IF
+    IF ( status /= 0 ) THEN
+      WRITE( out, "( ' IOSTAT = ', I6, ' when opening file ', A,               &
+     & '. Stopping ' )" ) status, summary_filename
+      STOP
+    END IF
+    WRITE( output_summary, "( A10 )" ) p_name
+  END IF
 
 !  transfer data into the format required by E04NQF
 
@@ -145,6 +173,44 @@
  &              ,' Solve time              =      ', 0P, F10.2, ' seconds' //  &
  &               66('*') / )" ) p_name, n, m, ifail, obj, TIMES( 1 ), TIMES( 2 )
 
+
+!  compute the primal and dual residuals if necessary
+
+  IF ( output_summary > 10 ) THEN
+    ALLOCATE( C( m ), G_l( n ), STAT = status )
+    CALL E04NQF_QPHX( n, X, G_l, 0, C_user, I_user, R_user )
+    G_l( : n ) = G_l( : n ) + G( : n ) - Z( : n )
+    C( : m ) = 0.0_wp
+    DO j = 1, n
+      DO l = A_ptr( j ), A_ptr( j + 1 ) - 1
+        i = A_row( l )
+        G_l( j ) = G_l( j ) - A_val( l ) * Y( i )
+        C( i ) = C( i ) + A_val( l ) * X( j )
+      END DO
+    END DO
+    C( : m ) = MIN( B_u( n + 1 : n + m ),                                      &
+                    MAX( B_l( n + 1 : n + m ), C( : m ) ) ) - C( : m )
+    res_p = MAXVAL( ABS( C( : m ) ) )
+    res_d = MAXVAL( ABS( G_l( : n ) ) )
+    DEALLOCATE( G_l, C, STAT = status )
+
+!  output a summary of the results to a file if required
+
+    BACKSPACE( output_summary )
+    iter = 0 ! not available from e04nqf apparently!
+    SELECT CASE ( ifail )
+    CASE ( 0, 3, 4 )
+      WRITE( output_summary,                                                   &
+        "( A10, 1X, I8, 1X, I8, ES16.8, 2ES9.1, bn, I9, F12.2, I6 )" )         &
+       p_name, n, m, obj, res_p, res_d, iter, TIMES( 4 ), ifail
+    CASE DEFAULT
+      WRITE( output_summary,                                                   &
+        "( A10,  1X, I8, 1X, I8, ES16.8, 2ES9.1, bn, I9, F12.2, I6 )" )        &
+        p_name, n, m, obj, res_p, res_d, - iter, - TIMES( 4 ), ifail
+    END SELECT
+    CLOSE( output_summary )
+  END IF
+
 !  deallocate workspace
 
   DEALLOCATE( A_val, A_row, A_ptr, B_l, B_u, G, HELAST, HS, X, Y, Z,           &
@@ -187,7 +253,7 @@
 
 !  initialize 
 
-  n_row = I_user( ncolh + 1 )
+  n_row = ncolh + 1
   HX = 0.0_wp
 
 !  loop over the columns of H, remembering that only one triangle of H is stored
