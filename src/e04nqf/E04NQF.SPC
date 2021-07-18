@@ -25,13 +25,14 @@ Begin E04NQF
   New Basis File              = 0
   Backup Basis File           = 0
   Save Frequency              = 100
-  No List
+* Nolist
 * List                
   Old Basis File              = 0
   Optimality Tolerance        = 1.0E-6
   Partial Price               = 1
   Pivot Tolerance             = 1.0E-10
   Print File                  = 0
+  Print Level                 = 1
   Print Frequency             = 100
   Punch File                  = 0
   Insert File                 = 0

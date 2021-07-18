@@ -1,0 +1,113 @@
+
+                    ********************************
+      	            *                              *
+                    *   USING HiGHS WITH CUTEst    *
+                    *                              *
+                    ********************************
+
+              ( Last modified on 14 Jul 2021 at 16:00:00 )
+
+WHAT IS HiGHS?
+-------------
+
+HiGHS is a package for solving large-scale linear and strictly-convex
+quadratic programming problems. HiGHS is based on the high performance
+dual revised simplex implementation (HSOL) and its parallel variant
+(PAMI) developed by Qi Huangfu. Features such as presolve, crash and
+advanced basis start have been added by Julian Hall and Ivet
+Galabova. Other features and the interfaces have been written by Michael
+Feldmeier and Leona Gottwald.
+
+HOW DO I GET HIGHS?
+--------------------
+
+HiGHS may be downloaded from 
+
+  https://github.com/ERGO-Code/HiGHS .
+
+A simple cloned copy is obtained by the command
+
+  git clone git@github.com:ERGO-Code/HiGHS.git
+
+The code was written and is maintained by Julian Hall, Qi Huangfu, 
+Ivet Galabova, Leona Gottwald and Michael Feldmeier from the 
+University of Edinburgh
+
+CREATING THE OBJECT FILES FOR HiGHS
+------------------------------------
+
+Download the code as above, and follow the instructions in 
+
+  https://github.com/ERGO-Code/HiGHS
+
+By default, a version will be compiled for use with the GNU compiler
+suite (gcc, gfortran, g++) using cmake, and will be installed as 
+shared libraries into standard subdirectories of /usr/local by default.
+
+Versions for other compilers may be built using suitable cmake flags, 
+for example to use the intel compiler suite,  
+
+cmake .. -D CMAKE_C_COMPILER=icc -D CMAKE_CXX_COMPILER=icc \
+         -D CMAKE_Fortran_COMPILER=ifort 
+
+while the -D CMAKE_INSTALL_PREFIX= flag may be used to install into
+a specfied directory, and -D SHARED="OFF" will produce a static version
+if desired.
+
+USING THE HiGHS INTERFACE TOOL
+------------------------------
+
+Suppose you wish to solve the problem written in SIF format contained
+in the file probname.SIF.
+
+The HiGHS interface tools require two input files:
+
+   probname.SIF   specifies the problem in SIF format
+   HiGHS.SPC      sets values for HiGHS run-time parameters
+
+If no HiGHS.SPC file is present in the current directory, the default version 
+is copied from the $CUTEST/src/highs directory. This default contains the 
+following:
+
+ time_limit = 1e70
+ infinite_cost = 1e20
+ infinite_bound = 1e20
+ small_matrix_value = 1e-9
+ large_matrix_value = 1e15
+ primal_feasibility_tolerance = 1e-7
+ dual_feasibility_tolerance = 1e-7
+ objective_bound = 1e70
+ objective_target = -1e70
+ highs_random_seed = 0
+ highs_debug_level = 0
+ highs_analysis_level = 0
+ simplex_strategy = 1
+ simplex_scale_strategy = 2
+ simplex_crash_strategy = 0
+ simplex_dual_edge_weight_strategy = -1
+ simplex_primal_edge_weight_strategy = -1
+ simplex_iteration_limit = 2147483647
+ simplex_update_limit = 5000
+ highs_min_threads = 1
+ highs_max_threads = 8
+ output_flag = true
+ write_solution_to_file = false
+ solution_file = "HiGHS.sol"
+ write_solution_pretty = false
+ log_to_console = true
+ log_file = "HiGHS.log"
+ print_full_solution = false
+
+Lines starting with a "#   " are disabled, and blank lines are ignored. 
+There are other options, see the software documentation.
+
+To run with CUTEst, use the runcutest command with the -p highs option.
+See the man page for runcutest for more details of other options.
+
+REFERENCES
+----------
+
+Q. Huangfu and J. A. J. Hall, 
+Parallelizing the dual revised simplex method, 
+Mathematical Programming Computation, 10 (1), 119-142, 2018. 
+DOI: 10.1007/s12532-017-0130-5
