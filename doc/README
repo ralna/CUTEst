@@ -11,22 +11,19 @@ To get CUTEst working, here is what you need to do:
 
    To download ARCHDefs, issue the command
 
-      svn checkout --username anonymous \
-        http://ccpforge.cse.rl.ac.uk/svn/cutest/archdefs/trunk ./archdefs
+      git clone https://github.com/ralna/ARCHDefs ./archdefs
 
     in a directory you can write to; use a blank password if prompted.
 
    To download SIFDecode, issue the command
 
-      svn checkout --username anonymous \
-        http://ccpforge.cse.rl.ac.uk/svn/cutest/sifdecode/trunk ./sifdecode
+      git clone https://github.com/ralna/SIFDecode ./sifdecode
 
     in the same directory.
 
     To download CUTEst,
 
-        svn checkout --username anonymous \
-          http://ccpforge.cse.rl.ac.uk/svn/cutest/cutest/trunk ./cutest
+        git clone https://github.com/ralna/CUTEst ./cutest
 
     in the same directory.
 
@@ -250,7 +247,7 @@ To get CUTEst working, here is what you need to do:
 
 11. Refer to the CUTEst Wiki
 
-      http://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki/
+      https://github.com/ralna/CUTEst/wiki
 
     for updates/bug fixes/news.
 
