@@ -35,10 +35,6 @@ To get CUTEst working, here is what you need to do:
 
     To obtain problems from the CUTEr/st and related test sets, see
 
-       http://tracsvn.mathappl.polymtl.ca/trac/cuter/wiki/ProblemCollections
-
-    or
-
        http://www.cuter.rl.ac.uk/Problems/mastsif.shtml
 
 1.  Now set the three environment variables $ARCHDEFS, $SIFDECODE and $CUTEST
