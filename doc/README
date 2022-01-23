@@ -35,7 +35,7 @@ To get CUTEst working, here is what you need to do:
 
     To obtain problems from the CUTEr/st and related test sets, see
 
-       http://www.cuter.rl.ac.uk/Problems/mastsif.shtml
+       https://bitbucket.org/optrove/sif/src/master
 
 1.  Now set the three environment variables $ARCHDEFS, $SIFDECODE and $CUTEST
     to point at the directories ./archdefs, ./sifdecode and ./cutest
