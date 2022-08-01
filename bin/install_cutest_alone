@@ -40,7 +40,7 @@ while [ $CORRECT_PLATFORM == "false" ]; do
    echo '  (10) SGI workstation'
    echo '  (11) SUN workstation'
    echo '  (12) MAC OS/X'
-   echo '  (13) 64-bit MAC OS/X'
+   echo '  (13) 64-bit MAC OS/X (incl. M1)'
 
    read CHOICE
 
