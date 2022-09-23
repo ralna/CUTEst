@@ -1,0 +1,124 @@
+# All actions have a name that will be displayed in the "Actions" page in GitHub.
+name: CI
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "CUTEst"
+  CUTEst:
+    # The type of runner that the job will run on
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows", artifact: "Windows-MinGW.tar.xz",
+            os: windows-latest,
+            build_type: "Release", cc: "x86_64-w64-mingw32-gcc", cxx: "x86_64-w64-mingw32-g++"
+          }
+        - {
+            name: "Ubuntu", artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: "Release", cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "MacOS", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: "Release", cc: "clang", cxx: "clang++"
+          }
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Usually this is always needed
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then sudo apt-get update -qq; sudo apt-get install gfortran libblas-dev liblapack-dev; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then brew update; brew install gfortran; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then choco upgrade all -y; fi
+
+      - name: ARCHDefs -- SIFDecode -- CUTEst
+        shell: bash
+        run: |
+          export CUTEST=$(pwd)
+          mkdir -p $HOME/archdefs
+          cd $HOME/archdefs
+          git clone https://github.com/ralna/ARCHDefs.git
+          export ARCHDEFS="${HOME}/archdefs/ARCHDefs"
+          mkdir -p $HOME/sifdecode
+          cd $HOME/sifdecode
+          git clone https://github.com/ralna/SIFDecode.git
+          export SIFDECODE="${HOME}/sifdecode/SIFDecode"
+          export MASTSIF="${SIFDECODE}/sif"
+          cd $SIFDECODE
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then printf "6\n2\n6\n" > sifdecode.opts; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then printf "13\n2\n" > sifdecode.opts; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then printf "6\n1\n3\n" > sifdecode.opts; fi
+          printf "nny" >> sifdecode.opts
+          ./install_sifdecode < sifdecode.opts
+          cd $CUTEST
+          ls
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then export MYARCH="pc64.lnx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then printf "6\n2\n6\n2\n9\n" > cutest.opts; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then export MYARCH="mac64.osx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then printf "13\n2\n2\n2\n" > cutest.opts; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then export MYARCH="pc64.mgw.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then printf "5\n1\n3\n2\n5\n" > cutest.opts; fi
+          printf "nnydy" >> cutest.opts
+          ./install_cutest < cutest.opts
+
+      - name: Tests
+        shell: bash
+        run: |
+          export CUTEST=$(pwd)
+          export ARCHDEFS="${HOME}/archdefs/ARCHDefs"
+          export SIFDECODE="${HOME}/sifdecode/SIFDecode"
+          export MASTSIF="${SIFDECODE}/sif"
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then export MYARCH="pc64.lnx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then export MYARCH="mac64.osx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then export MYARCH="pc64.mgw.gfo"; fi
+          ./bin/runcutest -p gen77 -param NN=10 -D LUBRIFC.SIF
+          ./bin/runcutest -p genc
+          ./bin/runcutest -p gen90
+          ./bin/runcutest -p stats
+          ./bin/runcutest --single -p gen77
+          ./bin/runcutest --single -p genc
+          ./bin/runcutest --single -p gen90
+          ./bin/runcutest --single -p stats
+          ./bin/runcutest -p gen77 -b -lblas -K -llapack -D ROSENBR
+          ./bin/runcutest -p gen77 -lblas -D ROSENBR
+
+      - name: Shared
+        shell: bash
+        run: |
+          export CUTEST=$(pwd)
+          export ARCHDEFS="${HOME}/archdefs/ARCHDefs"
+          export SIFDECODE="${HOME}/sifdecode/SIFDecode"
+          export MASTSIF="${SIFDECODE}/sif"
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then export dlext="so"; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then export dlext="dylib"; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then export dlext="dll"; fi
+          if [[ "${{matrix.config.name}}" == "Ubuntu" ]]; then export MYARCH="pc64.lnx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "MacOS" ]]; then export MYARCH="mac64.osx.gfo"; fi
+          if [[ "${{matrix.config.name}}" == "Windows" ]]; then export MYARCH="pc64.mgw.gfo"; fi
+          all_load="--whole-archive"
+          noall_load="--no-whole-archive"
+          if [[ "${target}" == *-apple-* ]]; then
+            all_load="-all_load"
+            noall_load="-noall_load"
+          fi
+          cd $SIFDECODE/objects/$MYARCH/double/
+          gfortran -fPIC -shared -Wl,${all_load} libsifdecode.a -Wl,${noall_load} -o libsifdecode.${dlext}
+          cd $CUTEST/objects/$MYARCH/single
+          gfortran -fPIC -shared -Wl,${all_load} libcutest.a -Wl,${noall_load} -o libcutest_single.${dlext}
+          cd $CUTEST/objects/$MYARCH/double
+          gfortran -fPIC -shared -Wl,${all_load} libcutest.a -Wl,${noall_load} -o libcutest_double.${dlext}
