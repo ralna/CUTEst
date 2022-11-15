@@ -34,7 +34,8 @@ jobs:
             compiler: intel
             sifdecode_input: '13\n2\nnny'
             cutest_input: '13\n2\n2\n4\nnnydy'
-            hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18977/m_HPCKit_p_2022.3.1.15344_offline.dmg'
+            # hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18977/m_HPCKit_p_2022.3.1.15344_offline.dmg'
+            hpckit: 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18681/m_HPCKit_p_2022.2.0.158_offline.dmg'
             script: 'install_macos.sh'
             arch: 'mac64.osx.ifr'
     runs-on: ${{ matrix.os }}
@@ -108,6 +109,5 @@ jobs:
         run: |
           [[ "${{ matrix.compiler }}" == "intel" ]] && source /opt/intel/oneapi/setvars.sh
           $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
-          $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p genc
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen90
