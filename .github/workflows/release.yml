@@ -1,0 +1,25 @@
+on: 
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  release-on-push:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: rymndhng/release-on-push-action@master
+        id: release
+        with:
+          # add a label to your pull request to change the default behavior:
+          # release:major
+          # release:minor
+          # release:patch
+          # norelease
+          bump_version_scheme: patch
+          tag_prefix: v
+          release_body: ""
+          use_github_release_notes: true
+
