@@ -43,10 +43,12 @@
 #               cutest_ushprod_threaded cutest_cshprod_threaded \
 #               cutest_cshcprod_threaded cutest_csjprod_threaded \
 #               cutest_cdimchp cutest_cchprods cutest_cchprods_threaded \
+#               cutest_uterminate cutest_cterminate \
 #               cutest_timings \
 #               cutest )
 
-foreach pack ( cutest_csjp cutest )
+foreach pack ( cutest_uterminate cutest_cterminate )
+#foreach pack ( cutest_csjp cutest )
 #foreach pack ( cutest_cshp cutest_csgrp cutest_csgrshp cutest_cchprodsp cutest )
 #foreach pack ( cutest_cdimchp cutest_cchprods cutest_cchprods_threaded )
 #foreach pack ( cutest_timings cutest_timings_threaded )
