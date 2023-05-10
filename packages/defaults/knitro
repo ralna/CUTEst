@@ -18,7 +18,7 @@ export PACKOBJS=""
 
 # Define package and system libraries using -llibrary to include library.a
 # or library.so together with any nonstandard library paths using -L(path)
-export PACKLIBS="-L$KNITRODIR/lib -lknitro700 -lstdc++ -ldl"
+export PACKLIBS="-L${KNITRODIR}/lib -lknitro -lstdc++ -ldl"
 
 # Define the name of the package specification file if any. This possibly
 # precision-dependent file must either lie in the current directory or in
