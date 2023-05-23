@@ -324,7 +324,6 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       MALLOC(gnames, CUTEst_ncon*FSTRING_LEN, char);
       CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon, 
                      pname, vnames, gnames);
-      FREE(gnames);
     } else
       CUTEST_unames( &status, &CUTEst_nvar, pname, vnames);
 
@@ -332,8 +331,6 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
        printf("** CUTEst error, status = %d, aborting\n", status);
        exit(status);
     }
-
-    FREE(vnames);
 
     /* Make sure to null-terminate problem name */
     pname[FSTRING_LEN] = '\0';
@@ -412,7 +409,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
       FREE(c);
 
-      for(int i = 0; i < CUTEst_ncon; i++) {
+      for(i = 0; i < CUTEst_ncon; i++) {
         consIndex[i] = (KNINT) i;
       }
     } else {
@@ -464,7 +461,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
       for (i = 0; i < CUTEst_nnzj; i++) {
 
-        // objective
+        /* objective */
         if ( jacIndexCons[i] == 0 )
         {
           ++offset;
@@ -510,6 +507,19 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     CHECK_KNITRO_EXIT_CODE(KN_set_var_primal_init_values_all(kc, x),
                            "Failed to set primal initial values\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_names_all(kc, vnames),
+                           "Failed to set variable names");
+
+    FREE(vnames);
+
+    if (constrained)
+    {
+      CHECK_KNITRO_EXIT_CODE(KN_set_con_names_all(kc, cnames),
+                             "Failed to set constraint names");
+
+      FREE(cnames);
+    }
 
     /* Register callback functions */
 #ifdef KNIT_DEBUG
