@@ -246,7 +246,8 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     doublereal *x, *bl, *bu, *dummy1, *dummy2;
     doublereal *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
-    char *pname, *vnames, *gnames;
+    char *pname, *vnames, *cnames;
+    char** all_vnames, **all_cnames;
     integer e_order = 1, l_order = 1, v_order = 0;
     logical grad;
     logical constrained = FALSE_;
@@ -320,12 +321,27 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     /* Get problem name */
     MALLOC(pname, FSTRING_LEN+1, char);
     MALLOC(vnames, CUTEst_nvar*FSTRING_LEN, char);
+    MALLOC(all_vnames, CUTEst_nvar, char*);
+
     if (constrained) {
-      MALLOC(gnames, CUTEst_ncon*FSTRING_LEN, char);
+      MALLOC(cnames, CUTEst_ncon*FSTRING_LEN, char);
+      MALLOC(all_cnames, CUTEst_ncon*FSTRING_LEN, char*);
+
       CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon, 
-                     pname, vnames, gnames);
+                     pname, vnames, cnames);
+
+      for(i = 0; i < CUTEst_ncon;++i)
+      {
+        all_cnames[i] = cnames + (i*FSTRING_LEN);
+      }
+
     } else
       CUTEST_unames( &status, &CUTEst_nvar, pname, vnames);
+
+    for(i = 0; i < CUTEst_nvar;++i)
+    {
+      all_vnames[i] = vnames + (i*FSTRING_LEN);
+    }
 
     if( status ) {
        printf("** CUTEst error, status = %d, aborting\n", status);
@@ -508,16 +524,18 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     CHECK_KNITRO_EXIT_CODE(KN_set_var_primal_init_values_all(kc, x),
                            "Failed to set primal initial values\n");
 
-    CHECK_KNITRO_EXIT_CODE(KN_set_var_names_all(kc, vnames),
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_names_all(kc, all_vnames),
                            "Failed to set variable names");
 
+    FREE(all_vnames);
     FREE(vnames);
 
     if (constrained)
     {
-      CHECK_KNITRO_EXIT_CODE(KN_set_con_names_all(kc, cnames),
+      CHECK_KNITRO_EXIT_CODE(KN_set_con_names_all(kc, all_cnames),
                              "Failed to set constraint names");
 
+      FREE(all_cnames);
       FREE(cnames);
     }
 
