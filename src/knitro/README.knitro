@@ -1,15 +1,15 @@
-                      ********************************
-                      *                              *
-                      * Using KNITRO 7.0 with CUTEst *
-                      *                              *
-                      ********************************
+                      ****************************
+                      *                          *
+                      * Using KNITRO with CUTEst *
+                      *                          *
+                      ****************************
 
-              ( Last modified on 19 Jan 2013 at 12:50:00 )
+              ( Last modified on 10 May 2023 at 23:25:00 )
 
-WHAT IS KNITRO 7.0?
+WHAT IS KNITRO?
 -------------------
 
-KNITRO 7.0 is a code for solving large-scale nonlinear programming
+KNITRO is a code for solving large-scale nonlinear programming
 problems of the form
 
   Min         f(x)
@@ -27,18 +27,18 @@ HOW DO I GET KNITRO?
 
 See 
 
-  http://www.ziena.com/knitro.htm
+  https://www.artelys.com/solvers/knitro/
 
 
-USING KNITRO 7.0 WITH CUTEst
+USING KNITRO WITH CUTEst
 ----------------------------
 
 Create an environment variable KNITRODIR pointing to the directory
-where your KNITRO 7.0 package is stored. You should have the
+where your KNITRO package is stored. You should have the
 subdirectories and files
 
     $KNITRODIR/include/knitro.h
-    $KNITRODIR/lib/libknitro700.a
+    $KNITRODIR/lib/libknitro.so
 
 Copy $KNITRODIR/include/knitro.h to the $CUTEST/include directory;
 the latest version we know about will already be in $CUTEST/include.
@@ -46,15 +46,15 @@ the latest version we know about will already be in $CUTEST/include.
 The file knitro.opt should be present in the directory from which you 
 launch CUTEst. Alternatively, there can be a symbolic link pointing to it.
 
-KNITRO 7.0 is not available in single precision.
+KNITRO is not available in single precision.
 
-USING THE KNITRO 7.0 INTERFACE TOOL
+USING THE KNITRO INTERFACE TOOL
 -----------------------------------
 
 Suppose you wish to solve the problem written in SIF format contained
 in the file probname.SIF.
 
-The KNITRO 7.0 interface tools require two input files:
+The KNITRO interface tools require two input files:
 
     probname.SIF   specifies the problem in SIF format
     knitro.opt      sets values for Knitro parameters
@@ -62,12 +62,12 @@ The KNITRO 7.0 interface tools require two input files:
 The opt file should be present in the current directory, in
 $CUTEST/src/knitro or there should be a symbolic link pointing to it. 
 The file is self-documented so the purpose of each parameter should be clear 
-from the file. Please refer to the KNITRO 7.0 documentation for more details.
+from the file. Please refer to the KNITRO documentation for more details.
 
 To run with CUTEst, use the runcutest command with the -p knitro option.
 See the man page for runcutest for more details of other options.
 
-THE KNITRO 7.0 SPECIFICATIONS FILE
+THE KNITRO SPECIFICATIONS FILE
 ----------------------------------
 
 The file knitro.opt may be used to set various Knitro parameters.
@@ -109,145 +109,3 @@ REFERENCES
   Evanston, Illinois, USA, 1999
     Note: this paper describes a number of enhancements that
           are implemented in the current version of the code 
-
-
-DESCRIPTION OF THE VARIABLES IN KNITRO 7.0
-------------------------------------------
-
-
-     n is an INTEGER variable denoting the number of variables.
-
-     m is an INTEGER variable denoting the number of general
-        constraints.
-
-     f is a DOUBLE PRECISION variable which holds the value of the
-        objective function.
-
-     x is a DOUBLE PRECISION array of length n.  It is the solution
-        vector.
-
-     bl is a DOUBLE PRECISION array of length n. bl(i) is the lower 
-        bound of the i-th variable x(i). If there is no such bound,
-        set it to be the large negative number -1.0d+20.
-
-     bu is a DOUBLE PRECISION array of length n. bu(i) is the upper 
-        bound of the i-th variable x(i). If there is no such bound,
-        set it to be the large positive number 1.0d+20.
-
-     c is a DOUBLE PRECISION array of length m.  It contains the
-        general equality and inequality constraint values (it
-        excludes fixed variables and bound constraints).
-
-     cl is a DOUBLE PRECISION array of length m. cl(i) is 
-    the lower bound of the i-th constraint c(i). If there 
-        is no such bound, set it to be the large negative 
-        number -1.0d+20.
-
-     cu is a DOUBLE PRECISION  array of length m. cu(i) is 
-    the upper bound of the i-th constraint c(i). If there
-        is no such bound, set it to be the large positive 
-        number 1.0d+20.
-
-     equatn is a LOGICAL variable of length m, with equatn(i) 
-        indicating whether the i-th constraint is an equality 
-        constraint or not. 
-
-     linear is a LOGICAL variable of length m, with linear(i) 
-        indicating whether the i-th constraint is a linear 
-        constraint or not. 
-
-     nnzj is an INTEGER. It is the number of nonzeros in the Jacobian 
-        matrix cjac which contains the gradient of the objective
-        function f and the constraint gradients in sparse form.
-
-     cjac is a DOUBLE PRECISION array of length nnzj. The first part  
-        contains the nonzero elements of the gradient of the objective
-        function; the second part contains the nonzero elements of the
-        Jacobian of the constraints. 
-
-     indvar is an INTEGER array of length nnzj. It is the index of the
-        variables.
-
-     indfun is an INTEGER array of length nnzj. It is the indicator 
-        for the functions. If indfun(i)=0, it refers to the objective 
-        function. If indfun(i)=j, it refers to the j-th constraint.
-
-        indfun(i) and indvar(i) determine the row number
-        and the column number respectively of nonzero Jacobian 
-        element cjac(i).
- 
-     lambda is a DOUBLE PRECISION array of length m+n containing the 
-        Lagrange multiplier estimates. The first m components hold 
-        the multipliers for the general constraints and the last
-        n components hold the multipliers for the bounds.
-        The Lagrangian function (excluding bounds) is
-
-        L(x, lambda) = f(x) + lambda*c(x).
-
-     nnz_W is an INTEGER variable denoting the number of nonzero
-        elements in the upper triangle of the Hessian of the
-        Lagrangian function. 
-
-     W is a DOUBLE PRECISION array of dimension nnz_W containing the 
-        Hessian of the Lagrangian in sparse form: 
-
-        W = nabla^2_{xx} f(x) + lambda*nabla^2_{xx} c(x)
-
-        Only the upper triangle is stored.
-
-     W_row is an INTEGER array of length nnz_W. W_row(i) stores
-        the row number of the nonzero element W(i).
-
-     W_col is an INTEGER array of length nnz_W. W_col(i) stores the 
-        column number of the nonzero element W(i).
-
-     vector is a DOUBLE PRECISION array of dimension n which is only
-        used if the user is providing a subroutine for computing
-        exact Hessian-vector products (option ispecs(4)=5).  In 
-        this case, on return from subroutine knitros vector holds
-        the vector which will be multiplied by the Hessian and on
-        re-entry vector must hold the desired Hessian-vector product.
-
-     ispecs is an INTEGER array of length 10 which holds the integer
-        user options. 
-        See the User's Manual for more detail.
-
-     dspecs is a DOUBLE PRECISION array of length 10 which holds the
-        double precision user options.
-        See the User's Manual for more detail.
-
-     lspecs is a LOGICAL array of length 10 which holds the
-        logical user options.
-        See the User's Manual for more detail.
-
-     info is an INTEGER variable which indicates the exit status.
-        info = 0: termination without error
-             < 0: termination with an error
-
-     liwork is an INTEGER variable which gives the length of the
-        integer work array, iwork. 
-
-     iwork is an INTEGER array of length liwork which is used
-        as an integer work vector.
-
-     lwork is an INTEGER variable which gives the length of the  
-        real work array, work. 
-
-     work is an DOUBLE PRECISION array of length lwork which is used
-        as a real work vector.
-
-     minwork is an INTEGER variable which gives some information
-        about the minimum work array sizes needed when these
-        arrays are too small.
-
-        info = -48: minwork gives minimum value for liwork
-        info = -49: minwork gives minimum value for lwork
-
-     status is an INTEGER which keeps track of the reverse 
-        communication status.  On initial entry status must
-        be set to 0.
-
-     --------------------------------------------------------------
-           END OF THE DESCRIPTION OF THE VARIABLES IN KNITRO
-     --------------------------------------------------------------
-

@@ -12,6 +12,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define SZ_VERSION_LEN 128
+
+#define CHECK_KNITRO_EXIT_CODE(command, message)                    \
+  do                                                                \
+  {                                                                 \
+    const int ExitCode = (command);                                 \
+    if(ExitCode)                                                    \
+    {                                                               \
+      fprintf(stderr, "Could not register FC callback function\n"); \
+      goto terminate;                                               \
+    }                                                               \
+  } while(0)
+
 #define KNITRO_main
 
 #ifdef __cplusplus
@@ -36,29 +49,24 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
   /* Callback function to evaluate the objective function and constraints */
   /* ======================================================================== */
 
-  int  callbackEvalFC (const int             evalRequestCode,
-                       const int             n,
-                       const int             m,
-                       const int             nnzJ,
-                       const int             nnzH,
-                       const double * const  x,
-                       const double * const  lambda,
-                       double * const  obj,
-                       double * const  c,
-                       double * const  objGrad,
-                       double * const  jac,
-                       double * const  hessian,
-                       double * const  hessVector,
-                       void   *        userParams) {
+  int  callbackEvalFC (KN_context_ptr            kc,
+                       CB_context_ptr            cb,
+                       KN_eval_request_ptr const evalRequest,
+                       KN_eval_result_ptr const  evalResult,
+                       void* const               userParams) {
 
     int i;
     integer status;
 
-    if (evalRequestCode != KTR_RC_EVALFC) {
+    if (evalRequest->type != KN_RC_EVALFC) {
       fprintf (stderr, "*** callbackEvalFC incorrectly called with code %d\n",
-               evalRequestCode);
+               evalRequest->type);
       return -1;
     }
+
+    const double* x = evalRequest->x;
+    double* obj = evalResult->obj;
+    double* c = evalResult->c;
 
     if (CUTEst_ncon > 0) {
       CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, x, obj, c);
@@ -82,47 +90,55 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
   /* Callback function to evaluate the objective gradient and Jacobian */
   /* ======================================================================== */
 
-  int  callbackEvalGA (const int             evalRequestCode,
-                       const int             n,
-                       const int             m,
-                       const int             nnzJ,
-                       const int             nnzH,
-                       const double * const  x,
-                       const double * const  lambda,
-                       double * const  obj,
-                       double * const  c,
-                       double * const  objGrad,
-                       double * const  jac,
-                       double * const  hessian,
-                       double * const  hessVector,
-                       void   *        userParams) {
+  int  callbackEvalGA (KN_context_ptr            kc,
+                       CB_context_ptr            cb,
+                       KN_eval_request_ptr const evalRequest,
+                       KN_eval_result_ptr const  evalResult,
+                       void* const               userParams) {
 
     int i;
     integer status;
 
-    if (evalRequestCode != KTR_RC_EVALGA) {
+    if (evalRequest->type != KN_RC_EVALGA) {
       fprintf (stderr, "*** callbackEvalGA incorrectly called with code %d\n",
-               evalRequestCode);
+               evalRequest->type);
       return -1;
     }
+
+    const double* x = evalRequest->x;
+    const double* lambda = evalRequest->lambda;
+
+    double* objGrad = evalResult->objGrad;
+    double* jac = evalResult->jac;
 
     if (CUTEst_ncon > 0) {
 
       CUTEST_csgr( &status,&CUTEst_nvar, &CUTEst_ncon, x, lambda, 
                    &somethingFalse, &CUTEst_nnzj, &CUTEst_lcjac, 
                    CUTEst_Jac, jacIndexVars, jacIndexCons);
-      for (i = 0; i < CUTEst_nvar; i++) objGrad[i] = 0.0;
-      for (i = 0; i < CUTEst_nnzj; i++)
-        if (jacIndexCons[i] == 0)
+
+      for (i = 0; i < CUTEst_nvar; i++) {
+        objGrad[i] = 0.0;
+      }
+
+      int offset = 0;
+
+      for (i = 0; i < CUTEst_nnzj; i++) {
+        if (jacIndexCons[i] == 0) {
           objGrad[ (int)(jacIndexVars[i])-1] = CUTEst_Jac[i];
-        else
-          jac[i] = CUTEst_Jac[i];
+          ++offset;
+        }
+        else {
+          jac[i - offset] = CUTEst_Jac[i];
+        }
+      }
       /*CCFSG(&CUTEst_nvar, &CUTEst_ncon, x, &CUTEst_ncon, c, &CUTEst_nnzj, */
       /*      &CUTEst_lcjac, jac, jacIndexVars, jacIndexCons, &somethingTrue); */
       /*COFG(&CUTEst_nvar, x, &f, objGrad, &somethingTrue); */
 
-    } else
-      CUTEST_ugr( &status,&CUTEst_nvar, x, objGrad);
+    } else {
+      CUTEST_ugr( &status, &CUTEst_nvar, x, objGrad);
+    }
 
     if( status ) {
        printf("** CUTEst error, status = %d, aborting\n", status);
@@ -138,25 +154,21 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
   /* Callback function to evaluate the Hessian or Hessian-vector product */
   /* ======================================================================== */
 
-  int  callbackEvalHess (const int             evalRequestCode,
-                         const int             n,
-                         const int             m,
-                         const int             nnzJ,
-                         const int             nnzH,
-                         const double * const  x,
-                         const double * const  lambda,
-                         double * const  obj,
-                         double * const  c,
-                         double * const  objGrad,
-                         double * const  jac,
-                         double * const  hessian,
-                         double * const  hessVector,
-                         void   *        userParams) {
+  int  callbackEvalHess (KN_context_ptr            kc,
+                         CB_context_ptr            cb,
+                         KN_eval_request_ptr const evalRequest,
+                         KN_eval_result_ptr const  evalResult,
+                         void* const               userParams) {
 
     int i;
     integer status;
 
-    if (evalRequestCode == KTR_RC_EVALH) {
+    const double* x = evalRequest->x;
+    const double* lambda = evalRequest->lambda;
+
+    if (evalRequest->type == KN_RC_EVALH) {
+
+      double* hessian = evalResult->hess;
 
       if (CUTEst_ncon > 0) {
         CUTEST_csh( &status,&CUTEst_nvar, &CUTEst_ncon, x, lambda, &CUTEst_nnzh,
@@ -180,7 +192,9 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
       }
 
-    } else if (evalRequestCode == KTR_RC_EVALHV) {
+    } else if (evalRequest->type == KN_RC_EVALHV) {
+
+      double* hessVector = evalResult->hessVec;
 
       if (! Hv) MALLOC(Hv, CUTEst_nvar, doublereal);
 
@@ -199,7 +213,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     } else {
       fprintf(stderr, "*** callbackEvalHess incorrectly called with code %d\n",
-              evalRequestCode);
+              evalRequest->type);
       return -1;
     }
 
@@ -219,18 +233,21 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     integer io_buffer = 11;    /* FORTRAN unit internal input/output */
     integer status;            /* Exit flag from CUTEst tools */
 
-    KTR_context *KnitroData;
-    int *cTypes;
-    char      szVersion[15 + 1];
+    KN_context *kc;
+    CB_context *cb;
+
+    KNINT* consIndex;
+
+    char szVersion[SZ_VERSION_LEN];
 
     VarTypes vtypes;
 
-    int *cType;
     integer ncon_dummy;
     doublereal *x, *bl, *bu, *dummy1, *dummy2;
     doublereal *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
-    char *pname, *vnames, *gnames;
+    char *pname, *vnames, *cnames;
+    char** all_vnames, **all_cnames;
     integer e_order = 1, l_order = 1, v_order = 0;
     logical grad;
     logical constrained = FALSE_;
@@ -273,7 +290,9 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     MALLOC(x,      CUTEst_nvar, doublereal);
     MALLOC(bl,     CUTEst_nvar, doublereal);
     MALLOC(bu,     CUTEst_nvar, doublereal);
-    MALLOC(cType,  CUTEst_ncon, integer);
+
+    MALLOC(consIndex,  CUTEst_ncon, KNINT);
+
     if (constrained) {
       MALLOC(equatn, CUTEst_ncon+1,            logical   );
       MALLOC(linear, CUTEst_ncon+1,            logical   );
@@ -302,20 +321,32 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     /* Get problem name */
     MALLOC(pname, FSTRING_LEN+1, char);
     MALLOC(vnames, CUTEst_nvar*FSTRING_LEN, char);
+    MALLOC(all_vnames, CUTEst_nvar, char*);
+
     if (constrained) {
-      MALLOC(gnames, CUTEst_ncon*FSTRING_LEN, char);
+      MALLOC(cnames, CUTEst_ncon*FSTRING_LEN, char);
+      MALLOC(all_cnames, CUTEst_ncon*FSTRING_LEN, char*);
+
       CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon, 
-                     pname, vnames, gnames);
-      FREE(gnames);
+                     pname, vnames, cnames);
+
+      for(i = 0; i < CUTEst_ncon;++i)
+      {
+        all_cnames[i] = cnames + (i*FSTRING_LEN);
+      }
+
     } else
       CUTEST_unames( &status, &CUTEst_nvar, pname, vnames);
+
+    for(i = 0; i < CUTEst_nvar;++i)
+    {
+      all_vnames[i] = vnames + (i*FSTRING_LEN);
+    }
 
     if( status ) {
        printf("** CUTEst error, status = %d, aborting\n", status);
        exit(status);
     }
-
-    FREE(vnames);
 
     /* Make sure to null-terminate problem name */
     pname[FSTRING_LEN] = '\0';
@@ -336,21 +367,25 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     */
 
     /* Initialize KNITRO context */
-    KTR_get_release(15, szVersion);
-    KnitroData = KTR_new();
-    if (KnitroData == NULL) {
+    KN_get_release(SZ_VERSION_LEN, szVersion);
+
+    ExitCode = KN_new(&kc);
+
+    if (kc == NULL) {
       fprintf(stderr, "Failed to find a valid KNITRO license.\n");
       fprintf(stderr, "%s\n", szVersion);
       exit(1);
     }
 
     /* Read spec file */
-    if (KTR_load_param_file(KnitroData, "knitro.opt")) {
+    if (KN_load_param_file(kc, "knitro.opt")) {
       fprintf(stderr, "Cannot open spec file knitro.opt...");
       fprintf(stderr, " using all default options\n");
     }
-    if (KTR_get_int_param_by_name(KnitroData, "hessopt", &nHessOpt))
+
+    if (KN_get_int_param_by_name(kc, "hessopt", &nHessOpt)) {
       exit(-1);
+    }
 
     /* Obtain Jacobian sparsity pattern and initial objective value */
 #ifdef KNIT_DEBUG
@@ -390,14 +425,9 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
       FREE(c);
 
-      /* Convert to 0-based indexing */
-      for (i = 0; i < CUTEst_nnzj; i++) {
-        jacIndexVars[i] = (int)(jacIndexVars[i] - 1);
-        jacIndexCons[i] = (int)(jacIndexCons[i] - 1);
-        /*   printf("jacIndexVars[%d]=%d\n", i, jacIndexVars[i]); */
-        /* printf("jacIndexCons[%d]=%d\n", i, jacIndexCons[i]); */
+      for(i = 0; i < CUTEst_ncon; i++) {
+        consIndex[i] = (KNINT) i;
       }
-
     } else {
 
       /* Unconstrained problem. */
@@ -439,76 +469,118 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       /* printf("hessIndexCols[%d]=%d\n", i, hessIndexCols[i]); */
     }
 
+    int consJac_nnz = 0;
+
+    if(constrained)
+    {
+      int offset = 0;
+
+      for (i = 0; i < CUTEst_nnzj; i++) {
+
+        /* objective */
+        if ( jacIndexCons[i] == 0 )
+        {
+          ++offset;
+        }
+        else
+        {
+          jacIndexVars[i - offset] = (int)(jacIndexVars[i] - 1);
+          jacIndexCons[i - offset] = (int)(jacIndexCons[i] - 1);
+          ++consJac_nnz;
+
+          /* printf("jacIndexVars[%d]=%d\n", i - offset, jacIndexVars[i - offset]); */
+          /* printf("jacIndexCons[%d]=%d\n", i - offset, jacIndexCons[i - offset]); */
+        }
+      }
+
+    }
+
+    /* Convert infinite bounds. */
+    for (i = 0; i < CUTEst_nvar; i++) {
+      if (bl[i] == -CUTE_INF) bl[i] = -KN_INFINITY;
+      if (bu[i] ==  CUTE_INF) bu[i] =  KN_INFINITY;
+    }
+    for (i = 0; i < CUTEst_ncon; i++) {
+      if (cl[i] == -CUTE_INF) cl[i] = -KN_INFINITY;
+      if (cl[i] ==  CUTE_INF) cu[i] =  KN_INFINITY;
+    }
+
+    CHECK_KNITRO_EXIT_CODE(KN_add_vars(kc, CUTEst_nvar, NULL),
+                           "Failed to add variables\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_add_cons(kc, CUTEst_ncon, NULL),
+                           "Failed to add constraints\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_lobnds_all(kc, bl),
+                           "Failed to set lower variable bounds\n");
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_upbnds_all(kc, bu),
+                           "Failed to set upper variable bounds\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_set_con_lobnds_all(kc, cl),
+                           "Failed to set lower constraint bounds\n");
+    CHECK_KNITRO_EXIT_CODE(KN_set_con_upbnds_all(kc, cu),
+                           "Failed to set upper constraint bounds\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_primal_init_values_all(kc, x),
+                           "Failed to set primal initial values\n");
+
+    CHECK_KNITRO_EXIT_CODE(KN_set_var_names_all(kc, all_vnames),
+                           "Failed to set variable names");
+
+    FREE(all_vnames);
+    FREE(vnames);
+
+    if (constrained)
+    {
+      CHECK_KNITRO_EXIT_CODE(KN_set_con_names_all(kc, all_cnames),
+                             "Failed to set constraint names");
+
+      FREE(all_cnames);
+      FREE(cnames);
+    }
+
     /* Register callback functions */
 #ifdef KNIT_DEBUG
     fprintf(stderr, "Registering callback functions...\n");
 #endif
-    if (KTR_set_func_callback(KnitroData, &callbackEvalFC)) {
-      fprintf(stderr, "Could not register FC callback function\n");
-      goto terminate;
-    }
-    if (KTR_set_grad_callback(KnitroData, &callbackEvalGA)) {
-      fprintf(stderr, "Could not register FC callback function\n");
-      goto terminate;
-    }
-    if ((nHessOpt == KTR_HESSOPT_EXACT) || (nHessOpt == KTR_HESSOPT_PRODUCT))
-      if (KTR_set_hess_callback(KnitroData, &callbackEvalHess)) {
-        fprintf(stderr, "Could not register Hess callback function\n");
-        goto terminate;
-      }
 
-    /* Convert infinite bounds. */
-    for (i = 0; i < CUTEst_nvar; i++) {
-        if (bl[i] == -CUTE_INF) bl[i] = -KTR_INFBOUND;
-        if (bu[i] ==  CUTE_INF) bu[i] =  KTR_INFBOUND;
-    }
-    for (i = 0; i < CUTEst_ncon; i++) {
-        if (cl[i] == -CUTE_INF) cl[i] = -KTR_INFBOUND;
-        if (cl[i] ==  CUTE_INF) cu[i] =  KTR_INFBOUND;
-    }
+    CHECK_KNITRO_EXIT_CODE(KN_add_eval_callback(kc, KNTRUE, CUTEst_ncon, consIndex, &callbackEvalFC, &cb),
+                           "Could not register FC callback function\n");
 
-    MALLOC(cTypes, CUTEst_ncon, int);
-    for (i = 0; i < CUTEst_ncon; i++)
-        if (linear[i])
-          cTypes[i] = KTR_CONTYPE_LINEAR;
-        else
-          cTypes[i] = KTR_CONTYPE_GENERAL;
+    CHECK_KNITRO_EXIT_CODE(KN_set_cb_grad(kc, cb, KN_DENSE, NULL, consJac_nnz, jacIndexCons, jacIndexVars, &callbackEvalGA),
+                           "Could not register FC callback function\n");
+
+    if ((nHessOpt == KN_HESSOPT_EXACT) || (nHessOpt == KN_HESSOPT_PRODUCT)) {
+      CHECK_KNITRO_EXIT_CODE(KN_set_cb_hess(kc, cb, CUTEst_nnzh, hessIndexRows, hessIndexCols, &callbackEvalHess),
+                             "Could not register FC callback function\n");
+    }
 
 #ifdef KNIT_DEBUG
     fprintf(stderr, "Initializing KNITRO data structure...\n");
 #endif
 
-    ExitCode = KTR_init_problem(KnitroData,
-                                 (int)CUTEst_nvar,
-                                 KTR_OBJGOAL_MINIMIZE,
-                                 KTR_OBJTYPE_GENERAL,
-                                 bl, bu,
-                                 (int)CUTEst_ncon,
-                                 cTypes,
-                                 cl, cu,
-                                 (int)CUTEst_nnzj,
-                                 (int *)jacIndexVars,
-                                 (int *)jacIndexCons,
-                                 (int)CUTEst_nnzh,
-                                 (int *)hessIndexRows,
-                                 (int *)hessIndexCols,
-                                 x,
-                                 NULL);
-
 #ifdef KNIT_DEBUG
     fprintf(stderr, "Exit code from initialization: %d\n", ExitCode);
 #endif
 
+    if(!kc || ExitCode)
+    {
+      fprintf(stderr, "Knitro-CUTEst:: Error creating Knitro data structure\n");
+      exit(1);
+    }
+
+    printf("Knitro-CUTEst:: Starting solve\n");
+
     /* Call the optimizer */
-    ExitCode = KTR_solve(KnitroData, x, v, 0, &f,
-                          NULL, NULL, NULL, NULL, NULL, NULL);
+    ExitCode = KN_solve(kc);
 
     /* Release KNITRO context */
 #ifdef KNIT_DEBUG
     fprintf(stderr, "Terminating...\n");
 #endif
-    if (KTR_free(&KnitroData))
+    if (KN_free(&kc)) {
       fprintf(stderr, "Knitro-CUTEst:: Error freeing Knitro data structure\n");
+    }
 
     /* Get CUTEst statistics */
     CUTEST_creport( &status, calls, cpu);
@@ -567,7 +639,8 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     FREE(hessIndexCols);
     FREE(CUTEst_Hess);
     if (Hv) FREE(Hv);
-    FREE(cTypes);
+
+    FREE(consIndex);
 
     CUTEST_cterminate( &status );
 
