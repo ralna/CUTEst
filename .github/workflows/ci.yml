@@ -15,25 +15,25 @@ jobs:
         include:
           - os: ubuntu-latest
             compiler: gnu
-            sifdecode_input: '1\n1\n1\n2\nnny'
-            cutest_input: '1\n1\n1\n2\nnnydy'
+            sifdecode_input: '1\n1\nn\n1'
+            cutest_input: '2\n2\nn\nn\ny\nd\ny\n
             arch: 'pc64.lnx.gfo'
           - os: macos-latest
             compiler: gnu
-            sifdecode_input: '2\n1\n2\nnny'
-            cutest_input: '2\n1\n2\nnnydy'
+            sifdecode_input: '2\nn\n1'
+            cutest_input: '2\n2\nn\nn\ny\nd\ny\n'
             arch: 'mac64.osx.gfo'
           - os: ubuntu-latest
             compiler: intel
-            sifdecode_input: '1\n1\n2\n8\nnny'
-            cutest_input: '1\n1\n2\n9\nnnydy'
+            sifdecode_input: '1\n1\nn\n2\nn\ny'
+            cutest_input: '2\n8\nn\nn\ny\nd\ny\n
             hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18975/l_HPCKit_p_2022.3.1.16997_offline.sh'
             script: 'install_linux.sh'
             arch: 'pc64.lnx.ifr'
           - os: macos-latest
             compiler: intel
-            sifdecode_input: '2\n2\n4\nnny'
-            cutest_input: '2\n2\n4\nnnydy'
+            sifdecode_input: '2\nn\n2\nn\ny'
+            cutest_input: '2\n8\nn\nn\ny\nd\ny\n'
             # hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18977/m_HPCKit_p_2022.3.1.15344_offline.dmg'
             hpckit: 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18681/m_HPCKit_p_2022.2.0.158_offline.dmg'
             script: 'install_macos.sh'
