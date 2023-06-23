@@ -16,7 +16,7 @@ jobs:
           - os: ubuntu-latest
             compiler: gnu
             sifdecode_input: '1\n1\nn\n1'
-            cutest_input: '2\n2\nn\nn\ny\nd\ny\n
+            cutest_input: '2\n2\nn\nn\ny\nd\ny\n'
             arch: 'pc64.lnx.gfo'
           - os: macos-latest
             compiler: gnu
@@ -26,7 +26,7 @@ jobs:
           - os: ubuntu-latest
             compiler: intel
             sifdecode_input: '1\n1\nn\n2\nn\ny'
-            cutest_input: '2\n8\nn\nn\ny\nd\ny\n
+            cutest_input: '2\n8\nn\nn\ny\nd\ny\n'
             hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18975/l_HPCKit_p_2022.3.1.16997_offline.sh'
             script: 'install_linux.sh'
             arch: 'pc64.lnx.ifr'
