@@ -470,7 +470,7 @@ if [[ ${PKG} == "matlab" ]]; then
         error "${thisprog}: environment variable MYMATLAB not set"
         exit 10
     fi
-    MEXFORTRAN=${MYMATLAB}/bin/MEX
+    MEXFORTRAN=${MYMATLAB}/bin/mex
     if [[ ! -x ${MEXFORTRAN} ]]; then
         error "Mex command ${MEXFORTRAN} does not exist or is not executable"
         exit 11
