@@ -491,7 +491,7 @@ elif [[ ${PKG} == "octave" ]]; then
     fi
     (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
     outputName=mcutest
-    command="${MEXFORTRAN} --mex -I${CUTEST}/include --output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -g"
+    command="${MEXFORTRAN} --mex -I${CUTEST}/include --output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -g"
     (( show_commands )) && echo "$command"
     $command
     Run_Post

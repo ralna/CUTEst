@@ -1979,8 +1979,8 @@ mexErrMsgTxt("stop\n");
 
     vector = mxCreateSparse(n, 1, nnz, mxREAL);
     if (vector == NULL) return NULL;
-    ir = mxGetIr(vector);
-    jptr = mxGetJc(vector);
+    ir = (mwIndex *)mxGetIr(vector);
+    jptr = (mwIndex *)mxGetJc(vector);
     pr = mxGetPr(vector);
 
     for (i = 0; i < nnz; i++) {
@@ -2016,8 +2016,8 @@ mexErrMsgTxt("stop\n");
     /* The nnzV given by the user may be an overestimate */
     vector = mxCreateSparse(ncol, 1, nnzV, mxREAL);
     if (vector == NULL) return NULL;
-    ir = mxGetIr(vector);
-    jptr = mxGetJc(vector);
+    ir = (mwIndex *)mxGetIr(vector);
+    jptr = (mwIndex *)mxGetJc(vector);
     pr = mxGetPr(vector);
 
     for (i = 0; i < nnz; i++)
@@ -2063,8 +2063,8 @@ mexErrMsgTxt("stop\n");
     matrix = mxCreateSparse((mwSize)nrow, (mwSize)ncol, (mwSize)nnz, mxREAL);
     if (matrix == NULL) return NULL;
 
-    ir   = mxGetIr(matrix);  /* Array of length nnz    */
-    jptr = mxGetJc(matrix);  /* Array of length ncol+1 */
+    ir   = (mwIndex *)mxGetIr(matrix);  /* Array of length nnz    */
+    jptr = (mwIndex *)mxGetJc(matrix);  /* Array of length ncol+1 */
     pr   = mxGetPr(matrix);  /* Array of length nnz    */
 
     /* Store the number of nonzeros in each column */
