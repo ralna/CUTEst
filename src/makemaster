@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for the CUTEST packages
 
 #  N. Gould, D. Orban and Ph. L. Toint.
-#  This version: 16 May 2016
+#  This version: 05 July 2023
 
 SHELL = /bin/$(BINSHELL)
 
@@ -238,6 +238,16 @@ all_matlab_single: tools_single
 all_matlab_double: tools_double
 	( cd matlab ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                        all PRECIS=double PWD=$(PWD)/matlab )
+
+#  all tools and their octave interface
+
+all_octave: all_octave_$(PRECIS)
+all_octave_single: tools_single
+	( cd octave ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                       all PRECIS=single PWD=$(PWD)/octave )
+all_octave_double: tools_double
+	( cd octave ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                       all PRECIS=double PWD=$(PWD)/octave )
 
 # all interface tests
 

@@ -76,6 +76,12 @@ To get CUTEst working, here is what you need to do:
        MYMATLAB      <- your system Matlab installation directory
        MYMATLABARCH  <- the "architecture" you wish to use with Matlab (if any)
 
+    and (for Octave users)
+
+       OCTAVE         <- directory containing Octave.
+       MYOCTAVEARCH   <- the "architecture" you wish to use with Octave (if any)
+       OCTAVE_VERSION <- (e.g. export OCTAVE_VERSION="octave-4.2.2").
+
     as indicated by the installation scripts, to ensure that
 
        $SIFDECODE/bin and $CUTEST/bin
@@ -179,7 +185,7 @@ To get CUTEst working, here is what you need to do:
 
        cutest2matlab problem
 
-    for your desired problem.SIF file. This will create a a  binary file
+    for your desired problem.SIF file. This will create a binary file
     mcutest.mexglx (32bit Linux), mcutest.mexa64 (64bit Linux) mcutest.mex-
     maci (32bit OSX) or mcutest.mexmaci64 (64bit OSX).
 
@@ -189,9 +195,34 @@ To get CUTEst working, here is what you need to do:
 
        help cutest
 
-    to find the range of CUTEst Matlab tools available.
+    to find the range of CUTEst Matlab tools available.  See 
 
-9.  If you wish to add an interace to your own package, "mypack",
+      $CUTEST/src/matlab/README.matlab
+
+    for further details.
+
+9.  If you wish to use CUTEst with Octave, you will need to use a
+    mkoctavefile interface between CUTEst, Octave and the SIF problem file you
+    wish to evaluate. To create this link, issue the command
+
+       cutest2octave problem
+
+    for your desired problem.SIF file. This will create a binary file
+    mcutest.mex
+
+    Once you have started Octave, you must add the mcutest.mex binary
+    and the contents of the directory $CUTEST/src/octave to your Octave
+    search path. Then consult
+
+       help cutest
+
+    to find the range of CUTEst Octave tools available. See 
+
+      $CUTEST/src/octave/README.octave
+
+    for further details.
+
+10. If you wish to add an interace to your own package, "mypack",
      you will need to create a directory
 
        $CUTEST/src/"mypack"
@@ -237,24 +268,24 @@ To get CUTEst working, here is what you need to do:
     like us to include your interface in the distribution for others to
     use, we would be delighted to help you.
 
-10. Aside from the man pages, PDF documentation for each tool and the
-    runcutest, cutest2matlab and sifdecoder scripts is avalable in
-    the directories $SIFDECODE/doc/pdf/ and $CUTEST/doc/pdf.
+11. Aside from the man pages, PDF documentation for each tool and the
+    runcutest, cutest2matlab, cutest2octave and sifdecoder scripts 
+    is avalable in the directories $SIFDECODE/doc/pdf/ and $CUTEST/doc/pdf.
 
-11. Refer to the CUTEst Wiki
+12. Refer to the CUTEst Wiki
 
       https://github.com/ralna/CUTEst/wiki
 
     for updates/bug fixes/news.
 
-12. To uninstall a particular architecture in CUTEst, execute the
+13. To uninstall a particular architecture in CUTEst, execute the
     script
 
       $CUTEST/bin/uninstall_cutest
 
     and follow the instructions
 
-13. To completely remove CUTEst, execute the command
+14. To completely remove CUTEst, execute the command
 
       rm -rf $CUTEST ~/.cutest
 
@@ -266,4 +297,4 @@ Philippe Toint
 
 For GALAHAD productions
 30 January 2013
-This version: 19 Decemeber 2018
+This version: 5 July 2023

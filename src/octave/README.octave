@@ -17,7 +17,8 @@ Make sure you have correctly set the following environment variables:
 
   OCTAVE        directory containing Octave.
   MYOCTAVEARCH  CUTEst architecture built with Octave support.
-  OCTAVE_VERSION (e.g. export OCTAVE_VERSION="octave-4.2.2").
+  OCTAVE_VERSION (e.g. export OCTAVE_VERSION="octave-4.2.2", see
+                  basename `ls -d /usr/include/octave*` )
 
 Octave's mex executable should be /usr/bin/mkoctfile. This is created by 
 installing liboctave-dev

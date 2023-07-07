@@ -1,0 +1,67 @@
+.\" @(#)cutest2octave v1.0 07/2023;
+.TH cutest2octave 1 "5 Jul 2023"
+.SH NAME
+cutest2octave \- CUTEst to Octave problem interface.
+.SH SYNOPSIS
+\fBcutest2octave\fP \fIproblem[.SIF]\fP]
+.SH DESCRIPTION
+\fBcutest2octave\fP builds the interace between a problem described in
+standard input format (SIF) and the CUTEst evaluation tools for Octave.
+The command is actually a shortcut to a call to the CUTEst script
+
+  \fBruncutest\fP -A ARCH -p octave -D \fIproblem[.SIF]\fP
+
+where ARCH is the value provided by the environment variable
+MYOCTAVEARCH (or MYARCH if MYOCTAVEARCH has not been set).
+Checks are performed to see if ARCH exists, a version of CUTEst
+using the architecture ARCH has been installed and if this
+architecture uses the gfortran compiler required by Octave's mex
+interface.
+
+A successful run of cutest2octave will create a binary file mcutest.mex. 
+This must be placed on the Octave search path before calling the Octave 
+CUTEst tools.
+.SH ENVIRONMENT
+.TP
+.SB CUTEST
+.br
+Directory containing CUTEst.
+.TP
+.SB OCTAVE
+Directory containing Octave's executable.
+.TP
+.SB MYOCTAVEARCH
+The default architecture that uses gfortran compatible with Octave's mex.
+.TP
+.SB OCTAVE_VERSION
+The current octave version as returned by the command 
+  basename `ls -d /usr/include/octave*`
+.TP
+.SB MYARCH
+.br
+The default architecture.
+.TP
+.SB MASTSIF
+A pointer to the directory containing the CUTEst problems
+collection. If this variable is not set, the current directory is
+searched for \fIproblem.SIF\fP. If it is set, the current directory is
+searched first, and if \fIproblem.SIF\fP is not found there, $MASTSIF
+is searched.
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban, Ph.L. Toint and R. Jezek
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+runcutest(1).
