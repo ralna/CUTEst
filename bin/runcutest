@@ -5,6 +5,9 @@
 #
 # N. Gould, D. Orban & Ph. Toint for GOT Productions, 2006, 2013
 #
+# modified for Octave by Romana Jezek, 2023
+# produced as part of the project Derivative-Free Optimization funded
+# by the Austrian Science Fund
 ###############################################################################
 
 if [[ ${CUTEST+set} != 'set' ]]; then
@@ -475,6 +478,20 @@ if [[ ${PKG} == "matlab" ]]; then
     (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
     outputName=mcutest
     command="${MEXFORTRAN} -cxx -I${CUTEST}/include -output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -lgfortran -g"
+    (( show_commands )) && echo "$command"
+    $command
+    Run_Post
+    Clean_Up
+    exit $?
+elif [[ ${PKG} == "octave" ]]; then
+    MEXFORTRAN=/usr/bin/mkoctfile
+    if [[ ! -x ${MEXFORTRAN} ]]; then
+        error "Mex command ${MEXFORTRAN} does not exist or is not executable"
+        exit 11
+    fi
+    (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
+    outputName=mcutest
+    command="${MEXFORTRAN} --mex -I${CUTEST}/include --output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -g"
     (( show_commands )) && echo "$command"
     $command
     Run_Post
