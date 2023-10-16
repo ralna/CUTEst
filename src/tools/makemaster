@@ -78,9 +78,9 @@ CCUTESTS = $(LCS)(csetup.o) $(LCS)(cdimen.o) $(LCS)(cdimse.o) $(LCS)(cdimsh.o) \
            $(LCS)(ccifg.o) $(LCS)(ccifsg.o) $(LCS)(cdh.o) $(LCS)(cdhc.o) \
            $(LCS)(ceh.o) $(LCS)(cgrdh.o) $(LCS)(cifn.o) $(LCS)(cigr.o) \
            $(LCS)(cisgr.o) $(LCS)(cidh.o) $(LCS)(csh.o) $(LCS)(cshc.o) \
-           $(LCS)(cshp.o) $(LCS)(cish.o) $(LCS)(cjprod.o) $(LCS)(cstats.o) \
-           $(LCS)(csgr.o) $(LCS)(csgreh.o) $(LCS)(csgrsh.o) $(LCS)(csjprod.o) \
-           $(LCS)(chprod.o) $(LCS)(chcprod.o) $(LCS)(csjp.o) \
+           $(LCS)(cshj.o) $(LCS)(cshp.o) $(LCS)(cish.o) $(LCS)(cjprod.o) \
+           $(LCS)(cstats.o) $(LCS)(csgr.o) $(LCS)(csgreh.o) $(LCS)(csgrsh.o) \
+           $(LCS)(csjprod.o) $(LCS)(chprod.o) $(LCS)(chcprod.o) $(LCS)(csjp.o) \
            $(LCS)(csgrp.o) $(LCS)(csgrshp.o) $(LCS)(cchprodsp.o) \
            $(LCS)(cshprod.o) $(LCS)(cshcprod.o) $(LCS)(cchprods.o) \
            $(LCS)(creport.o) $(LCS)(connames.o) $(LCS)(cterminate.o) \
@@ -105,13 +105,13 @@ CCUTESTD = $(LCD)(csetup.o) $(LCD)(cdimen.o) $(LCD)(cdimse.o) $(LCD)(cdimsh.o) \
            $(LCD)(ccifg.o) $(LCD)(ccifsg.o) $(LCD)(cdh.o) $(LCD)(cdhc.o) \
            $(LCD)(ceh.o) $(LCD)(cgrdh.o) $(LCD)(cifn.o) $(LCD)(cigr.o) \
            $(LCD)(cisgr.o) $(LCD)(cidh.o) $(LCD)(csh.o) $(LCD)(cshc.o) \
-           $(LCD)(cshp.o) $(LCD)(cish.o) $(LCD)(cjprod.o) $(LCD)(cstats.o) \
-           $(LCD)(csgr.o) $(LCD)(csgreh.o) $(LCD)(csgrsh.o) $(LCD)(csjprod.o) \
-           $(LCD)(chprod.o) $(LCD)(chcprod.o) $(LCD)(cshprod.o) \
-           $(LCD)(cshcprod.o) $(LCD)(cchprods.o) $(LCD)(csjp.o) \
-           $(LCD)(csgrp.o) $(LCD)(csgrshp.o) $(LCD)(cchprodsp.o) \
-           $(LCD)(creport.o) $(LCD)(connames.o) $(LCD)(cterminate.o) \
-           $(LCD)(lqp.o) $(LCD)(cconst.o)
+           $(LCD)(cshj.o) $(LCD)(cshp.o) $(LCD)(cish.o) $(LCD)(cjprod.o) \
+           $(LCD)(cstats.o) $(LCD)(csgr.o) $(LCD)(csgreh.o) $(LCD)(csgrsh.o) \
+           $(LCD)(csjprod.o) $(LCD)(chprod.o) $(LCD)(chcprod.o) \
+           $(LCD)(cshprod.o) $(LCD)(cshcprod.o) $(LCD)(cchprods.o) \
+           $(LCD)(csjp.o) $(LCD)(csgrp.o) $(LCD)(csgrshp.o) \
+           $(LCD)(cchprodsp.o) $(LCD)(creport.o) $(LCD)(connames.o) \
+           $(LCD)(cterminate.o) $(LCD)(lqp.o) $(LCD)(cconst.o)
 
 CUTESTS = $(BASICS) $(UCUTESTS) $(CCUTESTS)
 CUTESTD = $(BASICD) $(UCUTESTD) $(CCUTESTD)
@@ -221,6 +221,7 @@ $(LC)(cutest.o): ../tools/cutest.f90
 	$(RMARFILE) cidh.o
 	$(RMARFILE) csh.o
 	$(RMARFILE) cshc.o
+	$(RMARFILE) cshj.o
 	$(RMARFILE) cshp.o
 	$(RMARFILE) cish.o
 	$(RMARFILE) cjprod.o
@@ -616,6 +617,18 @@ $(LC)(cshc.o): ../tools/cshc.f90
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
                    $(FORTRAN) -o cshc.o $(FFLAGSN) cshc.f90 )
 	cd $(OBJ); $(ARR) cshc.o; $(RM) cshc.f90 cshc.o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cshj.o: $(LC)(cshj.o)
+
+$(LC)(cshj.o): ../tools/cshj.f90
+	@printf ' %-9s %-15s\t\t' "Compiling" "cshj"
+	$(SED) -f $(SEDS) ../tools/cshj.f90 > $(OBJ)/cshj.f90
+	cd $(OBJ); $(FORTRAN) -o cshj.o $(FFLAGS) cshj.f90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o cshj.o $(FFLAGSN) cshj.f90 )
+	cd $(OBJ); $(ARR) cshj.o; $(RM) cshj.f90 cshj.o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

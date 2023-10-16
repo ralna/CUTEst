@@ -176,6 +176,7 @@
         REAL :: time_csgrshp = 0.0
         REAL :: time_csh = 0.0
         REAL :: time_cshc = 0.0
+        REAL :: time_cshj = 0.0
         REAL :: time_cshcprod = 0.0
         REAL :: time_cshp = 0.0
         REAL :: time_cshprod = 0.0

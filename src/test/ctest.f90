@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.6 - 22/02/2018 AT 15:40 GMT.
+! THIS VERSION: CUTEST 2.1 - 2023-10-16 AT 11:40 GMT.
 
 !-*- C U T E S T  t e s t _ c o n s t r a i n e d _ t o o l s  P R O G R A M -*-
 
@@ -38,7 +38,7 @@
       INTEGER :: equality_constraints, linear_constraints
       INTEGER :: nnz_vector, nnz_result
       INTEGER :: CHP_ne, l_chp, l_j2_1, l_j2_2, l_j, icon, iprob
-      REAL ( KIND = wp ) :: f, ci
+      REAL ( KIND = wp ) :: f, ci, y0
       LOGICAL :: grad, byrows, goth, gotj
       LOGICAL :: grlagf, jtrans
       CHARACTER ( len = 10 ) ::  p_name
@@ -481,6 +481,15 @@
 
       WRITE( out, "( ' CALL CUTEST_cshc' )" )
       CALL CUTEST_cshc( status, n, m, X, Y,                                    &
+                        H_ne, l_h, H_val, H_row, H_col )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+
+!  compute the sparse Hessian of the John function
+
+      y0 = 2.0_wp
+      WRITE( out, "( ' CALL CUTEST_cshj' )" )
+      CALL CUTEST_cshj( status, n, m, X, y0, Y,                                &
                         H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )

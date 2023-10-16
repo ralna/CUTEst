@@ -173,6 +173,8 @@
         time = work%time_csh
       CASE ( 'cutest_cshc' )
         time = work%time_cshc
+      CASE ( 'cutest_cshj' )
+        time = work%time_cshj
       CASE ( 'cutest_cshcprod' )
         time = work%time_cshcprod
       CASE ( 'cutest_cshp' )
