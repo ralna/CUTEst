@@ -77,7 +77,8 @@ CCUTESTS = $(LCS)(csetup.o) $(LCS)(cdimen.o) $(LCS)(cdimse.o) $(LCS)(cdimsh.o) \
            $(LCS)(cofsg.o) $(LCS)(ccfg.o) $(LCS)(clfg.o) $(LCS)(ccfsg.o) \
            $(LCS)(ccifg.o) $(LCS)(ccifsg.o) $(LCS)(cdh.o) $(LCS)(cdhc.o) \
            $(LCS)(ceh.o) $(LCS)(cgrdh.o) $(LCS)(cifn.o) $(LCS)(cigr.o) \
-           $(LCS)(cisgr.o) $(LCS)(cidh.o) $(LCS)(csh.o) $(LCS)(cshc.o) \
+           $(LCS)(cisgr.o) $(LCS)(cisgrp.o) \
+           $(LCS)(cidh.o) $(LCS)(csh.o) $(LCS)(cshc.o) \
            $(LCS)(cshj.o) $(LCS)(cshp.o) $(LCS)(cish.o) $(LCS)(cjprod.o) \
            $(LCS)(cstats.o) $(LCS)(csgr.o) $(LCS)(csgreh.o) $(LCS)(csgrsh.o) \
            $(LCS)(csjprod.o) $(LCS)(chprod.o) $(LCS)(chcprod.o) $(LCS)(csjp.o) \
@@ -104,7 +105,8 @@ CCUTESTD = $(LCD)(csetup.o) $(LCD)(cdimen.o) $(LCD)(cdimse.o) $(LCD)(cdimsh.o) \
            $(LCD)(cofsg.o) $(LCD)(ccfg.o) $(LCD)(clfg.o) $(LCD)(ccfsg.o) \
            $(LCD)(ccifg.o) $(LCD)(ccifsg.o) $(LCD)(cdh.o) $(LCD)(cdhc.o) \
            $(LCD)(ceh.o) $(LCD)(cgrdh.o) $(LCD)(cifn.o) $(LCD)(cigr.o) \
-           $(LCD)(cisgr.o) $(LCD)(cidh.o) $(LCD)(csh.o) $(LCD)(cshc.o) \
+           $(LCD)(cisgr.o) $(LCD)(cisgrp.o) \
+           $(LCD)(cidh.o) $(LCD)(csh.o) $(LCD)(cshc.o) \
            $(LCD)(cshj.o) $(LCD)(cshp.o) $(LCD)(cish.o) $(LCD)(cjprod.o) \
            $(LCD)(cstats.o) $(LCD)(csgr.o) $(LCD)(csgreh.o) $(LCD)(csgrsh.o) \
            $(LCD)(csjprod.o) $(LCD)(chprod.o) $(LCD)(chcprod.o) \
@@ -218,6 +220,7 @@ $(LC)(cutest.o): ../tools/cutest.f90
 	$(RMARFILE) cifn.o
 	$(RMARFILE) cigr.o
 	$(RMARFILE) cisgr.o
+	$(RMARFILE) cisgrp.o
 	$(RMARFILE) cidh.o
 	$(RMARFILE) csh.o
 	$(RMARFILE) cshc.o
@@ -581,6 +584,18 @@ $(LC)(cisgr.o): ../tools/cisgr.f90
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
                    $(FORTRAN) -o cisgr.o $(FFLAGSN) cisgr.f90 )
 	cd $(OBJ); $(ARR) cisgr.o; $(RM) cisgr.f90 cisgr.o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cisgrp.o: $(LC)(cisgrp.o)
+
+$(LC)(cisgrp.o): ../tools/cisgrp.f90
+	@printf ' %-9s %-15s\t\t' "Compiling" "cisgrp"
+	$(SED) -f $(SEDS) ../tools/cisgrp.f90 > $(OBJ)/cisgrp.f90
+	cd $(OBJ); $(FORTRAN) -o cisgrp.o $(FFLAGS) cisgrp.f90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o cisgrp.o $(FFLAGSN) cisgrp.f90 )
+	cd $(OBJ); $(ARR) cisgrp.o; $(RM) cisgrp.f90 cisgrp.o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

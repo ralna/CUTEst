@@ -151,6 +151,8 @@
         time = work%time_cigr
       CASE ( 'cutest_cisgr' )
         time = work%time_cisgr
+      CASE ( 'cutest_cisgrp' )
+        time = work%time_cisgrp
       CASE ( 'cutest_cidh' )
         time = work%time_cidh
       CASE ( 'cutest_cish' )

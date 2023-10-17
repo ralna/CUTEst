@@ -162,6 +162,7 @@
         REAL :: time_cifn = 0.0
         REAL :: time_cigr = 0.0
         REAL :: time_cisgr = 0.0
+        REAL :: time_cisgrp = 0.0
         REAL :: time_cidh = 0.0
         REAL :: time_cish = 0.0
         REAL :: time_cjprod = 0.0

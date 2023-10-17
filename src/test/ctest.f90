@@ -240,6 +240,13 @@
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
 
+!  and its sparsity pattern
+
+      WRITE( out, "( ' CALL CUTEST_cisgrp for the objective function' )" )
+      CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
+
 !  compute the number of nonzeros in the sparse Jacobian
 
       WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
@@ -388,6 +395,13 @@
       CALL CUTEST_cisgr( status, n, icon, X, Ji_ne, n, Ji, J_var )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
+
+!  and its sparsity pattern
+
+      WRITE( out, "( ' CALL CUTEST_cisgrp for a constraint' )" )
+      CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
 
 !  compute the dense Hessian value
 
@@ -1036,6 +1050,32 @@
         END DO
       END DO
       END SUBROUTINE WRITE_JT_dense
+
+      SUBROUTINE WRITE_G_sparsity_pattern( out, G_ne, l_g, G_ind )
+      INTEGER :: l_g, G_ne, out
+      INTEGER, DIMENSION( l_g ) :: G_ind
+      INTEGER :: i
+      WRITE( out, "( ' * G(sparse)' )" )
+      WRITE( out, "( ' * ', 5( '    ind' ) )" )
+      DO i = 1, G_ne, 5
+        IF ( i + 4 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  5( I7 ) )" )                                  &
+            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 ), G_ind( i + 3 ),        &
+            G_ind( i + 4 )
+        ELSE IF ( i + 3 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  4( I7 ) )" )                                  &
+            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 ), G_ind( i + 3 )
+        ELSE IF ( i + 2 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  3( I7 ) )" )                                  &
+            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 )
+        ELSE IF ( i + 1 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  2( I7 ) )" )                                  &
+            G_ind( i ), G_ind( i + 1 )
+        ELSE
+          WRITE( out, "( ' * ',  I7 )" ) G_ind( i )
+        END IF
+      END DO
+      END SUBROUTINE WRITE_G_sparsity_pattern
 
       SUBROUTINE WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
       INTEGER :: l_h, H_ne, out

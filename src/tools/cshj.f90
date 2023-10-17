@@ -8,8 +8,8 @@
 !  History -
 !   modern fortran version released in CUTEst, 16th October 2023
 
-      SUBROUTINE CUTEST_cshj( status, n, m, X, Y0, Y,                          &
-                             nnzh, lh, H_val, H_row, H_col )
+      SUBROUTINE CUTEST_cshj( status, n, m, X, y0, Y,                          &
+                              nnzh, lh, H_val, H_row, H_col )
       USE CUTEST
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
 
@@ -19,7 +19,7 @@
       INTEGER, INTENT( OUT ) :: nnzh, status
       INTEGER, INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( n ) :: X
-      REAL ( KIND = wp ), INTENT( IN ) :: Y0
+      REAL ( KIND = wp ), INTENT( IN ) :: y0
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( m ) :: Y
       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( lh ) :: H_val
 
@@ -34,7 +34,7 @@
 
       CALL CUTEST_cshj_threadsafe( CUTEST_data_global,                         &
                                    CUTEST_work_global( 1 ),                    &
-                                   status, n, m, X, Y0, Y,                     &
+                                   status, n, m, X, y0, Y,                     &
                                    nnzh, lh, H_val, H_row, H_col )
       RETURN
 
@@ -50,7 +50,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 16th October 2023
 
-      SUBROUTINE CUTEST_cshj_threaded( status, n, m, X, Y0, Y,                 &
+      SUBROUTINE CUTEST_cshj_threaded( status, n, m, X, y0, Y,                 &
                                        nnzh, lh, H_val, H_row, H_col, thread )
       USE CUTEST
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
@@ -61,7 +61,7 @@
       INTEGER, INTENT( OUT ) :: nnzh, status
       INTEGER, INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( n ) :: X
-      REAL ( KIND = wp ), INTENT( IN ) :: Y0
+      REAL ( KIND = wp ), INTENT( IN ) :: y0
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( m ) :: Y
       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( lh ) :: H_val
 
@@ -87,7 +87,7 @@
 
       CALL CUTEST_cshj_threadsafe( CUTEST_data_global,                         &
                                    CUTEST_work_global( thread ),               &
-                                   status, n, m, X, Y0, Y,                     &
+                                   status, n, m, X, y0, Y,                     &
                                    nnzh, lh, H_val, H_row, H_col )
       RETURN
 
@@ -104,7 +104,7 @@
 !   derived from csh released in CUTEst, 24th November 2012
 !   modern fortran version released in CUTEst, 16th October 2023
 
-      SUBROUTINE CUTEST_cshj_threadsafe( data, work, status, n, m, X, Y0, Y,   &
+      SUBROUTINE CUTEST_cshj_threadsafe( data, work, status, n, m, X, y0, Y,   &
                                          nnzh, lh, H_val, H_row, H_col )
       USE CUTEST
       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
@@ -117,7 +117,7 @@
       INTEGER, INTENT( OUT ) :: nnzh, status
       INTEGER, INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( n ) :: X
-      REAL ( KIND = wp ), INTENT( IN ) :: Y0
+      REAL ( KIND = wp ), INTENT( IN ) :: y0
       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( m ) :: Y
       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( lh ) :: H_val
 
@@ -209,7 +209,7 @@
         DO ig = 1, data%ng
           i = data%KNDOFC( ig )
           IF ( i == 0 ) THEN
-            work%GSCALE_used( ig ) = data%GSCALE( ig ) * Y0
+            work%GSCALE_used( ig ) = data%GSCALE( ig ) * y0
           ELSE
             work%GSCALE_used( ig ) = data%GSCALE( ig ) * Y( i )
           END IF
