@@ -367,7 +367,6 @@
 
 !  compute just its dense gradient
 
-      icon = 1
       WRITE( out, "( ' CALL CUTEST_cigr for a constraint' )" )
       CALL CUTEST_cigr( status, n, icon, X, Ji )
       IF ( status /= 0 ) GO TO 900
@@ -501,7 +500,7 @@
 
 !  compute the sparse Hessian of the John function
 
-      y0 = 2.0_wp
+      y0 = 1.0_wp
       WRITE( out, "( ' CALL CUTEST_cshj' )" )
       CALL CUTEST_cshj( status, n, m, X, y0, Y,                                &
                         H_ne, l_h, H_val, H_row, H_col )
@@ -1255,8 +1254,8 @@
       DO i = 1, m
         IF (  CHP_ptr( i + 1 ) > CHP_ptr( i ) ) THEN
           WRITE( out, "( ' * constraint Hessian ', I0 )" ) i
-          WRITE( out, "( ' * product indices ', 5I12, /,                       &
-         &  ( ' *', 17X, 5I12 ) )" )                                           &
+          WRITE( out, "( ' * product indices ', 5I12, : , /,                   &
+         &  ( ' *', 17X, 5I12, : ) )" )                                        &
             CHP_ind( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
         ELSE
           WRITE( out, "( ' * no Hessian indices for constraint ', I0 )" ) i
@@ -1274,11 +1273,11 @@
       DO i = 1, m
         IF (  CHP_ptr( i + 1 ) > CHP_ptr( i ) ) THEN
           WRITE( out, "( ' * constraint Hessian ', I0 )" ) i
-          WRITE( out, "( ' * product indices ', 5I12, /,                       &
-         &  ( ' *', 17X, 5I12 ) )" )                                           &
+          WRITE( out, "( ' * product indices ', 5I12, : , /,                   &
+         &  ( ' *', 17X, 5I12, : ) )" )                                        &
             CHP_ind( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
-          WRITE( out, "( ' * product values  ', 5ES12.4, /,                    &
-         &  ( ' *', 9X, 5ES12.4 ) )" )                                         &
+          WRITE( out, "( ' * product values  ', 5ES12.4, : , /,                &
+         &  ( ' *', 17X, 5ES12.4, : ) )" )                                     &
             CHP_val( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
         ELSE
           WRITE( out, "( ' * no Hessian indices for constraint ', I0 )" ) i

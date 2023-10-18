@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.0 - 28/12/2012 AT 13:00 GMT.
+! THIS VERSION: CUTEST 2.1 - 2013-10-17 AT 13:10 GMT.
 
 !-*-*-*-*-*-*-*-*- C U T E S T  t e s t _ m a i n  P R O G R A M -*-*-*-*-*-*-*-
 
@@ -26,6 +26,7 @@
       INTEGER, PARAMETER :: out = 6
       INTEGER, PARAMETER :: buffer = 77
       REAL ( KIND = wp ), PARAMETER :: one = 1.0_wp
+      REAL ( KIND = wp ), PARAMETER :: zero = 0.0_wp
 
 !--------------------------------
 !   L o c a l   V a r i a b l e s
@@ -36,16 +37,20 @@
       INTEGER :: lbandh, nsemib, maxsbw, i, icon, iprob, l_j, l_j2_1, l_j2_2
       INTEGER :: nonlinear_variables_objective, nonlinear_variables_constraints
       INTEGER :: equality_constraints, linear_constraints
-      REAL ( KIND = wp ) :: f, ci
+      INTEGER ::  CHP_ne, l_chp, nnz_vector, nnz_result
+      REAL ( KIND = wp ) :: f, ci, y0
       LOGICAL :: grad, byrows, goth, gotj, grlagf, jtrans, only_print_small
+      LOGICAL :: debug_cutest_exists
       CHARACTER ( len = 10 ) ::  p_name
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: H_row, H_col, X_type
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: HE_row, HE_row_ptr, HE_val_ptr
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: G_var, J_var, J_fun
+      INTEGER, ALLOCATABLE, DIMENSION( : ) :: CHP_ind, CHP_ptr
+      INTEGER, ALLOCATABLE, DIMENSION( : ) :: INDEX_nz_vector, INDEX_nz_result
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: X, X_l, X_u, G, Ji
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: Y, C_l, C_u, C, J_val
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: G_val, H_val, HE_val
-      REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: VECTOR, RESULT
+      REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: VECTOR, RESULT, CHP_val
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: H2_val, H_band
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: J2_val
       LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATION, LINEAR
@@ -59,8 +64,13 @@
 !  decide whether this problem has general constraints
 
       CALL CUTEST_cdimen( status, input, n, m )
-      only_print_small = n <= 5 .AND. m <= 5
-!     only_print_small = .TRUE.
+      INQUIRE( FILE = 'debug_cutest', EXIST = debug_cutest_exists )
+      IF ( debug_cutest_exists ) THEN
+        only_print_small = .TRUE.
+      ELSE
+!       only_print_small = .TRUE.
+        only_print_small = n <= 5 .AND. m <= 5
+      END IF
 
       IF ( m == 0 ) THEN
 
@@ -75,7 +85,8 @@
         WRITE( out, "( ' * n = ', I0 )" ) n
         l_h2_1 = n
         ALLOCATE( X( n ), X_l( n ), X_u( n ), G( n ), VECTOR( n ), RESULT( n ),&
-                  X_names( n ), X_type( n ), stat = alloc_stat )
+                  X_names( n ), X_type( n ), INDEX_nz_vector( n ),             &
+                  INDEX_nz_result( n ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
         ALLOCATE( H2_val( l_h2_1, n ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
@@ -267,7 +278,7 @@
 
 !  compute a Hessian-vector product
 
-        VECTOR = one
+        VECTOR = one ; VECTOR( 2 : n ) = zero
         goth = .FALSE.
         WRITE( out, "( ' Call CUTEST_uhprod with goth = .FALSE.' )" )
         CALL CUTEST_uhprod( status, n, goth, X, VECTOR, RESULT )
@@ -280,6 +291,29 @@
         IF ( status /= 0 ) GO to 900
         IF ( only_print_small )                                                &
           CALL WRITE_RESULT( out, n, VECTOR, RESULT )
+
+!  compute a sparse Hessian-vector product
+
+        nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_ushprod with goth = .FALSE.' )" )
+        CALL CUTEST_ushprod( status, n, goth, X,                               &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
+
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_ushprod with goth = .TRUE.' )" )
+        CALL CUTEST_ushprod( status, n, goth, X,                               &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
 
 !  compute a band of the Hessian
 
@@ -330,7 +364,8 @@
 
         DEALLOCATE( X_type, H_row, H_col, HE_row, HE_row_ptr, HE_val_ptr, X,   &
                     X_l, X_u, G, H_val, HE_val, VECTOR, RESULT, H2_val, H_band,&
-                    X_names, stat = alloc_stat )
+                    X_names, INDEX_nz_vector, INDEX_nz_result,                 &
+                    stat = alloc_stat )
 
 !  ========================= Test constrained tools ===========================
 
@@ -344,7 +379,8 @@
         l_h2_1 = n
 
         ALLOCATE( X( n ), X_l( n ), X_u( n ), G( n ), Ji( n ),                 &
-                  X_names( n ), X_type( n ), stat = alloc_stat )
+                  X_names( n ), X_type( n ), INDEX_nz_vector( n ),             &
+                INDEX_nz_result( n ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
         ALLOCATE( C( m ), Y( m ), C_l( m ), C_u( m ), C_names( m ),            &
                   EQUATION( m ), LINEAR( m ), stat = alloc_stat )
@@ -412,7 +448,7 @@
         IF ( only_print_small )                                                &
           CALL WRITE_X_type( out, n, X_type )
 
-!  compute the objective function value
+!  compute the objective and constraint function values
 
         WRITE( out, "( ' CALL CUTEST_cfn' )" )
         CALL CUTEST_cfn( status, n, m, X, f, C )
@@ -420,6 +456,22 @@
         CALL WRITE_f( out, f )
         IF ( only_print_small )                                                &
           CALL WRITE_C( out, m, C )
+
+!  compute the objective function value
+
+        WRITE( out, "( ' CALL CUTEST_cifn for the objective function' )" )
+        icon = 0
+        CALL CUTEST_cifn( status, n, icon, X, f )
+        IF ( status /= 0 ) GO TO 900
+        CALL WRITE_f( out, f )
+
+!  compute a constraint value
+
+        WRITE( out, "( ' CALL CUTEST_cifn for a constraint' )" )
+        icon = 1
+        CALL CUTEST_cifn( status, n, icon, X, ci )
+        IF ( status /= 0 ) GO TO 900
+        CALL WRITE_CI( out, icon, ci )
 
 !  compute the gradient and dense Jacobian values
 
@@ -479,6 +531,15 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_f( out, f )
 
+!  compute just its gradient
+
+        icon = 0
+        WRITE( out, "( ' CALL CUTEST_cigr for the objective function' )" )
+        CALL CUTEST_cigr( status, n, icon, X, G )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_G( out, n, G )
+
 !  compute the objective function and sparse gradient values
 
         l_g = n
@@ -499,6 +560,23 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_f( out, f )
 
+!  compute just its sparse gradient
+
+        icon = 0
+        WRITE( out, "( ' CALL CUTEST_cisgr for the objective function' )" )
+        CALL CUTEST_cisgr( status, n, icon, X, G_ne, l_g, G_val, G_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
+
+!  and its sparsity pattern
+
+        WRITE( out, "( ' CALL CUTEST_cisgrp for the objective function' )" )
+        CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
+
 !  compute the number of nonzeros in the sparse Jacobian
 
         WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
@@ -509,6 +587,22 @@
         l_j = J_ne
         ALLOCATE( J_val( l_j ), J_fun( l_j ), J_var( l_j ), stat = alloc_stat )
         IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the sparsity pattern of the Jacobian
+
+        WRITE( out, "( ' Call CUTEST_csjp' )" )
+        CALL CUTEST_csjp( status, J_ne, l_j, J_var, J_fun )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+
+!  compute the sparsity pattern of the Jacobian and objective gradient
+
+        WRITE( out, "( ' Call CUTEST_csgrp' )" )
+        CALL CUTEST_csgrp( status, n, J_ne, l_j, J_var, J_fun )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
 
 !  compute the gradient and sparse Jacobian values
 
@@ -616,6 +710,14 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_CI( out, icon, ci )
 
+!  compute just its dense gradient
+
+        WRITE( out, "( ' CALL CUTEST_cigr for a constraint' )" )
+        CALL CUTEST_cigr( status, n, icon, X, Ji )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_JI( out, n, icon, Ji )
+
 !  compute an individual constraint and its sparse gradient
 
         grad = .TRUE.
@@ -633,11 +735,35 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_CI( out, icon, ci )
 
+!  compute just its sparse gradient
+
+        WRITE( out, "( ' CALL CUTEST_cisgr for a constraint' )" )
+        CALL CUTEST_cisgr( status, n, icon, X, Ji_ne, n, Ji, J_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
+
+!  and its sparsity pattern
+
+        WRITE( out, "( ' CALL CUTEST_cisgrp for a constraint' )" )
+        CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
+
 !  compute the dense Hessian value
 
         WRITE( out, "( ' CALL CUTEST_cdh' )" )
         CALL CUTEST_cdh( status, n, m, X, Y, l_h2_1, H2_val )
         IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
+
+!  compute the dense Hessian value without the objective function
+
+        WRITE( out, "( ' CALL CUTEST_cdhc' )" )
+        CALL CUTEST_cdhc( status, n, m, X, Y, l_h2_1, H2_val )
+        IF ( status /= 0 ) GO TO 900
         IF ( only_print_small )                                                &
           CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
 
@@ -736,6 +862,16 @@
         IF ( only_print_small )                                                &
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
+!  compute the sparse Hessian of the John function
+
+        y0 = 1.0_wp
+        WRITE( out, "( ' CALL CUTEST_cshj' )" )
+        CALL CUTEST_cshj( status, n, m, X, y0, Y,                              &
+                          H_ne, l_h, H_val, H_row, H_col )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+
 !  compute the sparse Hessian value of the objective or a constraint
 
         iprob = 0
@@ -752,6 +888,17 @@
         IF ( status /= 0 ) GO to 900
         IF ( only_print_small )                                                &
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+
+!  compute the sparsity pattern of the gradients and Hessian
+
+        WRITE( out, "( ' Call CUTEST_csgrshp' )" )
+        CALL CUTEST_csgrshp( status, n, J_ne, l_j, J_var, J_fun,               &
+                             H_ne, l_h, H_row, H_col )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small ) THEN
+          CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+          CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
+        END IF
 
 !  compute the gradient and sparse Hessian values
 
@@ -865,7 +1012,7 @@
 
 !  compute a Hessian-vector product
 
-        VECTOR = one
+        VECTOR( 1 ) = one ; VECTOR( 2 : n ) = zero
         goth = .FALSE.
         WRITE( out, "( ' Call CUTEST_chprod with goth = .FALSE.' )" )
         CALL CUTEST_chprod( status, n, m, goth, X, Y, VECTOR, RESULT )
@@ -879,9 +1026,31 @@
         IF ( only_print_small )                                                &
           CALL WRITE_RESULT( out, n, VECTOR, RESULT )
 
+!  compute a sparse Hessian-vector product
+
+        nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
+        CALL CUTEST_cshprod( status, n, m, goth, X, Y,                         &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
+
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
+        CALL CUTEST_cshprod( status, n, m, goth, X, Y,                         &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
+
 !  compute a Hessian-vector product ignoring the objective
 
-        VECTOR = one
         goth = .FALSE.
         WRITE( out, "( ' Call CUTEST_chcprod with goth = .FALSE.' )" )
         CALL CUTEST_chcprod( status, n, m, goth, X, Y, VECTOR, RESULT )
@@ -894,6 +1063,28 @@
         IF ( status /= 0 ) GO to 900
         IF ( only_print_small )                                                &
           CALL WRITE_RESULT( out, n, VECTOR, RESULT )
+
+!  compute a sparse Hessian-vector product ignoring the objective
+
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
+        CALL CUTEST_cshcprod( status, n, m, goth, X, Y,                        &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
+
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
+        CALL CUTEST_cshcprod( status, n, m, goth, X, Y,                        &
+                             nnz_vector, INDEX_nz_vector, VECTOR,              &
+                             nnz_result, INDEX_nz_result, RESULT )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                              nnz_result, INDEX_nz_result, RESULT )
 
 !  compute a Jacobian-vector product
 
@@ -923,6 +1114,79 @@
         IF ( only_print_small )                                                &
           CALL WRITE_RESULT2( out, m, VECTOR, n, RESULT )
 
+!  compute a sparse Jacobian-vector product
+
+        gotj = .FALSE. ; jtrans = .FALSE.
+        WRITE( out,"(' CALL CSJPROD with gotj = .FALSE. and jtrans = .FALSE.')")
+        CALL CUTEST_csjprod( status, n, m, gotj, jtrans, X,                    &
+                             nnz_vector, INDEX_nz_vector, VECTOR, n,           &
+                             nnz_result, INDEX_nz_result, RESULT, m )
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,    &
+                               nnz_result, INDEX_nz_result, RESULT, m )
+        gotj = .TRUE. ; jtrans = .FALSE.
+        WRITE( out, "(' CALL CSJPROD with gotj = .TRUE. and jtrans = .FALSE.')")
+        CALL CUTEST_csjprod( status, n, m, gotj, jtrans, X,                    &
+                             nnz_vector, INDEX_nz_vector, VECTOR, n,           &
+                             nnz_result, INDEX_nz_result, RESULT, m )
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,    &
+                               nnz_result, INDEX_nz_result, RESULT, m )
+        gotj = .FALSE. ; jtrans = .TRUE.
+        WRITE( out, "(' CALL CSJPROD with gotj = .FALSE. and jtrans = .TRUE.')")
+        CALL CUTEST_csjprod( status, n, m, gotj, jtrans, X,                    &
+                             nnz_vector, INDEX_nz_vector, VECTOR, m,           &
+                             nnz_result, INDEX_nz_result, RESULT, n )
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,    &
+                               nnz_result, INDEX_nz_result, RESULT, n )
+        gotj = .TRUE. ; jtrans = .TRUE.
+        WRITE( out, "( ' CALL CSJPROD with gotj = .TRUE. and jtrans = .TRUE.')")
+        CALL CUTEST_csjprod( status, n, m, gotj, jtrans, X,                    &
+                             nnz_vector, INDEX_nz_vector, VECTOR, m,           &
+                             nnz_result, INDEX_nz_result, RESULT, n )
+        IF ( only_print_small )                                                &
+          CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,    &
+                               nnz_result, INDEX_nz_result, RESULT, n )
+
+!  compute the number of nonzeros when forming the products of the constraint
+!  Hessians with a vector
+
+        WRITE( out, "( ' CALL CUTEST_cdimchp' )" )
+        CALL CUTEST_cdimchp( status, CHP_ne )
+        IF ( status /= 0 ) GO TO 900
+        WRITE( out, "( ' * CHP_ne = ', I0 )" ) CHP_ne
+
+        l_chp = CHP_ne
+        ALLOCATE( CHP_val( l_chp ), CHP_ind( l_chp ), CHP_ptr( m + 1 ),        &
+                  stat = alloc_stat )
+        IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the sparsity pattern needed for the matrix-vector products between
+!  each constraint Hessian and a vector
+
+        WRITE( out, "( ' Call CUTEST_cchprodsp' )" )
+        CALL CUTEST_cchprodsp( status, m, l_chp, CHP_ind, CHP_ptr )
+        IF ( only_print_small )                                                &
+          CALL WRITE_CHP_sparsity( out, m, l_chp, CHP_ind, CHP_ptr )
+
+!  compute the matrix-vector products between each constraint Hessian and a
+!  vector
+
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_cchprods with goth = .FALSE.' )" )
+        CALL CUTEST_cchprods( status, n, m, goth, X, VECTOR, l_chp,            &
+                              CHP_val, CHP_ind, CHP_ptr )
+        IF ( only_print_small )                                                &
+          CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_cchprods with goth = .TRUE.' )" )
+        CALL CUTEST_cchprods( status, n, m, goth, X, VECTOR, l_chp,            &
+                              CHP_val, CHP_ind, CHP_ptr )
+        IF ( only_print_small )                                                &
+          CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+
 !  calls and time report
 
         WRITE( out, "( ' CALL CUTEST_creport' )" )
@@ -951,8 +1215,10 @@
 
         DEALLOCATE( X_type, H_row, H_col, HE_row, HE_row_ptr, HE_val_ptr, X,   &
                     X_l, X_u, G, Ji, Y, C_l, C_u, C, H_val, HE_val, H2_val,    &
-                    J_val, J_var, J_fun, J2_val, VECTOR, RESULT,               &
-                    X_names, C_names, EQUATION, LINEAR, stat = alloc_stat )
+                    J_val, J_var, J_fun, J2_val, VECTOR, RESULT, g_val, g_var, &
+                    X_names, C_names, EQUATION, LINEAR, INDEX_nz_vector,       &
+                    INDEX_nz_result, CHP_val, CHP_ind, CHP_ptr,                &
+                    stat = alloc_stat )
       END IF
       CLOSE( input )
       STOP
@@ -1193,6 +1459,33 @@
       END DO
       END SUBROUTINE WRITE_JT_dense
 
+      SUBROUTINE WRITE_G_sparsity_pattern( out, G_ne, l_g, G_ind )
+      INTEGER :: l_g, G_ne, out
+      INTEGER, DIMENSION( l_g ) :: G_ind
+      INTEGER :: i
+      WRITE( out, "( ' * G(sparse)' )" )
+      WRITE( out, "( ' * ', 8( '    ind' ) )" )
+      DO i = 1, G_ne, 5
+        IF ( i + 7 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  8I7 )" ) G_ind(  i: i + 7 )
+        ELSE IF ( i + 4 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  7I7 )" ) G_ind(  i: i + 6 )
+        ELSE IF ( i + 4 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  6I7 )" ) G_ind(  i: i + 5 )
+        ELSE IF ( i + 4 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  5I7 )" ) G_ind(  i: i + 4 )
+        ELSE IF ( i + 3 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  4I7 )" ) G_ind(  i: i + 3 )
+        ELSE IF ( i + 2 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  3I7 )" ) G_ind( i : i + 2 )
+        ELSE IF ( i + 1 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  2I7 )" ) G_ind( i : i + 1 )
+        ELSE
+          WRITE( out, "( ' * ',  I7 )" ) G_ind( i )
+        END IF
+      END DO
+      END SUBROUTINE WRITE_G_sparsity_pattern
+
       SUBROUTINE WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
       INTEGER :: l_h, H_ne, out
       INTEGER, DIMENSION( l_h ) :: H_row, H_col
@@ -1255,6 +1548,22 @@
       END DO
       END SUBROUTINE WRITE_J_sparse
 
+      SUBROUTINE WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+      INTEGER :: l_j, J_ne, out
+      INTEGER, DIMENSION( l_j ) :: J_fun, J_var
+      INTEGER :: i
+      WRITE( out, "( ' * J(sparse)' )" )
+      WRITE( out, "( ' * ', 2( '    fun    var' ) )" )
+      DO i = 1, J_ne, 2
+        IF ( i + 1 <= J_ne ) THEN
+          WRITE( out, "( ' * ',  2( 2I7 ) )" )                                 &
+            J_fun( i ), J_var( i ), J_fun( i + 1 ), J_var( i + 1 )
+        ELSE
+          WRITE( out, "( ' * ',  2( 2I7 ) )" ) J_fun( i ), J_var( i )
+        END IF
+      END DO
+      END SUBROUTINE WRITE_J_sparsity_pattern
+
       SUBROUTINE WRITE_H_element( out, ne, lhe_ptr, HE_row_ptr,                &
                       HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       INTEGER :: ne, lhe_ptr, lhe_row, lhe_val, out
@@ -1315,9 +1624,90 @@
 !     WRITE( out, "( ' * H(band) has max seemibandwidth ', I0 )" ) maxsbw
       WRITE( out, "( ' *       i   band', I7, 4I12 )" ) ( j, j = 0, nsemib )
       DO i = 1, n
-        WRITE( out, "( ' * ', I7, 6X, 5ES12.4 )" )                             &
+        WRITE( out, "( ' * ', I7, 6X, 5ES12.4, :, /,                           &
+                       ( ' * ', 7X, 6X, 5ES12.4, : ) )" )                      &
           i, ( H_band( j, i ), j = 0, nsemib )
       END DO
       END SUBROUTINE WRITE_H_BAND
+
+      SUBROUTINE WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,   &
+                                nnz_result, INDEX_nz_result, RESULT )
+      INTEGER :: n, out,  nnz_vector,  nnz_result
+      INTEGER, DIMENSION( nnz_vector ) :: INDEX_nz_vector
+      INTEGER, DIMENSION( n ) :: INDEX_nz_result
+      REAL ( KIND = wp ), DIMENSION( n ) :: VECTOR, RESULT
+      INTEGER :: i, j
+      WRITE( out, "( ' *       i    VECTOR' )" )
+      DO j = 1, nnz_vector
+        i = INDEX_nz_vector( j )
+        WRITE( out, "( ' * ', I7, 2ES12.4 )" ) i, VECTOR( i )
+      END DO
+      WRITE( out, "( ' *       i    RESULT' )" )
+      DO j = 1, nnz_result
+        i = INDEX_nz_result( j )
+        WRITE( out, "( ' * ', I7, 2ES12.4 )" ) i, RESULT( i )
+      END DO
+      END SUBROUTINE WRITE_SRESULT
+
+      SUBROUTINE WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR,     &
+                                 len_vector, nnz_result, INDEX_nz_result,      &
+                                 RESULT, len_result )
+      INTEGER :: len_vector, len_result, out,  nnz_vector,  nnz_result
+      INTEGER, DIMENSION( nnz_vector ) :: INDEX_nz_vector
+      INTEGER, DIMENSION( n ) :: INDEX_nz_result
+      REAL ( KIND = wp ), DIMENSION( len_vector ) :: VECTOR
+      REAL ( KIND = wp ), DIMENSION( len_result ) :: RESULT
+      INTEGER :: i, j
+      WRITE( out, "( ' *       i    VECTOR' )" )
+      DO j = 1, nnz_vector
+        i = INDEX_nz_vector( j )
+        WRITE( out, "( ' * ', I7, 2ES12.4 )" ) i, VECTOR( i )
+      END DO
+      WRITE( out, "( ' *       i    RESULT' )" )
+      DO j = 1, nnz_result
+        i = INDEX_nz_result( j )
+        WRITE( out, "( ' * ', I7, 2ES12.4 )" ) i, RESULT( i )
+      END DO
+      END SUBROUTINE WRITE_SRESULT2
+
+      SUBROUTINE WRITE_CHP_sparsity( out, m, l_chp, CHP_ind, CHP_ptr )
+      INTEGER :: m, l_chp, out
+      INTEGER, DIMENSION( m + 1 ) :: CHP_ptr
+      INTEGER, DIMENSION( l_chp ) :: CHP_ind
+      INTEGER :: i
+      WRITE( out, "( ' * CH(product_sparsity)' )" )
+      DO i = 1, m
+        IF (  CHP_ptr( i + 1 ) > CHP_ptr( i ) ) THEN
+          WRITE( out, "( ' * constraint Hessian ', I0 )" ) i
+          WRITE( out, "( ' * product indices ', 5I12, : , /,                   &
+         &  ( ' *', 17X, 5I12, : ) )" )                                        &
+            CHP_ind( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
+        ELSE
+          WRITE( out, "( ' * no Hessian indices for constraint ', I0 )" ) i
+        END IF
+      END DO
+      END SUBROUTINE WRITE_CHP_sparsity
+
+      SUBROUTINE WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+      INTEGER :: m, l_chp, out
+      INTEGER, DIMENSION( m + 1 ) :: CHP_ptr
+      INTEGER, DIMENSION( l_chp ) :: CHP_ind
+      REAL ( KIND = wp ), DIMENSION( l_chp ) :: CHP_val
+      INTEGER :: i
+      WRITE( out, "( ' * CH(product)' )" )
+      DO i = 1, m
+        IF (  CHP_ptr( i + 1 ) > CHP_ptr( i ) ) THEN
+          WRITE( out, "( ' * constraint Hessian ', I0 )" ) i
+          WRITE( out, "( ' * product indices ', 5I12, : , /,                   &
+         &  ( ' *', 17X, 5I12, : ) )" )                                        &
+            CHP_ind( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
+          WRITE( out, "( ' * product values  ', 5ES12.4, : , /,                &
+         &  ( ' *', 17X, 5ES12.4, : ) )" )                                     &
+            CHP_val( CHP_ptr( i ) : CHP_ptr( i + 1 ) - 1 )
+        ELSE
+          WRITE( out, "( ' * no Hessian indices for constraint ', I0 )" ) i
+        END IF
+      END DO
+      END SUBROUTINE WRITE_CHP
 
     END PROGRAM CUTEST_test_main
