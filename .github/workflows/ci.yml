@@ -20,8 +20,8 @@ jobs:
             arch: 'pc64.lnx.gfo'
           - os: macos-latest
             compiler: gnu
-            sifdecode_input: '2\nn\n1'
-            cutest_input: '2\nn\n1\n2\n2\nn\nn\ny\nd\ny\n'
+            sifdecode_input: '2\nn\n4'
+            cutest_input: '2\nn\n4\n2\n2\nn\nn\ny\nd\ny\n'
             arch: 'mac64.osx.gfo'
           - os: ubuntu-latest
             compiler: intel
@@ -33,7 +33,7 @@ jobs:
           - os: macos-latest
             compiler: intel
             sifdecode_input: '2\nn\n2\nn\ny'
-            cutest_input: '2\nn\n2\nn\ny\n2\n8\nn\nn\ny\nd\ny\n'
+            cutest_input: '2\nn\n5\n2\n4\nn\nn\ny\nd\ny\n'
             # hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18977/m_HPCKit_p_2022.3.1.15344_offline.dmg'
             hpckit: 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18681/m_HPCKit_p_2022.2.0.158_offline.dmg'
             script: 'install_macos.sh'
