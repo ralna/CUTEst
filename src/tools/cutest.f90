@@ -146,8 +146,10 @@
         REAL :: time_ccfg = 0.0
         REAL :: time_ccfsg = 0.0
         REAL :: time_cch = 0.0
-        REAL :: time_cchprods = 0.0
+        REAL :: time_cohprodsp = 0.0
+        REAL :: time_cohprods = 0.0
         REAL :: time_cchprodsp = 0.0
+        REAL :: time_cchprods = 0.0
         REAL :: time_ccifg = 0.0
         REAL :: time_ccifsg = 0.0
         REAL :: time_cdh = 0.0
@@ -159,6 +161,7 @@
         REAL :: time_cgrdh = 0.0
         REAL :: time_chcprod = 0.0
         REAL :: time_chprod = 0.0
+        REAL :: time_chjprod = 0.0
         REAL :: time_cifn = 0.0
         REAL :: time_cigr = 0.0
         REAL :: time_cisgr = 0.0

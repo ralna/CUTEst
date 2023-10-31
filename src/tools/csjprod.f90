@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 1.4 - 26/02/2016 AT 08:00 GMT.
+! THIS VERSION: CUTEST 2.1 - 2023-10-29 AT 13:00 GMT.
 
 !-*-*-*-*-  C U T E S T   C I N T _ C S J P R O D    S U B R O U T I N E  -*-*-
 
@@ -216,12 +216,15 @@
 
 !  local variables
 
-      INTEGER :: i, ig, j, k, l, ifstat, igstat
-      REAL ( KIND = wp ) :: ftt, pi
+      INTEGER :: i, icon, ifstat, igstat, ig, ig1, ii, iel, iv, j, k, l
+      INTEGER :: nvarel, nin
+      REAL ( KIND = wp ) :: ftt, pi, prod, scalee
       REAL :: time_in, time_out
+      LOGICAL :: skip
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
+      IF ( data%numcon == 0 ) GO TO 990
 
 !  check input data
 
@@ -241,9 +244,9 @@
 !  there are non-trivial group functions
 
       IF ( .NOT. gotj ) THEN
-        DO i = 1, MAX( data%nel, data%ng )
-          work%ICALCF( i ) = i
-        END DO
+         DO i = 1, MAX( data%nel, data%ng )
+           work%ICALCF( i ) = i
+         END DO
 
 !  evaluate the element function values
 
@@ -253,9 +256,9 @@
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
                     data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
                     1, ifstat )
-        IF ( ifstat /= 0 ) GO TO 930
+      IF ( ifstat /= 0 ) GO TO 930
 
-!  evaluate the element function gradient and Hessian values
+!  evaluate the element function values
 
         CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
@@ -263,7 +266,7 @@
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
                     data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
                     3, ifstat )
-        IF ( ifstat /= 0 ) GO TO 930
+      IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
 
@@ -279,16 +282,13 @@
 !  include the contributions from the nonlinear elements
 
           DO j = data%ISTADG( ig ), data%ISTADG( ig + 1 ) - 1
-            ftt = ftt + data%ESCALE( j ) * work%FUVALS( data%IELING( j ) )
+            ftt = ftt + data%ESCALE( j ) * work%FUVALS( data%IELING( J ) )
           END DO
           work%FT( ig ) = ftt
 
 !  record the derivatives of trivial groups
 
-          IF ( data%GXEQX( ig ) ) THEN
-            work%GVALS( ig, 2 ) = 1.0_wp
-            work%GVALS( ig, 3 ) = 0.0_wp
-          END IF
+          IF ( data%GXEQX( ig ) ) work%GVALS( ig, 2 ) = 1.0_wp
         END DO
 
 !  evaluate the group derivative values
@@ -298,94 +298,181 @@
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
-          IF ( igstat /= 0 ) GO TO 930
-        END IF
-
-!  change the group weightings to include the contributions from the
-!  Lagrange multipliers.
-
-        IF ( data%numcon > 0 ) THEN
-          DO ig = 1, data%ng
-            i = data%KNDOFC( ig )
-!           IF ( i == 0 ) THEN
-              work%GSCALE_used( ig ) = data%GSCALE( ig )
-!           ELSE
-!             work%GSCALE_used( ig ) = data%GSCALE( ig ) * Y( i )
-!           END IF
-          END DO
-
-!  compute the gradient value
-
-          CALL CUTEST_form_gradients( n, data%ng, data%nel, data%ntotel,       &
-                 data%nvrels, data%nnza, data%nvargp, work%firstg, data%ICNA,  &
-                 data%ISTADA, data%IELING, data%ISTADG, data%ISTAEV,           &
-                 data%IELVAR, data%INTVAR, data%A, work%GVALS( : , 2 ),        &
-                 work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),      &
-                 work%GSCALE_used, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),&
-                 data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV,            &
-                 data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE )
-        ELSE
-          CALL CUTEST_form_gradients( n, data%ng, data%nel, data%ntotel,       &
-                 data%nvrels, data%nnza, data%nvargp, work%firstg, data%ICNA,  &
-                 data%ISTADA, data%IELING, data%ISTADG, data%ISTAEV,           &
-                 data%IELVAR, data%INTVAR, data%A, work%GVALS( : , 2 ),        &
-                 work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),      &
-                 data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),     &
-                 data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV,            &
-                 data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE )
+         IF ( igstat /= 0 ) GO TO 930
         END IF
       END IF
 
-     nnz_result = 0
+      nnz_result = 0
 
-!  form the product sparse result = J(transpose) * sparse vector
+!  form the product result = J(transpose) vector
 
-     IF ( jtrans ) THEN
-       DO l = 1, nnz_vector
-         i = INDEX_nz_vector( l )
-         pi = VECTOR( i )
-         ig = data%CGROUP( i )
-!DIR$ IVDEP
-         DO k = data%ISTAGV( ig ), data%ISTAGV( ig + 1 ) - 1
-           j = data%ISVGRP( k )
-           IF ( work%IUSED( j ) == 0 ) THEN
-             RESULT( j ) = pi * work%FUVALS( data%lgrjac + data%IVALJR( k ) )
-             work%IUSED( j ) = 1
-             nnz_result = nnz_result + 1
-             INDEX_nz_result( nnz_result ) = j
-           ELSE
-             RESULT( j ) = RESULT( j ) +                                       &
-               pi * work%FUVALS( data%lgrjac + data%IVALJR( k ) )
-           END IF
-         END DO
-       END DO
+      IF ( jtrans ) THEN
 
-!  form the product sparse result = J * sparse vector
+!  consider the ig-th group
 
-     ELSE
-       DO l = 1, nnz_vector
-         j = INDEX_nz_vector( l )
-         pi = VECTOR( j )
-!DIR$ IVDEP
-         DO k = work%ISTAJC( j ), work%ISTAJC( j + 1 ) - 1
-           i = data%KNDOFC( data%IGCOLJ( k ) )
-           IF ( i /= 0 ) THEN
-             IF ( work%IUSED( i ) == 0 ) THEN
-               RESULT( i ) = pi * work%FUVALS( data%lgrjac + k )
-               work%IUSED( i ) = 1
-               nnz_result = nnz_result + 1
-               INDEX_nz_result( nnz_result ) = i
-             ELSE
-               RESULT( i ) = RESULT( i ) + pi * work%FUVALS( data%lgrjac + k )
-             END IF
-           END IF
-         END DO
-       END DO
-     END IF
+        DO iv = 1, nnz_vector
+          icon = INDEX_nz_vector( iv )
+          pi = VECTOR( icon )
+          ig = data%CGROUP( icon )
+          ig1 = ig + 1
 
-!  Reset IUSED to zero
+!  compute the product of vector(i) with the (scaled) group derivative
 
-     work%IUSED( INDEX_nz_result( : nnz_result ) ) = 0
+          IF ( data%GXEQX( ig ) ) THEN
+            prod = VECTOR( icon ) * data%GSCALE( ig )
+          ELSE
+            prod = VECTOR( icon ) * data%GSCALE( ig ) * work%GVALS( ig, 2 )
+          END IF
+
+!  loop over the group's nonlinear elements
+
+          DO ii = data%ISTADG( ig ), data%ISTADG( ig1 ) - 1
+            iel = data%IELING( ii )
+            k = data%INTVAR( iel )
+            l = data%ISTAEV( iel )
+            nvarel = data%ISTAEV( iel + 1 ) - l
+            scalee = data%ESCALE( ii ) * prod
+
+!  the iel-th element has an internal representation
+
+            IF ( data%INTREP( iel ) ) THEN
+              nin = data%INTVAR( iel + 1 ) - k
+              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                          nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+              DO i = 1, nvarel
+                j = data%IELVAR( l )
+                IF (  work%IUSED( j ) == 0 ) THEN
+                  RESULT( j ) = scalee * work%W_el( i )
+                  work%IUSED( j ) = 1
+                  nnz_result = nnz_result + 1
+                  INDEX_nz_result( nnz_result ) = j
+                ELSE
+                  RESULT( j ) = RESULT( j ) + scalee * work%W_el( i )
+                END IF
+                l = l + 1
+              END DO
+
+!  the iel-th element has no internal representation
+
+            ELSE
+              DO i = 1, nvarel
+                j = data%IELVAR( l )
+                IF (  work%IUSED( j ) == 0 ) THEN
+                  RESULT( j ) = scalee * work%FUVALS( k )
+                  work%IUSED( j ) = 1
+                  nnz_result = nnz_result + 1
+                  INDEX_nz_result( nnz_result ) = j
+                ELSE
+                  RESULT( j ) = RESULT( j ) + scalee * work%FUVALS( k )
+                END IF
+                k = k + 1 ; l = l + 1
+               END DO
+            END IF
+          END DO
+
+!  include the contribution from the linear element
+
+          DO k = data%ISTADA( ig ), data%ISTADA( ig1 ) - 1
+            j = data%ICNA( k )
+            IF (  work%IUSED( j ) == 0 ) THEN
+              RESULT( j ) = data%A( k ) * prod
+              work%IUSED( j ) = 1
+              nnz_result = nnz_result + 1
+              INDEX_nz_result( nnz_result ) = j
+            ELSE
+              RESULT( j ) = RESULT( j ) + data%A( k ) * prod
+            END IF
+          END DO
+        END DO
+
+!  reset IUSED to zero
+
+       work%IUSED( INDEX_nz_result( : nnz_result ) ) = 0
+
+!  form the product result = J vector
+
+      ELSE
+
+!  record nonzero components of vector in IUSED
+
+         work%IUSED( INDEX_nz_vector( : nnz_vector ) ) = 1
+
+!  consider each constrant group in turn
+
+write(6,* ) data%numcon
+        DO icon = 1, data%numcon
+          ig = data%CGROUP( icon )
+          ig1 = ig + 1
+
+!  check whether there is a nonzero product 
+
+          skip = .TRUE.
+          DO i = data%ISTAGV( ig ), data%ISTAGV( ig + 1 ) - 1
+            IF ( work%IUSED( data%ISVGRP( i ) ) == 0 ) CYCLE
+            skip = .FALSE.
+            EXIT
+          END DO
+          IF ( skip ) CYCLE
+
+!  compute the first derivative of the group
+
+          prod = 0.0_wp
+
+!  loop over the group's nonlinear elements
+
+          DO ii = data%ISTADG( ig ), data%ISTADG( ig1 ) - 1
+            iel = data%IELING( ii )
+            k = data%INTVAR( iel )
+            l = data%ISTAEV( iel )
+            nvarel = data%ISTAEV( iel + 1 ) - l
+            scalee = data%ESCALE( ii )
+
+!  the iel-th element has an internal representation
+
+            IF ( data%INTREP( iel ) ) THEN
+              nin = data%INTVAR( iel + 1 ) - k
+              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,            &
+                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+              DO i = 1, nvarel
+               IF ( work%IUSED( data%IELVAR( l ) ) == 1 ) prod = prod          &
+                  + VECTOR( data%IELVAR( l ) ) * scalee * work%W_el( i )
+                l = l + 1
+              END DO
+
+!  the iel-th element has no internal representation
+
+              ELSE
+              DO i = 1, nvarel
+               IF ( work%IUSED( data%IELVAR( l ) ) == 1 ) prod = prod          &
+                  + VECTOR( data%IELVAR( l ) ) * scalee * work%FUVALS( k )
+                k = k + 1 ; l = l + 1
+              END DO
+            END IF
+          END DO
+
+!  include the contribution from the linear element
+
+          DO k = data%ISTADA( ig ), data%ISTADA( ig1 ) - 1
+            IF ( work%IUSED( data%ICNA( k ) ) == 1 ) prod = prod               &
+               + VECTOR( data%ICNA( k ) ) * data%A( k )
+          END DO
+
+!  multiply the product by the (scaled) group derivative
+
+          IF ( data%GXEQX( ig ) ) THEN
+            RESULT( icon ) = prod * data%GSCALE( ig )
+          ELSE
+            RESULT( icon ) = prod * data%GSCALE( ig ) * work%GVALS( ig, 2 )
+          END IF
+          nnz_result = nnz_result + 1
+          INDEX_nz_result( nnz_result ) = icon
+        END DO
+
+!  reset IUSED to zero
+
+         work%IUSED( INDEX_nz_vector( : nnz_vector ) ) = 0
+
+      END IF
 
 !  update the counters for the report tool
 
@@ -400,20 +487,18 @@
 
   930 CONTINUE
       IF ( data%out > 0 ) WRITE( data%out,                                     &
-        "( ' ** SUBROUTINE CSJPROD: error flag raised during SIF evaluation')" )
+        "( ' ** SUBROUTINE CSJPROD: error flag raised during SIF evaluation' )" )
       status = 3
 
 !  update elapsed CPU time if required
 
   990 CONTINUE
       IF ( work%record_times ) THEN
-         CALL CPU_TIME( time_out )
-         work%time_csjprod = work%time_csjprod + time_out - time_in
+        CALL CPU_TIME( time_out )
+        work%time_csjprod = work%time_csjprod + time_out - time_in
       END IF
       RETURN
 
 !  end of subroutine CUTEST_csjprod_threadsafe
 
       END SUBROUTINE CUTEST_csjprod_threadsafe
-
-

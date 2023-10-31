@@ -10,7 +10,6 @@
 
       SUBROUTINE CUTEST_cisgrp( status, n, iprob, nnzgr, lgr, GR_var )
       USE CUTEST
-      INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
 
 !  dummy arguments
 
@@ -35,53 +34,6 @@
 
       END SUBROUTINE CUTEST_cisgrp
 
-!-*-  C U T E S T    C I S G R P _ t h r e a d e d   S U B R O U T I N E  -*-
-
-!  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
-!  Principal author: Nick Gould
-
-!  History -
-!   modern fortran version released in CUTEst, 17th October 2023
-
-      SUBROUTINE CUTEST_cisgrp_threaded( status, n, iprob, nnzgr, lgr,         &
-                                         GR_var, thread )
-      USE CUTEST
-      INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
-
-!  dummy arguments
-
-      INTEGER, INTENT( IN ) :: n, iprob, lgr, thread
-      INTEGER, INTENT( OUT ) :: status, nnzgr
-      INTEGER, INTENT( OUT ), DIMENSION( lgr ) :: GR_var
-
-!  ---------------------------------------------------------------------
-!  compute the sparsity pattern of the gradient of a specified problem 
-!  function (iprob = 0 is the objective function, while iprob > 0 is 
-!  the iprob-th constraint) initially written in Standard Input Format
-!  (SIF). The nonzero components of the iprob-th gradient occur in 
-!  positions GR_var(j), j = 1,...,nnzgr.
-!  ---------------------------------------------------------------------
-
-!  check that the specified thread is within range
-
-      IF ( thread < 1 .OR. thread > CUTEST_data_global%threads ) THEN
-        IF ( CUTEST_data_global%out > 0 )                                      &
-          WRITE( CUTEST_data_global%out, "( ' ** CUTEST error: thread ', I0,   &
-         &  ' out of range [1,', I0, ']' )" ) thread, CUTEST_data_global%threads
-        status = 4 ; RETURN
-      END IF
-
-!  evaluate using specified thread
-
-      CALL CUTEST_cisgrp_threadsafe( CUTEST_data_global,                       &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, iprob, nnzgr, lgr, GR_var )
-      RETURN
-
-!  end of subroutine CUTEST_cisgrp_threaded
-
-      END SUBROUTINE CUTEST_cisgrp_threaded
-
 !-*-  C U T E S T   C I S G R P _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -93,7 +45,6 @@
       SUBROUTINE CUTEST_cisgrp_threadsafe( data, work, status, n, iprob,       &
                                            nnzgr, lgr, GR_var )
       USE CUTEST
-      INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
 
 !  dummy arguments
 
@@ -113,7 +64,7 @@
 
 !  local variables
 
-      INTEGER :: i, j, iel, k, ig, ii, ig1, l, ll, ncalcg, neling
+      INTEGER :: i, j, iel, k, ig, ii, ig1, l, ll, neling
       INTEGER :: nin, nvarel, nelow, nelup, istrgv, iendgv, ifstat, igstat
       REAL :: time_in, time_out
       LOGICAL :: nontrv
@@ -148,40 +99,6 @@
          &    'invalid constraint index iprob ' )" )
           status = 2 ; GO TO 990
         END IF
-
-!  determine nonlinear elements in group ig. Record their indices in ICALCF
-
-        neling = data%ISTADG( ig + 1 ) - data%ISTADG( ig )
-        j = data%ISTADG( ig ) - 1
-        DO i = 1, neling
-          j = j + 1
-          work%ICALCF( i ) = data%IELING( j )
-        END DO
-
-!  objective gradient required
-
-      ELSE
-
-!  identify which elements are included in objective function. Use LOGIC
-!  to keep track of elements already included
-
-        work%LOGIC( : data%nel ) = .FALSE.
-
-!  now identify elements in objective function groups
-
-        neling = 0
-        DO ig = 1, data%ng
-          IF ( data%KNDOFC( ig ) == 0 ) THEN
-            DO ii = data%ISTADG( ig ), data%ISTADG( ig + 1 ) - 1
-              iel = data%IELING( ii )
-              IF ( .NOT. work%LOGIC( iel ) ) THEN
-                work%LOGIC( iel ) = .TRUE.
-                neling = neling + 1
-                work%ICALCF( neling ) = iel
-              END IF
-            END DO
-          END IF
-        END DO
       END IF
 
 !  Use ISWKSP to flag which variables have nonzero partial derivatives
@@ -242,17 +159,7 @@
 
       ELSE
 
-!  compute the list of groups involved in the required problem function
-
-        ncalcg = 0
-        DO ig = 1, data%ng
-          IF ( data%KNDOFC( ig ) == 0 ) THEN
-            ncalcg = ncalcg + 1
-            work%ICALCF( ncalcg ) = ig
-          END IF
-        END DO
-
-!  compute the group function values
+!  loop over the groups
 
         DO ig = 1, data%ng
 
@@ -285,8 +192,6 @@
 !  the group has only linear elements
 
           ELSE
-
-!  allocate a gradient
 
 !DIR$ IVDEP
             DO k = data%ISTADA( ig ), data%ISTADA( ig1 ) - 1

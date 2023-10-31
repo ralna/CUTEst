@@ -37,7 +37,7 @@
       INTEGER :: lbandh, nsemib, maxsbw, i, icon, iprob, l_j, l_j2_1, l_j2_2
       INTEGER :: nonlinear_variables_objective, nonlinear_variables_constraints
       INTEGER :: equality_constraints, linear_constraints
-      INTEGER ::  CHP_ne, l_chp, nnz_vector, nnz_result
+      INTEGER ::  CHP_ne, l_chp,OHP_ne, l_ohp,  nnz_vector, nnz_result
       REAL ( KIND = wp ) :: f, ci, y0
       LOGICAL :: grad, byrows, goth, gotj, grlagf, jtrans, only_print_small
       LOGICAL :: debug_cutest_exists
@@ -45,12 +45,13 @@
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: H_row, H_col, X_type
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: HE_row, HE_row_ptr, HE_val_ptr
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: G_var, J_var, J_fun
-      INTEGER, ALLOCATABLE, DIMENSION( : ) :: CHP_ind, CHP_ptr
+      INTEGER, ALLOCATABLE, DIMENSION( : ) :: CHP_ind, CHP_ptr, OHP_ind
       INTEGER, ALLOCATABLE, DIMENSION( : ) :: INDEX_nz_vector, INDEX_nz_result
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: X, X_l, X_u, G, Ji
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: Y, C_l, C_u, C, J_val
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: G_val, H_val, HE_val
-      REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: VECTOR, RESULT, CHP_val
+      REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: VECTOR, RESULT
+      REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : ) :: CHP_val, OHP_val
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: H2_val, H_band
       REAL ( KIND = wp ), ALLOCATABLE, DIMENSION( : , : ) :: J2_val
       LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATION, LINEAR
@@ -560,22 +561,29 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_f( out, f )
 
-!  compute just its sparse gradient
+!  compute the number of nonzeros in the sparse gradient of the objective
+
+        WRITE( out, "( ' CALL CUTEST_cdimsg' )" )
+        CALL CUTEST_cdimsg( status, G_ne )
+        IF ( status /= 0 ) GO TO 900
+        WRITE( out, "( ' * G_ne = ', I0 )" ) G_ne
+
+!  compute the sparsity pattern of the gradient of the objective function
 
         icon = 0
-        WRITE( out, "( ' CALL CUTEST_cisgr for the objective function' )" )
-        CALL CUTEST_cisgr( status, n, icon, X, G_ne, l_g, G_val, G_var )
-        IF ( status /= 0 ) GO TO 900
-        IF ( only_print_small )                                                &
-          CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
-
-!  and its sparsity pattern
-
         WRITE( out, "( ' CALL CUTEST_cisgrp for the objective function' )" )
         CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
         IF ( status /= 0 ) GO TO 900
         IF ( only_print_small )                                                &
           CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
+
+!  and its values
+
+        WRITE( out, "( ' CALL CUTEST_cisgr for the objective function' )" )
+        CALL CUTEST_cisgr( status, n, icon, X, G_ne, l_g, G_val, G_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
 
 !  compute the number of nonzeros in the sparse Jacobian
 
@@ -735,21 +743,21 @@
         IF ( status /= 0 ) GO to 900
         CALL WRITE_CI( out, icon, ci )
 
-!  compute just its sparse gradient
-
-        WRITE( out, "( ' CALL CUTEST_cisgr for a constraint' )" )
-        CALL CUTEST_cisgr( status, n, icon, X, Ji_ne, n, Ji, J_var )
-        IF ( status /= 0 ) GO TO 900
-        IF ( only_print_small )                                                &
-          CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
-
-!  and its sparsity pattern
+!  compute its sparsity pattern
 
         WRITE( out, "( ' CALL CUTEST_cisgrp for a constraint' )" )
         CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var )
         IF ( status /= 0 ) GO TO 900
         IF ( only_print_small )                                                &
           CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
+
+!  and its values
+
+        WRITE( out, "( ' CALL CUTEST_cisgr for a constraint' )" )
+        CALL CUTEST_cisgr( status, n, icon, X, Ji_ne, n, Ji, J_var )
+        IF ( status /= 0 ) GO TO 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
 
 !  compute the dense Hessian value
 
@@ -1049,6 +1057,21 @@
           CALL WRITE_SRESULT( out, n, nnz_vector, INDEX_nz_vector, VECTOR,     &
                               nnz_result, INDEX_nz_result, RESULT )
 
+!  compute a Hessian-of-the-John-function-vector product
+
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_chjprod with goth = .FALSE.' )" )
+        CALL CUTEST_chjprod( status, n, m, goth, X, y0, Y, VECTOR, RESULT )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_RESULT( out, n, VECTOR, RESULT )
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_chjprod with goth = .TRUE.' )" )
+        CALL CUTEST_chjprod( status, n, m, goth, X, y0, Y, VECTOR, RESULT )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_RESULT( out, n, VECTOR, RESULT )
+
 !  compute a Hessian-vector product ignoring the objective
 
         goth = .FALSE.
@@ -1186,6 +1209,43 @@
                               CHP_val, CHP_ind, CHP_ptr )
         IF ( only_print_small )                                                &
           CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+
+!  compute the number of nonzeros when forming the products of the objective
+!  Hessians with a vector
+
+      WRITE( out, "( ' CALL CUTEST_cdimohp' )" )
+      CALL CUTEST_cdimohp( status, OHP_ne )
+      IF ( status /= 0 ) GO TO 900
+      WRITE( out, "( ' * OHP_ne = ', I0 )" ) OHP_ne
+
+      l_ohp = OHP_ne
+      ALLOCATE( OHP_val( l_ohp ), OHP_ind( l_ohp ), stat = alloc_stat )
+      IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the sparsity pattern needed for the matrix-vector product between
+!  the objective Hessian and a vector
+
+        WRITE( out, "( ' Call CUTEST_cohprodsp' )" )
+        CALL CUTEST_cohprodsp( status, OHP_ne, l_ohp, OHP_ind )
+        IF ( only_print_small )                                                &
+          CALL WRITE_OHP_sparsity( out, OHP_ne, l_ohp, OHP_ind )
+
+!  compute the matrix-vector product between the objective Hessian and a
+!  vector
+
+        goth = .FALSE.
+        WRITE( out, "( ' Call CUTEST_cohprods with goth = .FALSE.' )" )
+        CALL CUTEST_cohprods( status, n, goth, X, VECTOR,                      &
+                              OHP_ne, l_ohp, OHP_val, OHP_ind )
+        IF ( only_print_small )                                                &
+          CALL WRITE_OHP( out, OHP_ne, l_ohp, OHP_val, OHP_ind )
+
+        goth = .TRUE.
+        WRITE( out, "( ' Call CUTEST_cohprods with goth = .TRUE.' )" )
+        CALL CUTEST_cohprods( status, n, goth, X, VECTOR,                      &
+                              OHP_ne, l_ohp, OHP_val, OHP_ind )
+        IF ( only_print_small )                                                &
+          CALL WRITE_OHP( out, OHP_ne, l_ohp, OHP_val, OHP_ind )
 
 !  calls and time report
 
@@ -1709,5 +1769,26 @@
         END IF
       END DO
       END SUBROUTINE WRITE_CHP
+
+      SUBROUTINE WRITE_OHP_sparsity( out, nnzohp, l_ohp, OHP_ind )
+      INTEGER :: nnzohp, l_ohp, out
+      INTEGER, DIMENSION( l_ohp ) :: OHP_ind
+      WRITE( out, "( ' * OH(product sparsity)' )" )
+      WRITE( out, "( ' * objective Hessian' )" )
+      WRITE( out, "( ' * product indices ', 5I12, : , /,                       &
+     &  ( ' *', 17X, 5I12, : ) )" ) OHP_ind( : nnzohp )
+      END SUBROUTINE WRITE_OHP_sparsity
+
+      SUBROUTINE WRITE_OHP( out, nnzohp, l_ohp, OHP_val, OHP_ind )
+      INTEGER :: nnzohp, l_ohp, out
+      INTEGER, DIMENSION( l_ohp ) :: OHP_ind
+      REAL ( KIND = wp ), DIMENSION( l_ohp ) :: OHP_val
+      WRITE( out, "( ' * OH(product)' )" )
+      WRITE( out, "( ' * objective Hessian' )" )
+      WRITE( out, "( ' * product indices ', 5I12, : , /,                       &
+     &  ( ' *', 17X, 5I12, : ) )" ) OHP_ind( : nnzohp )
+      WRITE( out, "( ' * product values  ', 5ES12.4, : , /,                    &
+     &  ( ' *', 17X, 5ES12.4, : ) )" ) OHP_val( : nnzohp )
+      END SUBROUTINE WRITE_OHP
 
     END PROGRAM CUTEST_test_main

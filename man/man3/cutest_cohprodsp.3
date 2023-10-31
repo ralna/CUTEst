@@ -1,0 +1,107 @@
+'\" e  @(#)cutest_cohprodsp v1.5 10/2023;
+.TH cutest_cohprodsp 3M "31 Oct 2023" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_cohprodsp \- CUTEst tool to detetrmine the sparsity structure used when
+forming the matrix-vector product of a vector with the Hessian matrix of the 
+objective function.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_cohprodsp( status, nnzohp, lohp, IND )
+.SH DESCRIPTION
+The CUTEST_cohprodsp subroutine obtins the sparsity structure used when
+forming the product of a vector with the Hessian matrix of the objective 
+function
+.EQ
+f(x)
+.EN
+corresponding to the problem decoded from a SIF file by the script
+\fIsifdecoder\fP at the point
+.EQ
+x =
+.EN
+X.
+
+The problem under consideration
+is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable
+and all constraint functions are partially separable.
+.LP
+.SH ARGUMENTS
+The arguments of CUTEST_cohprodsp are as follows:
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B nnzohp \fP[out] - integer
+the total number of nonzero entries required to store the product of the
+objective Hessian with a vector.
+.TP
+.B lohp \fP[in] - integer
+a variable that specifies the declared length of IND.
+The precise length required may be found by calling \fICUTEST_cdimohp\fP prior
+to \fICUTEST_cohprodsp\fP,
+.TP
+.B IND \fP[inout] - integer
+an array that gives the indices of the nonzeros in the result obtained by
+multiplying the objective Hessian by VECTOR. The indices
+are stored in IND(1:nnzohp), and will match the values stored in RESULT 
+from a cutest_cohprods(3M) call.
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing
+Environment with safe threads for mathematical optimization\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+  I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint,
+  ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_cdimohp(3M), cutest_cohprods(3M), sifdecoder(1).

@@ -121,6 +121,12 @@
         time = work%time_ccfsg
       CASE ( 'cutest_cch' )
         time = work%time_cch
+      CASE ( 'cutest_cohprodsp' )
+        time = work%time_cohprodsp
+      CASE ( 'cutest_cohprods' )
+        time = work%time_cohprods
+      CASE ( 'cutest_cchprodsp' )
+        time = work%time_cchprodsp
       CASE ( 'cutest_cchprods' )
         time = work%time_cchprods
       CASE ( 'cutest_ccifg' )
@@ -145,6 +151,8 @@
         time = work%time_chcprod
       CASE ( 'cutest_chprod' )
         time = work%time_chprod
+      CASE ( 'cutest_chjprod' )
+        time = work%time_chjprod
       CASE ( 'cutest_cifn' )
         time = work%time_cifn
       CASE ( 'cutest_cigr' )

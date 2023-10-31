@@ -10,7 +10,6 @@
 
       SUBROUTINE CUTEST_csgrp( status, n, nnzj, lj, J_var, J_fun )
       USE CUTEST
-      INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
 
 !  dummy arguments
 
@@ -38,7 +37,6 @@
 
       END SUBROUTINE CUTEST_csgrp
 
-
 !-*-*-  C U T E S T    C S G R P _ t h r e a d s a f e  S U B R O U T I N E  -*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -50,7 +48,6 @@
       SUBROUTINE CUTEST_csgrp_threadsafe( data, work, status, n,              &
                                           nnzj, lj, J_var, J_fun )
       USE CUTEST
-      INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
 
 !  dummy arguments
 
