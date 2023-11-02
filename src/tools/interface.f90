@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-10-25 AT 14:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-01 AT 08:00 GMT.
 
 !-*-*-*-*-*-*-*-  C U T E S T    I N T E R F A C E   M O D U L E  -*-*-*-*-*-*-
 
@@ -641,6 +641,27 @@
        REAL ( KIND = wp ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
        REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( lresult ) :: RESULT
        END SUBROUTINE CUTEST_csjprod
+
+       SUBROUTINE CUTEST_cdimohp( cutest_status, nnzohp )
+       INTEGER, INTENT( OUT ) :: cutest_status, nnzohp
+       END SUBROUTINE CUTEST_cdimohp
+
+       SUBROUTINE CUTEST_cohprodsp( cutest_status, nnzohp, lp, IND )
+       INTEGER, INTENT( IN ) :: lp
+       INTEGER, INTENT( OUT ) :: cutest_status, nnzohp
+       INTEGER, INTENT( OUT ), DIMENSION( lp ) :: IND
+       END SUBROUTINE CUTEST_cohprodsp
+
+       SUBROUTINE CUTEST_cohprods( cutest_status, n, goth, X, VECTOR,          &
+                                   nnzohp, lp, RESULT, IND )
+       INTEGER, PARAMETER :: wp = KIND( 1.0D+0 )
+       INTEGER, INTENT( IN ) :: n, lp
+       INTEGER, INTENT( OUT ) :: cutest_status, nnzohp
+       LOGICAL, INTENT( IN ) :: goth
+       REAL ( KIND = wp ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
+       INTEGER, INTENT( OUT ), DIMENSION( lp ) :: IND
+       REAL ( KIND = wp ), INTENT( OUT ), DIMENSION( lp ) :: RESULT
+       END SUBROUTINE CUTEST_cohprods
 
        SUBROUTINE CUTEST_cdimchp( cutest_status, nnzchp )
        INTEGER, INTENT( OUT ) :: cutest_status, nnzchp
