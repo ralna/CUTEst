@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-  C U T E S T    U S E T U P    S U B R O U T I N E  -*-*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -179,7 +181,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, ialgor, neltyp, ngrtyp, count, count_rate, alloc_status
+      INTEGER ( KIND = ip_ ) :: i, ialgor, neltyp, ngrtyp
+      INTEGER ( KIND = ip_ ) :: count, count_rate, alloc_status
       LOGICAL :: debug
       INTEGER ( KIND = ip_ ), PARAMETER :: lmin = 10000
       REAL ( KIND = rp_ ), DIMENSION( 2 ) :: OBFBND

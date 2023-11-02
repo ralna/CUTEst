@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-  C U T E S T   C S T A T S    S U B R O U T I N E  -*-*-*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -16,9 +18,11 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nonlinear_variables_objective 
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nonlinear_variables_objective 
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nonlinear_variables_constraints
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: equality_constraints, linear_constraints
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: equality_constraints
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: linear_constraints
 
 !  ------------------------------------------------------------------------
 !  Report the numbers of nonlinear variables used by the objective function and
@@ -60,9 +64,11 @@
 !  dummy arguments
 
       TYPE ( CUTEST_data_type ), INTENT( IN ) :: data
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nonlinear_variables_objective 
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nonlinear_variables_objective 
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nonlinear_variables_constraints
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: equality_constraints, linear_constraints
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: equality_constraints
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: linear_constraints
 
 !  ------------------------------------------------------------------------
 !  Report the numbers of nonlinear variables used by the objective function and

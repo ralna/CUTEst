@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-  C U T E S T   C I N T _ U S H P R O D   S U B R O U T I N E  -*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -20,7 +22,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nnz_vector
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: goth
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), DIMENSION( n ), INTENT( IN ) :: X, VECTOR
       REAL ( KIND = rp_ ), DIMENSION( n ), INTENT( OUT ) :: RESULT
@@ -72,7 +75,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nnz_vector
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: goth
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: RESULT
@@ -122,7 +126,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nnz_vector, thread
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: goth
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: RESULT
@@ -186,7 +191,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nnz_vector
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: goth
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: RESULT
