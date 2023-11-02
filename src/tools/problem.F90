@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-*-*-*- C U T E S T _ P R O B L E M     M O D U l E -*-*-*-*-*-*-*-
 
 !  Copyright reserved, Bongartz/Conn/Gould/Orban/Toint, for GALAHAD productions
@@ -12,17 +14,15 @@
 !  For full documentation, see 
 !   http://galahad.rl.ac.uk/galahad-www/specs.html
 
-    MODULE CUTEST_problem
+    MODULE CUTEST_problem_precision
+
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
 
       IMPLICIT None
 
       PRIVATE
       PUBLIC :: CUTEST_problem_setup, CUTEST_problem_terminate
-
-!--------------------
-!   P r e c i s i o n
-!--------------------
-
 
 !----------------------
 !   P a r a m e t e r s
@@ -332,4 +332,4 @@
 
       End Subroutine CUTEST_problem_terminate
 
-    END MODULE CUTEST_problem
+    END MODULE CUTEST_problem_precision

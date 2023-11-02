@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-  C U T E S T  C I N T _  U G R E H    S U B R O U T I N E  -*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -20,7 +22,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
@@ -90,7 +93,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
@@ -155,10 +159,12 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lhe_ptr, lhe_row, lhe_val, thread
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: thread
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
@@ -240,7 +246,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
@@ -280,8 +287,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, ig, j, ifstat, igstat, lhe_row_int, lhe_val_int
-      INTEGER ( KIND = ip_ ) :: alloc_status
+      INTEGER ( KIND = ip_ ) :: i, ig, j, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: alloc_status, lhe_row_int, lhe_val_int
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )

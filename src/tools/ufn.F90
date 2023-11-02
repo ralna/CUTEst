@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-*-  C U T E S T    U F N    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
@@ -109,7 +111,7 @@
       INTEGER ( KIND = ip_ ) :: i, j, ig, ifstat, igstat
       REAL ( KIND = rp_ ) :: ftt, one, zero
       REAL :: time_in, time_out
-      PARAMETER ( zero = 0.0_wp, one = 1.0_rp_ )
+      PARAMETER ( zero = 0.0_rp_, one = 1.0_rp_ )
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 

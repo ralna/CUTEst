@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*--*- F O R T R A N  O P E R A T I O N S   S U B R O U T I N E S  -*-*-*-*-
 
 !  Copyright reserved, Bongartz/Conn/Gould/Orban/Toint, for GALAHAD productions
@@ -15,6 +17,7 @@
 !-*-*-*-*-*-*- F O R T R A N  O P E N   S U B R O U T I N E  -*-*-*-*-*-*-*-*-
 
       SUBROUTINE FORTRAN_open( funit, fname, status )
+      USE CUTEST_KINDS_precision
 
 !  Open file fname using Fortran unit number funit. 
 !  If successful, status = 0 is returned, otherwise status = 1.
@@ -38,6 +41,7 @@
 !-*-*-*-*-*-*- F O R T R A N  C L O S E  S U B R O U T I N E  -*-*-*-*-*-*-*-*-
 
       SUBROUTINE FORTRAN_close( funit, status )
+      USE CUTEST_KINDS_precision
 
 ! Close a stream unit previously opened by FORTRAN_OPEN.
 ! Exit value status: = 0 = successful return, 1 = error
