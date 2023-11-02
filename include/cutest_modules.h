@@ -19,25 +19,33 @@
 #if defined CUTEST_half
 #ifdef CUTEST_long
 #define CUTEST_KINDS_precision CUTEST_KINDS_half_long
+#define CUTEST_precision CUTEST_half_long
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_half
+#define CUTEST_precision CUTEST_half
 #endif
 #elif defined CUTEST_single
 #ifdef CUTEST_long
 #define CUTEST_KINDS_precision CUTEST_KINDS_single_long
+#define CUTEST_precision CUTEST_single_long
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_single
+#define CUTEST_precision CUTEST_single
 #endif
 #elif defined CUTEST_quad
 #ifdef CUTEST_long
 #define CUTEST_KINDS_precision CUTEST_KINDS_quadruple_long
+#define CUTEST_precision CUTEST_quadruple_long
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_quadruple
+#define CUTEST_precision CUTEST_quadruple
 #endif
 #else
 #ifdef CUTEST_long
 #define CUTEST_KINDS_precision CUTEST_KINDS_double_long
+#define CUTEST_precision CUTEST_double_long
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_double
+#define CUTEST_precision CUTEST_double
 #endif
 #endif

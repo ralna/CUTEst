@@ -1,20 +1,36 @@
 #  Main body of the installation makefile for basic CUTEST tools packages
 
 #  N. Gould, D. Orban and Ph. L. Toint.
-#  This version: 3 IV 2014
+#  This version: 2023-11-02
 
 SHELL = /bin/$(BINSHELL)
 
+#  preprocessing flags
+
+ifeq "$(PRECIS)" "single"
+ DPREC = -DCUTEST_SINGLE
+else
+ DPREC = -DCUTEST_DOUBLE
+endif
+
 #  compiler flags
 
-FFLAGS    = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(USUAL)
-FFLAGSS   = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL)
-FFLAGSN   = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90)
-FFLAGS77  = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL)
-FFLAGS77S = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL)
-RUNFFLAGS =          $(OPTIMIZATION) $(DEBUG) $(MODULES)
-CFLAGS    = $(CCBASIC) $(CCISO) $(OPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include
-CFLAGSN   = $(CCBASIC) $(CCISO) $(NOOPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include
+FFLAGS    = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(USUAL) \
+              $(DPREC) -I $(CUTEST)/include
+FFLAGSS   = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL) \
+              $(DPREC) -I $(CUTEST)/include
+FFLAGSN   = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90) \
+              $(DPREC) -I $(CUTEST)/include
+FFLAGS77  = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
+              $(DPREC) -I $(CUTEST)/include
+FFLAGS77S = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL) \
+              $(DPREC) -I $(CUTEST)/include
+RUNFFLAGS =          $(OPTIMIZATION) $(DEBUG) $(MODULES) \
+              $(DPREC) -I $(CUTEST)/include
+CFLAGS    = $(CCBASIC) $(CCISO) $(OPTIMIZATION) $(CCDEBUG) \
+              $(DPREC) -I $(CUTEST)/include
+CFLAGSN   = $(CCBASIC) $(CCISO) $(NOOPTIMIZATION) $(CCDEBUG) \
+              $(DPREC) -I $(CUTEST)/include
 
 #  names of random libraries
 
@@ -59,67 +75,101 @@ CSEDS = $(CUTEST)/seds/cutersize.sed
 
 #  compilation agenda
 
-BASICS = $(LCS)(cutest.o) $(LCS)(pname.o) $(LCS)(probname.o) \
-         $(LCS)(varnames.o) $(LCS)(newthread.o) $(LCS)(problem.o) \
-         $(LCS)(fortran_ops.o) $(LCS)(interface.o) $(LCS)(ccutest.o) \
-         $(LCS)(timings.o)
+BASICS = $(LCS)(kinds_single.o) $(LCS)(cutest_single.o) \
+         $(LCS)(pname_single.o) $(LCS)(probname_single.o) \
+         $(LCS)(varnames_single.o) $(LCS)(newthread_single.o) \
+         $(LCS)(problem_single.o) $(LCS)(fortran_ops_single.o) \
+         $(LCS)(interface_single.o) $(LCS)(ccutest_single.o) \
+         $(LCS)(timings_single.o)
 
-UCUTESTS = $(LCS)(usetup.o) $(LCS)(udimen.o) $(LCS)(udimse.o) $(LCS)(udimsh.o) \
-           $(LCS)(unames.o) $(LCS)(uvartype.o) $(LCS)(ufn.o) $(LCS)(ugr.o) \
-           $(LCS)(uofg.o) $(LCS)(udh.o) $(LCS)(ugrdh.o) $(LCS)(ush.o) \
-           $(LCS)(ushp.o) $(LCS)(ueh.o) $(LCS)(ugreh.o) $(LCS)(ugrsh.o) \
-           $(LCS)(uhprod.o) $(LCS)(ushprod.o) $(LCS)(ubandh.o) \
-           $(LCS)(ureport.o) $(LCS)(uterminate.o)
+UCUTESTS = $(LCS)(usetup_single.o) $(LCS)(udimen_single.o) \
+           $(LCS)(udimse_single.o) $(LCS)(udimsh_single.o) \
+           $(LCS)(unames_single.o) $(LCS)(uvartype_single.o) \
+           $(LCS)(ufn_single.o) $(LCS)(ugr_single.o) \
+           $(LCS)(uofg_single.o) $(LCS)(udh_single.o) \
+           $(LCS)(ugrdh_single.o) $(LCS)(ush_single.o) \
+           $(LCS)(ushp_single.o) $(LCS)(ueh_single.o) \
+           $(LCS)(ugreh_single.o) $(LCS)(ugrsh_single.o) \
+           $(LCS)(uhprod_single.o) $(LCS)(ushprod_single.o) \
+           $(LCS)(ubandh_single.o) $(LCS)(ureport_single.o) \
+           $(LCS)(uterminate_single.o)
 
-CCUTESTS = $(LCS)(csetup.o) $(LCS)(cdimen.o) $(LCS)(cdimse.o) $(LCS)(cdimsh.o) \
-           $(LCS)(cdimsj.o) $(LCS)(cdimchp.o) $(LCS)(cdimohp.o) \
-           $(LCS)(cvartype.o) $(LCS)(cfn.o) $(LCS)(cgr.o) $(LCS)(cofg.o) \
-           $(LCS)(cofsg.o) $(LCS)(ccfg.o) $(LCS)(clfg.o) $(LCS)(ccfsg.o) \
-           $(LCS)(ccifg.o) $(LCS)(ccifsg.o) $(LCS)(cdh.o) $(LCS)(cdhc.o) \
-           $(LCS)(ceh.o) $(LCS)(cgrdh.o) $(LCS)(cifn.o) $(LCS)(cigr.o) \
-           $(LCS)(cdimsg.o) $(LCS)(cisgr.o) $(LCS)(cisgrp.o) \
-           $(LCS)(cidh.o) $(LCS)(csh.o) $(LCS)(cshc.o) \
-           $(LCS)(cshj.o) $(LCS)(cshp.o) $(LCS)(cish.o) $(LCS)(cjprod.o) \
-           $(LCS)(cstats.o) $(LCS)(csgr.o) $(LCS)(csgreh.o) $(LCS)(csgrsh.o) \
-           $(LCS)(csjprod.o) $(LCS)(chprod.o) $(LCS)(chpjrod.o) \
-           $(LCS)(chcprod.o) $(LCS)(csjp.o) \
-           $(LCS)(csgrp.o) $(LCS)(csgrshp.o) \
-           $(LCS)(cohprodsp.o) $(LCS)(cohprods.o) \
-           $(LCS)(cchprodsp.o) $(LCS)(cchprods.o) \
-           $(LCS)(cshprod.o) $(LCS)(cshcprod.o) \
-           $(LCS)(creport.o) $(LCS)(connames.o) $(LCS)(cterminate.o) \
-           $(LCS)(lqp.o) $(LCS)(cconst.o) $(LCS)(cnames.o)
+CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
+           $(LCS)(cdimse_single.o) $(LCS)(cdimsh_single.o) \
+           $(LCS)(cdimsj_single.o) $(LCS)(cdimchp_single.o) \
+           $(LCS)(cdimohp_single.o) $(LCS)(cvartype_single.o) \
+           $(LCS)(cfn_single.o) $(LCS)(cgr_single.o) \
+           $(LCS)(cofg_single.o) $(LCS)(cofsg_single.o) \
+           $(LCS)(ccfg_single.o) $(LCS)(clfg_single.o) \
+           $(LCS)(ccfsg_single.o) $(LCS)(ccifg_single.o) \
+           $(LCS)(ccifsg_single.o) $(LCS)(cdh_single.o) \
+           $(LCS)(cdhc_single.o) $(LCS)(ceh_single.o) \
+           $(LCS)(cgrdh_single.o) $(LCS)(cifn_single.o) \
+           $(LCS)(cigr_single.o) $(LCS)(cdimsg_single.o) \
+           $(LCS)(cisgr_single.o) $(LCS)(cisgrp_single.o) \
+           $(LCS)(cidh_single.o) $(LCS)(csh_single.o) \
+           $(LCS)(cshc_single.o) $(LCS)(cshj_single.o) \
+           $(LCS)(cshp_single.o) $(LCS)(cish_single.o) \
+           $(LCS)(cjprod_single.o) $(LCS)(cstats_single.o) \
+           $(LCS)(csgr_single.o) $(LCS)(csgreh_single.o) \
+           $(LCS)(csgrsh_single.o) $(LCS)(csjprod_single.o) \
+           $(LCS)(chprod_single.o) $(LCS)(chpjrod_single.o) \
+           $(LCS)(chcprod_single.o) $(LCS)(csjp_single.o) \
+           $(LCS)(csgrp_single.o) $(LCS)(csgrshp_single.o) \
+           $(LCS)(cohprodsp_single.o) $(LCS)(cohprods_single.o) \
+           $(LCS)(cchprodsp_single.o) $(LCS)(cchprods_single.o) \
+           $(LCS)(cshprod_single.o) $(LCS)(cshcprod_single.o) \
+           $(LCS)(creport_single.o) $(LCS)(connames_single.o) \
+           $(LCS)(cterminate_single.o) $(LCS)(lqp_single.o) \
+           $(LCS)(cconst_single.o) $(LCS)(cnames_single.o)
 
-BASICD = $(LCD)(cutest.o) $(LCD)(pname.o) $(LCD)(probname.o) \
-         $(LCD)(varnames.o) $(LCD)(newthread.o) $(LCD)(problem.o) \
-         $(LCD)(fortran_ops.o) $(LCD)(interface.o) $(LCD)(ccutest.o) \
-         $(LCD)(timings.o)
+BASICD = $(LCD)(kinds_double.o) $(LCD)(cutest_double.o) \
+         $(LCD)(pname_double.o) $(LCD)(probname_double.o) \
+         $(LCD)(varnames_double.o) $(LCD)(newthread_double.o) \
+         $(LCD)(problem_double.o) $(LCD)(fortran_ops_double.o) \
+         $(LCD)(interface_double.o) $(LCD)(ccutest_double.o) \
+         $(LCD)(timings_double.o)
 
-UCUTESTD = $(LCD)(usetup.o) $(LCD)(udimen.o) $(LCD)(udimse.o) $(LCD)(udimsh.o) \
-           $(LCD)(unames.o) $(LCD)(uvartype.o) $(LCD)(ufn.o) $(LCD)(ugr.o) \
-           $(LCD)(uofg.o) $(LCD)(udh.o) $(LCD)(ugrdh.o) $(LCD)(ush.o) \
-           $(LCD)(ushp.o) $(LCD)(ueh.o) $(LCD)(ugreh.o) $(LCD)(ugrsh.o) \
-           $(LCD)(uhprod.o) $(LCD)(ushprod.o) $(LCD)(ubandh.o) \
-           $(LCD)(ureport.o) $(LCD)(uterminate.o)
+UCUTESTD = $(LCD)(usetup_double.o) $(LCD)(udimen_double.o) \
+           $(LCD)(udimse_double.o) $(LCD)(udimsh_double.o) \
+           $(LCD)(unames_double.o) $(LCD)(uvartype_double.o) \
+           $(LCD)(ufn_double.o) $(LCD)(ugr_double.o) \
+           $(LCD)(uofg_double.o) $(LCD)(udh_double.o) \
+           $(LCD)(ugrdh_double.o) $(LCD)(ush_double.o) \
+           $(LCD)(ushp_double.o) $(LCD)(ueh_double.o) \
+           $(LCD)(ugreh_double.o) $(LCD)(ugrsh_double.o) \
+           $(LCD)(uhprod_double.o) $(LCD)(ushprod_double.o) \
+           $(LCD)(ubandh_double.o) $(LCD)(ureport_double.o) \
+           $(LCD)(uterminate_double.o)
 
-CCUTESTD = $(LCD)(csetup.o) $(LCD)(cdimen.o) $(LCD)(cdimse.o) $(LCD)(cdimsh.o) \
-           $(LCD)(cdimsj.o) $(LCD)(cdimchp.o) $(LCD)(cdimohp.o) \
-           $(LCD)(cvartype.o) $(LCD)(cfn.o) $(LCD)(cgr.o) $(LCD)(cofg.o) \
-           $(LCD)(cofsg.o) $(LCD)(ccfg.o) $(LCD)(clfg.o) $(LCD)(ccfsg.o) \
-           $(LCD)(ccifg.o) $(LCD)(ccifsg.o) $(LCD)(cdh.o) $(LCD)(cdhc.o) \
-           $(LCD)(ceh.o) $(LCD)(cgrdh.o) $(LCD)(cifn.o) $(LCD)(cigr.o) \
-           $(LCD)(cdimsg.o) $(LCD)(cisgr.o) $(LCD)(cisgrp.o) \
-           $(LCD)(cidh.o) $(LCD)(csh.o) $(LCD)(cshc.o) \
-           $(LCD)(cshj.o) $(LCD)(cshp.o) $(LCD)(cish.o) $(LCD)(cjprod.o) \
-           $(LCD)(cstats.o) $(LCD)(csgr.o) $(LCD)(csgreh.o) $(LCD)(csgrsh.o) \
-           $(LCD)(csjprod.o) $(LCD)(chprod.o) \
-           $(LCD)(chjprod.o) $(LCD)(chcprod.o) \
-           $(LCD)(cshprod.o) $(LCD)(cshcprod.o) \
-           $(LCD)(cohprodsp.o) $(LCD)(cohprods.o) \
-           $(LCD)(cchprodsp.o) $(LCD)(cchprods.o) \
-           $(LCD)(csjp.o) $(LCD)(csgrp.o) $(LCD)(csgrshp.o) \
-           $(LCD)(creport.o) $(LCD)(connames.o) $(LCD)(cterminate.o) \
-           $(LCD)(lqp.o) $(LCD)(cconst.o) $(LCD)(cnames.o)
+CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
+           $(LCD)(cdimse_double.o) $(LCD)(cdimsh_double.o) \
+           $(LCD)(cdimsj_double.o) $(LCD)(cdimchp_double.o) \
+           $(LCD)(cdimohp_double.o) $(LCD)(cvartype_double.o) \
+           $(LCD)(cfn_double.o) $(LCD)(cgr_double.o) \
+           $(LCD)(cofg_double.o) $(LCD)(cofsg_double.o) \
+           $(LCD)(ccfg_double.o) $(LCD)(clfg_double.o) \
+           $(LCD)(ccfsg_double.o) $(LCD)(ccifg_double.o) \
+           $(LCD)(ccifsg_double.o) $(LCD)(cdh_double.o) \
+           $(LCD)(cdhc_double.o) $(LCD)(ceh_double.o) \
+           $(LCD)(cgrdh_double.o) $(LCD)(cifn_double.o) \
+           $(LCD)(cigr_double.o) $(LCD)(cdimsg_double.o) \
+           $(LCD)(cisgr_double.o) $(LCD)(cisgrp_double.o) \
+           $(LCD)(cidh_double.o) $(LCD)(csh_double.o) \
+           $(LCD)(cshc_double.o) $(LCD)(cshj_double.o) \
+           $(LCD)(cshp_double.o) $(LCD)(cish_double.o) \
+           $(LCD)(cjprod_double.o) $(LCD)(cstats_double.o) \
+           $(LCD)(csgr_double.o) $(LCD)(csgreh_double.o) \
+           $(LCD)(csgrsh_double.o) $(LCD)(csjprod_double.o) \
+           $(LCD)(chprod_double.o) $(LCD)(chjprod_double.o) \
+           $(LCD)(chcprod_double.o) $(LCD)(cshprod_double.o) \
+           $(LCD)(cshcprod_double.o) $(LCD)(cohprodsp_double.o) \
+           $(LCD)(cohprods_double.o) $(LCD)(cchprodsp_double.o) \
+           $(LCD)(cchprods_double.o) $(LCD)(csjp_double.o) \
+           $(LCD)(csgrp_double.o) $(LCD)(csgrshp_double.o) \
+           $(LCD)(creport_double.o) $(LCD)(connames_double.o) \
+           $(LCD)(cterminate_double.o) $(LCD)(lqp_double.o) \
+           $(LCD)(cconst_double.o) $(LCD)(cnames_double.o)
 
 CUTESTS = $(BASICS) $(UCUTESTS) $(CCUTESTS)
 CUTESTD = $(BASICD) $(UCUTESTD) $(CCUTESTD)
@@ -183,1158 +233,1270 @@ test_cutest: test_cutest_unconstrained test_cutest_constrained
 test_cutest_unconstrained: cutest
 	echo " Exhaustive test of unconstrained tools"
 	( cd ../test ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                    test_cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
+                test_cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
 
 test_cutest_constrained: cutest
 	echo " Exhaustive test of constrained tools"
 	( cd ../test ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                    test_cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
+                test_cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
 
 #  individual compilations
 
-cutest.o: $(LC)(cutest.o)
+kinds.o: $(LC)(kinds_$(PRECIS).o)
 
-$(LC)(cutest.o): ../tools/cutest.f90
+$(LC)(kinds_$(PRECIS).o): ../tools/kinds.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "kinds"
+	$(CP) ../tools/kinds.F90 $(OBJ)/kinds.F90
+	cd $(OBJ); $(FORTRAN) -o kinds_$(PRECIS).o $(FFLAGS) kinds.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o kinds_$(PRECIS).o $(FFLAGSN) kinds.F90 )
+	cd $(OBJ); $(ARR) kinds_$(PRECIS).o; $(RM) kinds.F90 kinds_$(PRECIS).o
+	$(RMARFILE) cutest_$(PRECIS).o
+	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cutest.o: $(LC)(cutest_$(PRECIS).o)
+
+$(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cutest"
-	$(SED) -f $(SEDS) ../tools/cutest.f90 > $(OBJ)/cutest.f90
-	cd $(OBJ); $(FORTRAN) -o cutest.o $(FFLAGS) cutest.f90 \
+	$(CP) ../tools/cutest.F90 $(OBJ)/cutest.F90
+	cd $(OBJ); $(FORTRAN) -o cutest_$(PRECIS).o $(FFLAGS) cutest.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cutest.o $(FFLAGSN) cutest.f90 )
-	cd $(OBJ); $(ARR) cutest.o; $(RM) cutest.f90 cutest.o
-	$(RMARFILE) csetup.o
-	$(RMARFILE) cdimen.o
-	$(RMARFILE) cstats.o
-	$(RMARFILE) cdimse.o
-	$(RMARFILE) cdimsh.o
-	$(RMARFILE) cdimsj.o
-	$(RMARFILE) cdimchp.o
-	$(RMARFILE) cdimohp.o
-	$(RMARFILE) cnames.o
-	$(RMARFILE) cvartype.o
-	$(RMARFILE) cfn.o
-	$(RMARFILE) cgr.o
-	$(RMARFILE) cofg.o
-	$(RMARFILE) cofsg.o
-	$(RMARFILE) ccfg.o
-	$(RMARFILE) ccfsg.o
-	$(RMARFILE) clfg.o
-	$(RMARFILE) ccifg.o
-	$(RMARFILE) ccifsg.o
-	$(RMARFILE) cdh.o
-	$(RMARFILE) cdhc.o
-	$(RMARFILE) ceh.o
-	$(RMARFILE) cgrdh.o
-	$(RMARFILE) cifn.o
-	$(RMARFILE) cigr.o
-	$(RMARFILE) cdimsg.o
-	$(RMARFILE) cisgrp.o
-	$(RMARFILE) cisgr.o
-	$(RMARFILE) cidh.o
-	$(RMARFILE) csh.o
-	$(RMARFILE) cshc.o
-	$(RMARFILE) cshj.o
-	$(RMARFILE) cshp.o
-	$(RMARFILE) cish.o
-	$(RMARFILE) cjprod.o
-	$(RMARFILE) csjprod.o
-	$(RMARFILE) csgr.o
-	$(RMARFILE) csjp.o
-	$(RMARFILE) csgrp.o
-	$(RMARFILE) csgreh.o
-	$(RMARFILE) csgrsh.o
-	$(RMARFILE) csgrshp.o
-	$(RMARFILE) chprod.o
-	$(RMARFILE) chjprod.o
-	$(RMARFILE) chcprod.o
-	$(RMARFILE) cshprod.o
-	$(RMARFILE) cshcprod.o
-	$(RMARFILE) cohprodsp.o
-	$(RMARFILE) cohprods.o
-	$(RMARFILE) cchprodsp.o
-	$(RMARFILE) cchprods.o
-	$(RMARFILE) cconst.o
-	$(RMARFILE) creport.o
-	$(RMARFILE) cterminate.o
-	$(RMARFILE) usetup.o
-	$(RMARFILE) udimen.o
-	$(RMARFILE) udimse.o
-	$(RMARFILE) udimsh.o
-	$(RMARFILE) unames.o
-	$(RMARFILE) uvartype.o
-	$(RMARFILE) ufn.o
-	$(RMARFILE) ugr.o
-	$(RMARFILE) uofg.o
-	$(RMARFILE) udh.o
-	$(RMARFILE) ugrdh.o
-	$(RMARFILE) ush.o
-	$(RMARFILE) ushp.o
-	$(RMARFILE) ueh.o
-	$(RMARFILE) ugreh.o
-	$(RMARFILE) ugrsh.o
-	$(RMARFILE) uhprod.o
-	$(RMARFILE) ushprod.o
-	$(RMARFILE) ubandh.o
-	$(RMARFILE) ureport.o
-	$(RMARFILE) uterminate.o
-	$(RMARFILE) pname.o
-	$(RMARFILE) probname.o
-	$(RMARFILE) varnames.o
-	$(RMARFILE) connames.o
-	$(RMARFILE) newthread.o
-	$(RMARFILE) set_monitor.o
-	$(RMARFILE) timingss.o
+                   $(FORTRAN) -o cutest_$(PRECIS).o $(FFLAGSN) cutest.F90 )
+	cd $(OBJ); $(ARR) cutest_$(PRECIS).o; \
+          $(RM) cutest.F90 cutest_$(PRECIS).o
+	$(RMARFILE) csetup_$(PRECIS).o
+	$(RMARFILE) cdimen_$(PRECIS).o
+	$(RMARFILE) cstats_$(PRECIS).o
+	$(RMARFILE) cdimse_$(PRECIS).o
+	$(RMARFILE) cdimsh_$(PRECIS).o
+	$(RMARFILE) cdimsj_$(PRECIS).o
+	$(RMARFILE) cdimchp_$(PRECIS).o
+	$(RMARFILE) cdimohp_$(PRECIS).o
+	$(RMARFILE) cnames_$(PRECIS).o
+	$(RMARFILE) cvartype_$(PRECIS).o
+	$(RMARFILE) cfn_$(PRECIS).o
+	$(RMARFILE) cgr_$(PRECIS).o
+	$(RMARFILE) cofg_$(PRECIS).o
+	$(RMARFILE) cofsg_$(PRECIS).o
+	$(RMARFILE) ccfg_$(PRECIS).o
+	$(RMARFILE) ccfsg_$(PRECIS).o
+	$(RMARFILE) clfg_$(PRECIS).o
+	$(RMARFILE) ccifg_$(PRECIS).o
+	$(RMARFILE) ccifsg_$(PRECIS).o
+	$(RMARFILE) cdh_$(PRECIS).o
+	$(RMARFILE) cdhc_$(PRECIS).o
+	$(RMARFILE) ceh_$(PRECIS).o
+	$(RMARFILE) cgrdh_$(PRECIS).o
+	$(RMARFILE) cifn_$(PRECIS).o
+	$(RMARFILE) cigr_$(PRECIS).o
+	$(RMARFILE) cdimsg_$(PRECIS).o
+	$(RMARFILE) cisgrp_$(PRECIS).o
+	$(RMARFILE) cisgr_$(PRECIS).o
+	$(RMARFILE) cidh_$(PRECIS).o
+	$(RMARFILE) csh_$(PRECIS).o
+	$(RMARFILE) cshc_$(PRECIS).o
+	$(RMARFILE) cshj_$(PRECIS).o
+	$(RMARFILE) cshp_$(PRECIS).o
+	$(RMARFILE) cish_$(PRECIS).o
+	$(RMARFILE) cjprod_$(PRECIS).o
+	$(RMARFILE) csjprod_$(PRECIS).o
+	$(RMARFILE) csgr_$(PRECIS).o
+	$(RMARFILE) csjp_$(PRECIS).o
+	$(RMARFILE) csgrp_$(PRECIS).o
+	$(RMARFILE) csgreh_$(PRECIS).o
+	$(RMARFILE) csgrsh_$(PRECIS).o
+	$(RMARFILE) csgrshp_$(PRECIS).o
+	$(RMARFILE) chprod_$(PRECIS).o
+	$(RMARFILE) chjprod_$(PRECIS).o
+	$(RMARFILE) chcprod_$(PRECIS).o
+	$(RMARFILE) cshprod_$(PRECIS).o
+	$(RMARFILE) cshcprod_$(PRECIS).o
+	$(RMARFILE) cohprodsp_$(PRECIS).o
+	$(RMARFILE) cohprods_$(PRECIS).o
+	$(RMARFILE) cchprodsp_$(PRECIS).o
+	$(RMARFILE) cchprods_$(PRECIS).o
+	$(RMARFILE) cconst_$(PRECIS).o
+	$(RMARFILE) creport_$(PRECIS).o
+	$(RMARFILE) cterminate_$(PRECIS).o
+	$(RMARFILE) usetup_$(PRECIS).o
+	$(RMARFILE) udimen_$(PRECIS).o
+	$(RMARFILE) udimse_$(PRECIS).o
+	$(RMARFILE) udimsh_$(PRECIS).o
+	$(RMARFILE) unames_$(PRECIS).o
+	$(RMARFILE) uvartype_$(PRECIS).o
+	$(RMARFILE) ufn_$(PRECIS).o
+	$(RMARFILE) ugr_$(PRECIS).o
+	$(RMARFILE) uofg_$(PRECIS).o
+	$(RMARFILE) udh_$(PRECIS).o
+	$(RMARFILE) ugrdh_$(PRECIS).o
+	$(RMARFILE) ush_$(PRECIS).o
+	$(RMARFILE) ushp_$(PRECIS).o
+	$(RMARFILE) ueh_$(PRECIS).o
+	$(RMARFILE) ugreh_$(PRECIS).o
+	$(RMARFILE) ugrsh_$(PRECIS).o
+	$(RMARFILE) uhprod_$(PRECIS).o
+	$(RMARFILE) ushprod_$(PRECIS).o
+	$(RMARFILE) ubandh_$(PRECIS).o
+	$(RMARFILE) ureport_$(PRECIS).o
+	$(RMARFILE) uterminate_$(PRECIS).o
+	$(RMARFILE) pname_$(PRECIS).o
+	$(RMARFILE) probname_$(PRECIS).o
+	$(RMARFILE) varnames_$(PRECIS).o
+	$(RMARFILE) connames_$(PRECIS).o
+	$(RMARFILE) newthread_$(PRECIS).o
+	$(RMARFILE) set_monitor_$(PRECIS).o
+	$(RMARFILE) timingss_$(PRECIS).o
 	$(MVMODS)
 	@printf '[ OK ]\n'
 
-interface.o: $(LC)(interface.o)
+interface.o: $(LC)(interface_$(PRECIS).o)
 
-$(LC)(interface.o): ../tools/interface.f90
+$(LC)(interface_$(PRECIS).o): ../tools/interface.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "interface"
-	$(SED) -f $(SEDS) ../tools/interface.f90 > $(OBJ)/interface.f90
-	cd $(OBJ); $(FORTRAN) -o interface.o $(FFLAGS) interface.f90 \
+	$(CP) ../tools/interface.F90 $(OBJ)/interface.F90
+	cd $(OBJ); $(FORTRAN) -o interface_$(PRECIS).o $(FFLAGS) \
+                   interface.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o interface.o $(FFLAGSN) interface.f90 )
-	cd $(OBJ); $(ARR) interface.o; $(RM) interface.f90 interface.o
+                   $(FORTRAN) -o interface_$(PRECIS).o $(FFLAGSN) \
+                   interface.F90 )
+	cd $(OBJ); $(ARR) interface_$(PRECIS).o; \
+          $(RM) interface.F90 interface_$(PRECIS).o
 	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csetup.o: $(LC)(csetup.o)
+csetup.o: $(LC)(csetup_$(PRECIS).o)
 
-$(LC)(csetup.o): ../tools/csetup.f90
+$(LC)(csetup_$(PRECIS).o): ../tools/csetup.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csetup"
-	$(SED) -f $(SEDS) ../tools/csetup.f90 > $(OBJ)/csetup.f90
-	cd $(OBJ); $(FORTRAN) -o csetup.o $(FFLAGS) csetup.f90 \
+	$(CP) ../tools/csetup.F90 $(OBJ)/csetup.F90
+	cd $(OBJ); $(FORTRAN) -o csetup_$(PRECIS).o $(FFLAGS) csetup.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csetup.o $(FFLAGSN) csetup.f90 )
-	cd $(OBJ); $(ARR) csetup.o; $(RM) csetup.f90 csetup.o
+                   $(FORTRAN) -o csetup_$(PRECIS).o $(FFLAGSN) csetup.F90 )
+	cd $(OBJ); $(ARR) csetup_$(PRECIS).o; \
+          $(RM) csetup.F90 csetup_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimen.o: $(LC)(cdimen.o)
+cdimen.o: $(LC)(cdimen_$(PRECIS).o)
 
-$(LC)(cdimen.o): ../tools/cdimen.f90
+$(LC)(cdimen_$(PRECIS).o): ../tools/cdimen.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimen"
-	$(SED) -f $(SEDS) ../tools/cdimen.f90 > $(OBJ)/cdimen.f90
-	cd $(OBJ); $(FORTRAN) -o cdimen.o $(FFLAGS) cdimen.f90 \
+	$(CP) ../tools/cdimen.F90 $(OBJ)/cdimen.F90
+	cd $(OBJ); $(FORTRAN) -o cdimen_$(PRECIS).o $(FFLAGS) cdimen.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimen.o $(FFLAGSN) cdimen.f90 )
-	cd $(OBJ); $(ARR) cdimen.o; $(RM) cdimen.f90 cdimen.o
+                   $(FORTRAN) -o cdimen_$(PRECIS).o $(FFLAGSN) cdimen.F90 )
+	cd $(OBJ); $(ARR) cdimen_$(PRECIS).o; \
+          $(RM) cdimen.F90 cdimen_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cstats.o: $(LC)(cstats.o)
+cstats.o: $(LC)(cstats_$(PRECIS).o)
 
-$(LC)(cstats.o): ../tools/cstats.f90
+$(LC)(cstats_$(PRECIS).o): ../tools/cstats.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cstats"
-	$(SED) -f $(SEDS) ../tools/cstats.f90 > $(OBJ)/cstats.f90
-	cd $(OBJ); $(FORTRAN) -o cstats.o $(FFLAGS) cstats.f90 \
+	$(CP) ../tools/cstats.F90 $(OBJ)/cstats.F90
+	cd $(OBJ); $(FORTRAN) -o cstats_$(PRECIS).o $(FFLAGS) cstats.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cstats.o $(FFLAGSN) cstats.f90 )
-	cd $(OBJ); $(ARR) cstats.o; $(RM) cstats.f90 cstats.o
+                   $(FORTRAN) -o cstats_$(PRECIS).o $(FFLAGSN) cstats.F90 )
+	cd $(OBJ); $(ARR) cstats_$(PRECIS).o; \
+          $(RM) cstats.F90 cstats_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimse.o: $(LC)(cdimse.o)
+cdimse.o: $(LC)(cdimse_$(PRECIS).o)
 
-$(LC)(cdimse.o): ../tools/cdimse.f90
+$(LC)(cdimse_$(PRECIS).o): ../tools/cdimse.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimse"
-	$(SED) -f $(SEDS) ../tools/cdimse.f90 > $(OBJ)/cdimse.f90
-	cd $(OBJ); $(FORTRAN) -o cdimse.o $(FFLAGS) cdimse.f90 \
+	$(CP) ../tools/cdimse.F90 $(OBJ)/cdimse.F90
+	cd $(OBJ); $(FORTRAN) -o cdimse_$(PRECIS).o $(FFLAGS) cdimse.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimse.o $(FFLAGSN) cdimse.f90 )
-	cd $(OBJ); $(ARR) cdimse.o; $(RM) cdimse.f90 cdimse.o
+                   $(FORTRAN) -o cdimse_$(PRECIS).o $(FFLAGSN) cdimse.F90 )
+	cd $(OBJ); $(ARR) cdimse_$(PRECIS).o; \
+          $(RM) cdimse.F90 cdimse_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimsh.o: $(LC)(cdimsh.o)
+cdimsh.o: $(LC)(cdimsh_$(PRECIS).o)
 
-$(LC)(cdimsh.o): ../tools/cdimsh.f90
+$(LC)(cdimsh_$(PRECIS).o): ../tools/cdimsh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimsh"
-	$(SED) -f $(SEDS) ../tools/cdimsh.f90 > $(OBJ)/cdimsh.f90
-	cd $(OBJ); $(FORTRAN) -o cdimsh.o $(FFLAGS) cdimsh.f90 \
+	$(CP) ../tools/cdimsh.F90 $(OBJ)/cdimsh.F90
+	cd $(OBJ); $(FORTRAN) -o cdimsh_$(PRECIS).o $(FFLAGS) cdimsh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimsh.o $(FFLAGSN) cdimsh.f90 )
-	cd $(OBJ); $(ARR) cdimsh.o; $(RM) cdimsh.f90 cdimsh.o
+                   $(FORTRAN) -o cdimsh_$(PRECIS).o $(FFLAGSN) cdimsh.F90 )
+	cd $(OBJ); $(ARR) cdimsh_$(PRECIS).o; \
+          $(RM) cdimsh.F90 cdimsh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimsj.o: $(LC)(cdimsj.o)
+cdimsj.o: $(LC)(cdimsj_$(PRECIS).o)
 
-$(LC)(cdimsj.o): ../tools/cdimsj.f90
+$(LC)(cdimsj_$(PRECIS).o): ../tools/cdimsj.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimsj"
-	$(SED) -f $(SEDS) ../tools/cdimsj.f90 > $(OBJ)/cdimsj.f90
-	cd $(OBJ); $(FORTRAN) -o cdimsj.o $(FFLAGS) cdimsj.f90 \
+	$(CP) ../tools/cdimsj.F90 $(OBJ)/cdimsj.F90
+	cd $(OBJ); $(FORTRAN) -o cdimsj_$(PRECIS).o $(FFLAGS) cdimsj.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimsj.o $(FFLAGSN) cdimsj.f90 )
-	cd $(OBJ); $(ARR) cdimsj.o; $(RM) cdimsj.f90 cdimsj.o
+                   $(FORTRAN) -o cdimsj_$(PRECIS).o $(FFLAGSN) cdimsj.F90 )
+	cd $(OBJ); $(ARR) cdimsj_$(PRECIS).o; \
+          $(RM) cdimsj.F90 cdimsj_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimchp.o: $(LC)(cdimchp.o)
+cdimchp.o: $(LC)(cdimchp_$(PRECIS).o)
 
-$(LC)(cdimchp.o): ../tools/cdimchp.f90
+$(LC)(cdimchp_$(PRECIS).o): ../tools/cdimchp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimchp"
-	$(SED) -f $(SEDS) ../tools/cdimchp.f90 > $(OBJ)/cdimchp.f90
-	cd $(OBJ); $(FORTRAN) -o cdimchp.o $(FFLAGS) cdimchp.f90 \
+	$(CP) ../tools/cdimchp.F90 $(OBJ)/cdimchp.F90
+	cd $(OBJ); $(FORTRAN) -o cdimchp_$(PRECIS).o $(FFLAGS) cdimchp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimchp.o $(FFLAGSN) cdimchp.f90 )
-	cd $(OBJ); $(ARR) cdimchp.o; $(RM) cdimchp.f90 cdimchp.o
+                   $(FORTRAN) -o cdimchp_$(PRECIS).o $(FFLAGSN) cdimchp.F90 )
+	cd $(OBJ); $(ARR) cdimchp_$(PRECIS).o; \
+          $(RM) cdimchp.F90 cdimchp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimohp.o: $(LC)(cdimohp.o)
+cdimohp.o: $(LC)(cdimohp_$(PRECIS).o)
 
-$(LC)(cdimohp.o): ../tools/cdimohp.f90
+$(LC)(cdimohp_$(PRECIS).o): ../tools/cdimohp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimohp"
-	$(SED) -f $(SEDS) ../tools/cdimohp.f90 > $(OBJ)/cdimohp.f90
-	cd $(OBJ); $(FORTRAN) -o cdimohp.o $(FFLAGS) cdimohp.f90 \
+	$(CP) ../tools/cdimohp.F90 $(OBJ)/cdimohp.F90
+	cd $(OBJ); $(FORTRAN) -o cdimohp_$(PRECIS).o $(FFLAGS) cdimohp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimohp.o $(FFLAGSN) cdimohp.f90 )
-	cd $(OBJ); $(ARR) cdimohp.o; $(RM) cdimohp.f90 cdimohp.o
+                   $(FORTRAN) -o cdimohp_$(PRECIS).o $(FFLAGSN) cdimohp.F90 )
+	cd $(OBJ); $(ARR) cdimohp_$(PRECIS).o; \
+          $(RM) cdimohp.F90 cdimohp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cnames.o: $(LC)(cnames.o)
+cnames.o: $(LC)(cnames_$(PRECIS).o)
 
-$(LC)(cnames.o): ../tools/cnames.f90
+$(LC)(cnames_$(PRECIS).o): ../tools/cnames.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cnames"
-	$(SED) -f $(SEDS) ../tools/cnames.f90 > $(OBJ)/cnames.f90
-	cd $(OBJ); $(FORTRAN) -o cnames.o $(FFLAGS) cnames.f90 \
+	$(CP) ../tools/cnames.F90 $(OBJ)/cnames.F90
+	cd $(OBJ); $(FORTRAN) -o cnames_$(PRECIS).o $(FFLAGS) cnames.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cnames.o $(FFLAGSN) cnames.f90 )
-	cd $(OBJ); $(ARR) cnames.o; $(RM) cnames.f90 cnames.o
+                   $(FORTRAN) -o cnames_$(PRECIS).o $(FFLAGSN) cnames.F90 )
+	cd $(OBJ); $(ARR) cnames_$(PRECIS).o; \
+          $(RM) cnames.F90 cnames_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cvartype.o: $(LC)(cvartype.o)
+cvartype.o: $(LC)(cvartype_$(PRECIS).o)
 
-$(LC)(cvartype.o): ../tools/cvartype.f90
+$(LC)(cvartype_$(PRECIS).o): ../tools/cvartype.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cvartype"
-	$(SED) -f $(SEDS) ../tools/cvartype.f90 > $(OBJ)/cvartype.f90
-	cd $(OBJ); $(FORTRAN) -o cvartype.o $(FFLAGS) cvartype.f90 \
+	$(CP) ../tools/cvartype.F90 $(OBJ)/cvartype.F90
+	cd $(OBJ); $(FORTRAN) -o cvartype_$(PRECIS).o $(FFLAGS) cvartype.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cvartype.o $(FFLAGSN) cvartype.f90 )
-	cd $(OBJ); $(ARR) cvartype.o; $(RM) cvartype.f90 cvartype.o
+                   $(FORTRAN) -o cvartype_$(PRECIS).o $(FFLAGSN) cvartype.F90 )
+	cd $(OBJ); $(ARR) cvartype_$(PRECIS).o; \
+          $(RM) cvartype.F90 cvartype_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cfn.o: $(LC)(cfn.o)
+cfn.o: $(LC)(cfn_$(PRECIS).o)
 
-$(LC)(cfn.o): ../tools/cfn.f90
+$(LC)(cfn_$(PRECIS).o): ../tools/cfn.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cfn"
-	$(SED) -f $(SEDS) ../tools/cfn.f90 > $(OBJ)/cfn.f90
-	cd $(OBJ); $(FORTRAN) -o cfn.o $(FFLAGS) cfn.f90 \
+	$(CP) ../tools/cfn.F90 $(OBJ)/cfn.F90
+	cd $(OBJ); $(FORTRAN) -o cfn_$(PRECIS).o $(FFLAGS) cfn.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cfn.o $(FFLAGSN) cfn.f90 )
-	cd $(OBJ); $(ARR) cfn.o; $(RM) cfn.f90 cfn.o
+                   $(FORTRAN) -o cfn_$(PRECIS).o $(FFLAGSN) cfn.F90 )
+	cd $(OBJ); $(ARR) cfn_$(PRECIS).o; \
+          $(RM) cfn.F90 cfn_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cgr.o: $(LC)(cgr.o)
+cgr.o: $(LC)(cgr_$(PRECIS).o)
 
-$(LC)(cgr.o): ../tools/cgr.f90
+$(LC)(cgr_$(PRECIS).o): ../tools/cgr.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cgr"
-	$(SED) -f $(SEDS) ../tools/cgr.f90 > $(OBJ)/cgr.f90
-	cd $(OBJ); $(FORTRAN) -o cgr.o $(FFLAGS) cgr.f90 \
+	$(CP) ../tools/cgr.F90 $(OBJ)/cgr.F90
+	cd $(OBJ); $(FORTRAN) -o cgr_$(PRECIS).o $(FFLAGS) cgr.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cgr.o $(FFLAGSN) cgr.f90 )
-	cd $(OBJ); $(ARR) cgr.o; $(RM) cgr.f90 cgr.o
+                   $(FORTRAN) -o cgr_$(PRECIS).o $(FFLAGSN) cgr.F90 )
+	cd $(OBJ); $(ARR) cgr_$(PRECIS).o; \
+          $(RM) cgr.F90 cgr_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cofg.o: $(LC)(cofg.o)
+cofg.o: $(LC)(cofg_$(PRECIS).o)
 
-$(LC)(cofg.o): ../tools/cofg.f90
+$(LC)(cofg_$(PRECIS).o): ../tools/cofg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cofg"
-	$(SED) -f $(SEDS) ../tools/cofg.f90 > $(OBJ)/cofg.f90
-	cd $(OBJ); $(FORTRAN) -o cofg.o $(FFLAGS) cofg.f90 \
+	$(CP) ../tools/cofg.F90 $(OBJ)/cofg.F90
+	cd $(OBJ); $(FORTRAN) -o cofg_$(PRECIS).o $(FFLAGS) cofg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cofg.o $(FFLAGSN) cofg.f90 )
-	cd $(OBJ); $(ARR) cofg.o; $(RM) cofg.f90 cofg.o
+                   $(FORTRAN) -o cofg_$(PRECIS).o $(FFLAGSN) cofg.F90 )
+	cd $(OBJ); $(ARR) cofg_$(PRECIS).o; \
+          $(RM) cofg.F90 cofg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cofsg.o: $(LC)(cofsg.o)
+cofsg.o: $(LC)(cofsg_$(PRECIS).o)
 
-$(LC)(cofsg.o): ../tools/cofsg.f90
+$(LC)(cofsg_$(PRECIS).o): ../tools/cofsg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cofsg"
-	$(SED) -f $(SEDS) ../tools/cofsg.f90 > $(OBJ)/cofsg.f90
-	cd $(OBJ); $(FORTRAN) -o cofsg.o $(FFLAGS) cofsg.f90 \
+	$(CP) ../tools/cofsg.F90 $(OBJ)/cofsg.F90
+	cd $(OBJ); $(FORTRAN) -o cofsg_$(PRECIS).o $(FFLAGS) cofsg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cofsg.o $(FFLAGSN) cofsg.f90 )
-	cd $(OBJ); $(ARR) cofsg.o; $(RM) cofsg.f90 cofsg.o
+                   $(FORTRAN) -o cofsg_$(PRECIS).o $(FFLAGSN) cofsg.F90 )
+	cd $(OBJ); $(ARR) cofsg_$(PRECIS).o; \
+          $(RM) cofsg.F90 cofsg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ccfg.o: $(LC)(ccfg.o)
+ccfg.o: $(LC)(ccfg_$(PRECIS).o)
 
-$(LC)(ccfg.o): ../tools/ccfg.f90
+$(LC)(ccfg_$(PRECIS).o): ../tools/ccfg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ccfg"
-	$(SED) -f $(SEDS) ../tools/ccfg.f90 > $(OBJ)/ccfg.f90
-	cd $(OBJ); $(FORTRAN) -o ccfg.o $(FFLAGS) ccfg.f90 \
+	$(CP) ../tools/ccfg.F90 $(OBJ)/ccfg.F90
+	cd $(OBJ); $(FORTRAN) -o ccfg_$(PRECIS).o $(FFLAGS) ccfg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ccfg.o $(FFLAGSN) ccfg.f90 )
-	cd $(OBJ); $(ARR) ccfg.o; $(RM) ccfg.f90 ccfg.o
+                   $(FORTRAN) -o ccfg_$(PRECIS).o $(FFLAGSN) ccfg.F90 )
+	cd $(OBJ); $(ARR) ccfg_$(PRECIS).o; \
+          $(RM) ccfg.F90 ccfg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ccfsg.o: $(LC)(ccfsg.o)
+ccfsg.o: $(LC)(ccfsg_$(PRECIS).o)
 
-$(LC)(ccfsg.o): ../tools/ccfsg.f90
+$(LC)(ccfsg_$(PRECIS).o): ../tools/ccfsg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ccfsg"
-	$(SED) -f $(SEDS) ../tools/ccfsg.f90 > $(OBJ)/ccfsg.f90
-	cd $(OBJ); $(FORTRAN) -o ccfsg.o $(FFLAGS) ccfsg.f90 \
+	$(CP) ../tools/ccfsg.F90 $(OBJ)/ccfsg.F90
+	cd $(OBJ); $(FORTRAN) -o ccfsg_$(PRECIS).o $(FFLAGS) ccfsg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ccfsg.o $(FFLAGSN) ccfsg.f90 )
-	cd $(OBJ); $(ARR) ccfsg.o; $(RM) ccfsg.f90 ccfsg.o
+                   $(FORTRAN) -o ccfsg_$(PRECIS).o $(FFLAGSN) ccfsg.F90 )
+	cd $(OBJ); $(ARR) ccfsg_$(PRECIS).o; \
+          $(RM) ccfsg.F90 ccfsg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-clfg.o: $(LC)(clfg.o)
+clfg.o: $(LC)(clfg_$(PRECIS).o)
 
-$(LC)(clfg.o): ../tools/clfg.f90
+$(LC)(clfg_$(PRECIS).o): ../tools/clfg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "clfg"
-	$(SED) -f $(SEDS) ../tools/clfg.f90 > $(OBJ)/clfg.f90
-	cd $(OBJ); $(FORTRAN) -o clfg.o $(FFLAGS) clfg.f90 \
+	$(CP) ../tools/clfg.F90 $(OBJ)/clfg.F90
+	cd $(OBJ); $(FORTRAN) -o clfg_$(PRECIS).o $(FFLAGS) clfg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o clfg.o $(FFLAGSN) clfg.f90 )
-	cd $(OBJ); $(ARR) clfg.o; $(RM) clfg.f90 clfg.o
+                   $(FORTRAN) -o clfg_$(PRECIS).o $(FFLAGSN) clfg.F90 )
+	cd $(OBJ); $(ARR) clfg_$(PRECIS).o; \
+          $(RM) clfg.F90 clfg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ccifg.o: $(LC)(ccifg.o)
+ccifg.o: $(LC)(ccifg_$(PRECIS).o)
 
-$(LC)(ccifg.o): ../tools/ccifg.f90
+$(LC)(ccifg_$(PRECIS).o): ../tools/ccifg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ccifg"
-	$(SED) -f $(SEDS) ../tools/ccifg.f90 > $(OBJ)/ccifg.f90
-	cd $(OBJ); $(FORTRAN) -o ccifg.o $(FFLAGS) ccifg.f90 \
+	$(CP) ../tools/ccifg.F90 $(OBJ)/ccifg.F90
+	cd $(OBJ); $(FORTRAN) -o ccifg_$(PRECIS).o $(FFLAGS) ccifg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ccifg.o $(FFLAGSN) ccifg.f90 )
-	cd $(OBJ); $(ARR) ccifg.o; $(RM) ccifg.f90 ccifg.o
+                   $(FORTRAN) -o ccifg_$(PRECIS).o $(FFLAGSN) ccifg.F90 )
+	cd $(OBJ); $(ARR) ccifg_$(PRECIS).o; \
+          $(RM) ccifg.F90 ccifg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ccifsg.o: $(LC)(ccifsg.o)
+ccifsg.o: $(LC)(ccifsg_$(PRECIS).o)
 
-$(LC)(ccifsg.o): ../tools/ccifsg.f90
+$(LC)(ccifsg_$(PRECIS).o): ../tools/ccifsg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ccifsg"
-	$(SED) -f $(SEDS) ../tools/ccifsg.f90 > $(OBJ)/ccifsg.f90
-	cd $(OBJ); $(FORTRAN) -o ccifsg.o $(FFLAGS) ccifsg.f90 \
+	$(CP) ../tools/ccifsg.F90 $(OBJ)/ccifsg.F90
+	cd $(OBJ); $(FORTRAN) -o ccifsg_$(PRECIS).o $(FFLAGS) ccifsg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ccifsg.o $(FFLAGSN) ccifsg.f90 )
-	cd $(OBJ); $(ARR) ccifsg.o; $(RM) ccifsg.f90 ccifsg.o
+                   $(FORTRAN) -o ccifsg_$(PRECIS).o $(FFLAGSN) ccifsg.F90 )
+	cd $(OBJ); $(ARR) ccifsg_$(PRECIS).o; \
+          $(RM) ccifsg.F90 ccifsg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdh.o: $(LC)(cdh.o)
+cdh.o: $(LC)(cdh_$(PRECIS).o)
 
-$(LC)(cdh.o): ../tools/cdh.f90
+$(LC)(cdh_$(PRECIS).o): ../tools/cdh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdh"
-	$(SED) -f $(SEDS) ../tools/cdh.f90 > $(OBJ)/cdh.f90
-	cd $(OBJ); $(FORTRAN) -o cdh.o $(FFLAGS) cdh.f90 \
+	$(CP) ../tools/cdh.F90 $(OBJ)/cdh.F90
+	cd $(OBJ); $(FORTRAN) -o cdh_$(PRECIS).o $(FFLAGS) cdh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdh.o $(FFLAGSN) cdh.f90 )
-	cd $(OBJ); $(ARR) cdh.o; $(RM) cdh.f90 cdh.o
+                   $(FORTRAN) -o cdh_$(PRECIS).o $(FFLAGSN) cdh.F90 )
+	cd $(OBJ); $(ARR) cdh_$(PRECIS).o; \
+          $(RM) cdh.F90 cdh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdhc.o: $(LC)(cdhc.o)
+cdhc.o: $(LC)(cdhc_$(PRECIS).o)
 
-$(LC)(cdhc.o): ../tools/cdhc.f90
+$(LC)(cdhc_$(PRECIS).o): ../tools/cdhc.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdhc"
-	$(SED) -f $(SEDS) ../tools/cdhc.f90 > $(OBJ)/cdhc.f90
-	cd $(OBJ); $(FORTRAN) -o cdhc.o $(FFLAGS) cdhc.f90 \
+	$(CP) ../tools/cdhc.F90 $(OBJ)/cdhc.F90
+	cd $(OBJ); $(FORTRAN) -o cdhc_$(PRECIS).o $(FFLAGS) cdhc.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdhc.o $(FFLAGSN) cdhc.f90 )
-	cd $(OBJ); $(ARR) cdhc.o; $(RM) cdhc.f90 cdhc.o
+                   $(FORTRAN) -o cdhc_$(PRECIS).o $(FFLAGSN) cdhc.F90 )
+	cd $(OBJ); $(ARR) cdhc_$(PRECIS).o; \
+          $(RM) cdhc.F90 cdhc_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ceh.o: $(LC)(ceh.o)
+ceh.o: $(LC)(ceh_$(PRECIS).o)
 
-$(LC)(ceh.o): ../tools/ceh.f90
+$(LC)(ceh_$(PRECIS).o): ../tools/ceh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ceh"
-	$(SED) -f $(SEDS) ../tools/ceh.f90 > $(OBJ)/ceh.f90
-	cd $(OBJ); $(FORTRAN) -o ceh.o $(FFLAGS) ceh.f90 \
+	$(CP) ../tools/ceh.F90 $(OBJ)/ceh.F90
+	cd $(OBJ); $(FORTRAN) -o ceh_$(PRECIS).o $(FFLAGS) ceh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ceh.o $(FFLAGSN) ceh.f90 )
-	cd $(OBJ); $(ARR) ceh.o; $(RM) ceh.f90 ceh.o
+                   $(FORTRAN) -o ceh_$(PRECIS).o $(FFLAGSN) ceh.F90 )
+	cd $(OBJ); $(ARR) ceh_$(PRECIS).o; \
+          $(RM) ceh.F90 ceh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cgrdh.o: $(LC)(cgrdh.o)
+cgrdh.o: $(LC)(cgrdh_$(PRECIS).o)
 
-$(LC)(cgrdh.o): ../tools/cgrdh.f90
+$(LC)(cgrdh_$(PRECIS).o): ../tools/cgrdh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cgrdh"
-	$(SED) -f $(SEDS) ../tools/cgrdh.f90 > $(OBJ)/cgrdh.f90
-	cd $(OBJ); $(FORTRAN) -o cgrdh.o $(FFLAGS) cgrdh.f90 \
+	$(CP) ../tools/cgrdh.F90 $(OBJ)/cgrdh.F90
+	cd $(OBJ); $(FORTRAN) -o cgrdh_$(PRECIS).o $(FFLAGS) cgrdh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cgrdh.o $(FFLAGSN) cgrdh.f90 )
-	cd $(OBJ); $(ARR) cgrdh.o; $(RM) cgrdh.f90 cgrdh.o
+                   $(FORTRAN) -o cgrdh_$(PRECIS).o $(FFLAGSN) cgrdh.F90 )
+	cd $(OBJ); $(ARR) cgrdh_$(PRECIS).o; \
+          $(RM) cgrdh.F90 cgrdh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cifn.o: $(LC)(cifn.o)
+cifn.o: $(LC)(cifn_$(PRECIS).o)
 
-$(LC)(cifn.o): ../tools/cifn.f90
+$(LC)(cifn_$(PRECIS).o): ../tools/cifn.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cifn"
-	$(SED) -f $(SEDS) ../tools/cifn.f90 > $(OBJ)/cifn.f90
-	cd $(OBJ); $(FORTRAN) -o cifn.o $(FFLAGS) cifn.f90 \
+	$(CP) ../tools/cifn.F90 $(OBJ)/cifn.F90
+	cd $(OBJ); $(FORTRAN) -o cifn_$(PRECIS).o $(FFLAGS) cifn.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cifn.o $(FFLAGSN) cifn.f90 )
-	cd $(OBJ); $(ARR) cifn.o; $(RM) cifn.f90 cifn.o
+                   $(FORTRAN) -o cifn_$(PRECIS).o $(FFLAGSN) cifn.F90 )
+	cd $(OBJ); $(ARR) cifn_$(PRECIS).o; \
+          $(RM) cifn.F90 cifn_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cigr.o: $(LC)(cigr.o)
+cigr.o: $(LC)(cigr_$(PRECIS).o)
 
-$(LC)(cigr.o): ../tools/cigr.f90
+$(LC)(cigr_$(PRECIS).o): ../tools/cigr.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cigr"
-	$(SED) -f $(SEDS) ../tools/cigr.f90 > $(OBJ)/cigr.f90
-	cd $(OBJ); $(FORTRAN) -o cigr.o $(FFLAGS) cigr.f90 \
+	$(CP) ../tools/cigr.F90 $(OBJ)/cigr.F90
+	cd $(OBJ); $(FORTRAN) -o cigr_$(PRECIS).o $(FFLAGS) cigr.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cigr.o $(FFLAGSN) cigr.f90 )
-	cd $(OBJ); $(ARR) cigr.o; $(RM) cigr.f90 cigr.o
+                   $(FORTRAN) -o cigr_$(PRECIS).o $(FFLAGSN) cigr.F90 )
+	cd $(OBJ); $(ARR) cigr_$(PRECIS).o; \
+          $(RM) cigr.F90 cigr_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cdimsg.o: $(LC)(cdimsg.o)
+cdimsg.o: $(LC)(cdimsg_$(PRECIS).o)
 
-$(LC)(cdimsg.o): ../tools/cdimsg.f90
+$(LC)(cdimsg_$(PRECIS).o): ../tools/cdimsg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cdimsg"
-	$(SED) -f $(SEDS) ../tools/cdimsg.f90 > $(OBJ)/cdimsg.f90
-	cd $(OBJ); $(FORTRAN) -o cdimsg.o $(FFLAGS) cdimsg.f90 \
+	$(CP) ../tools/cdimsg.F90 $(OBJ)/cdimsg.F90
+	cd $(OBJ); $(FORTRAN) -o cdimsg_$(PRECIS).o $(FFLAGS) cdimsg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cdimsg.o $(FFLAGSN) cdimsg.f90 )
-	cd $(OBJ); $(ARR) cdimsg.o; $(RM) cdimsg.f90 cdimsg.o
+                   $(FORTRAN) -o cdimsg_$(PRECIS).o $(FFLAGSN) cdimsg.F90 )
+	cd $(OBJ); $(ARR) cdimsg_$(PRECIS).o; \
+          $(RM) cdimsg.F90 cdimsg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cisgr.o: $(LC)(cisgr.o)
+cisgr.o: $(LC)(cisgr_$(PRECIS).o)
 
-$(LC)(cisgr.o): ../tools/cisgr.f90
+$(LC)(cisgr_$(PRECIS).o): ../tools/cisgr.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cisgr"
-	$(SED) -f $(SEDS) ../tools/cisgr.f90 > $(OBJ)/cisgr.f90
-	cd $(OBJ); $(FORTRAN) -o cisgr.o $(FFLAGS) cisgr.f90 \
+	$(CP) ../tools/cisgr.F90 $(OBJ)/cisgr.F90
+	cd $(OBJ); $(FORTRAN) -o cisgr_$(PRECIS).o $(FFLAGS) cisgr.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cisgr.o $(FFLAGSN) cisgr.f90 )
-	cd $(OBJ); $(ARR) cisgr.o; $(RM) cisgr.f90 cisgr.o
+                   $(FORTRAN) -o cisgr_$(PRECIS).o $(FFLAGSN) cisgr.F90 )
+	cd $(OBJ); $(ARR) cisgr_$(PRECIS).o; \
+          $(RM) cisgr.F90 cisgr_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cisgrp.o: $(LC)(cisgrp.o)
+cisgrp.o: $(LC)(cisgrp_$(PRECIS).o)
 
-$(LC)(cisgrp.o): ../tools/cisgrp.f90
+$(LC)(cisgrp_$(PRECIS).o): ../tools/cisgrp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cisgrp"
-	$(SED) -f $(SEDS) ../tools/cisgrp.f90 > $(OBJ)/cisgrp.f90
-	cd $(OBJ); $(FORTRAN) -o cisgrp.o $(FFLAGS) cisgrp.f90 \
+	$(CP) ../tools/cisgrp.F90 $(OBJ)/cisgrp.F90
+	cd $(OBJ); $(FORTRAN) -o cisgrp_$(PRECIS).o $(FFLAGS) cisgrp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cisgrp.o $(FFLAGSN) cisgrp.f90 )
-	cd $(OBJ); $(ARR) cisgrp.o; $(RM) cisgrp.f90 cisgrp.o
+                   $(FORTRAN) -o cisgrp_$(PRECIS).o $(FFLAGSN) cisgrp.F90 )
+	cd $(OBJ); $(ARR) cisgrp_$(PRECIS).o; \
+          $(RM) cisgrp.F90 cisgrp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cidh.o: $(LC)(cidh.o)
+cidh.o: $(LC)(cidh_$(PRECIS).o)
 
-$(LC)(cidh.o): ../tools/cidh.f90
+$(LC)(cidh_$(PRECIS).o): ../tools/cidh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cidh"
-	$(SED) -f $(SEDS) ../tools/cidh.f90 > $(OBJ)/cidh.f90
-	cd $(OBJ); $(FORTRAN) -o cidh.o $(FFLAGS) cidh.f90 \
+	$(CP) ../tools/cidh.F90 $(OBJ)/cidh.F90
+	cd $(OBJ); $(FORTRAN) -o cidh_$(PRECIS).o $(FFLAGS) cidh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cidh.o $(FFLAGSN) cidh.f90 )
-	cd $(OBJ); $(ARR) cidh.o; $(RM) cidh.f90 cidh.o
+                   $(FORTRAN) -o cidh_$(PRECIS).o $(FFLAGSN) cidh.F90 )
+	cd $(OBJ); $(ARR) cidh_$(PRECIS).o; \
+          $(RM) cidh.F90 cidh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csh.o: $(LC)(csh.o)
+csh.o: $(LC)(csh_$(PRECIS).o)
 
-$(LC)(csh.o): ../tools/csh.f90
+$(LC)(csh_$(PRECIS).o): ../tools/csh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csh"
-	$(SED) -f $(SEDS) ../tools/csh.f90 > $(OBJ)/csh.f90
-	cd $(OBJ); $(FORTRAN) -o csh.o $(FFLAGS) csh.f90 \
+	$(CP) ../tools/csh.F90 $(OBJ)/csh.F90
+	cd $(OBJ); $(FORTRAN) -o csh_$(PRECIS).o $(FFLAGS) csh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csh.o $(FFLAGSN) csh.f90 )
-	cd $(OBJ); $(ARR) csh.o; $(RM) csh.f90 csh.o
+                   $(FORTRAN) -o csh_$(PRECIS).o $(FFLAGSN) csh.F90 )
+	cd $(OBJ); $(ARR) csh_$(PRECIS).o; \
+          $(RM) csh.F90 csh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cshc.o: $(LC)(cshc.o)
+cshc.o: $(LC)(cshc_$(PRECIS).o)
 
-$(LC)(cshc.o): ../tools/cshc.f90
+$(LC)(cshc_$(PRECIS).o): ../tools/cshc.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cshc"
-	$(SED) -f $(SEDS) ../tools/cshc.f90 > $(OBJ)/cshc.f90
-	cd $(OBJ); $(FORTRAN) -o cshc.o $(FFLAGS) cshc.f90 \
+	$(CP) ../tools/cshc.F90 $(OBJ)/cshc.F90
+	cd $(OBJ); $(FORTRAN) -o cshc_$(PRECIS).o $(FFLAGS) cshc.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cshc.o $(FFLAGSN) cshc.f90 )
-	cd $(OBJ); $(ARR) cshc.o; $(RM) cshc.f90 cshc.o
+                   $(FORTRAN) -o cshc_$(PRECIS).o $(FFLAGSN) cshc.F90 )
+	cd $(OBJ); $(ARR) cshc_$(PRECIS).o; \
+          $(RM) cshc.F90 cshc_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cshj.o: $(LC)(cshj.o)
+cshj.o: $(LC)(cshj_$(PRECIS).o)
 
-$(LC)(cshj.o): ../tools/cshj.f90
+$(LC)(cshj_$(PRECIS).o): ../tools/cshj.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cshj"
-	$(SED) -f $(SEDS) ../tools/cshj.f90 > $(OBJ)/cshj.f90
-	cd $(OBJ); $(FORTRAN) -o cshj.o $(FFLAGS) cshj.f90 \
+	$(CP) ../tools/cshj.F90 $(OBJ)/cshj.F90
+	cd $(OBJ); $(FORTRAN) -o cshj_$(PRECIS).o $(FFLAGS) cshj.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cshj.o $(FFLAGSN) cshj.f90 )
-	cd $(OBJ); $(ARR) cshj.o; $(RM) cshj.f90 cshj.o
+                   $(FORTRAN) -o cshj_$(PRECIS).o $(FFLAGSN) cshj.F90 )
+	cd $(OBJ); $(ARR) cshj_$(PRECIS).o; \
+          $(RM) cshj.F90 cshj_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cshp.o: $(LC)(cshp.o)
+cshp.o: $(LC)(cshp_$(PRECIS).o)
 
-$(LC)(cshp.o): ../tools/cshp.f90
+$(LC)(cshp_$(PRECIS).o): ../tools/cshp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cshp"
-	$(SED) -f $(SEDS) ../tools/cshp.f90 > $(OBJ)/cshp.f90
-	cd $(OBJ); $(FORTRAN) -o cshp.o $(FFLAGS) cshp.f90 \
+	$(CP) ../tools/cshp.F90 $(OBJ)/cshp.F90
+	cd $(OBJ); $(FORTRAN) -o cshp_$(PRECIS).o $(FFLAGS) cshp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cshp.o $(FFLAGSN) cshp.f90 )
-	cd $(OBJ); $(ARR) cshp.o; $(RM) cshp.f90 cshp.o
+                   $(FORTRAN) -o cshp_$(PRECIS).o $(FFLAGSN) cshp.F90 )
+	cd $(OBJ); $(ARR) cshp_$(PRECIS).o; \
+          $(RM) cshp.F90 cshp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cish.o: $(LC)(cish.o)
+cish.o: $(LC)(cish_$(PRECIS).o)
 
-$(LC)(cish.o): ../tools/cish.f90
+$(LC)(cish_$(PRECIS).o): ../tools/cish.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cish"
-	$(SED) -f $(SEDS) ../tools/cish.f90 > $(OBJ)/cish.f90
-	cd $(OBJ); $(FORTRAN) -o cish.o $(FFLAGS) cish.f90 \
+	$(CP) ../tools/cish.F90 $(OBJ)/cish.F90
+	cd $(OBJ); $(FORTRAN) -o cish_$(PRECIS).o $(FFLAGS) cish.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cish.o $(FFLAGSN) cish.f90 )
-	cd $(OBJ); $(ARR) cish.o; $(RM) cish.f90 cish.o
+                   $(FORTRAN) -o cish_$(PRECIS).o $(FFLAGSN) cish.F90 )
+	cd $(OBJ); $(ARR) cish_$(PRECIS).o; \
+          $(RM) cish.F90 cish_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cjprod.o: $(LC)(cjprod.o)
+cjprod.o: $(LC)(cjprod_$(PRECIS).o)
 
-$(LC)(cjprod.o): ../tools/cjprod.f90
+$(LC)(cjprod_$(PRECIS).o): ../tools/cjprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cjprod"
-	$(SED) -f $(SEDS) ../tools/cjprod.f90 > $(OBJ)/cjprod.f90
-	cd $(OBJ); $(FORTRAN) -o cjprod.o $(FFLAGS) cjprod.f90 \
+	$(CP) ../tools/cjprod.F90 $(OBJ)/cjprod.F90
+	cd $(OBJ); $(FORTRAN) -o cjprod_$(PRECIS).o $(FFLAGS) cjprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cjprod.o $(FFLAGSN) cjprod.f90 )
-	cd $(OBJ); $(ARR) cjprod.o; $(RM) cjprod.f90 cjprod.o
+                   $(FORTRAN) -o cjprod_$(PRECIS).o $(FFLAGSN) cjprod.F90 )
+	cd $(OBJ); $(ARR) cjprod_$(PRECIS).o; \
+          $(RM) cjprod.F90 cjprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csjprod.o: $(LC)(csjprod.o)
+csjprod.o: $(LC)(csjprod_$(PRECIS).o)
 
-$(LC)(csjprod.o): ../tools/csjprod.f90
+$(LC)(csjprod_$(PRECIS).o): ../tools/csjprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csjprod"
-	$(SED) -f $(SEDS) ../tools/csjprod.f90 > $(OBJ)/csjprod.f90
-	cd $(OBJ); $(FORTRAN) -o csjprod.o $(FFLAGS) csjprod.f90 \
+	$(CP) ../tools/csjprod.F90 $(OBJ)/csjprod.F90
+	cd $(OBJ); $(FORTRAN) -o csjprod_$(PRECIS).o $(FFLAGS) csjprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csjprod.o $(FFLAGSN) csjprod.f90 )
-	cd $(OBJ); $(ARR) csjprod.o; $(RM) csjprod.f90 csjprod.o
+                   $(FORTRAN) -o csjprod_$(PRECIS).o $(FFLAGSN) csjprod.F90 )
+	cd $(OBJ); $(ARR) csjprod_$(PRECIS).o; \
+          $(RM) csjprod.F90 csjprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csgr.o: $(LC)(csgr.o)
+csgr.o: $(LC)(csgr_$(PRECIS).o)
 
-$(LC)(csgr.o): ../tools/csgr.f90
+$(LC)(csgr_$(PRECIS).o): ../tools/csgr.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csgr"
-	$(SED) -f $(SEDS) ../tools/csgr.f90 > $(OBJ)/csgr.f90
-	cd $(OBJ); $(FORTRAN) -o csgr.o $(FFLAGS) csgr.f90 \
+	$(CP) ../tools/csgr.F90 $(OBJ)/csgr.F90
+	cd $(OBJ); $(FORTRAN) -o csgr_$(PRECIS).o $(FFLAGS) csgr.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csgr.o $(FFLAGSN) csgr.f90 )
-	cd $(OBJ); $(ARR) csgr.o; $(RM) csgr.f90 csgr.o
+                   $(FORTRAN) -o csgr_$(PRECIS).o $(FFLAGSN) csgr.F90 )
+	cd $(OBJ); $(ARR) csgr_$(PRECIS).o; \
+          $(RM) csgr.F90 csgr_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csjp.o: $(LC)(csjp.o)
+csjp.o: $(LC)(csjp_$(PRECIS).o)
 
-$(LC)(csjp.o): ../tools/csjp.f90
+$(LC)(csjp_$(PRECIS).o): ../tools/csjp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csjp"
-	$(SED) -f $(SEDS) ../tools/csjp.f90 > $(OBJ)/csjp.f90
-	cd $(OBJ); $(FORTRAN) -o csjp.o $(FFLAGS) csjp.f90 \
+	$(CP) ../tools/csjp.F90 $(OBJ)/csjp.F90
+	cd $(OBJ); $(FORTRAN) -o csjp_$(PRECIS).o $(FFLAGS) csjp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csjp.o $(FFLAGSN) csjp.f90 )
-	cd $(OBJ); $(ARR) csjp.o; $(RM) csjp.f90 csjp.o
+                   $(FORTRAN) -o csjp_$(PRECIS).o $(FFLAGSN) csjp.F90 )
+	cd $(OBJ); $(ARR) csjp_$(PRECIS).o; \
+          $(RM) csjp.F90 csjp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csgrp.o: $(LC)(csgrp.o)
+csgrp.o: $(LC)(csgrp_$(PRECIS).o)
 
-$(LC)(csgrp.o): ../tools/csgrp.f90
+$(LC)(csgrp_$(PRECIS).o): ../tools/csgrp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csgrp"
-	$(SED) -f $(SEDS) ../tools/csgrp.f90 > $(OBJ)/csgrp.f90
-	cd $(OBJ); $(FORTRAN) -o csgrp.o $(FFLAGS) csgrp.f90 \
+	$(CP) ../tools/csgrp.F90 $(OBJ)/csgrp.F90
+	cd $(OBJ); $(FORTRAN) -o csgrp_$(PRECIS).o $(FFLAGS) csgrp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csgrp.o $(FFLAGSN) csgrp.f90 )
-	cd $(OBJ); $(ARR) csgrp.o; $(RM) csgrp.f90 csgrp.o
+                   $(FORTRAN) -o csgrp_$(PRECIS).o $(FFLAGSN) csgrp.F90 )
+	cd $(OBJ); $(ARR) csgrp_$(PRECIS).o; \
+          $(RM) csgrp.F90 csgrp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csgreh.o: $(LC)(csgreh.o)
+csgreh.o: $(LC)(csgreh_$(PRECIS).o)
 
-$(LC)(csgreh.o): ../tools/csgreh.f90
+$(LC)(csgreh_$(PRECIS).o): ../tools/csgreh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csgreh"
-	$(SED) -f $(SEDS) ../tools/csgreh.f90 > $(OBJ)/csgreh.f90
-	cd $(OBJ); $(FORTRAN) -o csgreh.o $(FFLAGS) csgreh.f90 \
+	$(CP) ../tools/csgreh.F90 $(OBJ)/csgreh.F90
+	cd $(OBJ); $(FORTRAN) -o csgreh_$(PRECIS).o $(FFLAGS) csgreh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csgreh.o $(FFLAGSN) csgreh.f90 )
-	cd $(OBJ); $(ARR) csgreh.o; $(RM) csgreh.f90 csgreh.o
+                   $(FORTRAN) -o csgreh_$(PRECIS).o $(FFLAGSN) csgreh.F90 )
+	cd $(OBJ); $(ARR) csgreh_$(PRECIS).o; \
+          $(RM) csgreh.F90 csgreh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csgrsh.o: $(LC)(csgrsh.o)
+csgrsh.o: $(LC)(csgrsh_$(PRECIS).o)
 
-$(LC)(csgrsh.o): ../tools/csgrsh.f90
+$(LC)(csgrsh_$(PRECIS).o): ../tools/csgrsh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csgrsh"
-	$(SED) -f $(SEDS) ../tools/csgrsh.f90 > $(OBJ)/csgrsh.f90
-	cd $(OBJ); $(FORTRAN) -o csgrsh.o $(FFLAGS) csgrsh.f90 \
+	$(CP) ../tools/csgrsh.F90 $(OBJ)/csgrsh.F90
+	cd $(OBJ); $(FORTRAN) -o csgrsh_$(PRECIS).o $(FFLAGS) csgrsh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csgrsh.o $(FFLAGSN) csgrsh.f90 )
-	cd $(OBJ); $(ARR) csgrsh.o; $(RM) csgrsh.f90 csgrsh.o
+                   $(FORTRAN) -o csgrsh_$(PRECIS).o $(FFLAGSN) csgrsh.F90 )
+	cd $(OBJ); $(ARR) csgrsh_$(PRECIS).o; \
+          $(RM) csgrsh.F90 csgrsh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-csgrshp.o: $(LC)(csgrshp.o)
+csgrshp.o: $(LC)(csgrshp_$(PRECIS).o)
 
-$(LC)(csgrshp.o): ../tools/csgrshp.f90
+$(LC)(csgrshp_$(PRECIS).o): ../tools/csgrshp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "csgrshp"
-	$(SED) -f $(SEDS) ../tools/csgrshp.f90 > \
-          $(OBJ)/csgrshp.f90
-	cd $(OBJ); $(FORTRAN) -o csgrshp.o $(FFLAGS) \
-                  csgrshp.f90 \
+	$(CP) ../tools/csgrshp.F90 \
+          $(OBJ)/csgrshp.F90
+	cd $(OBJ); $(FORTRAN) -o csgrshp_$(PRECIS).o $(FFLAGS) \
+                  csgrshp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o csgrshp.o $(FFLAGSN) \
-                  csgrshp.f90 )
-	cd $(OBJ); $(ARR) csgrshp.o; \
-          $(RM) csgrshp.f90 csgrshp.o
+                   $(FORTRAN) -o csgrshp_$(PRECIS).o $(FFLAGSN) \
+                  csgrshp.F90 )
+	cd $(OBJ); $(ARR) csgrshp_$(PRECIS).o; \
+          $(RM) csgrshp.F90 csgrshp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-chprod.o: $(LC)(chprod.o)
+chprod.o: $(LC)(chprod_$(PRECIS).o)
 
-$(LC)(chprod.o): ../tools/chprod.f90
+$(LC)(chprod_$(PRECIS).o): ../tools/chprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "chprod"
-	$(SED) -f $(SEDS) ../tools/chprod.f90 > $(OBJ)/chprod.f90
-	cd $(OBJ); $(FORTRAN) -o chprod.o $(FFLAGS) chprod.f90 \
+	$(CP) ../tools/chprod.F90 $(OBJ)/chprod.F90
+	cd $(OBJ); $(FORTRAN) -o chprod_$(PRECIS).o $(FFLAGS) chprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o chprod.o $(FFLAGSN) chprod.f90 )
-	cd $(OBJ); $(ARR) chprod.o; $(RM) chprod.f90 chprod.o
+                   $(FORTRAN) -o chprod_$(PRECIS).o $(FFLAGSN) chprod.F90 )
+	cd $(OBJ); $(ARR) chprod_$(PRECIS).o; \
+          $(RM) chprod.F90 chprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-chjprod.o: $(LC)(chjprod.o)
+chjprod.o: $(LC)(chjprod_$(PRECIS).o)
 
-$(LC)(chjprod.o): ../tools/chjprod.f90
+$(LC)(chjprod_$(PRECIS).o): ../tools/chjprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "chjprod"
-	$(SED) -f $(SEDS) ../tools/chjprod.f90 > $(OBJ)/chjprod.f90
-	cd $(OBJ); $(FORTRAN) -o chjprod.o $(FFLAGS) chjprod.f90 \
+	$(CP) ../tools/chjprod.F90 $(OBJ)/chjprod.F90
+	cd $(OBJ); $(FORTRAN) -o chjprod_$(PRECIS).o $(FFLAGS) chjprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o chjprod.o $(FFLAGSN) chjprod.f90 )
-	cd $(OBJ); $(ARR) chjprod.o; $(RM) chjprod.f90 chjprod.o
+                   $(FORTRAN) -o chjprod_$(PRECIS).o $(FFLAGSN) chjprod.F90 )
+	cd $(OBJ); $(ARR) chjprod_$(PRECIS).o; \
+          $(RM) chjprod.F90 chjprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-chcprod.o: $(LC)(chcprod.o)
+chcprod.o: $(LC)(chcprod_$(PRECIS).o)
 
-$(LC)(chcprod.o): ../tools/chcprod.f90
+$(LC)(chcprod_$(PRECIS).o): ../tools/chcprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "chcprod"
-	$(SED) -f $(SEDS) ../tools/chcprod.f90 > $(OBJ)/chcprod.f90
-	cd $(OBJ); $(FORTRAN) -o chcprod.o $(FFLAGS) chcprod.f90 \
+	$(CP) ../tools/chcprod.F90 $(OBJ)/chcprod.F90
+	cd $(OBJ); $(FORTRAN) -o chcprod_$(PRECIS).o $(FFLAGS) chcprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o chcprod.o $(FFLAGSN) chcprod.f90 )
-	cd $(OBJ); $(ARR) chcprod.o; $(RM) chcprod.f90 chcprod.o
+                   $(FORTRAN) -o chcprod_$(PRECIS).o $(FFLAGSN) chcprod.F90 )
+	cd $(OBJ); $(ARR) chcprod_$(PRECIS).o; \
+          $(RM) chcprod.F90 chcprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cshprod.o: $(LC)(cshprod.o)
+cshprod.o: $(LC)(cshprod_$(PRECIS).o)
 
-$(LC)(cshprod.o): ../tools/cshprod.f90
+$(LC)(cshprod_$(PRECIS).o): ../tools/cshprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cshprod"
-	$(SED) -f $(SEDS) ../tools/cshprod.f90 > $(OBJ)/cshprod.f90
-	cd $(OBJ); $(FORTRAN) -o cshprod.o $(FFLAGS) cshprod.f90 \
+	$(CP) ../tools/cshprod.F90 $(OBJ)/cshprod.F90
+	cd $(OBJ); $(FORTRAN) -o cshprod_$(PRECIS).o $(FFLAGS) cshprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cshprod.o $(FFLAGSN) cshprod.f90 )
-	cd $(OBJ); $(ARR) cshprod.o; $(RM) cshprod.f90 cshprod.o
+                   $(FORTRAN) -o cshprod_$(PRECIS).o $(FFLAGSN) cshprod.F90 )
+	cd $(OBJ); $(ARR) cshprod_$(PRECIS).o; \
+          $(RM) cshprod.F90 cshprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cshcprod.o: $(LC)(cshcprod.o)
+cshcprod.o: $(LC)(cshcprod_$(PRECIS).o)
 
-$(LC)(cshcprod.o): ../tools/cshcprod.f90
+$(LC)(cshcprod_$(PRECIS).o): ../tools/cshcprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cshcprod"
-	$(SED) -f $(SEDS) ../tools/cshcprod.f90 > $(OBJ)/cshcprod.f90
-	cd $(OBJ); $(FORTRAN) -o cshcprod.o $(FFLAGS) cshcprod.f90 \
+	$(CP) ../tools/cshcprod.F90 $(OBJ)/cshcprod.F90
+	cd $(OBJ); $(FORTRAN) -o cshcprod_$(PRECIS).o $(FFLAGS) cshcprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cshcprod.o $(FFLAGSN) cshcprod.f90 )
-	cd $(OBJ); $(ARR) cshcprod.o; $(RM) cshcprod.f90 cshcprod.o
+                   $(FORTRAN) -o cshcprod_$(PRECIS).o $(FFLAGSN) cshcprod.F90 )
+	cd $(OBJ); $(ARR) cshcprod_$(PRECIS).o; \
+          $(RM) cshcprod.F90 cshcprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cohprodsp.o: $(LC)(cohprodsp.o)
+cohprodsp.o: $(LC)(cohprodsp_$(PRECIS).o)
 
-$(LC)(cohprodsp.o): ../tools/cohprodsp.f90
+$(LC)(cohprodsp_$(PRECIS).o): ../tools/cohprodsp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cohprodsp"
-	$(SED) -f $(SEDS) ../tools/cohprodsp.f90 > \
-          $(OBJ)/cohprodsp.f90
-	cd $(OBJ); $(FORTRAN) -o cohprodsp.o $(FFLAGS) cohprodsp.f90 \
+	$(CP) ../tools/cohprodsp.F90 \
+          $(OBJ)/cohprodsp.F90
+	cd $(OBJ); $(FORTRAN) -o cohprodsp_$(PRECIS).o $(FFLAGS) cohprodsp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cohprodsp.o $(FFLAGSN) \
-                     cohprodsp.f90 )
-	cd $(OBJ); $(ARR) cohprodsp.o; $(RM) cohprodsp.f90 cohprodsp.o
+                   $(FORTRAN) -o cohprodsp_$(PRECIS).o $(FFLAGSN) \
+                     cohprodsp.F90 )
+	cd $(OBJ); $(ARR) cohprodsp_$(PRECIS).o; \
+          $(RM) cohprodsp.F90 cohprodsp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cohprods.o: $(LC)(cohprods.o)
+cohprods.o: $(LC)(cohprods_$(PRECIS).o)
 
-$(LC)(cohprods.o): ../tools/cohprods.f90
+$(LC)(cohprods_$(PRECIS).o): ../tools/cohprods.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cohprods"
-	$(SED) -f $(SEDS) ../tools/cohprods.f90 > $(OBJ)/cohprods.f90
-	cd $(OBJ); $(FORTRAN) -o cohprods.o $(FFLAGS) cohprods.f90 \
+	$(CP) ../tools/cohprods.F90 $(OBJ)/cohprods.F90
+	cd $(OBJ); $(FORTRAN) -o cohprods_$(PRECIS).o $(FFLAGS) cohprods.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cohprods.o $(FFLAGSN) cohprods.f90 )
-	cd $(OBJ); $(ARR) cohprods.o; $(RM) cohprods.f90 cohprods.o
+                   $(FORTRAN) -o cohprods_$(PRECIS).o $(FFLAGSN) cohprods.F90 )
+	cd $(OBJ); $(ARR) cohprods_$(PRECIS).o; \
+          $(RM) cohprods.F90 cohprods_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cchprodsp.o: $(LC)(cchprodsp.o)
+cchprodsp.o: $(LC)(cchprodsp_$(PRECIS).o)
 
-$(LC)(cchprodsp.o): ../tools/cchprodsp.f90
+$(LC)(cchprodsp_$(PRECIS).o): ../tools/cchprodsp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cchprodsp"
-	$(SED) -f $(SEDS) ../tools/cchprodsp.f90 > \
-          $(OBJ)/cchprodsp.f90
-	cd $(OBJ); $(FORTRAN) -o cchprodsp.o $(FFLAGS) cchprodsp.f90 \
+	$(CP) ../tools/cchprodsp.F90 \
+          $(OBJ)/cchprodsp.F90
+	cd $(OBJ); $(FORTRAN) -o cchprodsp_$(PRECIS).o $(FFLAGS) cchprodsp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cchprodsp.o $(FFLAGSN) \
-                     cchprodsp.f90 )
-	cd $(OBJ); $(ARR) cchprodsp.o; $(RM) cchprodsp.f90 cchprodsp.o
+                   $(FORTRAN) -o cchprodsp_$(PRECIS).o $(FFLAGSN) \
+                     cchprodsp.F90 )
+	cd $(OBJ); $(ARR) cchprodsp_$(PRECIS).o; \
+          $(RM) cchprodsp.F90 cchprodsp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cchprods.o: $(LC)(cchprods.o)
+cchprods.o: $(LC)(cchprods_$(PRECIS).o)
 
-$(LC)(cchprods.o): ../tools/cchprods.f90
+$(LC)(cchprods_$(PRECIS).o): ../tools/cchprods.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cchprods"
-	$(SED) -f $(SEDS) ../tools/cchprods.f90 > $(OBJ)/cchprods.f90
-	cd $(OBJ); $(FORTRAN) -o cchprods.o $(FFLAGS) cchprods.f90 \
+	$(CP) ../tools/cchprods.F90 $(OBJ)/cchprods.F90
+	cd $(OBJ); $(FORTRAN) -o cchprods_$(PRECIS).o $(FFLAGS) cchprods.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cchprods.o $(FFLAGSN) cchprods.f90 )
-	cd $(OBJ); $(ARR) cchprods.o; $(RM) cchprods.f90 cchprods.o
+                   $(FORTRAN) -o cchprods_$(PRECIS).o $(FFLAGSN) cchprods.F90 )
+	cd $(OBJ); $(ARR) cchprods_$(PRECIS).o; \
+          $(RM) cchprods.F90 cchprods_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cconst.o: $(LC)(cconst.o)
+cconst.o: $(LC)(cconst_$(PRECIS).o)
 
-$(LC)(cconst.o): ../tools/cconst.f90
+$(LC)(cconst_$(PRECIS).o): ../tools/cconst.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cconst"
-	$(SED) -f $(SEDS) ../tools/cconst.f90 > $(OBJ)/cconst.f90
-	cd $(OBJ); $(FORTRAN) -o cconst.o $(FFLAGS) cconst.f90 \
+	$(CP) ../tools/cconst.F90 $(OBJ)/cconst.F90
+	cd $(OBJ); $(FORTRAN) -o cconst_$(PRECIS).o $(FFLAGS) cconst.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cconst.o $(FFLAGSN) cconst.f90 )
-	cd $(OBJ); $(ARR) cconst.o; $(RM) cconst.f90 cconst.o
+                   $(FORTRAN) -o cconst_$(PRECIS).o $(FFLAGSN) cconst.F90 )
+	cd $(OBJ); $(ARR) cconst_$(PRECIS).o; \
+          $(RM) cconst.F90 cconst_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-creport.o: $(LC)(creport.o)
+creport.o: $(LC)(creport_$(PRECIS).o)
 
-$(LC)(creport.o): ../tools/creport.f90
+$(LC)(creport_$(PRECIS).o): ../tools/creport.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "creport"
-	$(SED) -f $(SEDS) ../tools/creport.f90 > $(OBJ)/creport.f90
-	cd $(OBJ); $(FORTRAN) -o creport.o $(FFLAGS) creport.f90 \
+	$(CP) ../tools/creport.F90 $(OBJ)/creport.F90
+	cd $(OBJ); $(FORTRAN) -o creport_$(PRECIS).o $(FFLAGS) creport.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o creport.o $(FFLAGSN) creport.f90 )
-	cd $(OBJ); $(ARR) creport.o; $(RM) creport.f90 creport.o
+                   $(FORTRAN) -o creport_$(PRECIS).o $(FFLAGSN) creport.F90 )
+	cd $(OBJ); $(ARR) creport_$(PRECIS).o; \
+          $(RM) creport.F90 creport_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cterminate.o: $(LC)(cterminate.o)
+cterminate_$(PRECIS).o: $(LC)(cterminate.o)
 
-$(LC)(cterminate.o): ../tools/cterminate.f90
+$(LC)(cterminate_$(PRECIS).o): ../tools/cterminate.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cterminate"
-	$(SED) -f $(SEDS) ../tools/cterminate.f90 > $(OBJ)/cterminate.f90
-	cd $(OBJ); $(FORTRAN) -o cterminate.o $(FFLAGS) cterminate.f90 \
+	$(CP) ../tools/cterminate.F90 $(OBJ)/cterminate.F90
+	cd $(OBJ); $(FORTRAN) -o cterminate_$(PRECIS).o $(FFLAGS) \
+                   cterminate.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o cterminate.o $(FFLAGSN) cterminate.f90 )
-	cd $(OBJ); $(ARR) cterminate.o; $(RM) cterminate.f90 cterminate.o
+                   $(FORTRAN) -o cterminate_$(PRECIS).o $(FFLAGSN) \
+                   cterminate.F90 )
+	cd $(OBJ); $(ARR) cterminate_$(PRECIS).o; \
+          $(RM) cterminate.F90 cterminate_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-lqp.o: $(LC)(lqp.o)
+lqp_$(PRECIS).o: $(LC)(lqp.o)
 
-$(LC)(lqp.o): ../tools/lqp.f90
+$(LC)(lqp_$(PRECIS).o): ../tools/lqp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "lqp"
-	$(SED) -f $(SEDS) ../tools/lqp.f90 > $(OBJ)/lqp.f90
-	cd $(OBJ); $(FORTRAN) -o lqp.o $(FFLAGS) lqp.f90 \
+	$(CP) ../tools/lqp.F90 $(OBJ)/lqp.F90
+	cd $(OBJ); $(FORTRAN) -o lqp_$(PRECIS).o $(FFLAGS) lqp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o lqp.o $(FFLAGSN) lqp.f90 )
-	cd $(OBJ); $(ARR) lqp.o; $(RM) lqp.f90 lqp.o
+                   $(FORTRAN) -o lqp_$(PRECIS).o $(FFLAGSN) lqp.F90 )
+	cd $(OBJ); $(ARR) lqp_$(PRECIS).o; \
+          $(RM) lqp.F90 lqp_$(PRECIS).o
 	$(MVMODS)
 	@printf '[ OK ]\n'
 
-timings.o: $(LC)(timings.o)
+timings.o: $(LC)(timings_$(PRECIS).o)
 
-$(LC)(timings.o): ../tools/timings.f90
+$(LC)(timings_$(PRECIS).o): ../tools/timings.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "timings"
-	$(SED) -f $(SEDS) ../tools/timings.f90 > $(OBJ)/timings.f90
-	cd $(OBJ); $(FORTRAN) -o timings.o $(FFLAGS) timings.f90 \
+	$(CP) ../tools/timings.F90 $(OBJ)/timings.F90
+	cd $(OBJ); $(FORTRAN) -o timings_$(PRECIS).o $(FFLAGS) timings.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o timings.o $(FFLAGSN) timings.f90 )
-	cd $(OBJ); $(ARR) timings.o; $(RM) timings.f90 timings.o
+                   $(FORTRAN) -o timings_$(PRECIS).o $(FFLAGSN) timings.F90 )
+	cd $(OBJ); $(ARR) timings_$(PRECIS).o; \
+          $(RM) timings.F90 timings_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-set_monitor.o: $(LC)(set_monitor.o)
+set_monitor.o: $(LC)(set_monitor_$(PRECIS).o)
 
-$(LC)(set_monitor.o): ../tools/set_monitor.f90
+$(LC)(set_monitor_$(PRECIS).o): ../tools/set_monitor.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "set_monitor"
-	$(SED) -f $(SEDS) ../tools/set_monitor.f90 > $(OBJ)/set_monitor.f90
-	cd $(OBJ); $(FORTRAN) -o set_monitor.o $(FFLAGS) set_monitor.f90 \
+	$(CP) ../tools/set_monitor.F90 $(OBJ)/set_monitor.F90
+	cd $(OBJ); $(FORTRAN) -o set_monitor_$(PRECIS).o $(FFLAGS) \
+                   set_monitor.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o set_monitor.o $(FFLAGSN) set_monitor.f90 )
-	cd $(OBJ); $(ARR) set_monitor.o; $(RM) set_monitor.f90 set_monitor.o
+                   $(FORTRAN) -o set_monitor_$(PRECIS).o $(FFLAGSN) \
+                   set_monitor.F90 )
+	cd $(OBJ); $(ARR) set_monitor_$(PRECIS).o; \
+          $(RM) set_monitor.F90 set_monitor_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-usetup.o: $(LC)(usetup.o)
+usetup.o: $(LC)(usetup_$(PRECIS).o)
 
-$(LC)(usetup.o): ../tools/usetup.f90
+$(LC)(usetup_$(PRECIS).o): ../tools/usetup.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "usetup"
-	$(SED) -f $(SEDS) ../tools/usetup.f90 > $(OBJ)/usetup.f90
-	cd $(OBJ); $(FORTRAN) -o usetup.o $(FFLAGS) usetup.f90 \
+	$(CP) ../tools/usetup.F90 $(OBJ)/usetup.F90
+	cd $(OBJ); $(FORTRAN) -o usetup_$(PRECIS).o $(FFLAGS) usetup.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o usetup.o $(FFLAGSN) usetup.f90 )
-	cd $(OBJ); $(ARR) usetup.o; $(RM) usetup.f90 usetup.o
+                   $(FORTRAN) -o usetup_$(PRECIS).o $(FFLAGSN) usetup.F90 )
+	cd $(OBJ); $(ARR) usetup_$(PRECIS).o; \
+          $(RM) usetup.F90 usetup_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-udimen.o: $(LC)(udimen.o)
+udimen.o: $(LC)(udimen_$(PRECIS).o)
 
-$(LC)(udimen.o): ../tools/udimen.f90
+$(LC)(udimen_$(PRECIS).o): ../tools/udimen.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "udimen"
-	$(SED) -f $(SEDS) ../tools/udimen.f90 > $(OBJ)/udimen.f90
-	cd $(OBJ); $(FORTRAN) -o udimen.o $(FFLAGS) udimen.f90 \
+	$(CP) ../tools/udimen.F90 $(OBJ)/udimen.F90
+	cd $(OBJ); $(FORTRAN) -o udimen_$(PRECIS).o $(FFLAGS) udimen.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o udimen.o $(FFLAGSN) udimen.f90 )
-	cd $(OBJ); $(ARR) udimen.o; $(RM) udimen.f90 udimen.o
+                   $(FORTRAN) -o udimen_$(PRECIS).o $(FFLAGSN) udimen.F90 )
+	cd $(OBJ); $(ARR) udimen_$(PRECIS).o; \
+          $(RM) udimen.F90 udimen_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-udimse.o: $(LC)(udimse.o)
+udimse.o: $(LC)(udimse_$(PRECIS).o)
 
-$(LC)(udimse.o): ../tools/udimse.f90
+$(LC)(udimse_$(PRECIS).o): ../tools/udimse.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "udimse"
-	$(SED) -f $(SEDS) ../tools/udimse.f90 > $(OBJ)/udimse.f90
-	cd $(OBJ); $(FORTRAN) -o udimse.o $(FFLAGS) udimse.f90 \
+	$(CP) ../tools/udimse.F90 $(OBJ)/udimse.F90
+	cd $(OBJ); $(FORTRAN) -o udimse_$(PRECIS).o $(FFLAGS) udimse.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o udimse.o $(FFLAGSN) udimse.f90 )
-	cd $(OBJ); $(ARR) udimse.o; $(RM) udimse.f90 udimse.o
+                   $(FORTRAN) -o udimse_$(PRECIS).o $(FFLAGSN) udimse.F90 )
+	cd $(OBJ); $(ARR) udimse_$(PRECIS).o; \
+          $(RM) udimse.F90 udimse_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-udimsh.o: $(LC)(udimsh.o)
+udimsh.o: $(LC)(udimsh_$(PRECIS).o)
 
-$(LC)(udimsh.o): ../tools/udimsh.f90
+$(LC)(udimsh_$(PRECIS).o): ../tools/udimsh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "udimsh"
-	$(SED) -f $(SEDS) ../tools/udimsh.f90 > $(OBJ)/udimsh.f90
-	cd $(OBJ); $(FORTRAN) -o udimsh.o $(FFLAGS) udimsh.f90 \
+	$(CP) ../tools/udimsh.F90 $(OBJ)/udimsh.F90
+	cd $(OBJ); $(FORTRAN) -o udimsh_$(PRECIS).o $(FFLAGS) udimsh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o udimsh.o $(FFLAGSN) udimsh.f90 )
-	cd $(OBJ); $(ARR) udimsh.o; $(RM) udimsh.f90 udimsh.o
+                   $(FORTRAN) -o udimsh_$(PRECIS).o $(FFLAGSN) udimsh.F90 )
+	cd $(OBJ); $(ARR) udimsh_$(PRECIS).o; \
+          $(RM) udimsh.F90 udimsh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-unames.o: $(LC)(unames.o)
+unames.o: $(LC)(unames_$(PRECIS).o)
 
-$(LC)(unames.o): ../tools/unames.f90
+$(LC)(unames_$(PRECIS).o): ../tools/unames.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "unames"
-	$(SED) -f $(SEDS) ../tools/unames.f90 > $(OBJ)/unames.f90
-	cd $(OBJ); $(FORTRAN) -o unames.o $(FFLAGS) unames.f90 \
+	$(CP) ../tools/unames.F90 $(OBJ)/unames.F90
+	cd $(OBJ); $(FORTRAN) -o unames_$(PRECIS).o $(FFLAGS) unames.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o unames.o $(FFLAGSN) unames.f90 )
-	cd $(OBJ); $(ARR) unames.o; $(RM) unames.f90 unames.o
+                   $(FORTRAN) -o unames_$(PRECIS).o $(FFLAGSN) unames.F90 )
+	cd $(OBJ); $(ARR) unames_$(PRECIS).o; \
+          $(RM) unames.F90 unames_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-uvartype.o: $(LC)(uvartype.o)
+uvartype.o: $(LC)(uvartype_$(PRECIS).o)
 
-$(LC)(uvartype.o): ../tools/uvartype.f90
+$(LC)(uvartype_$(PRECIS).o): ../tools/uvartype.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "uvartype"
-	$(SED) -f $(SEDS) ../tools/uvartype.f90 > $(OBJ)/uvartype.f90
-	cd $(OBJ); $(FORTRAN) -o uvartype.o $(FFLAGS) uvartype.f90 \
+	$(CP) ../tools/uvartype.F90 $(OBJ)/uvartype.F90
+	cd $(OBJ); $(FORTRAN) -o uvartype_$(PRECIS).o $(FFLAGS) uvartype.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o uvartype.o $(FFLAGSN) uvartype.f90 )
-	cd $(OBJ); $(ARR) uvartype.o; $(RM) uvartype.f90 uvartype.o
+                   $(FORTRAN) -o uvartype_$(PRECIS).o $(FFLAGSN) uvartype.F90 )
+	cd $(OBJ); $(ARR) uvartype_$(PRECIS).o; \
+          $(RM) uvartype.F90 uvartype_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ufn.o: $(LC)(ufn.o)
+ufn.o: $(LC)(ufn_$(PRECIS).o)
 
-$(LC)(ufn.o): ../tools/ufn.f90
+$(LC)(ufn_$(PRECIS).o): ../tools/ufn.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ufn"
-	$(SED) -f $(SEDS) ../tools/ufn.f90 > $(OBJ)/ufn.f90
-	cd $(OBJ); $(FORTRAN) -o ufn.o $(FFLAGS) ufn.f90 \
+	$(CP) ../tools/ufn.F90 $(OBJ)/ufn.F90
+	cd $(OBJ); $(FORTRAN) -o ufn_$(PRECIS).o $(FFLAGS) ufn.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ufn.o $(FFLAGSN) ufn.f90 )
-	cd $(OBJ); $(ARR) ufn.o; $(RM) ufn.f90 ufn.o
+                   $(FORTRAN) -o ufn_$(PRECIS).o $(FFLAGSN) ufn.F90 )
+	cd $(OBJ); $(ARR) ufn_$(PRECIS).o; \
+          $(RM) ufn.F90 ufn_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ugr.o: $(LC)(ugr.o)
+ugr.o: $(LC)(ugr_$(PRECIS).o)
 
-$(LC)(ugr.o): ../tools/ugr.f90
+$(LC)(ugr_$(PRECIS).o): ../tools/ugr.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ugr"
-	$(SED) -f $(SEDS) ../tools/ugr.f90 > $(OBJ)/ugr.f90
-	cd $(OBJ); $(FORTRAN) -o ugr.o $(FFLAGS) ugr.f90 \
+	$(CP) ../tools/ugr.F90 $(OBJ)/ugr.F90
+	cd $(OBJ); $(FORTRAN) -o ugr_$(PRECIS).o $(FFLAGS) ugr.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ugr.o $(FFLAGSN) ugr.f90 )
-	cd $(OBJ); $(ARR) ugr.o; $(RM) ugr.f90 ugr.o
+                   $(FORTRAN) -o ugr_$(PRECIS).o $(FFLAGSN) ugr.F90 )
+	cd $(OBJ); $(ARR) ugr_$(PRECIS).o; \
+          $(RM) ugr.F90 ugr_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-uofg.o: $(LC)(uofg.o)
+uofg.o: $(LC)(uofg_$(PRECIS).o)
 
-$(LC)(uofg.o): ../tools/uofg.f90
+$(LC)(uofg_$(PRECIS).o): ../tools/uofg.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "uofg"
-	$(SED) -f $(SEDS) ../tools/uofg.f90 > $(OBJ)/uofg.f90
-	cd $(OBJ); $(FORTRAN) -o uofg.o $(FFLAGS) uofg.f90 \
+	$(CP) ../tools/uofg.F90 $(OBJ)/uofg.F90
+	cd $(OBJ); $(FORTRAN) -o uofg_$(PRECIS).o $(FFLAGS) uofg.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o uofg.o $(FFLAGSN) uofg.f90 )
-	cd $(OBJ); $(ARR) uofg.o; $(RM) uofg.f90 uofg.o
+                   $(FORTRAN) -o uofg_$(PRECIS).o $(FFLAGSN) uofg.F90 )
+	cd $(OBJ); $(ARR) uofg_$(PRECIS).o; \
+          $(RM) uofg.F90 uofg_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-udh.o: $(LC)(udh.o)
+udh.o: $(LC)(udh_$(PRECIS).o)
 
-$(LC)(udh.o): ../tools/udh.f90
+$(LC)(udh_$(PRECIS).o): ../tools/udh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "udh"
-	$(SED) -f $(SEDS) ../tools/udh.f90 > $(OBJ)/udh.f90
-	cd $(OBJ); $(FORTRAN) -o udh.o $(FFLAGS) udh.f90 \
+	$(CP) ../tools/udh.F90 $(OBJ)/udh.F90
+	cd $(OBJ); $(FORTRAN) -o udh_$(PRECIS).o $(FFLAGS) udh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o udh.o $(FFLAGSN) udh.f90 )
-	cd $(OBJ); $(ARR) udh.o; $(RM) udh.f90 udh.o
+                   $(FORTRAN) -o udh_$(PRECIS).o $(FFLAGSN) udh.F90 )
+	cd $(OBJ); $(ARR) udh_$(PRECIS).o; \
+          $(RM) udh.F90 udh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ugrdh.o: $(LC)(ugrdh.o)
+ugrdh.o: $(LC)(ugrdh_$(PRECIS).o)
 
-$(LC)(ugrdh.o): ../tools/ugrdh.f90
+$(LC)(ugrdh_$(PRECIS).o): ../tools/ugrdh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ugrdh"
-	$(SED) -f $(SEDS) ../tools/ugrdh.f90 > $(OBJ)/ugrdh.f90
-	cd $(OBJ); $(FORTRAN) -o ugrdh.o $(FFLAGS) ugrdh.f90 \
+	$(CP) ../tools/ugrdh.F90 $(OBJ)/ugrdh.F90
+	cd $(OBJ); $(FORTRAN) -o ugrdh_$(PRECIS).o $(FFLAGS) ugrdh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ugrdh.o $(FFLAGSN) ugrdh.f90 )
-	cd $(OBJ); $(ARR) ugrdh.o; $(RM) ugrdh.f90 ugrdh.o
+                   $(FORTRAN) -o ugrdh_$(PRECIS).o $(FFLAGSN) ugrdh.F90 )
+	cd $(OBJ); $(ARR) ugrdh_$(PRECIS).o; \
+          $(RM) ugrdh.F90 ugrdh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ush.o: $(LC)(ush.o)
+ush.o: $(LC)(ush_$(PRECIS).o)
 
-$(LC)(ush.o): ../tools/ush.f90
+$(LC)(ush_$(PRECIS).o): ../tools/ush.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ush"
-	$(SED) -f $(SEDS) ../tools/ush.f90 > $(OBJ)/ush.f90
-	cd $(OBJ); $(FORTRAN) -o ush.o $(FFLAGS) ush.f90 \
+	$(CP) ../tools/ush.F90 $(OBJ)/ush.F90
+	cd $(OBJ); $(FORTRAN) -o ush_$(PRECIS).o $(FFLAGS) ush.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ush.o $(FFLAGSN) ush.f90 )
-	cd $(OBJ); $(ARR) ush.o; $(RM) ush.f90 ush.o
+                   $(FORTRAN) -o ush_$(PRECIS).o $(FFLAGSN) ush.F90 )
+	cd $(OBJ); $(ARR) ush_$(PRECIS).o; \
+          $(RM) ush.F90 ush_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ushp.o: $(LC)(ushp.o)
+ushp.o: $(LC)(ushp_$(PRECIS).o)
 
-$(LC)(ushp.o): ../tools/ushp.f90
+$(LC)(ushp_$(PRECIS).o): ../tools/ushp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ushp"
-	$(SED) -f $(SEDS) ../tools/ushp.f90 > $(OBJ)/ushp.f90
-	cd $(OBJ); $(FORTRAN) -o ushp.o $(FFLAGS) ushp.f90 \
+	$(CP) ../tools/ushp.F90 $(OBJ)/ushp.F90
+	cd $(OBJ); $(FORTRAN) -o ushp_$(PRECIS).o $(FFLAGS) ushp.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ushp.o $(FFLAGSN) ushp.f90 )
-	cd $(OBJ); $(ARR) ushp.o; $(RM) ushp.f90 ushp.o
+                   $(FORTRAN) -o ushp_$(PRECIS).o $(FFLAGSN) ushp.F90 )
+	cd $(OBJ); $(ARR) ushp_$(PRECIS).o; \
+          $(RM) ushp.F90 ushp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ueh.o: $(LC)(ueh.o)
+ueh.o: $(LC)(ueh_$(PRECIS).o)
 
-$(LC)(ueh.o): ../tools/ueh.f90
+$(LC)(ueh_$(PRECIS).o): ../tools/ueh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ueh"
-	$(SED) -f $(SEDS) ../tools/ueh.f90 > $(OBJ)/ueh.f90
-	cd $(OBJ); $(FORTRAN) -o ueh.o $(FFLAGS) ueh.f90 \
+	$(CP) ../tools/ueh.F90 $(OBJ)/ueh.F90
+	cd $(OBJ); $(FORTRAN) -o ueh_$(PRECIS).o $(FFLAGS) ueh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ueh.o $(FFLAGSN) ueh.f90 )
-	cd $(OBJ); $(ARR) ueh.o; $(RM) ueh.f90 ueh.o
+                   $(FORTRAN) -o ueh_$(PRECIS).o $(FFLAGSN) ueh.F90 )
+	cd $(OBJ); $(ARR) ueh_$(PRECIS).o; \
+          $(RM) ueh.F90 ueh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ugreh.o: $(LC)(ugreh.o)
+ugreh.o: $(LC)(ugreh_$(PRECIS).o)
 
-$(LC)(ugreh.o): ../tools/ugreh.f90
+$(LC)(ugreh_$(PRECIS).o): ../tools/ugreh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ugreh"
-	$(SED) -f $(SEDS) ../tools/ugreh.f90 > $(OBJ)/ugreh.f90
-	cd $(OBJ); $(FORTRAN) -o ugreh.o $(FFLAGS) ugreh.f90 \
+	$(CP) ../tools/ugreh.F90 $(OBJ)/ugreh.F90
+	cd $(OBJ); $(FORTRAN) -o ugreh_$(PRECIS).o $(FFLAGS) ugreh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ugreh.o $(FFLAGSN) ugreh.f90 )
-	cd $(OBJ); $(ARR) ugreh.o; $(RM) ugreh.f90 ugreh.o
+                   $(FORTRAN) -o ugreh_$(PRECIS).o $(FFLAGSN) ugreh.F90 )
+	cd $(OBJ); $(ARR) ugreh_$(PRECIS).o; \
+          $(RM) ugreh.F90 ugreh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ugrsh.o: $(LC)(ugrsh.o)
+ugrsh.o: $(LC)(ugrsh_$(PRECIS).o)
 
-$(LC)(ugrsh.o): ../tools/ugrsh.f90
+$(LC)(ugrsh_$(PRECIS).o): ../tools/ugrsh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ugrsh"
-	$(SED) -f $(SEDS) ../tools/ugrsh.f90 > $(OBJ)/ugrsh.f90
-	cd $(OBJ); $(FORTRAN) -o ugrsh.o $(FFLAGS) ugrsh.f90 \
+	$(CP) ../tools/ugrsh.F90 $(OBJ)/ugrsh.F90
+	cd $(OBJ); $(FORTRAN) -o ugrsh_$(PRECIS).o $(FFLAGS) ugrsh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ugrsh.o $(FFLAGSN) ugrsh.f90 )
-	cd $(OBJ); $(ARR) ugrsh.o; $(RM) ugrsh.f90 ugrsh.o
+                   $(FORTRAN) -o ugrsh_$(PRECIS).o $(FFLAGSN) ugrsh.F90 )
+	cd $(OBJ); $(ARR) ugrsh_$(PRECIS).o; \
+          $(RM) ugrsh.F90 ugrsh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-uhprod.o: $(LC)(uhprod.o)
+uhprod.o: $(LC)(uhprod_$(PRECIS).o)
 
-$(LC)(uhprod.o): ../tools/uhprod.f90
+$(LC)(uhprod_$(PRECIS).o): ../tools/uhprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "uhprod"
-	$(SED) -f $(SEDS) ../tools/uhprod.f90 > $(OBJ)/uhprod.f90
-	cd $(OBJ); $(FORTRAN) -o uhprod.o $(FFLAGS) uhprod.f90 \
+	$(CP) ../tools/uhprod.F90 $(OBJ)/uhprod.F90
+	cd $(OBJ); $(FORTRAN) -o uhprod_$(PRECIS).o $(FFLAGS) uhprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o uhprod.o $(FFLAGSN) uhprod.f90 )
-	cd $(OBJ); $(ARR) uhprod.o; $(RM) uhprod.f90 uhprod.o
+                   $(FORTRAN) -o uhprod_$(PRECIS).o $(FFLAGSN) uhprod.F90 )
+	cd $(OBJ); $(ARR) uhprod_$(PRECIS).o; \
+          $(RM) uhprod.F90 uhprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ushprod.o: $(LC)(ushprod.o)
+ushprod.o: $(LC)(ushprod_$(PRECIS).o)
 
-$(LC)(ushprod.o): ../tools/ushprod.f90
+$(LC)(ushprod_$(PRECIS).o): ../tools/ushprod.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ushprod"
-	$(SED) -f $(SEDS) ../tools/ushprod.f90 > $(OBJ)/ushprod.f90
-	cd $(OBJ); $(FORTRAN) -o ushprod.o $(FFLAGS) ushprod.f90 \
+	$(CP) ../tools/ushprod.F90 $(OBJ)/ushprod.F90
+	cd $(OBJ); $(FORTRAN) -o ushprod_$(PRECIS).o $(FFLAGS) ushprod.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ushprod.o $(FFLAGSN) ushprod.f90 )
-	cd $(OBJ); $(ARR) ushprod.o; $(RM) ushprod.f90 ushprod.o
+                   $(FORTRAN) -o ushprod_$(PRECIS).o $(FFLAGSN) ushprod.F90 )
+	cd $(OBJ); $(ARR) ushprod_$(PRECIS).o; \
+          $(RM) ushprod.F90 ushprod_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ubandh.o: $(LC)(ubandh.o)
+ubandh.o: $(LC)(ubandh_$(PRECIS).o)
 
-$(LC)(ubandh.o): ../tools/ubandh.f90
+$(LC)(ubandh_$(PRECIS).o): ../tools/ubandh.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ubandh"
-	$(SED) -f $(SEDS) ../tools/ubandh.f90 > $(OBJ)/ubandh.f90
-	cd $(OBJ); $(FORTRAN) -o ubandh.o $(FFLAGS) ubandh.f90 \
+	$(CP) ../tools/ubandh.F90 $(OBJ)/ubandh.F90
+	cd $(OBJ); $(FORTRAN) -o ubandh_$(PRECIS).o $(FFLAGS) ubandh.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ubandh.o $(FFLAGSN) ubandh.f90 )
-	cd $(OBJ); $(ARR) ubandh.o; $(RM) ubandh.f90 ubandh.o
+                   $(FORTRAN) -o ubandh_$(PRECIS).o $(FFLAGSN) ubandh.F90 )
+	cd $(OBJ); $(ARR) ubandh_$(PRECIS).o; \
+          $(RM) ubandh.F90 ubandh_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ureport.o: $(LC)(ureport.o)
+ureport.o: $(LC)(ureport_$(PRECIS).o)
 
-$(LC)(ureport.o): ../tools/ureport.f90
+$(LC)(ureport_$(PRECIS).o): ../tools/ureport.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "ureport"
-	$(SED) -f $(SEDS) ../tools/ureport.f90 > $(OBJ)/ureport.f90
-	cd $(OBJ); $(FORTRAN) -o ureport.o $(FFLAGS) ureport.f90 \
+	$(CP) ../tools/ureport.F90 $(OBJ)/ureport.F90
+	cd $(OBJ); $(FORTRAN) -o ureport_$(PRECIS).o $(FFLAGS) ureport.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o ureport.o $(FFLAGSN) ureport.f90 )
-	cd $(OBJ); $(ARR) ureport.o; $(RM) ureport.f90 ureport.o
+                   $(FORTRAN) -o ureport_$(PRECIS).o $(FFLAGSN) ureport.F90 )
+	cd $(OBJ); $(ARR) ureport_$(PRECIS).o; \
+          $(RM) ureport.F90 ureport_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-uterminate.o: $(LC)(uterminate.o)
+uterminate.o: $(LC)(uterminate_$(PRECIS).o)
 
-$(LC)(uterminate.o): ../tools/uterminate.f90
+$(LC)(uterminate_$(PRECIS).o): ../tools/uterminate.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "uterminate"
-	$(SED) -f $(SEDS) ../tools/uterminate.f90 > $(OBJ)/uterminate.f90
-	cd $(OBJ); $(FORTRAN) -o uterminate.o $(FFLAGS) uterminate.f90 \
+	$(CP) ../tools/uterminate.F90 $(OBJ)/uterminate.F90
+	cd $(OBJ); $(FORTRAN) -o uterminate_$(PRECIS).o $(FFLAGS) \
+                   uterminate.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o uterminate.o $(FFLAGSN) uterminate.f90 )
-	cd $(OBJ); $(ARR) uterminate.o; $(RM) uterminate.f90 uterminate.o
+                   $(FORTRAN) -o uterminate_$(PRECIS).o $(FFLAGSN) \
+                   uterminate.F90 )
+	cd $(OBJ); $(ARR) uterminate_$(PRECIS).o; \
+          $(RM) uterminate.F90 uterminate_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-pname.o: $(LC)(pname.o)
+pname.o: $(LC)(pname_$(PRECIS).o)
 
-$(LC)(pname.o): ../tools/pname.f90
+$(LC)(pname_$(PRECIS).o): ../tools/pname.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "pname"
-	$(SED) -f $(SEDS) ../tools/pname.f90 > $(OBJ)/pname.f90
-	cd $(OBJ); $(FORTRAN) -o pname.o $(FFLAGS) pname.f90 \
+	$(CP) ../tools/pname.F90 $(OBJ)/pname.F90
+	cd $(OBJ); $(FORTRAN) -o pname_$(PRECIS).o $(FFLAGS) pname.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o pname.o $(FFLAGSN) pname.f90 )
-	cd $(OBJ); $(ARR) pname.o; $(RM) pname.f90 pname.o
+                   $(FORTRAN) -o pname_$(PRECIS).o $(FFLAGSN) pname.F90 )
+	cd $(OBJ); $(ARR) pname_$(PRECIS).o; \
+          $(RM) pname.F90 pname_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-probname.o: $(LC)(probname.o)
+probname.o: $(LC)(probname_$(PRECIS).o)
 
-$(LC)(probname.o): ../tools/probname.f90
+$(LC)(probname_$(PRECIS).o): ../tools/probname.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "probname"
-	$(SED) -f $(SEDS) ../tools/probname.f90 > $(OBJ)/probname.f90
-	cd $(OBJ); $(FORTRAN) -o probname.o $(FFLAGS) probname.f90 \
+	$(CP) ../tools/probname.F90 $(OBJ)/probname.F90
+	cd $(OBJ); $(FORTRAN) -o probname_$(PRECIS).o $(FFLAGS) probname.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o probname.o $(FFLAGSN) probname.f90 )
-	cd $(OBJ); $(ARR) probname.o; $(RM) probname.f90 probname.o
+                   $(FORTRAN) -o probname_$(PRECIS).o $(FFLAGSN) probname.F90 )
+	cd $(OBJ); $(ARR) probname_$(PRECIS).o; \
+          $(RM) probname.F90 probname_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-varnames.o: $(LC)(varnames.o)
+varnames.o: $(LC)(varnames_$(PRECIS).o)
 
-$(LC)(varnames.o): ../tools/varnames.f90
+$(LC)(varnames_$(PRECIS).o): ../tools/varnames.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "varnames"
-	$(SED) -f $(SEDS) ../tools/varnames.f90 > $(OBJ)/varnames.f90
-	cd $(OBJ); $(FORTRAN) -o varnames.o $(FFLAGS) varnames.f90 \
+	$(CP) ../tools/varnames.F90 $(OBJ)/varnames.F90
+	cd $(OBJ); $(FORTRAN) -o varnames_$(PRECIS).o $(FFLAGS) varnames.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o varnames.o $(FFLAGSN) varnames.f90 )
-	cd $(OBJ); $(ARR) varnames.o; $(RM) varnames.f90 varnames.o
+                   $(FORTRAN) -o varnames_$(PRECIS).o $(FFLAGSN) varnames.F90 )
+	cd $(OBJ); $(ARR) varnames_$(PRECIS).o; \
+          $(RM) varnames.F90 varnames_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-connames.o: $(LC)(connames.o)
+connames.o: $(LC)(connames_$(PRECIS).o)
 
-$(LC)(connames.o): ../tools/connames.f90
+$(LC)(connames_$(PRECIS).o): ../tools/connames.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "connames"
-	$(SED) -f $(SEDS) ../tools/connames.f90 > $(OBJ)/connames.f90
-	cd $(OBJ); $(FORTRAN) -o connames.o $(FFLAGS) connames.f90 \
+	$(CP) ../tools/connames.F90 $(OBJ)/connames.F90
+	cd $(OBJ); $(FORTRAN) -o connames_$(PRECIS).o $(FFLAGS) connames.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o connames.o $(FFLAGSN) connames.f90 )
-	cd $(OBJ); $(ARR) connames.o; $(RM) connames.f90 connames.o
+                   $(FORTRAN) -o connames_$(PRECIS).o $(FFLAGSN) connames.F90 )
+	cd $(OBJ); $(ARR) connames_$(PRECIS).o; \
+          $(RM) connames.F90 connames_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-newthread.o: $(LC)(newthread.o)
+newthread.o: $(LC)(newthread_$(PRECIS).o)
 
-$(LC)(newthread.o): ../tools/newthread.f90
+$(LC)(newthread_$(PRECIS).o): ../tools/newthread.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "newthread"
-	$(SED) -f $(SEDS) ../tools/newthread.f90 > $(OBJ)/newthread.f90
-	cd $(OBJ); $(FORTRAN) -o newthread.o $(FFLAGS) newthread.f90 \
+	$(CP) ../tools/newthread.F90 $(OBJ)/newthread.F90
+	cd $(OBJ); $(FORTRAN) -o newthread_$(PRECIS).o $(FFLAGS) \
+                   newthread.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o newthread.o $(FFLAGSN) newthread.f90 )
-	cd $(OBJ); $(ARR) newthread.o; $(RM) newthread.f90 newthread.o
+                   $(FORTRAN) -o newthread_$(PRECIS).o $(FFLAGSN) \
+                   newthread.F90 )
+	cd $(OBJ); $(ARR) newthread_$(PRECIS).o; \
+          $(RM) newthread.F90 newthread_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-problem.o: $(LC)(problem.o)
+problem.o: $(LC)(problem_$(PRECIS).o)
 
-$(LC)(problem.o): ../tools/problem.f90
+$(LC)(problem_$(PRECIS).o): ../tools/problem.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "problem"
-	$(SED) -f $(SEDS) ../tools/problem.f90 > $(OBJ)/problem.f90
-	cd $(OBJ); $(FORTRAN) -o problem.o $(FFLAGS) problem.f90 \
+	$(CP) ../tools/problem.F90 $(OBJ)/problem.F90
+	cd $(OBJ); $(FORTRAN) -o problem_$(PRECIS).o $(FFLAGS) problem.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o problem.o $(FFLAGSN) problem.f90 )
-	cd $(OBJ); $(ARR) problem.o; $(RM) problem.f90 problem.o
+                   $(FORTRAN) -o problem_$(PRECIS).o $(FFLAGSN) problem.F90 )
+	cd $(OBJ); $(ARR) problem_$(PRECIS).o; \
+          $(RM) problem.F90 problem_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-fortran_ops.o: $(LC)(fortran_ops.o)
+fortran_ops.o: $(LC)(fortran_ops_$(PRECIS).o)
 
-$(LC)(fortran_ops.o): ../tools/fortran_ops.f90
+$(LC)(fortran_ops_$(PRECIS).o): ../tools/fortran_ops.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "fortran_ops"
-	$(SED) -f $(SEDS) ../tools/fortran_ops.f90 > $(OBJ)/fortran_ops.f90
-	cd $(OBJ); $(FORTRAN) -o fortran_ops.o $(FFLAGS) fortran_ops.f90 \
+	$(CP) ../tools/fortran_ops.F90 $(OBJ)/fortran_ops.F90
+	cd $(OBJ); $(FORTRAN) -o fortran_ops_$(PRECIS).o $(FFLAGS) \
+                   fortran_ops.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o fortran_ops.o $(FFLAGSN) fortran_ops.f90 )
-	cd $(OBJ); $(ARR) fortran_ops.o; $(RM) fortran_ops.f90 fortran_ops.o
+                   $(FORTRAN) -o fortran_ops_$(PRECIS).o $(FFLAGSN) \
+                   fortran_ops.F90 )
+	cd $(OBJ); $(ARR) fortran_ops_$(PRECIS).o; \
+          $(RM) fortran_ops.F90 fortran_ops_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-ccutest.o: $(LC)(ccutest.o)
+ccutest.o: $(LC)(ccutest_$(PRECIS).o)
 
-$(LC)(ccutest.o): ../tools/ccutest.c
+$(LC)(ccutest_$(PRECIS).o): ../tools/ccutest.c
 	@printf ' %-9s %-15s\t\t' "Compiling" "ccutest"
-	$(SED) -f $(SEDS) ../tools/ccutest.c > $(OBJ)/ccutest.c
-	cd $(OBJ); $(CC) -o ccutest.o $(CFLAGS) ccutest.c \
+	$(CP) ../tools/ccutest.c $(OBJ)/ccutest.c
+	cd $(OBJ); $(CC) -o ccutest_$(PRECIS).o $(CFLAGS) ccutest.c \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(CC) -o ccutest.o $(CFLAGSN) ccutest.c )
-	cd $(OBJ); $(ARR) ccutest.o; $(RM) ccutest.o ccutest.o
+                   $(CC) -o ccutest_$(PRECIS).o $(CFLAGSN) ccutest.c )
+	cd $(OBJ); $(ARR) ccutest_$(PRECIS).o; \
+          $(RM) ccutest_$(PRECIS).o ccutest_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

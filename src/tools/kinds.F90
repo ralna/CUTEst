@@ -68,14 +68,14 @@
 !  Real and complex kinds (half precision)
 
     INTEGER, PARAMETER :: real_bytes_ = 2
-  #ifdef HSL_2btye_reals_exist
+#ifdef CUTEST_2btye_reals_exist
     INTEGER, PARAMETER :: rp_ = REAL16!! selected_real_kind( 3 )
 ! INTEGER, PARAMETER :: rpc_ = C_FLOAT16!! does this exist??
     INTEGER, PARAMETER :: rpc_ = C_FLOAT
-  #else
+#else
     INTEGER, PARAMETER :: rp_ = REAL32
     INTEGER, PARAMETER :: rpc_ = C_FLOAT
-  #endif
+#endif
     INTEGER, PARAMETER :: cp_ = KIND( ( 1.0_rp_, 1.0_rp_ ) )
 
   END MODULE CUTEST_KINDS_r2
@@ -128,13 +128,13 @@
 !  Real and complex kinds (quadruple precision)
 
     INTEGER, PARAMETER :: real_bytes_ = 16
-  #ifdef HSL_16btye_reals_exist
+#ifdef CUTEST_16btye_reals_exist
     INTEGER, PARAMETER :: rp_ = REAL128 !! selected_real_kind( 20 )
     INTEGER, PARAMETER :: rpc_ = C_FLOAT128 !! does this exist??
-  #else
+#else
     INTEGER, PARAMETER :: rp_ = REAL64
     INTEGER, PARAMETER :: rpc_ = C_DOUBLE
-  #endif
+#endif
     INTEGER, PARAMETER :: cp_ = KIND( ( 1.0_rp_, 1.0_rp_ ) )
 
   END MODULE CUTEST_KINDS_r16
