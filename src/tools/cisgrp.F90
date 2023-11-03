@@ -68,12 +68,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll
-      INTEGER ( KIND = ip_ ) :: istrgv, iendgv, ifstat, igstat
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, neling
+      INTEGER ( KIND = ip_ ) :: i, k, ig, ig1, ll
       REAL :: time_in, time_out
-      LOGICAL :: nontrv
-      INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
       EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

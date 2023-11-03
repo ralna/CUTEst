@@ -109,12 +109,12 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cjprod_single.o) $(LCS)(cstats_single.o) \
            $(LCS)(csgr_single.o) $(LCS)(csgreh_single.o) \
            $(LCS)(csgrsh_single.o) $(LCS)(csjprod_single.o) \
-           $(LCS)(chprod_single.o) $(LCS)(chpjrod_single.o) \
-           $(LCS)(chcprod_single.o) $(LCS)(csjp_single.o) \
+           $(LCS)(chprod_single.o) $(LCS)(chjprod_single.o) \
+           $(LCS)(chcprod_single.o) $(LCS)(cshprod_single.o) \
+           $(LCS)(cshcprod_single.o) $(LCS)(cohprodsp_single.o) \
+           $(LCS)(cohprods_single.o) $(LCS)(cchprodsp_single.o) \
+           $(LCS)(cchprods_single.o) $(LCS)(csjp_single.o) \
            $(LCS)(csgrp_single.o) $(LCS)(csgrshp_single.o) \
-           $(LCS)(cohprodsp_single.o) $(LCS)(cohprods_single.o) \
-           $(LCS)(cchprodsp_single.o) $(LCS)(cchprods_single.o) \
-           $(LCS)(cshprod_single.o) $(LCS)(cshcprod_single.o) \
            $(LCS)(creport_single.o) $(LCS)(connames_single.o) \
            $(LCS)(cterminate_single.o) $(LCS)(lqp_single.o) \
            $(LCS)(cconst_single.o) $(LCS)(cnames_single.o)

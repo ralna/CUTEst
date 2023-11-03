@@ -59,7 +59,7 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) ::  ii, iel, iell, ig, j, k, l, ll
+      INTEGER ( KIND = ip_ ) ::  iel, iell, ig, j, l
 
 !  record the total space is stored in nnzohp
 

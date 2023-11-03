@@ -85,8 +85,7 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, ig, ig1, icon, alloc_status
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, istrgv
+      INTEGER ( KIND = ip_ ) :: i, ig, icon, alloc_status
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       REAL :: time_in, time_out
 

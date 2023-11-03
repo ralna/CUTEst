@@ -177,9 +177,9 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, ic, iel, iell, ielhst, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: i, iel, iell, ielhst, ifstat, igstat
       INTEGER ( KIND = ip_ ) :: ig, ii, irow, lthvar, nvarel, nin
-      INTEGER ( KIND = ip_ ) :: ijhess, j, jcol, k, l, ll, ls
+      INTEGER ( KIND = ip_ ) :: ijhess, j, jcol, k, l, ll
       REAL ( KIND = rp_ ) :: ftt, gdash, g2dash, gi, pi, prod, scalee
       REAL :: time_in, time_out
       LOGICAL :: nullwk

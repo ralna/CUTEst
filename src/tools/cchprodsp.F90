@@ -70,7 +70,7 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, ic, ig, k, ls
+      INTEGER ( KIND = ip_ ) :: ic, ig, k, ls
       REAL :: time_in, time_out
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
