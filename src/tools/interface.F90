@@ -11,7 +11,7 @@
 !    November 10th 2000 (as a GALAHAD module) for CUTEr
 !    February 6th 2013 for CUTEst
 
-   MODULE CUTEst_interface_precision
+   MODULE CUTEST_interface_precision
 
 !  Interface blocks for CUTEst fortran tools
 
@@ -1247,4 +1247,4 @@
 
 !  End of module CUTEst_interface_double
 
-   END MODULE CUTEst_interface_precision
+   END MODULE CUTEST_interface_precision

@@ -130,7 +130,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, ig, j, ncalcf, ncalcg, ifstat, igstat, k, nnzh, alloc_status
+      INTEGER ( KIND = ip_ ) :: i, ig, j, ifstat, igstat, k
+      INTEGER ( KIND = ip_ ) :: ncalcf, ncalcg, nnzh, alloc_status
       REAL ( KIND = rp_ ) :: ftt
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       REAL :: time_in, time_out

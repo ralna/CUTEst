@@ -247,8 +247,9 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: ialgor, i, ig, j, jg, mend, mmax, count, count_rate
-      INTEGER ( KIND = ip_ ) :: ii, k, iel, jwrk, kndv, nnlin, nend, neltyp, ngrtyp, itemp
+      INTEGER ( KIND = ip_ ) :: count, count_rate, ialgor, i, ig, j, jg
+      INTEGER ( KIND = ip_ ) :: ii, k, iel, jwrk, kndv, itemp
+      INTEGER ( KIND = ip_ ) :: mend, mmax, nend, neltyp, ngrtyp, nnlin
       INTEGER ( KIND = ip_ ) :: alloc_status
       LOGICAL :: debug, ltemp
       CHARACTER ( LEN = 10 ) :: pname

@@ -168,8 +168,9 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll, icon, icnt, ifstat, igstat
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, istrgv, iendgv
+      INTEGER ( KIND = ip_ ) :: i, j, iel, ig, ii, ig1, l, icon, icnt
+      INTEGER ( KIND = ip_ ) :: ifstat, igstat, istrgv, iendgv, k, ll
+      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup
       REAL ( KIND = rp_ ) :: ftt, gi, scalee
       REAL :: time_in, time_out
       EXTERNAL :: RANGE

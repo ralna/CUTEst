@@ -57,8 +57,9 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll, ncalcg, neling
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, istrgv, iendgv, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll
+      INTEGER ( KIND = ip_ ) :: istrgv, iendgv, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, ncalcg, neling
       LOGICAL :: nontrv
       INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
       EXTERNAL :: RANGE

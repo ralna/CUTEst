@@ -56,14 +56,29 @@
 !
 ! ..............................................................................
 
+!-*-*-*-*-*-*-  C U T E S T _  K I N D S _ R E A L   M O D U L E   -*-*-*-*-*-*-
+
+  MODULE CUTEST_KINDS_real
+
+    USE ISO_C_BINDING
+    USE ISO_FORTRAN_ENV
+    PRIVATE
+    PUBLIC :: sp_, dp_
+
+   INTEGER, PARAMETER :: sp_ = REAL32
+   INTEGER, PARAMETER :: dp_ = REAL64
+
+  END MODULE CUTEST_KINDS_real
+
 !-*-*-*-*-*-*-  C U T E S T _  K I N D S _ H A L F   M O D U L E   -*-*-*-*-*-*-
 
   MODULE CUTEST_KINDS_r2
 
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
+    USE CUTEST_KINDS_real
     PRIVATE
-    PUBLIC :: real_bytes_, rp_, rpc_, cp_
+    PUBLIC :: real_bytes_, rp_, rpc_, cp_, sp_, dp_
 
 !  Real and complex kinds (half precision)
 
@@ -86,8 +101,9 @@
 
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
+    USE CUTEST_KINDS_real
     PRIVATE
-    PUBLIC :: real_bytes_, rp_, rpc_, cp_
+    PUBLIC :: real_bytes_, rp_, rpc_, cp_, sp_, dp_
 
 !  Real and complex kinds (single precision)
 
@@ -104,8 +120,9 @@
 
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
+    USE CUTEST_KINDS_real
     PRIVATE
-    PUBLIC :: real_bytes_, rp_, rpc_, cp_
+    PUBLIC :: real_bytes_, rp_, rpc_, cp_, sp_, dp_
 
 !  Real and complex kinds (double precision)
 
@@ -122,8 +139,9 @@
 
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
+    USE CUTEST_KINDS_real
     PRIVATE
-    PUBLIC :: real_bytes_, rp_, rpc_, cp_
+    PUBLIC :: real_bytes_, rp_, rpc_, cp_, sp_, dp_
 
 !  Real and complex kinds (quadruple precision)
 

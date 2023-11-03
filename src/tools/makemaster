@@ -69,10 +69,6 @@ DARR = $(AR) $(ARREPFLAGS) $(DLC)
 LARR = $(AR) $(ARREPFLAGS) $(LLC)
 LRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LLC)
 
-#  sed scripts
-
-CSEDS = $(CUTEST)/seds/cutersize.sed
-
 #  compilation agenda
 
 BASICS = $(LCS)(kinds_single.o) $(LCS)(cutest_single.o) \

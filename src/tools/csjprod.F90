@@ -24,7 +24,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector, lvector, lresult
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: gotj, jtrans
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
@@ -76,7 +77,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector, lvector, lresult
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: gotj, jtrans
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
@@ -126,10 +128,12 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector, lvector, lresult, thread
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lvector, lresult, thread
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: gotj, jtrans
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
@@ -197,7 +201,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector, lvector, lresult
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
       LOGICAL, INTENT( IN ) :: gotj, jtrans
-      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ), INTENT( IN ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( IN ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
@@ -218,8 +223,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, icon, ifstat, igstat, ig, ig1, ii, iel, iv, j, k, l
-      INTEGER ( KIND = ip_ ) :: nvarel, nin
+      INTEGER ( KIND = ip_ ) :: i, icon, ifstat, igstat, ig, ig1, ii, iel, iv
+      INTEGER ( KIND = ip_ ) :: j, k, l, nvarel, nin
       REAL ( KIND = rp_ ) :: ftt, pi, prod, scalee
       REAL :: time_in, time_out
       LOGICAL :: skip

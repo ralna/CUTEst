@@ -100,7 +100,7 @@
 !   fortran 2003 version released in CUTEst, 7th Octoberr 2015
 
       SUBROUTINE CUTEST_cdhc_threadsafe( data, work, status, n, m, X, Y,       &
-                                        lh1, H_val )
+                                         lh1, H_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

@@ -20,11 +20,13 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, nnzj, status
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grlagf, byrows
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -96,11 +98,13 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, nnzj, status
       LOGICAL, INTENT( IN ) :: grlagf, byrows
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -170,11 +174,13 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, lhe_ptr, lhe_row, lhe_val, thread
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, thread
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, nnzj, status
       LOGICAL, INTENT( IN ) :: grlagf, byrows
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -258,11 +264,13 @@
 
       TYPE ( CUTEST_data_type ), INTENT( IN ) :: data
       TYPE ( CUTEST_work_type ), INTENT( INOUT ) :: work
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, nnzj, status
       LOGICAL, INTENT( IN ) :: grlagf, byrows
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -306,7 +314,8 @@
 
       INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, jj, ll, icon
       INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, istrgv, iendgv
-      INTEGER ( KIND = ip_ ) :: lhe_row_int, lhe_val_int, ifstat, igstat, alloc_status
+      INTEGER ( KIND = ip_ ) :: lhe_row_int, lhe_val_int, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: alloc_status
       LOGICAL :: nontrv
       REAL ( KIND = rp_ ) :: ftt, gi, scalee, gii
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )

@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-*-*-*-*-*- C U T E S T  L Q P  M O D U l E -*-*-*-*-*-*-*-*-*-*-
 
 !  Copyright reserved, Bongartz/Conn/Gould/Orban/Toint, for GALAHAD productions
@@ -14,17 +16,13 @@
 
     MODULE CUTEST_LQP_double
 
-      USE CUTEst_interface_double
+      USE CUTEST_KINDS_precision
+      USE CUTEST_interface_double
 
       IMPLICIT NONE
 
       PRIVATE
       PUBLIC :: CUTEST_lqp_create
-
-!--------------------
-!   P r e c i s i o n
-!--------------------
-
 
 !----------------------
 !   P a r a m e t e r s
@@ -67,7 +65,7 @@
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, n, m
       REAL ( KIND = rp_ ), INTENT( OUT ) :: f
       CHARACTER ( LEN = 10 ), INTENT( OUT ) :: p_name
-      REAL ( KIND = rp_ ), ALLOCATABLE, INTENT( OUT ),                          &
+      REAL ( KIND = rp_ ), ALLOCATABLE, INTENT( OUT ),                         &
         DIMENSION( : ) :: G, X, X_l, X_u, Z, Y, C_l, C_u
       CHARACTER ( LEN = 10 ), ALLOCATABLE, INTENT( OUT ),                      &
         DIMENSION( : )  :: X_names, C_names
@@ -87,11 +85,11 @@
       INTEGER ( KIND = ip_ ), OPTIONAL :: A_ne, H_ne
       LOGICAL, OPTIONAL :: dont_terminate_cutest
       REAL ( KIND = rp_ ), OPTIONAL :: H_pert
-      INTEGER ( KIND = ip_ ), ALLOCATABLE, OPTIONAL,                                          &
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, OPTIONAL,                           &
         DIMENSION( : ) :: X_type, A_row, A_col, A_ptr, H_row, H_col, H_ptr
-      REAL ( KIND = rp_ ), ALLOCATABLE, OPTIONAL,                               &
+      REAL ( KIND = rp_ ), ALLOCATABLE, OPTIONAL,                              &
         DIMENSION( : ) :: A_val, H_val
-      REAL ( KIND = rp_ ), ALLOCATABLE, OPTIONAL,                               &
+      REAL ( KIND = rp_ ), ALLOCATABLE, OPTIONAL,                              &
         DIMENSION( : , : ) :: A_dense, H_dense
 
 !  local variables
@@ -583,6 +581,8 @@
 
      END SUBROUTINE CUTEST_lqp_create
 
+!-*-*-  C U T E S T _ r e o r d e r _ b y _ r o w s   S U B R O U T I N E -*-*-
+
      SUBROUTINE CUTEST_reorder_by_rows( nr, nc, nnz, A_row, A_col, la, A_val,  &
                                         A_ptr, lptr, IW, liw, error, warning,  &
                                         inform )
@@ -661,7 +661,8 @@
 !
 !  Dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: nr, nc, nnz, la, lptr, liw, error, warning
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: nr, nc, nnz, la, lptr, liw
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: error, warning
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: inform
       REAL ( KIND = rp_ ), INTENT( INOUT ), DIMENSION( la ) :: A_val
       INTEGER ( KIND = ip_ ), INTENT( INOUT ), DIMENSION( la ) :: A_row, A_col

@@ -253,8 +253,9 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, jj, ll, nnzh, iendgv, icon
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, istrgv, ifstat, igstat, alloc_status
+      INTEGER ( KIND = ip_ ) :: i, j, icon, iel, k, ig, ii, ig1, l, jj, ll
+      INTEGER ( KIND = ip_ ) :: iendgv, istrgv, ifstat, igstat, alloc_status
+      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, nnzh
       REAL ( KIND = rp_ ) :: ftt, gi, gii, scalee
       REAL :: time_in, time_out
       LOGICAL :: nontrv
