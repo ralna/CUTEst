@@ -130,7 +130,6 @@
       USE CUTEST_precision
       TYPE ( CUTEST_data_type ) :: data
       TYPE ( CUTEST_work_type ) :: work
-      INTEGER ( KIND = ip_ ), PARAMETER :: sp = KIND( 1.0 )
 
 !  Dummy arguments
 
@@ -169,7 +168,7 @@
 
       CALL CPU_TIME( cpu_time_now )
       CALL SYSTEM_CLOCK( count = count, count_rate = count_rate )
-      time_now = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
+      time_now = REAL( count, KIND = sp_ ) / REAL( count_rate, KIND = sp_ )
 
       TIME( 1 ) = data%su_cpu_time
       TIME( 2 ) = cpu_time_now - data%st_cpu_time

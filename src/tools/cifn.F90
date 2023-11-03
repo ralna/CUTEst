@@ -111,7 +111,8 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, ig, ii, ncalcg, neling, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: i, j, iel, ig, ii, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: ncalcg, neling
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
       INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG

@@ -22,7 +22,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -92,7 +93,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -157,10 +159,12 @@
 
 !  dummy arguments
 
-      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val, thread
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: thread
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
@@ -242,7 +246,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
       LOGICAL, INTENT( IN ) :: byrows
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y

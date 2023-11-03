@@ -171,7 +171,8 @@
 !  local variables
 
       INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll, neling
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, istrgv, iendgv, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: istrgv, iendgv, ifstat, igstat
+      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup
       REAL ( KIND = rp_ ) :: ftt, gi, scalee
       REAL :: time_in, time_out
       LOGICAL :: nontrv
