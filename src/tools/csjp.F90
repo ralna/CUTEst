@@ -71,9 +71,7 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, ig, ig1, icon, alloc_status
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, istrgv
-      CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
+      INTEGER ( KIND = ip_ ) :: i, ig, icon
       REAL :: time_in, time_out
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )

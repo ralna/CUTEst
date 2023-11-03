@@ -57,11 +57,7 @@
 
 !  local variables
 
-      INTEGER ( KIND = ip_ ) :: i, j, iel, k, ig, ii, ig1, l, ll
-      INTEGER ( KIND = ip_ ) :: istrgv, iendgv, ifstat, igstat
-      INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup, ncalcg, neling
-      LOGICAL :: nontrv
-      INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
+      INTEGER ( KIND = ip_ ) :: i, k, ig, ig1, ll
       EXTERNAL :: RANGE
 
 !  Use ISWKSP to flag which variables have nonzero partial derivatives

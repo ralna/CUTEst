@@ -98,7 +98,6 @@
 
 !  update elapsed CPU time if required
 
-  990 CONTINUE
       IF ( work%record_times ) THEN
         CALL CPU_TIME( time_out )
         work%time_cshp = work%time_cshp + time_out - time_in
