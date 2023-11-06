@@ -406,7 +406,6 @@
 
 !  consider each constrant group in turn
 
-write(6,* ) data%numcon
         DO icon = 1, data%numcon
           ig = data%CGROUP( icon )
           ig1 = ig + 1

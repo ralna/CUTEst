@@ -992,8 +992,8 @@
         INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar
         INTEGER ( KIND = ip_ ), INTENT( IN ) :: ieltyp, lw1, lw2
         LOGICAL, INTENT( IN ) :: transp
-        REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( IN ), DIMENSION ( lw1 ) :: W1
-        REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
+        REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION ( lw1 ) :: W1
+        REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
         END SUBROUTINE RANGE
       END INTERFACE
 
@@ -1245,8 +1245,8 @@
         INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar
         INTEGER ( KIND = ip_ ), INTENT( IN ) :: ieltyp, lw1, lw2
         LOGICAL, INTENT( IN ) :: transp
-        REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
-        REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
+        REAL ( KIND = rp_ ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
+        REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
         END SUBROUTINE RANGE
       END INTERFACE
 
@@ -1611,6 +1611,7 @@
 !  For debugging, print the nonzero values
 !  ---------------------------------------
 
+!     IF ( .TRUE. ) THEN
       IF ( iprint >= 10 ) THEN
         IF ( .NOT. use_band )                                                  &
           WRITE( out,                                                          &
@@ -2805,8 +2806,8 @@
        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar
        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ieltyp, lw1, lw2
        LOGICAL, INTENT( IN ) :: transp
-       REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
-       REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
+       REAL ( KIND = rp_ ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
+       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
        END SUBROUTINE RANGE
      END INTERFACE
 
@@ -3045,8 +3046,8 @@
        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar
        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ieltyp, lw1, lw2
        LOGICAL, INTENT( IN ) :: transp
-       REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
-       REAL ( KIND = KIND( 1.0D+0 ) ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
+       REAL ( KIND = rp_ ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
+       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
        END SUBROUTINE RANGE
      END INTERFACE
 

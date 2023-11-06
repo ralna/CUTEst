@@ -13,7 +13,7 @@
 !   fortran 2003 version released November 2012
 
      USE CUTEST_KINDS_precision
-     USE CUTEst_interface_precision
+     USE CUTEst_INTERFACE_precision
 
 !----------------------
 !   P a r a m e t e r s
@@ -1690,7 +1690,7 @@
       WRITE( out, "( ' *       i   band', I7, 4I12 )" ) ( j, j = 0, nsemib )
       DO i = 1, n
         WRITE( out, "( ' * ', I7, 6X, 5ES12.4, :, /,                           &
-                       ( ' * ', 7X, 6X, 5ES12.4, : ) )" )                      &
+       &               ( ' * ', 7X, 6X, 5ES12.4, : ) )" )                      &
           i, ( H_band( j, i ), j = 0, nsemib )
       END DO
       END SUBROUTINE WRITE_H_BAND

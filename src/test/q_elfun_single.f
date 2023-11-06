@@ -34,11 +34,11 @@ C
     1  CONTINUE
        X = XVALUE(IELVAR(ILSTRT+     1))
        IF ( IFFLAG == 1 ) THEN
-        FUVALS(IELEMN)= 5.0D-1 * X * X
+        FUVALS(IELEMN)= 0.5 * X * X
        ELSE
         FUVALS(IGSTRT+     1)= X
         IF ( IFFLAG == 3 ) THEN
-         FUVALS(IHSTRT+     1)= 1.0D+0
+         FUVALS(IHSTRT+     1)= 1.0
         END IF
        END IF
        GO TO     3
@@ -54,9 +54,9 @@ C
         FUVALS(IGSTRT+     1)= Y
         FUVALS(IGSTRT+     2)= X
         IF ( IFFLAG == 3 ) THEN
-         FUVALS(IHSTRT+     1)= 0.0D+0
-         FUVALS(IHSTRT+     2)= 1.0D+0
-         FUVALS(IHSTRT+     3)= 0.0D+0
+         FUVALS(IHSTRT+     1)= 0.0
+         FUVALS(IHSTRT+     2)= 1.0
+         FUVALS(IHSTRT+     3)= 0.0
         END IF
        END IF
     3 CONTINUE

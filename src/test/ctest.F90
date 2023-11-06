@@ -13,7 +13,7 @@
 !   fortran 2003 version released November 2012
 
      USE CUTEST_KINDS_precision
-     USE CUTEst_interface_precision
+     USE CUTEST_INTERFACE_precision
  
 !----------------------
 !   P a r a m e t e r s
@@ -96,7 +96,7 @@
       CALL WRITE_X( out, n, X, X_l, X_u )
       CALL WRITE_Y( out, m, Y, C_l, C_u, EQUATION, LINEAR )
 
-      X( 1 : 2 )  = (/ 1.1_wp, 2.2_rp_ /)
+      X( 1 : 2 )  = (/ 1.1_rp_, 2.2_rp_ /)
 
 !  obtain numbers of nonlinear variables, and equality and linear constraints
 
