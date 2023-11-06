@@ -522,7 +522,8 @@
 !     WRITE( out, "( ' * H(band) has max seemibandwidth ', I0 )" ) maxsbw
       WRITE( out, "( ' *       i   band', I7, 4I12 )" ) ( j, j = 0, nsemib )
       DO i = 1, n
-        WRITE( out, "( ' * ', I7, 6X, 5ES12.4 )" )                             &
+        WRITE( out, "( ' * ', I7, 6X, 5ES12.4, :, /,                           &
+       &               ( ' * ', 7X, 6X, 5ES12.4, : ) )" )                      &
           i, ( H_band( j, i ), j = 0, nsemib )
       END DO
       END SUBROUTINE WRITE_H_BAND

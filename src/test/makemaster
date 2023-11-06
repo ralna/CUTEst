@@ -131,20 +131,20 @@ run_test_threaded_cutest: run_test_cutest_threaded_unconstrained run_test_cutest
 
 run_test_cutest_unconstrained: utools test_cutest_unconstrained
 	echo " Exhaustive test of unconstrained tools"
-	$(CP) ../test/utest.f90 $(OBJ)/utest.f90
+	$(CP) ../test/utest.F90 $(OBJ)/utest.F90
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(U_TEST) utest.f90 -L$(OBJ) $(LIBS)
+            $(U_TEST) utest.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_test >& ../test/test_unc.output
 	cat ../test/test_unc.output
 	rm $(OBJ)/run_test
 
 run_test_cutest_constrained: ctools test_cutest_constrained
 	echo " Exhaustive test of constrained tools"
-	$(CP) ../test/ctest.f90 $(OBJ)/ctest.f90
-	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest.f90 -L$(OBJ) $(LIBS)"
+	$(CP) ../test/ctest.F90 $(OBJ)/ctest.F90
+#	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+#            $(C_TEST) ctest.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest.f90 -L$(OBJ) $(LIBS)
+            $(C_TEST) ctest.F90 -L$(OBJ) $(LIBS)
 #	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes $(OBJ)/run_test
 #	- $(OBJ)/run_test
 	- $(OBJ)/run_test >& ../test/test_con.output
@@ -153,59 +153,56 @@ run_test_cutest_constrained: ctools test_cutest_constrained
 
 run_test_cutest_threaded_unconstrained: utools test_cutest_unconstrained
 	echo " Exhaustive test of unconstrained threaded tools"
-	$(CP) ../test/utest_threaded.f90 $(OBJ)/utest_threaded.f90
+	$(CP) ../test/utest_threaded.F90 $(OBJ)/utest_threaded.F90
 #	echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-#            $(U_TEST) utest_threaded.f90 -L$(OBJ) $(LIBS)"
+#            $(U_TEST) utest_threaded.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(U_TEST) utest_threaded.f90 -L$(OBJ) $(LIBS)
-#	- $(OBJ)/run_test
+            $(U_TEST) utest_threaded.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_test >& ../test/test_unc_threaded.output
 	cat ../test/test_unc_threaded.output
 	rm $(OBJ)/run_test
 
 run_test_cutest_threaded_constrained: ctools test_cutest_constrained
 	echo " Exhaustive test of constrained threaded tools"
-	$(CP) ../test/ctest_threaded.f90 $(OBJ)/ctest_threaded.f90
-	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest_threaded.f90 -L$(OBJ) $(LIBS)"
+	$(CP) ../test/ctest_threaded.F90 $(OBJ)/ctest_threaded.F90
+#	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+#            $(C_TEST) ctest_threaded.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest_threaded.f90 -L$(OBJ) $(LIBS)
-#	- $(OBJ)/run_test
+            $(C_TEST) ctest_threaded.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_test >& ../test/test_con_threaded.output
 	cat ../test/test_con_threaded.output
 	rm $(OBJ)/run_test
 
 run_test_cutest_constrained_debug: ctools test_cutest_constrained
 	echo " Exhaustive test of constrained tools"
-	$(CP) ../test/ctest_debug.f90 $(OBJ)/ctest_debug.f90
-	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest_debug.f90 -L$(OBJ) $(LIBS)"
+	$(CP) ../test/ctest_debug.F90 $(OBJ)/ctest_debug.F90
+#	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+#            $(C_TEST) ctest_debug.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(C_TEST) ctest_debug.f90 -L$(OBJ) $(LIBS)
+            $(C_TEST) ctest_debug.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_test
 #	- $(OBJ)/run_test >& ../test/test_con.output
 #	cat ../test/test_con.output
-	rm $(OBJ)/run_test $(OBJ)/ctest_debug.f90
+	rm $(OBJ)/run_test $(OBJ)/ctest_debug.F90
 
 run_lqp_test: ctools test_cutest_quadratic
 	echo " Exhaustive test of constrained tools"
-	$(CP) ../test/lqptest.f90 $(OBJ)/lqptest.f90
-	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(Q_TEST) lqptest.f90 -L$(OBJ) $(LIBS)"
+	$(CP) ../test/lqptest.F90 $(OBJ)/lqptest.F90
+#	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+#            $(Q_TEST) lqptest.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(Q_TEST) lqptest.f90 -L$(OBJ) $(LIBS)
-#	- $(OBJ)/run_test
+            $(Q_TEST) lqptest.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_test >& ../test/test_lqp.output
 	cat ../test/test_lqp.output
 	rm $(OBJ)/run_test
 
 run_debug_cutest_constrained: ctools test_cutest_constrained
 	echo " Exhaustive debug of constrained tools"
-	$(CP) ../test/cdebug.f90 $(OBJ)/cdebug.f90
+	$(CP) ../test/cdebug.F90 $(OBJ)/cdebug.F90
 	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_debug \
-            $(C_TEST) cdebug.f90 -L$(OBJ) $(LIBS)"
+            $(C_TEST) cdebug.F90 -L$(OBJ) $(LIBS)"
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_debug \
-            $(C_TEST) cdebug.f90 -L$(OBJ) $(LIBS)
+            $(C_TEST) cdebug.F90 -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_debug
 	rm $(OBJ)/run_debug
 
@@ -322,14 +319,14 @@ $(OBJ)/q_range.o: ../test/q_range_$(PRECIS).f
 
 #  CUTEst interface main programs
 
-$(OBJ)/$(package)_main.o: ../$(package)/$(package)_main.f90
+$(OBJ)/$(package)_main.o: ../$(package)/$(package)_main.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "$(package)_main"
-	$(CP) ../$(package)/$(package)_main.f90 $(OBJ)/$(package)_main.f90
+	$(CP) ../$(package)/$(package)_main.F90 $(OBJ)/$(package)_main.F90
 	cd $(OBJ); $(FORTRAN) -o $(package)_main.o $(FFLAGS) \
-             $(package)_main.f90 \
+             $(package)_main.F90 \
               || ( printf ' %-26s' "=> Disabling optimization " ; \
-              $(FORTRAN) -o $(package)_main.o $(FFLAGS77N) $(package)_main.f90 )
-	$(RM) $(OBJ)/$(package)_main.f90 $(OBJ)/*.mod
+              $(FORTRAN) -o $(package)_main.o $(FFLAGS77N) $(package)_main.F90 )
+	$(RM) $(OBJ)/$(package)_main.F90 $(OBJ)/*.mod
 	@printf '[ OK ]\n'
 
 #  book keeping

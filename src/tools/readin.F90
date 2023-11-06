@@ -1,5 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
 
+#include "cutest_modules.h"
+
 !-*-*-*-*-*-*-*-*-*-*-*-  GALAHAD READ_input  *-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 !  Nick Gould, for GALAHAD productions
@@ -8,10 +10,11 @@
 
       MODULE READ_input
 
+      USE CUTEST_KINDS_precision
+
 !  Read and replace data as required
 
          IMPLICIT NONE
-!S       INTEGER ( KIND = ip_ ), PARAMETER :: wp = KIND( 1.0E+0 )
 
          INTERFACE READ_data
             MODULE PROCEDURE READ_real, READ_integer, READ_logical

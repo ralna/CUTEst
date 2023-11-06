@@ -265,6 +265,7 @@
       data%out = out
       work%io_buffer = io_buffer
       debug = .FALSE.
+!     debug = .TRUE.
       debug = debug .AND. out > 0
 
 !  input the problem dimensions

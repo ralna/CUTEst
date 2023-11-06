@@ -14,7 +14,7 @@
 !  For full documentation, see 
 !   http://galahad.rl.ac.uk/galahad-www/specs.html
 
-    MODULE CUTEST_problem_precision
+    MODULE CUTEST_PROBLEM_precision
 
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -332,4 +332,4 @@
 
       End Subroutine CUTEST_problem_terminate
 
-    END MODULE CUTEST_problem_precision
+    END MODULE CUTEST_PROBLEM_precision

@@ -99,7 +99,7 @@
       CALL WRITE_X( out, n, X, X_l, X_u )
       CALL WRITE_Y( out, m, Y, C_l, C_u, EQUATION, LINEAR )
 
-      X( 1 : 2 )  = (/ 1.1_wp, 2.2_rp_ /)
+      X( 1 : 2 )  = (/ 1.1_rp_, 2.2_rp_ /)
 
 !  obtain numbers of nonlinear variables, and equality and linear constraints
 
@@ -250,7 +250,7 @@
 !  and its sparsity pattern
 
       WRITE( out, "( ' CALL CUTEST_cisgrp for the objective function' )" )
-      CALL CUTEST_cisgrp_threaded( status, n, icon, G_ne, l_g, G_var, thread )
+      CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var, thread )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
 
@@ -407,7 +407,7 @@
 !  and its sparsity pattern
 
       WRITE( out, "( ' CALL CUTEST_cisgrp for a constraint' )" )
-      CALL CUTEST_cisgrp_threaded( status, n, icon, G_ne, l_g, G_var, thread )
+      CALL CUTEST_cisgrp( status, n, icon, G_ne, l_g, G_var, thread )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G_sparsity_pattern( out, G_ne, l_g, G_var )
 

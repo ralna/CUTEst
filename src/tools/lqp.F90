@@ -14,10 +14,10 @@
 !  For full documentation, see 
 !   http://galahad.rl.ac.uk/galahad-www/specs.html
 
-    MODULE CUTEST_LQP_double
+    MODULE CUTEST_LQP_precision
 
       USE CUTEST_KINDS_precision
-      USE CUTEST_interface_double
+      USE CUTEST_INTERFACE_precision
 
       IMPLICIT NONE
 
@@ -151,9 +151,9 @@
 
 !  allocate suitable arrays
 
-      ALLOCATE( X( n ), X_l( n ), X_u( n ), G( n ), Z( n ), C_l( m ), C_u( m ),&
-                Y( m ), X_names( n ), C_names( m ), EQUATN( m ), LINEAR( m ),  &
-                STAT = alloc_status )
+      ALLOCATE( X( n ), X_l( n ), X_u( n ), G( n ), Z( n ),                    &
+                C_l( m ), C_u( m ), Y( m ), X_names( n ), C_names( m ),        &
+                EQUATN( m ), LINEAR( m ), STAT = alloc_status )
       IF ( alloc_status /= 0 ) GO TO 990
 
 !  set up the data structures necessary to hold the problem
@@ -877,4 +877,4 @@
 
 !  end of module CUTEST_LQP_double
 
-   END MODULE CUTEST_LQP_double
+   END MODULE CUTEST_LQP_precision

@@ -255,7 +255,8 @@ cutest.o: $(LC)(cutest_$(PRECIS).o)
 
 $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cutest"
-	$(CP) ../tools/cutest.F90 $(OBJ)/cutest.F90
+	$(CP) ../tools/cutest.F90  $(OBJ)/cutest.F90
+#	cd $(OBJ); $(FORTRAN) -dM  $(DPREC) -I $(CUTEST)/include cutest.F90
 	cd $(OBJ); $(FORTRAN) -o cutest_$(PRECIS).o $(FFLAGS) cutest.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
                    $(FORTRAN) -o cutest_$(PRECIS).o $(FFLAGSN) cutest.F90 )
@@ -1057,7 +1058,7 @@ $(LC)(creport_$(PRECIS).o): ../tools/creport.F90
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-cterminate_$(PRECIS).o: $(LC)(cterminate.o)
+cterminate.o: $(LC)(cterminate_$(PRECIS).o)
 
 $(LC)(cterminate_$(PRECIS).o): ../tools/cterminate.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "cterminate"
@@ -1072,7 +1073,7 @@ $(LC)(cterminate_$(PRECIS).o): ../tools/cterminate.F90
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
-lqp_$(PRECIS).o: $(LC)(lqp.o)
+lqp.o: $(LC)(lqp_$(PRECS).o)
 
 $(LC)(lqp_$(PRECIS).o): ../tools/lqp.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "lqp"
