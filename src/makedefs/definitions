@@ -1,0 +1,73 @@
+#  Standard GALAHAD makefile definitions
+
+#  Nick Gould, for GALAHAD production
+#  This version: 2023-05-18
+
+#  makefile shell
+
+SHELL = /bin/$(BINSHELL)
+
+ifeq "$(PRECIS)" "single"
+ DPREC = -DCUTEST_SINGLE
+else
+ DPREC = -DCUTEST_DOUBLE
+endif
+
+#  compiler flags
+
+F90FLAGS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(USUAL) \
+              $(DPREC) -I $(CUTEST)/include
+F90FLAGSFS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL) \
+               $(DPREC) -I $(CUTEST)/include
+F90FLAGSFN = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90) \
+               $(DPREC) -I $(CUTEST)/include
+FFLAGS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
+            $(DPREC) -I $(CUTEST)/include
+FFLAGSS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL) \
+             $(DPREC) -I $(CUTEST)/include
+FFLAGSN  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
+             $(DPREC) -I $(CUTEST)/include
+RUNFFLAGS = $(OPTIMIZATION) $(DEBUG) $(MODULES) \
+              $(DPREC) -I $(CUTEST)/include
+
+#  names of random libraries
+
+LC  = $(OBJ)/libcutest.a
+LCS = $(OBJS)/libcutest.a
+LCD = $(OBJD)/libcutest.a
+
+BLC  = $(OBJ)/libcutest_blas.a
+BLCS = $(OBJS)/libcutest_blas.a
+BLCD = $(OBJD)/libcutest_blas.a
+
+DLC  = $(OBJ)/libcutest_dummy.a
+DLCS = $(OBJS)/libcutest_dummy.a
+DLCD = $(OBJD)/libcutest_dummy.a
+
+LLC  = $(OBJ)/libcutest_lapack.a
+LLCS = $(OBJS)/libcutest_lapack.a
+LLCD = $(OBJD)/libcutest_lapack.a
+
+#  Libraries used
+
+#LIBS = -lcutest -lcutest_lapack -lcutest_blas
+LIBS = -lcutest
+PLIBS = $(LIBS) -lcutest_problem
+
+#  Archive manipulation strings
+
+ARR = $(AR) $(ARREPFLAGS) $(LC)
+RMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LC)
+RMOBFILE = $(CUTEST)/bin/rmobfile $(RM) $(OBJ)
+
+BARR = $(AR) $(ARREPFLAGS) $(BLC)
+BRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(BLC)
+
+DARR = $(AR) $(ARREPFLAGS) $(DLC)
+
+LARR = $(AR) $(ARREPFLAGS) $(LLC)
+LRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LLC)
+
+#  strings
+
+SUCC = precision version) compiled successfully

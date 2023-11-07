@@ -1,0 +1,48 @@
+#  standard CUTEst package compilation
+
+#  Nick Gould, for GALAHAD production
+#  This version: 2023-11-06
+
+#  pattern rules
+
+$(OBJ)/%.o : %.c
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(CC) -c $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
+
+$(OBJ)/%.o : %.C
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(CC) -c $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
+
+$(OBJ)/%.o : %.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(FORTRAN) -c $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(FORTRAN) -c $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
+
+$(OBJ)/%.o : %.f90
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(FORTRAN) -c $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(FORTRAN) -c $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
+
+$(OBJ)/%.o : %.F
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(FORTRAN) -c $(FFLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(FORTRAN) -c $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
+
+$(OBJ)/%.o : %.f
+	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
+	$(FORTRAN) -c $(FFLAGS) $(CPPFLAGS) $< -o $@ \
+          ||  ( printf ' %-26s' "=> Disabling optimization " ; \
+            $(FORTRAN) -c $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
+	@printf '[ OK ]\n'
