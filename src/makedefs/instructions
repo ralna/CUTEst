@@ -1,0 +1,65 @@
+#  standard CUTEst compilation and run instructions
+
+#  Nick Gould, for GALAHAD production
+#  This version: 2023-11-06
+
+#  compilation agenda
+
+$(PACKAGE) = $(OBJ)/$(package)_main.o
+
+#U_TEST = $(OBJ)/u_elfun.o $(OBJ)/u_group.o $(OBJ)/u_range.o $(OBJ)/u_exter.o
+#C_TEST = $(OBJ)/c_elfun.o $(OBJ)/c_group.o $(OBJ)/c_range.o $(OBJ)/c_exter.o
+U_TEST = $(OBJ)/u_elfun.o $(OBJ)/u_group.o $(OBJ)/u_range.o
+C_TEST = $(OBJ)/c_elfun.o $(OBJ)/c_group.o $(OBJ)/c_range.o
+Q_TEST = $(OBJ)/q_elfun.o $(OBJ)/q_group.o $(OBJ)/q_range.o
+
+#  =========================================================================
+#  ========================== makefile stanza ==============================
+#  =========================================================================
+
+all: $(package)
+
+#  basic packages
+
+$(package): $(package)_$(PRECIS)
+	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
+$(package)_single: $($(PACKAGE))
+$(package)_double: $($(PACKAGE))
+
+# run example tests
+
+run_test: tools test_cutest_unconstrained $(package) $(OBJ)/$(package)_test.o
+	echo " Test of unconstrained $(package)"
+	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+            $(package)_main.o $(package)_test.o $(U_TEST) -L$(OBJ) $(LIBS)
+	ln -fs $(CUTEST)/src/test/u_OUTSDIF.d ../$(package)/OUTSDIF.d
+	- $(OBJ)/run_test >& ../$(package)/u_test.output
+	cat ../$(package)/u_test.output
+	rm $(OBJ)/run_test ../$(package)/OUTSDIF.d
+
+test_cutest_unconstrained:
+	( cd ../test ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+            test_cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
+tools:
+	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+utools:
+	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+ctools:
+	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+
+#  book keeping
+
+clean:
+	@printf ' %-9s\t\t' "Cleaning"
+	$(RM) $(OBJ)/*
+	@printf '[ OK ]\n'
+
+cleanall:
+	@printf ' %-14s\t\t' \
+          "Removing all $(PRECIS) precision object and module files"
+	$(RM) $(OBJ)/* $(MOD)/*
+	@printf '[ OK ]\n'
+
