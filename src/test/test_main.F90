@@ -14,7 +14,7 @@
 !   fortran 2003 version released November 2012
 
      USE CUTEST_KINDS_precision
-     USE CUTEst_INTERFACE_precision
+     USE CUTEST_INTERFACE_precision
 
 !----------------------
 !   P a r a m e t e r s

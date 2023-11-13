@@ -1,5 +1,5 @@
 /*
- * assign names for each double precision CUTEst routine using 
+ * assign names for each double precision CUTEst routine using
  * the C pre-processor
  *
  * Nick Gould for CUTEst
@@ -24,7 +24,7 @@
 #define CUTEST_cchprodsp_r CUTEST_cchprodsp
 #define CUTEST_cchprodsp_threadsafe_r CUTEST_cchprodsp_threadsafe
 #define CUTEST_cchprods_r CUTEST_cchprods
-#define CUTEST_cchprods_threaded_r CUTEST_cchprods_threaded
+#define CUTEST_cchprods_threaded_r CUTEST_cchprods_threaded_w
 #define CUTEST_cchprods_threadsafe_r CUTEST_cchprods_threadsafe
 #define CUTEST_ccifg_r CUTEST_ccifg
 #define CUTEST_ccifg_threaded_r CUTEST_ccifg_threaded

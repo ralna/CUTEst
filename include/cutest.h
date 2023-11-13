@@ -95,11 +95,13 @@ typedef struct VarTypes {
 #define CUTEST_ureport    FUNDERSCORE(cutest_ureport)
 
 #define CUTEST_cdimen     FUNDERSCORE(cutest_cdimen)
+#define CUTEST_cdimsg     FUNDERSCORE(cutest_cdimsg)
 #define CUTEST_cdimsj     FUNDERSCORE(cutest_cdimsj)
 #define CUTEST_cdimsh     FUNDERSCORE(cutest_cdimsh)
+#define CUTEST_cdimohp    FUNDERSCORE(cutest_cdimohp)
 #define CUTEST_cdimchp    FUNDERSCORE(cutest_cdimchp)
 #define CUTEST_cdimse     FUNDERSCORE(cutest_cdimse)
-#define CUTEST_cdstats    FUNDERSCORE(cutest_cstats)
+#define CUTEST_cstats     FUNDERSCORE(cutest_cstats)
 #define CUTEST_cvartype   FUNDERSCORE(cutest_cvartype)
 #define CUTEST_cnames     FUNDERSCORE(cutest_cnames)
 #define CUTEST_creport    FUNDERSCORE(cutest_creport)
@@ -124,12 +126,15 @@ typedef struct VarTypes {
 #define CUTEST_ushprod    FUNDERSCORE(cutest_cint_ushprod)
 
 #define CUTEST_cfn        FUNDERSCORE(cutest_cfn)
+#define CUTEST_const      FUNDERSCORE(cutest_const)
 #define CUTEST_cofg       FUNDERSCORE(cutest_cint_cofg)
 #define CUTEST_cofsg      FUNDERSCORE(cutest_cint_cofsg)
 #define CUTEST_ccfg       FUNDERSCORE(cutest_cint_ccfg)
 #define CUTEST_clfg       FUNDERSCORE(cutest_cint_clfg)
 #define CUTEST_cgr        FUNDERSCORE(cutest_cint_cgr)
 #define CUTEST_csgr       FUNDERSCORE(cutest_cint_csgr)
+#define CUTEST_csgrp      FUNDERSCORE(cutest_cint_csgrp)
+#define CUTEST_csjp       FUNDERSCORE(cutest_cint_csjp)
 #define CUTEST_ccfsg      FUNDERSCORE(cutest_cint_ccfsg)
 #define CUTEST_ccifg      FUNDERSCORE(cutest_cint_ccifg)
 #define CUTEST_ccifsg     FUNDERSCORE(cutest_cint_ccifsg)
@@ -139,21 +144,28 @@ typedef struct VarTypes {
 #define CUTEST_cshp       FUNDERSCORE(cutest_cshp)
 #define CUTEST_csh        FUNDERSCORE(cutest_csh)
 #define CUTEST_cshc       FUNDERSCORE(cutest_cshc)
+#define CUTEST_cshj       FUNDERSCORE(cutest_cshj)
 #define CUTEST_ceh        FUNDERSCORE(cutest_cint_ceh)
 #define CUTEST_cifn       FUNDERSCORE(cutest_cifn)
 #define CUTEST_cigr       FUNDERSCORE(cutest_cigr)
-#define CUTEST_cisgr       FUNDERSCORE(cutest_cisgr)
+#define CUTEST_cisgr      FUNDERSCORE(cutest_cisgr)
+#define CUTEST_cisgrp     FUNDERSCORE(cutest_cisgrp)
 #define CUTEST_cidh       FUNDERSCORE(cutest_cidh)
 #define CUTEST_cish       FUNDERSCORE(cutest_cish)
 #define CUTEST_csgrsh     FUNDERSCORE(cutest_cint_csgrsh)
+#define CUTEST_csgrshp    FUNDERSCORE(cutest_cint_csgrshp)
 #define CUTEST_csgreh     FUNDERSCORE(cutest_cint_csgreh)
 #define CUTEST_chprod     FUNDERSCORE(cutest_cint_chprod)
 #define CUTEST_cshprod    FUNDERSCORE(cutest_cint_chsprod)
 #define CUTEST_chcprod    FUNDERSCORE(cutest_cint_chcprod)
 #define CUTEST_cshcprod   FUNDERSCORE(cutest_cint_cshcprod)
+#define CUTEST_chjprod    FUNDERSCORE(cutest_cint_chjprod)
 #define CUTEST_cjprod     FUNDERSCORE(cutest_cint_cjprod)
 #define CUTEST_csjprod    FUNDERSCORE(cutest_cint_csjprod)
 #define CUTEST_cchprods   FUNDERSCORE(cutest_cint_cchprods)
+#define CUTEST_cchprodsp  FUNDERSCORE(cutest_cint_cchprodsp)
+#define CUTEST_cohprods   FUNDERSCORE(cutest_cint_cohprods)
+#define CUTEST_cohprodsp  FUNDERSCORE(cutest_cint_cohprodsp)
 
 #define CUTEST_uterminate FUNDERSCORE(cutest_uterminate)
 #define CUTEST_cterminate FUNDERSCORE(cutest_cterminate)
@@ -192,8 +204,10 @@ void CUTEST_ureport ( integer *status, doublereal *calls, doublereal *time );
 /* Constrained dimensioning and report routines */
 void CUTEST_cdimen  ( integer *status, const integer *funit, integer *n,
                       integer *m );
+void CUTEST_cdimsg  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh  ( integer *status, integer *nnzh );
+void CUTEST_cdimcop ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp ( integer *status, integer *nnzchp );
 void CUTEST_cdimse  ( integer *status, integer *ne, integer *nzh,
                       integer *nzirnh );
@@ -253,6 +267,7 @@ void CUTEST_ubandh  ( integer *status, const integer *n, const doublereal *x,
 /* Constrained optimization routines */
 void CUTEST_cfn     ( integer *status,  const integer *n, const integer *m,
                       const doublereal *x, doublereal *f, doublereal *c );
+void CUTEST_cconst  ( integer *status,  const integer *m, doublereal *c );
 void CUTEST_cofg    ( integer *status, const integer *n, const doublereal *x,
                       doublereal *f, doublereal *g, const logical *grad );
 void CUTEST_cofsg   ( integer *status, const integer *n, const doublereal *x,
@@ -275,6 +290,10 @@ void CUTEST_csgr    ( integer *status, const integer *n, const integer *m,
                       const logical *grlagf, integer *nnzj,
                       const integer *lcjac, doublereal *cjac,
                       integer *indvar, integer *indfun );
+void CUTEST_csgrp   ( integer *status, const integer *n, integer *nnzj,
+                      const integer *lj, integer *jvar, integer *jcon );
+void CUTEST_csjp    ( integer *status, integer *nnzj, const integer *lj,
+                      integer *jvar, integer *jcon );
 void CUTEST_ccfsg   ( integer *status,  const integer *n, const integer *m,
                       const doublereal *x, doublereal *c, integer *nnzj,
                       const integer *lcjac, doublereal *cjac, integer *indvar,
@@ -308,6 +327,11 @@ void CUTEST_cshc    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y, integer *nnzh,
                       const integer *lh, doublereal *h,
                       integer *irnh, integer *icnh );
+void CUTEST_cshj    ( integer *status, const integer *n, const integer *m,
+                      const doublereal *x, const doublereal *y0,
+                      const doublereal *y, integer *nnzh,
+                      const integer *lh, doublereal *h,
+                      integer *irnh, integer *icnh );
 void CUTEST_ceh     ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y,
                       integer *ne, const integer *le, integer *iprnhi,
@@ -321,6 +345,8 @@ void CUTEST_cigr    ( integer *status, const integer *n, const integer *iprob,
 void CUTEST_cisgr   ( integer *status, const integer *n, const integer *iprob,
                       const doublereal *x, integer *nnzg, const integer *lg,
                       doublereal *sg, integer *ivsg );
+void CUTEST_cisgrp  ( integer *status, const integer *n, const integer *iprob,
+                      integer *nnzg, const integer *lg, integer *ivsg );
 void CUTEST_cidh    ( integer *status, const integer *n, const doublereal *x,
                       const integer *iprob, const integer *lh1, doublereal *h );
 void CUTEST_cish    ( integer *status, const integer *n, const doublereal *x,
@@ -332,6 +358,10 @@ void CUTEST_csgrsh  ( integer *status, const integer *n, const integer *m,
                       const integer *lcjac, doublereal *cjac, integer *indvar,
                       integer *indfun, integer *nnzh, const integer *lh,
                       doublereal *h, integer *irnh, integer *icnh );
+void CUTEST_csgrshp ( integer *status, const integer *n, integer *nnzj,
+                      const integer *lcjac, integer *indvar,
+                      integer *indfun, integer *nnzh, const integer *lh,
+                      integer *irnh, integer *icnh );
 void CUTEST_csgreh  ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y,
                       const logical *grlagf, integer *nnzj,
@@ -349,14 +379,18 @@ void CUTEST_cshprod ( integer *status, const integer *n, const integer *m,
                       const doublereal *y, const integer *nnzp,
                       const integer *indp, const doublereal *p,
                       integer *nnzr, integer *indr, doublereal *r );
-void CUTEST_chcprod( integer *status, const integer *n, const integer *m,
-                     const logical *goth, const doublereal *x,
-                     const doublereal *y, doublereal *p, doublereal *q );
+void CUTEST_chcprod ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const doublereal *x,
+                      const doublereal *y, doublereal *p, doublereal *q );
 void CUTEST_cshcprod( integer *status, const integer *n, const integer *m,
                       const logical *goth, const doublereal *x,
                       const doublereal *y, integer *nnzp, integer *indp,
                       doublereal *p, integer *nnzr, integer *indr,
                       doublereal *r );
+void CUTEST_chjprod ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const doublereal *x,
+                      const doublereal *y0,
+                      const doublereal *y, doublereal *p, doublereal *q );
 void CUTEST_cjprod  ( integer *status, const integer *n, const integer *m,
                       const logical *gotj, const logical *jtrans,
                       const doublereal *x, const doublereal *p,
@@ -371,6 +405,14 @@ void CUTEST_cchprods( integer *status, const integer *n, const integer *m,
                       const logical *goth, const doublereal *x,
                       const doublereal *p, const integer *lchp,
                       doublereal *chpval, integer *chpind, integer *chpptr );
+void CUTEST_cchprodsp( integer *status, const integer *m,
+                       const integer *lchp, integer *chpind, integer *chpptr );
+void CUTEST_cohprods( integer *status, const integer *n,
+                      const logical *goth, const doublereal *x,
+                      const doublereal *p, integer *nnzohp, const integer *lohp,
+                      doublereal *ohpval, integer *ohpind );
+void CUTEST_cohprodsp( integer *status, integer *nnzohp,
+                       const integer *lohp, integer *chpind );
 
 /* Termination routines */
 void CUTEST_uterminate( integer *status );

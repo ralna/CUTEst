@@ -2,7 +2,6 @@
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
-#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T    C C H P R O D S P   S U B R O U T I N E  -*-*-*-*-
 
@@ -103,5 +102,3 @@
 !  end of subroutine CUTEST_cchprodsp_threadsafe_r
 
       END SUBROUTINE CUTEST_cchprodsp_threadsafe_r
-
-

@@ -9,7 +9,7 @@ export PACKDIR=test
 
 # Precision for which the package was written
 # Valid values are "single", "double", "single double" and "double single"
-export PACK_PRECISION="double"
+export PACK_PRECISION="double single"
 
 # Define the name of any package object files used; any object file without
 # a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/

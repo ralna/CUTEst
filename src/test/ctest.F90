@@ -15,7 +15,7 @@
 
      USE CUTEST_KINDS_precision
      USE CUTEST_INTERFACE_precision
- 
+
 !----------------------
 !   P a r a m e t e r s
 !----------------------
@@ -91,7 +91,7 @@
 !  set up SIF data
 
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
-      CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,       &
+      CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,     &
                       Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_X( out, n, X, X_l, X_u )
@@ -102,7 +102,7 @@
 !  obtain numbers of nonlinear variables, and equality and linear constraints
 
       WRITE( out, "( ' CALL CUTEST_cstats' )" )
-      CALL CUTEST_cstats_r( status, nonlinear_variables_objective,               &
+      CALL CUTEST_cstats_r( status, nonlinear_variables_objective,             &
                           nonlinear_variables_constraints,                     &
                           equality_constraints, linear_constraints )
       IF ( status /= 0 ) GO TO 900
@@ -166,7 +166,7 @@
       grlagf = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .TRUE. and ',             &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                  &
+      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                &
                        l_j2_1, l_j2_2, J2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -174,7 +174,7 @@
       grlagf = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .TRUE. and ',             &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                  &
+      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                &
                        l_j2_1, l_j2_2, J2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -182,7 +182,7 @@
       grlagf = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .FALSE. and ',            &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                  &
+      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                &
                        l_j2_1, l_j2_2, J2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -190,7 +190,7 @@
       grlagf = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .FALSE. and ',            &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                  &
+      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,                &
                        l_j2_1, l_j2_2, J2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -225,13 +225,13 @@
       IF ( alloc_stat /= 0 ) GO TO 990
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cofsg with grad = .FALSE.' )" )
-      CALL CUTEST_cofsg_r( status, n, X, f,                                      &
+      CALL CUTEST_cofsg_r( status, n, X, f,                                    &
                          G_ne, l_g, G_val, G_var, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_f( out, f )
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cofsg with grad = .TRUE.' )" )
-      CALL CUTEST_cofsg_r( status, n, X, f,                                      &
+      CALL CUTEST_cofsg_r( status, n, X, f,                                    &
                          G_ne, l_g, G_val, G_var, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_f( out, f )
@@ -288,13 +288,13 @@
 
       grlagf = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgr with grlagf = .TRUE.' )" )
-      CALL CUTEST_csgr_r( status, n, m, X, Y, grlagf,                            &
+      CALL CUTEST_csgr_r( status, n, m, X, Y, grlagf,                          &
                         J_ne, l_j, J_val, J_var, J_fun )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       grlagf = .FALSE.
       WRITE( out, "( ' CALL CUTEST_csgr with grlagf = .FALSE.' )" )
-      CALL CUTEST_csgr_r( status, n, m, X, Y, grlagf,                            &
+      CALL CUTEST_csgr_r( status, n, m, X, Y, grlagf,                          &
                         J_ne, l_j, J_val, J_var, J_fun )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
@@ -304,7 +304,7 @@
       grad = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .TRUE. and ',              &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                            &
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                          &
                         l_j2_1, l_j2_2, J2_val, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
@@ -312,7 +312,7 @@
       grad = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .TRUE. and ',              &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                            &
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                          &
                         l_j2_1, l_j2_2, J2_val, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
@@ -320,14 +320,14 @@
       grad = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .FALSE. and ',             &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                            &
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                          &
                         l_j2_1, l_j2_2, J2_val, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
       grad = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .FALSE. and ',             &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                            &
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans,                          &
                         l_j2_1, l_j2_2, J2_val, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
@@ -336,14 +336,14 @@
 
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfsg with grad = .TRUE.' )" )
-      CALL CUTEST_ccfsg_r( status, n, m, X, C,                                   &
+      CALL CUTEST_ccfsg_r( status, n, m, X, C,                                 &
                          J_ne, l_j, J_val, J_var, J_fun, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfsg with grad = .FALSE.' )" )
-      CALL CUTEST_ccfsg_r( status, n, m, X, C,                                   &
+      CALL CUTEST_ccfsg_r( status, n, m, X, C,                                 &
                          J_ne, l_j, J_val, J_var, J_fun, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_C( out, m, C )
@@ -388,13 +388,13 @@
 
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccifsg with grad = .FALSE.' )" )
-      CALL CUTEST_ccifsg_r( status, n, icon, X, ci,                              &
+      CALL CUTEST_ccifsg_r( status, n, icon, X, ci,                            &
                           Ji_ne, n, Ji, J_var, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_CI( out, icon, ci )
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccifsg with grad = .TRUE.' )" )
-      CALL CUTEST_ccifsg_r( status, n, icon, X, ci,                              &
+      CALL CUTEST_ccifsg_r( status, n, icon, X, ci,                            &
                           Ji_ne, n, Ji, J_var, grad )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_CI( out, icon, ci )
@@ -446,7 +446,7 @@
       grlagf = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .TRUE. and ',           &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,                &
+      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,              &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -454,7 +454,7 @@
       grlagf = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .TRUE. and ',           &
      &               'jtrans = .FALSE.' )")
-      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,                &
+      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,              &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -462,7 +462,7 @@
       grlagf = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .FALSE. and ',          &
      &               'jtrans = .TRUE.' )")
-      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,                &
+      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,              &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -470,7 +470,7 @@
       grlagf = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .FALSE. and ',          &
      &               'jtrans = .FALSE.')")
-      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,                &
+      CALL CUTEST_cgrdh_r( status, n, m, X, Y, grlagf, G, jtrans,              &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_G( out, n, G )
@@ -497,7 +497,7 @@
 !  compute the sparse Hessian value
 
       WRITE( out, "( ' CALL CUTEST_csh' )" )
-      CALL CUTEST_csh_r( status, n, m, X, Y,                                     &
+      CALL CUTEST_csh_r( status, n, m, X, Y,                                   &
                        H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
@@ -505,7 +505,7 @@
 !  compute the sparse Hessian value without the objective
 
       WRITE( out, "( ' CALL CUTEST_cshc' )" )
-      CALL CUTEST_cshc_r( status, n, m, X, Y,                                    &
+      CALL CUTEST_cshc_r( status, n, m, X, Y,                                  &
                         H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
@@ -514,7 +514,7 @@
 
       y0 = 1.0_rp_
       WRITE( out, "( ' CALL CUTEST_cshj' )" )
-      CALL CUTEST_cshj_r( status, n, m, X, y0, Y,                                &
+      CALL CUTEST_cshj_r( status, n, m, X, y0, Y,                              &
                         H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
@@ -523,13 +523,13 @@
 
       iprob = 0
       WRITE( out, "( ' CALL CUTEST_cish for objective' )" )
-      CALL CUTEST_cish_r( status, n, X, iprob,                                   &
+      CALL CUTEST_cish_r( status, n, X, iprob,                                 &
                         H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
       iprob = 1
       WRITE( out, "( ' CALL CUTEST_cish for a constraint' )" )
-      CALL CUTEST_cish_r( status, n, X, iprob,                                   &
+      CALL CUTEST_cish_r( status, n, X, iprob,                                 &
                         H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
@@ -537,7 +537,7 @@
 !  compute the sparsity pattern of the gradients and Hessian
 
       WRITE( out, "( ' Call CUTEST_csgrshp' )" )
-      CALL CUTEST_csgrshp_r( status, n, J_ne, l_j, J_var, J_fun,                 &
+      CALL CUTEST_csgrshp_r( status, n, J_ne, l_j, J_var, J_fun,               &
                            H_ne, l_h, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
@@ -547,14 +547,14 @@
 
       grlagf = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgrsh with grlagf = .TRUE.' )" )
-      CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf, J_ne, l_j, J_val,        &
+      CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf, J_ne, l_j, J_val,      &
                    J_var, J_fun, H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
       grlagf = .FALSE.
       WRITE( out, "( ' CALL CUTEST_csgrsh with grlagf = .FALSE.' )" )
-      CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf, J_ne, l_j, J_val,        &
+      CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf, J_ne, l_j, J_val,      &
                    J_var, J_fun, H_ne, l_h, H_val, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
@@ -579,14 +579,14 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ceh with byrows = .FALSE.' )" )
-      CALL CUTEST_ceh_r( status, n, m, X, Y, HE_nel, lhe_ptr, HE_row_ptr,        &
+      CALL CUTEST_ceh_r( status, n, m, X, Y, HE_nel, lhe_ptr, HE_row_ptr,      &
                        HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ceh with byrows = .TRUE.' )" )
-      CALL CUTEST_ceh_r( status, n, m, X, Y, HE_nel, lhe_ptr, HE_row_ptr,        &
+      CALL CUTEST_ceh_r( status, n, m, X, Y, HE_nel, lhe_ptr, HE_row_ptr,      &
                        HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
@@ -597,7 +597,7 @@
       grlagf = .TRUE. ; byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgreh with grlagf = .TRUE. and ',          &
      &               'byrows = .TRUE.')" )
-      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,               &
+      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,             &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
@@ -607,7 +607,7 @@
       grlagf = .TRUE. ; byrows = .FALSE.
       WRITE( out, "(' CALL CUTEST_csgreh with grlagf = .TRUE. and ',           &
      &               'byrows = .FALSE.')" )
-      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,               &
+      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,             &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
@@ -617,7 +617,7 @@
       grlagf = .FALSE. ; byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgreh with grlagf = .FALSE. and ',         &
      &               'byrows = .TRUE.')")
-      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,               &
+      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,             &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
@@ -627,7 +627,7 @@
       grlagf = .FALSE. ; byrows = .FALSE.
       WRITE( out, "(' CALL CUTEST_csgreh with grlagf = .FALSE. and ',          &
      &               'byrows = .FALSE.')")
-      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,               &
+      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf, J_ne, l_j,             &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO TO 900
@@ -654,7 +654,7 @@
       nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
-      CALL CUTEST_cshprod_r( status, n, m, goth, X, Y,                           &
+      CALL CUTEST_cshprod_r( status, n, m, goth, X, Y,                         &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO TO 900
@@ -663,7 +663,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
-      CALL CUTEST_cshprod_r( status, n, m, goth, X, Y,                           &
+      CALL CUTEST_cshprod_r( status, n, m, goth, X, Y,                         &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO TO 900
@@ -700,7 +700,7 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
-      CALL CUTEST_cshcprod_r( status, n, m, goth, X, Y,                          &
+      CALL CUTEST_cshcprod_r( status, n, m, goth, X, Y,                        &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO TO 900
@@ -709,7 +709,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
-      CALL CUTEST_cshcprod_r( status, n, m, goth, X, Y,                          &
+      CALL CUTEST_cshcprod_r( status, n, m, goth, X, Y,                        &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO TO 900
@@ -721,47 +721,51 @@
       VECTOR( 1 ) = one ; VECTOR( 2 : MAX( n, m ) ) = zero
       gotj = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CJPROD with gotj = .FALSE. and jtrans = .FALSE.')" )
-      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, n, RESULT, m )
+      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, n,          &
+                            RESULT, m )
       CALL WRITE_RESULT2( out, n, VECTOR, m, RESULT )
       gotj = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CJPROD with gotj = .TRUE. and jtrans = .FALSE.' )" )
-      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, n, RESULT, m )
+      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, n,          &
+                            RESULT, m )
       CALL WRITE_RESULT2( out, n, VECTOR, m, RESULT )
       gotj = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CJPROD with gotj = .FALSE. and jtrans = .TRUE.')" )
-      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, m, RESULT, n )
+      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, m,          &
+                            RESULT, n )
       CALL WRITE_RESULT2( out, m, VECTOR, n, RESULT )
       gotj = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CJPROD with gotj = .TRUE. and jtrans = .TRUE.' )" )
-      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, m, RESULT, n )
+      CALL CUTEST_cjprod_r( status, n, m, gotj, jtrans, X, VECTOR, m,          &
+                            RESULT, n )
       CALL WRITE_RESULT2( out, m, VECTOR, n, RESULT )
 
 !  compute a sparse Jacobian-vector product
 
       gotj = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .FALSE. and jtrans = .FALSE.')")
-      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                      &
+      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                    &
                            nnz_vector, INDEX_nz_vector, VECTOR, n,             &
                            nnz_result, INDEX_nz_result, RESULT, m )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,        &
                            nnz_result, INDEX_nz_result, RESULT, m )
       gotj = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .TRUE. and jtrans = .FALSE.')" )
-      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                      &
+      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                    &
                            nnz_vector, INDEX_nz_vector, VECTOR, n,             &
                            nnz_result, INDEX_nz_result, RESULT, m )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,        &
                            nnz_result, INDEX_nz_result, RESULT, m )
       gotj = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .FALSE. and jtrans = .TRUE.')" )
-      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                      &
+      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                    &
                            nnz_vector, INDEX_nz_vector, VECTOR, m,             &
                            nnz_result, INDEX_nz_result, RESULT, n )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,        &
                            nnz_result, INDEX_nz_result, RESULT, n )
       gotj = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .TRUE. and jtrans = .TRUE.' )" )
-      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                      &
+      CALL CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,                    &
                            nnz_vector, INDEX_nz_vector, VECTOR, m,             &
                            nnz_result, INDEX_nz_result, RESULT, n )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,        &
@@ -792,15 +796,15 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cchprods with goth = .FALSE.' )" )
-!      CALL CUTEST_cchprods_r( status, n, m, goth, X, VECTOR, l_chp,           &
-!                            CHP_val, CHP_ind, CHP_ptr )
-!      CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+       CALL CUTEST_cchprods_r( status, n, m, goth, X, VECTOR, l_chp,           &
+                             CHP_val, CHP_ind, CHP_ptr )
+       CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cchprods with goth = .TRUE.' )" )
-!      CALL CUTEST_cchprods_r( status, n, m, goth, X, VECTOR, l_chp,           &
-!                            CHP_val, CHP_ind, CHP_ptr )
-!      CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
+       CALL CUTEST_cchprods_r( status, n, m, goth, X, VECTOR, l_chp,           &
+                             CHP_val, CHP_ind, CHP_ptr )
+       CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
 
 !  compute the number of nonzeros when forming the products of the objective
 !  Hessians with a vector
@@ -826,13 +830,13 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cohprods with goth = .FALSE.' )" )
-      CALL CUTEST_cohprods_r( status, n, goth, X, VECTOR,                        &
+      CALL CUTEST_cohprods_r( status, n, goth, X, VECTOR,                      &
                             OHP_ne, l_ohp, OHP_val, OHP_ind )
       CALL WRITE_OHP( out, OHP_ne, l_ohp, OHP_val, OHP_ind )
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cohprods with goth = .TRUE.' )" )
-      CALL CUTEST_cohprods_r( status, n, goth, X, VECTOR,                        &
+      CALL CUTEST_cohprods_r( status, n, goth, X, VECTOR,                      &
                             OHP_ne, l_ohp, OHP_val, OHP_ind )
       CALL WRITE_OHP( out, OHP_ne, l_ohp, OHP_val, OHP_ind )
 
@@ -852,7 +856,7 @@
 !  one more setup ...
 
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
-      CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,       &
+      CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,     &
                       Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
       IF ( status /= 0 ) GO TO 900
 
@@ -1286,7 +1290,8 @@
       SUBROUTINE WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR,     &
                                  len_vector, nnz_result, INDEX_nz_result,      &
                                  RESULT, len_result )
-      INTEGER ( KIND = ip_ ) :: len_vector, len_result, out,  nnz_vector,  nnz_result
+      INTEGER ( KIND = ip_ ) :: len_vector, len_result, out
+      INTEGER ( KIND = ip_ ) :: nnz_vector,  nnz_result
       INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ) :: INDEX_nz_vector
       INTEGER ( KIND = ip_ ), DIMENSION( n ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), DIMENSION( len_vector ) :: VECTOR

@@ -30,7 +30,7 @@ FFLAGS77  = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
               $(DPREC) -I $(CUTEST)/include
 FFLAGS77S = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL) \
               $(DPREC) -I $(CUTEST)/include
-FFLAGS7N  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
+FFLAGS77N  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
               $(DPREC) -I $(CUTEST)/include
 RUNFFLAGS =          $(OPTIMIZATION) $(DEBUG) $(MODULES) \
               $(DPREC) -I $(CUTEST)/include
@@ -326,7 +326,7 @@ $(OBJ)/$(package)_main.o: ../$(package)/$(package)_main.F90
 	cd $(OBJ); $(FORTRAN) -o $(package)_main.o $(FFLAGS) \
              $(package)_main.F90 \
               || ( printf ' %-26s' "=> Disabling optimization " ; \
-              $(FORTRAN) -o $(package)_main.o $(FFLAGS77N) $(package)_main.F90 )
+              $(FORTRAN) -o $(package)_main.o $(FFLAGSN) $(package)_main.F90 )
 	$(RM) $(OBJ)/$(package)_main.F90 $(OBJ)/*.mod
 	@printf '[ OK ]\n'
 
@@ -342,4 +342,3 @@ cleanall:
           "Removing all $(PRECIS) precision object and module files"
 	$(RM) $(OBJ)/* $(MOD)/*
 	@printf '[ OK ]\n'
-

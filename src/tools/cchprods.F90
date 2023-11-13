@@ -1,6 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-  C U T E S T   C I N T _ C C H P R O D S    S U B R O U T I N E  -*-*-
 
@@ -518,5 +519,3 @@
 !  end of subroutine CUTEST_cchprods_threadsafe_r
 
       END SUBROUTINE CUTEST_cchprods_threadsafe_r
-
-
