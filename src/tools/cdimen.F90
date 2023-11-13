@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C D I M E N    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -11,7 +12,7 @@
 !   fortran 77 version originally released in CUTEr, September 1999
 !   fortran 2003 version released in CUTEst, 19th November 2012
 
-      SUBROUTINE CUTEST_cdimen( status, input, n, m )
+      SUBROUTINE CUTEST_cdimen_r( status, input, n, m )
       USE CUTEST_KINDS_precision
 
 !  dummy arguments
@@ -84,6 +85,6 @@
       status = 0
       RETURN
 
-!  End of subroutine CUTEST_cdimen
+!  End of subroutine CUTEST_cdimen_r
 
-      END SUBROUTINE CUTEST_cdimen
+      END SUBROUTINE CUTEST_cdimen_r

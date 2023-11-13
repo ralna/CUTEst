@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C I G R    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 12th October 2016
 
-      SUBROUTINE CUTEST_cigr( status, n, iprob, X, GR )
+      SUBROUTINE CUTEST_cigr_r( status, n, iprob, X, GR )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -31,14 +32,14 @@
 !  calculations for a sparse gradient vector.)
 !  -------------------------------------------------------------------
 
-      CALL CUTEST_cigr_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_cigr_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( 1 ),                    &
                                    status, n, iprob, X, GR )
       RETURN
 
-!  end of subroutine CUTEST_cigr
+!  end of subroutine CUTEST_cigr_r
 
-      END SUBROUTINE CUTEST_cigr
+      END SUBROUTINE CUTEST_cigr_r
 
 !-*-*-  C U T E S T    C I G R _ t h r e a d e d   S U B R O U T I N E  -*-*-
 
@@ -48,7 +49,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 12th October 2016
 
-      SUBROUTINE CUTEST_cigr_threaded( status, n, iprob, X, GR, thread )
+      SUBROUTINE CUTEST_cigr_threaded_r( status, n, iprob, X, GR, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -80,14 +81,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cigr_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_cigr_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( thread ),               &
                                    status, n, iprob, X, GR )
       RETURN
 
-!  end of subroutine CUTEST_cigr_threaded
+!  end of subroutine CUTEST_cigr_threaded_r
 
-      END SUBROUTINE CUTEST_cigr_threaded
+      END SUBROUTINE CUTEST_cigr_threaded_r
 
 !-*-  C U T E S T    C I G R _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -97,7 +98,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 12th October 2016
 
-      SUBROUTINE CUTEST_cigr_threadsafe( data, work, status, n, iprob, X, GR )
+      SUBROUTINE CUTEST_cigr_threadsafe_r( data, work, status, n, iprob, X, GR )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -129,7 +130,6 @@
       REAL :: time_in, time_out
       LOGICAL :: nontrv
       INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -197,7 +197,7 @@
 
 !  evaluate the element functions
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,            &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -207,7 +207,7 @@
 
 !  evaluate the element function derivatives
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,            &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -255,7 +255,7 @@
 
         ELSE
           ICALCG( 1 ) = ig
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
                       data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
                       .FALSE., igstat )
@@ -263,7 +263,7 @@
 
 !  evaluate the group derivative
 
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
                       data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
                       .TRUE., igstat )
@@ -300,7 +300,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,            &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
                           nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
@@ -412,7 +412,7 @@
 !  evaluate the group function values
 
         ELSE
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,       &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .FALSE., igstat )
@@ -420,7 +420,7 @@
 
 !  evaluate the group derivative values.
 
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                        .TRUE., igstat )
@@ -461,7 +461,7 @@
 !  the iel-th element has an internal representation
 
                 nin = data%INTVAR( iel + 1 ) - k
-                CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
@@ -542,6 +542,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cigr_threadsafe
+!  end of subroutine CUTEST_cigr_threadsafe_r
 
-      END SUBROUTINE CUTEST_cigr_threadsafe
+      END SUBROUTINE CUTEST_cigr_threadsafe_r

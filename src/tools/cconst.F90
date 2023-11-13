@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C C O N S T    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 14th March 2016
 
-      SUBROUTINE CUTEST_cconst( status, m, CONST )
+      SUBROUTINE CUTEST_cconst_r( status, m, CONST )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -25,14 +26,14 @@
 !  of a function initially written in Standard Input Format (SIF)
 !  ---------------------------------------------------------------------
 
-      CALL CUTEST_cconst_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cconst_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, m, CONST )
       RETURN
 
-!  end of subroutine CUTEST_cconst
+!  end of subroutine CUTEST_cconst_r
 
-      END SUBROUTINE CUTEST_cconst
+      END SUBROUTINE CUTEST_cconst_r
 
 !-*-*-  C U T E S T    C C O N S T _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -42,7 +43,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 14th March 2016
 
-      SUBROUTINE CUTEST_cconst_threaded( status, m, CONST, thread )
+      SUBROUTINE CUTEST_cconst_threaded_r( status, m, CONST, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -68,14 +69,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cconst_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cconst_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( thread ),             &
                                      status, m, CONST )
       RETURN
 
-!  end of subroutine CUTEST_cconst_threaded
+!  end of subroutine CUTEST_cconst_threaded_r
 
-      END SUBROUTINE CUTEST_cconst_threaded
+      END SUBROUTINE CUTEST_cconst_threaded_r
 
 !-*-  C U T E S T    C C O N S T _ t h r e a d s a f e   S U B R O U T I N E -*-
 
@@ -85,7 +86,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 14th March 2016
 
-      SUBROUTINE CUTEST_cconst_threadsafe( data, work, status, m, CONST )
+      SUBROUTINE CUTEST_cconst_threadsafe_r( data, work, status, m, CONST )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -130,6 +131,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cconst_threadsafe
+!  end of subroutine CUTEST_cconst_threadsafe_r
 
-      END SUBROUTINE CUTEST_cconst_threadsafe
+      END SUBROUTINE CUTEST_cconst_threadsafe_r

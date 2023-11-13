@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T  C I N T _  U O F G    S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_uofg( status, n, X, f, G, grad )
+      SUBROUTINE CUTEST_Cint_uofg_r( status, n, X, f, G, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -36,13 +37,13 @@
       LOGICAL :: grad_fortran
 
       grad_fortran = grad
-      CALL CUTEST_uofg( status, n, X, f, G, grad_fortran )
+      CALL CUTEST_uofg_r( status, n, X, f, G, grad_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_uofg
+!  end of subroutine CUTEST_Cint_uofg_r
 
-      END SUBROUTINE CUTEST_Cint_uofg
+      END SUBROUTINE CUTEST_Cint_uofg_r
 
 !-*-*-*-*-*-*-*-  C U T E S T   U O F G   S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -52,7 +53,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 23rd December 2012
 
-      SUBROUTINE CUTEST_uofg( status, n, X, f, G, grad )
+      SUBROUTINE CUTEST_uofg_r( status, n, X, f, G, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -74,14 +75,14 @@
 !        derivative of the objective function wrt variable X(i)
 !  ---------------------------------------------------------------
 
-      CALL CUTEST_uofg_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_uofg_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( 1 ),                    &
                                    status, n, X, f, G, grad )
       RETURN
 
-!  end of subroutine CUTEST_uofg
+!  end of subroutine CUTEST_uofg_r
 
-      END SUBROUTINE CUTEST_uofg
+      END SUBROUTINE CUTEST_uofg_r
 
 !-*-*-   C U T E S T    U O F G _ t h r e a d e d   S U B R O U T I N E  -*-*-
 
@@ -91,7 +92,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 23rd December 2012
 
-      SUBROUTINE CUTEST_uofg_threaded( status, n, X, f, G, grad, thread )
+      SUBROUTINE CUTEST_uofg_threaded_r( status, n, X, f, G, grad, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -124,14 +125,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_uofg_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_uofg_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( thread ),               &
                                    status, n, X, f, G, grad )
       RETURN
 
-!  end of subroutine CUTEST_uofg_threaded
+!  end of subroutine CUTEST_uofg_threaded_r
 
-      END SUBROUTINE CUTEST_uofg_threaded
+      END SUBROUTINE CUTEST_uofg_threaded_r
 
 !-*-   C U T E S T    U O F G _ t h r e a d s a f e   S U B R O U T I N E   -*-
 
@@ -142,7 +143,8 @@
 !   fortran 77 version originally released in CUTE, February 1993
 !   fortran 2003 version released in CUTEst, 20th November 2012
 
-      SUBROUTINE CUTEST_uofg_threadsafe( data, work, status, n, X, f, G, grad )
+      SUBROUTINE CUTEST_uofg_threadsafe_r( data, work, status, n, X, f, G,     &
+                                           grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -171,7 +173,7 @@
       INTEGER ( KIND = ip_ ) :: i, j, ig, ifstat, igstat
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -183,7 +185,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -228,7 +230,7 @@
 !  evaluate the group function values
 
       ELSE
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .FALSE., igstat )
@@ -249,7 +251,7 @@
 !  evaluate the element function derivatives
 
       IF ( grad ) THEN
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -260,7 +262,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -276,7 +278,7 @@
              work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),          &
              data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),         &
              data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE,   &
-             work%ISTAJC, work%W_ws, work%W_el, RANGE )
+             work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
         work%firstg = .FALSE.
 
 !  store the gradient value
@@ -309,6 +311,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_uofg_threadsafe
+!  end of subroutine CUTEST_uofg_threadsafe_r
 
-      END SUBROUTINE CUTEST_uofg_threadsafe
+      END SUBROUTINE CUTEST_uofg_threadsafe_r

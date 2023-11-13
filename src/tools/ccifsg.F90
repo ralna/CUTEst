@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T   C I N T _ C C I F S G    S U B R O U T I N E  -*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_ccifsg( status, n, icon, X, ci,                   &
+      SUBROUTINE CUTEST_Cint_ccifsg_r( status, n, icon, X, ci,                 &
                                      nnzgci, lgci, GCI_val, GCI_var, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -40,14 +41,14 @@
       LOGICAL :: grad_fortran
 
       grad_fortran = grad
-      CALL CUTEST_ccifsg( status, n, icon, X, ci,                              &
+      CALL CUTEST_ccifsg_r( status, n, icon, X, ci,                            &
                           nnzgci, lgci, GCI_val, GCI_var, grad_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_ccifsg
+!  end of subroutine CUTEST_Cint_ccifsg_r
 
-      END SUBROUTINE CUTEST_Cint_ccifsg
+      END SUBROUTINE CUTEST_Cint_ccifsg_r
 
 !-*-*-*-*-*-*-  C U T E S T    C C I F S G    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -57,7 +58,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccifsg( status, n, icon, X, ci,                        &
+      SUBROUTINE CUTEST_ccifsg_r( status, n, icon, X, ci,                      &
                                 nnzgci, lgci, GCI_val, GCI_var, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -83,15 +84,15 @@
 !   constraint gradient vector.)
 !  ---------------------------------------------------------------------
 
-      CALL CUTEST_ccifsg_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_ccifsg_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, n, icon, X, ci, nnzgci, lgci,     &
                                      GCI_val, GCI_var, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccifsg
+!  end of subroutine CUTEST_ccifsg_r
 
-      END SUBROUTINE CUTEST_ccifsg
+      END SUBROUTINE CUTEST_ccifsg_r
 
 !-*-  C U T E S T    C C I F S G _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -101,8 +102,9 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccifsg_threaded( status, n, icon, X, ci, nnzgci, lgci, &
-                                         GCI_val, GCI_var, grad, thread )
+      SUBROUTINE CUTEST_ccifsg_threaded_r( status, n, icon, X, ci, nnzgci,     &
+                                           lgci, GCI_val, GCI_var, grad,       &
+                                           thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -138,15 +140,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_ccifsg_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_ccifsg_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( thread ),             &
                                      status, n, icon, X, ci, nnzgci, lgci,     &
                                      GCI_val, GCI_var, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccifsg_threaded
+!  end of subroutine CUTEST_ccifsg_threaded_r
 
-      END SUBROUTINE CUTEST_ccifsg_threaded
+      END SUBROUTINE CUTEST_ccifsg_threaded_r
 
 !-*-  C U T E S T   C C I F S G _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -157,7 +159,7 @@
 !   replaced obsolete subroutine CSCIFG in CUTEr, September 1994
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_ccifsg_threadsafe( data, work, status, n, icon, X,     &
+      SUBROUTINE CUTEST_ccifsg_threadsafe_r( data, work, status, n, icon, X,   &
                                            ci, nnzgci, lgci, GCI_val,          &
                                            GCI_var, grad )
       USE CUTEST_KINDS_precision
@@ -194,7 +196,6 @@
       REAL ( KIND = rp_ ) :: ftt, gi, scalee
       REAL :: time_in, time_out
       INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -236,7 +237,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,            &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -274,7 +275,7 @@
 
       ELSE
         ICALCG( 1 ) = ig
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,              &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
                     data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,              &
                     data%lstgp, 1, data%lcalcg, data%lgpvlu,                   &
                     .FALSE., igstat )
@@ -292,7 +293,7 @@
 !  evaluate the element function derivatives
 
       IF ( grad ) THEN
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,        &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -303,7 +304,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%GXEQX( ig ) ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
                       data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
                       .TRUE., igstat )
@@ -344,7 +345,7 @@
 !  the iel-th element has an internal representation
 
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,            &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
                           nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
@@ -444,6 +445,6 @@
 
  2000 FORMAT( ' ** SUBROUTINE CCIFSG: invalid constraint index icon ' )
 
-!  end of subroutine CUTEST_ccifsg_threadsafe
+!  end of subroutine CUTEST_ccifsg_threadsafe_r
 
-      END SUBROUTINE CUTEST_ccifsg_threadsafe
+      END SUBROUTINE CUTEST_ccifsg_threadsafe_r

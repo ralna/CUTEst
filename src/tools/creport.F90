@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C R E P O R T    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_creport( status, CALLS, TIME )
+      SUBROUTINE CUTEST_creport_r( status, CALLS, TIME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -44,14 +45,14 @@
 !  for constraints having full ranges
 !  --------------------------------------------------------------
 
-      CALL CUTEST_creport_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_creport_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( 1 ),                 &
                                       status, CALLS, TIME )
       RETURN
 
-!  End of subroutine CUTEST_creport
+!  End of subroutine CUTEST_creport_r
 
-      END SUBROUTINE CUTEST_creport
+      END SUBROUTINE CUTEST_creport_r
 
 !-*-  C U T E S T    C R E P O R T _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -61,7 +62,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_creport_threaded( status, CALLS, TIME, thread )
+      SUBROUTINE CUTEST_creport_threaded_r( status, CALLS, TIME, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -107,14 +108,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_creport_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_creport_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( thread ),            &
                                       status, CALLS, TIME )
       RETURN
 
-!  End of subroutine CUTEST_creport_threaded
+!  End of subroutine CUTEST_creport_threaded_r
 
-      END SUBROUTINE CUTEST_creport_threaded
+      END SUBROUTINE CUTEST_creport_threaded_r
 
 !-  C U T E S T    C R E P O R T _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -125,7 +126,7 @@
 !   fortran 77 version originally released as CREPRT in CUTEr, December, 2000
 !   fortran 2003 version released in CUTEst, 4th November 2012
 
-      SUBROUTINE CUTEST_creport_threadsafe( data, work, status, CALLS, TIME )
+      SUBROUTINE CUTEST_creport_threadsafe_r( data, work, status, CALLS, TIME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       TYPE ( CUTEST_data_type ) :: data
@@ -192,6 +193,6 @@
       status = 0
       RETURN
 
-!  End of subroutine CUTEST_creport_threadsafe
+!  End of subroutine CUTEST_creport_threadsafe_r
 
-      END SUBROUTINE CUTEST_creport_threadsafe
+      END SUBROUTINE CUTEST_creport_threadsafe_r

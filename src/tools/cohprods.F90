@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-03 AT 08:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-  C U T E S T   C I N T _ C O H P R O D S    S U B R O U T I N E  -*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_Cint_cohprods( status, n, goth, X, VECTOR,             &
+      SUBROUTINE CUTEST_Cint_cohprods_r( status, n, goth, X, VECTOR,           &
                                        nnzohp, lohp, RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -38,13 +39,13 @@
       LOGICAL :: goth_fortran
 
       goth_fortran = goth
-      CALL CUTEST_cohprods( status, n, goth_fortran, X, VECTOR,                &
+      CALL CUTEST_cohprods_r( status, n, goth_fortran, X, VECTOR,              &
                              nnzohp, lohp, RESULT, IND )
       RETURN
 
-!  end of subroutine CUTEST_Cint_cohprods
+!  end of subroutine CUTEST_Cint_cohprods_r
 
-      END SUBROUTINE CUTEST_Cint_cohprods
+      END SUBROUTINE CUTEST_Cint_cohprods_r
 
 !-*-*-*-*-*-  C U T E S T    C O H P R O D S    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -54,7 +55,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprods( status, n, goth, X, VECTOR,                  &
+      SUBROUTINE CUTEST_cohprods_r( status, n, goth, X, VECTOR,                &
                                   nnzohp, lohp, RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -78,15 +79,15 @@
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
 
-      CALL CUTEST_cohprods_threadsafe( CUTEST_data_global,                     &
+      CALL CUTEST_cohprods_threadsafe_r( CUTEST_data_global,                   &
                                        CUTEST_work_global( 1 ),                &
                                        status, n, goth, X, VECTOR,             &
                                        nnzohp, lohp, RESULT, IND )
       RETURN
 
-!  end of subroutine CUTEST_cohprods
+!  end of subroutine CUTEST_cohprods_r
 
-      END SUBROUTINE CUTEST_cohprods
+      END SUBROUTINE CUTEST_cohprods_r
 
 !-*-  C U T E S T   C O H P R O D S _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -96,7 +97,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprods_threaded( status, n, goth, X, VECTOR,        &
+      SUBROUTINE CUTEST_cohprods_threaded_r( status, n, goth, X, VECTOR,      &
                                            nnzohp, lohp, RESULT, IND, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -131,15 +132,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cohprods_threadsafe( CUTEST_data_global,                     &
+      CALL CUTEST_cohprods_threadsafe_r( CUTEST_data_global,                   &
                                        CUTEST_work_global( thread ),           &
                                        status, n, goth, X, VECTOR,             &
                                        nnzohp, lohp, RESULT, IND )
       RETURN
 
-!  end of subroutine CUTEST_cohprods_threaded
+!  end of subroutine CUTEST_cohprods_threaded_r
 
-      END SUBROUTINE CUTEST_cohprods_threaded
+      END SUBROUTINE CUTEST_cohprods_threaded_r
 
 !-  C U T E S T   C O H P R O D S _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -149,7 +150,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprods_threadsafe( data, work, status, n, goth, X,   &
+      SUBROUTINE CUTEST_cohprods_threadsafe_r( data, work, status, n, goth, X, &
                                              VECTOR, nnzohp, lohp, RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -183,7 +184,7 @@
       REAL ( KIND = rp_ ) :: ftt, gdash, g2dash, gi, pi, prod, scalee
       REAL :: time_in, time_out
       LOGICAL :: nullwk
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -196,7 +197,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -206,7 +207,7 @@
 
 !  evaluate the element function gradient and Hessian values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -243,7 +244,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -259,11 +260,11 @@
                work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),        &
                data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),       &
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV,              &
-               data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE )
+               data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
 
 !  set the indices for the nonzeros for the objective Hessian product
 
-       CALL CUTEST_cohprodsp( status, nnzohp, lohp, IND )
+       CALL CUTEST_cohprodsp_r( status, nnzohp, lohp, IND )
 
      END IF
 
@@ -305,7 +306,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k : k + nin - 1 ),         &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k : k + nin - 1 ),       &
                           work%H_el, nvarel, nin, data%ITYPEE( iel ),          &
                           nin, nvarel )
               DO i = 1, nvarel
@@ -400,7 +401,7 @@
 !  find the internal variables, W_in
 
             nin = data%INTVAR( iel + 1 ) - data%INTVAR( iel )
-            CALL RANGE( iel, .FALSE., work%W_el, work%W_in, nvarel, nin,       &
+            CALL RANGE_r( iel, .FALSE., work%W_el, work%W_in, nvarel, nin,     &
                         data%ITYPEE( iel ), nvarel, nin )
 
 !  multiply the internal variables by the element Hessian and put the
@@ -423,7 +424,7 @@
 
 !  scatter the product back onto the elemental variables, W
 
-            CALL RANGE( iel, .TRUE., work%H_in, work%W_el, nvarel, nin,        &
+            CALL RANGE_r( iel, .TRUE., work%H_in, work%W_el, nvarel, nin,      &
                         data%ITYPEE( iel ), nin, nvarel )
 
 !  add the scattered product to Q
@@ -487,8 +488,8 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cohprods_threadsafe
+!  end of subroutine CUTEST_cohprods_threadsafe_r
 
-      END SUBROUTINE CUTEST_cohprods_threadsafe
+      END SUBROUTINE CUTEST_cohprods_threadsafe_r
 
 

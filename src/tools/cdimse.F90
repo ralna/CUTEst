@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T   C D I M S E    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cdimse( status, ne, he_val_ne, he_row_ne )
+      SUBROUTINE CUTEST_cdimse_r( status, ne, he_val_ne, he_row_ne )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -41,13 +42,13 @@
 !         H. Specifically, the sum of the row dimensions of each H_e
 !  ---------------------------------------------------------------------------
 
-      CALL CUTEST_cdimse_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cdimse_threadsafe_r( CUTEST_data_global,                     &
                                      status, ne, he_val_ne, he_row_ne )
       RETURN
 
-!  end of subroutine CUTEST_cdimse
+!  end of subroutine CUTEST_cdimse_r
 
-      END SUBROUTINE CUTEST_cdimse
+      END SUBROUTINE CUTEST_cdimse_r
 
 !-*-  C U T E S T   C D I M S E _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -58,7 +59,7 @@
 !   fortran 77 version originally released in CUTEr, November 1994
 !   fortran 2003 version released in CUTEst, 26th November 2012
 
-      SUBROUTINE CUTEST_cdimse_threadsafe( data, status,                       &
+      SUBROUTINE CUTEST_cdimse_threadsafe_r( data, status,                     &
                                            ne, he_val_ne, he_row_ne )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -96,6 +97,6 @@
                                         status )
       RETURN
 
-!  end of subroutine CUTEST_cdimse_threadsafe
+!  end of subroutine CUTEST_cdimse_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdimse_threadsafe
+      END SUBROUTINE CUTEST_cdimse_threadsafe_r

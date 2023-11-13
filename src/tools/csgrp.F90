@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-  C U T E S T    C S G R P  S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
-      SUBROUTINE CUTEST_csgrp( status, n, nnzj, lj, J_var, J_fun )
+      SUBROUTINE CUTEST_csgrp_r( status, n, nnzj, lj, J_var, J_fun )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -31,14 +32,14 @@
 !  and function j>0 is the jth constraint
 !  ----------------------------------------------------------------------
 
-      CALL CUTEST_csgrp_threadsafe( CUTEST_data_global,                        &
+      CALL CUTEST_csgrp_threadsafe_r( CUTEST_data_global,                      &
                                     CUTEST_work_global( 1 ),                   &
                                     status, n, nnzj, lj, J_var, J_fun )
       RETURN
 
-!  end of subroutine CUTEST_csgrp
+!  end of subroutine CUTEST_csgrp_r
 
-      END SUBROUTINE CUTEST_csgrp
+      END SUBROUTINE CUTEST_csgrp_r
 
 !-*-*-  C U T E S T    C S G R P _ t h r e a d s a f e  S U B R O U T I N E  -*-
 
@@ -48,7 +49,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
-      SUBROUTINE CUTEST_csgrp_threadsafe( data, work, status, n,              &
+      SUBROUTINE CUTEST_csgrp_threadsafe_r( data, work, status, n,            &
                                           nnzj, lj, J_var, J_fun )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -139,6 +140,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_csgrp_threadsafe
+!  end of subroutine CUTEST_csgrp_threadsafe_r
 
-      END SUBROUTINE CUTEST_csgrp_threadsafe
+      END SUBROUTINE CUTEST_csgrp_threadsafe_r

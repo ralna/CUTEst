@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C D I M C O P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 31st October 2023
 
-      SUBROUTINE CUTEST_cdimohp( status, nnzohp )
+      SUBROUTINE CUTEST_cdimohp_r( status, nnzohp )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -24,14 +25,14 @@
 !  in Standard Input Format (SIF)
 !  -----------------------------------------------------------------
 
-      CALL CUTEST_cdimohp_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_cdimohp_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( 1 ),                 &
                                       status, nnzohp )
       RETURN
 
-!  end of sunroutine CUTEST_cdimohp
+!  end of sunroutine CUTEST_cdimohp_r
 
-      END SUBROUTINE CUTEST_cdimohp
+      END SUBROUTINE CUTEST_cdimohp_r
 
 !-  C U T E S T   C D I M C O P _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -41,7 +42,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 31st October 2023
 
-      SUBROUTINE CUTEST_cdimohp_threadsafe( data, work, status, nnzohp )
+      SUBROUTINE CUTEST_cdimohp_threadsafe_r( data, work, status, nnzohp )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -122,6 +123,6 @@
       status = 0
       RETURN
 
-!  end of sunroutine CUTEST_cdimohp_threadsafe
+!  end of sunroutine CUTEST_cdimohp_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdimohp_threadsafe
+      END SUBROUTINE CUTEST_cdimohp_threadsafe_r

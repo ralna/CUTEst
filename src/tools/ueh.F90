@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T  C I N T _  U E H    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_ueh( status, n, X,                                &
+      SUBROUTINE CUTEST_Cint_ueh_r( status, n, X,                              &
                                   ne, lhe_ptr, HE_row_ptr, HE_val_ptr,         &
                                   lhe_row, HE_row, lhe_val, HE_val, byrows )
       USE CUTEST_KINDS_precision
@@ -63,15 +64,15 @@
       LOGICAL :: byrows_fortran
 
       byrows_fortran = byrows
-      CALL CUTEST_ueh( status, n, X,                                           &
+      CALL CUTEST_ueh_r( status, n, X,                                         &
                        ne, lhe_ptr, HE_row_ptr, HE_val_ptr,                    &
                        lhe_row, HE_row, lhe_val, HE_val, byrows_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_ueh
+!  end of subroutine CUTEST_Cint_ueh_r
 
-      END SUBROUTINE CUTEST_Cint_ueh
+      END SUBROUTINE CUTEST_Cint_ueh_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    U E H    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -81,7 +82,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_ueh( status, n, X,                                     &
+      SUBROUTINE CUTEST_ueh_r( status, n, X,                                   &
                              ne, lhe_ptr, HE_row_ptr, HE_val_ptr,              &
                              lhe_row, HE_row, lhe_val, HE_val, byrows )
       USE CUTEST_KINDS_precision
@@ -130,16 +131,16 @@
 !          to be stored by rows, and .FALSE. if it is to be stored by columns
 !  ----------------------------------------------------------------------------
 
-      CALL CUTEST_ueh_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_ueh_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( 1 ),                     &
                                   status, n, X, ne, lhe_ptr,                   &
                                   HE_row_ptr, HE_val_ptr, lhe_row,             &
                                   HE_row, lhe_val, HE_val, byrows )
       RETURN
 
-!  end of subroutine CUTEST_ueh
+!  end of subroutine CUTEST_ueh_r
 
-      END SUBROUTINE CUTEST_ueh
+      END SUBROUTINE CUTEST_ueh_r
 
 !-*-*-*-  C U T E S T    U E H _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -149,7 +150,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_ueh_threaded( status, n, X, ne, lhe_ptr, HE_row_ptr,   &
+      SUBROUTINE CUTEST_ueh_threaded_r( status, n, X, ne, lhe_ptr, HE_row_ptr, &
                                       HE_val_ptr, lhe_row, HE_row, lhe_val,    &
                                       HE_val, byrows, thread )
       USE CUTEST_KINDS_precision
@@ -210,16 +211,16 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_ueh_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_ueh_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( thread ),                &
                                   status, n, X, ne, lhe_ptr,                   &
                                   HE_row_ptr, HE_val_ptr, lhe_row,             &
                                   HE_row, lhe_val, HE_val, byrows )
       RETURN
 
-!  end of subroutine CUTEST_ueh_threaded
+!  end of subroutine CUTEST_ueh_threaded_r
 
-      END SUBROUTINE CUTEST_ueh_threaded
+      END SUBROUTINE CUTEST_ueh_threaded_r
 
 !-*-*-  C U T E S T    U E H _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -230,9 +231,10 @@
 !   fortran 77 version originally released in CUTEr, November 1994
 !   fortran 2003 version released in CUTEst, 27th November 2012
 
-      SUBROUTINE CUTEST_ueh_threadsafe( data, work, status, n, X, ne, lhe_ptr, &
-                                        HE_row_ptr, HE_val_ptr, lhe_row,       &
-                                        HE_row, lhe_val, HE_val, byrows )
+      SUBROUTINE CUTEST_ueh_threadsafe_r( data, work, status, n, X, ne,        &
+                                        lhe_ptr, HE_row_ptr, HE_val_ptr,       &
+                                        lhe_row, HE_row, lhe_val, HE_val,      &
+                                        byrows )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -288,7 +290,7 @@
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -300,7 +302,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -310,7 +312,7 @@
 
 !  evaluate the element function gradients and Hessians
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -347,7 +349,7 @@
 !  evaluate the group derivative values.
 
       IF ( .NOT. data%altriv ) THEN
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .TRUE., igstat )
@@ -363,7 +365,7 @@
              work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),          &
              data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),         &
              data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE,   &
-             work%ISTAJC, work%W_ws, work%W_el, RANGE )
+             work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
       work%firstg = .FALSE.
 
 !  assemble the Hessian
@@ -380,7 +382,8 @@
                         work%GVALS( : , 2 ), work%GVALS( : , 3 ),              &
                         data%GSCALE, data%ESCALE, data%GXEQX, data%INTREP,     &
                         work%ISWKSP, work%W_ws, work%W_el, work%W_in,          &
-                        work%H_el, work%H_in, RANGE, ne, lhe_ptr, lhe_row_int, &
+                        work%H_el, work%H_in, RANGE_r,                         &
+                        ne, lhe_ptr, lhe_row_int,                              &
                         lhe_val_int, work%H_row, HE_row_ptr, work%H_val,       &
                         HE_val_ptr, byrows, 0, data%out, data%out,             &
                         work%io_buffer, alloc_status, bad_alloc, status )
@@ -434,6 +437,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_ueh_threadsafe
+!  end of subroutine CUTEST_ueh_threadsafe_r
 
-      END SUBROUTINE CUTEST_ueh_threadsafe
+      END SUBROUTINE CUTEST_ueh_threadsafe_r

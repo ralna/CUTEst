@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C I S G R P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 17th October 2023
 
-      SUBROUTINE CUTEST_cisgrp( status, n, iprob, nnzgr, lgr, GR_var )
+      SUBROUTINE CUTEST_cisgrp_r( status, n, iprob, nnzgr, lgr, GR_var )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -28,14 +29,14 @@
 !  positions GR_var(j), j = 1,...,nnzgr.
 !  -------------------------------------------------------------------
 
-      CALL CUTEST_cisgrp_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cisgrp_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, n, iprob, nnzgr, lgr, GR_var )
       RETURN
 
-!  end of subroutine CUTEST_cisgrp
+!  end of subroutine CUTEST_cisgrp_r
 
-      END SUBROUTINE CUTEST_cisgrp
+      END SUBROUTINE CUTEST_cisgrp_r
 
 !-*-  C U T E S T   C I S G R P _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -45,7 +46,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 17th October 2023
 
-      SUBROUTINE CUTEST_cisgrp_threadsafe( data, work, status, n, iprob,       &
+      SUBROUTINE CUTEST_cisgrp_threadsafe_r( data, work, status, n, iprob,     &
                                            nnzgr, lgr, GR_var )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -70,7 +71,6 @@
 
       INTEGER ( KIND = ip_ ) :: i, k, ig, ig1, ll
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -225,6 +225,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cisgrp_threadsafe
+!  end of subroutine CUTEST_cisgrp_threadsafe_r
 
-      END SUBROUTINE CUTEST_cisgrp_threadsafe
+      END SUBROUTINE CUTEST_cisgrp_threadsafe_r

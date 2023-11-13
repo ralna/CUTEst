@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T  C I N T _  C O F S G    S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst,  21st August 2013
 
-      SUBROUTINE CUTEST_Cint_cofsg( status, n, X, f, nnzg, lg, G_val, G_var,   &
+      SUBROUTINE CUTEST_Cint_cofsg_r( status, n, X, f, nnzg, lg, G_val, G_var, &
                                     grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -38,13 +39,14 @@
       LOGICAL :: grad_fortran
 
       grad_fortran = grad
-      CALL CUTEST_cofsg( status, n, X, f, nnzg, lg, G_val, G_var, grad_fortran )
+      CALL CUTEST_cofsg_r( status, n, X, f, nnzg, lg, G_val, G_var,            &
+                           grad_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_cofsg
+!  end of subroutine CUTEST_Cint_cofsg_r
 
-      END SUBROUTINE CUTEST_Cint_cofsg
+      END SUBROUTINE CUTEST_Cint_cofsg_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    C O F S G    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -54,7 +56,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th February 2013
 
-      SUBROUTINE CUTEST_cofsg( status, n, X, f, nnzg, lg, G_val, G_var, grad )
+      SUBROUTINE CUTEST_cofsg_r( status, n, X, f, nnzg, lg, G_val, G_var, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -77,15 +79,15 @@
 !    X(G_var(i)) for i = 1, ..., nnzg. All other partial derivatves are zero
 !  -------------------------------------------------------------------------
 
-      CALL CUTEST_cofsg_threadsafe( CUTEST_data_global,                        &
+      CALL CUTEST_cofsg_threadsafe_r( CUTEST_data_global,                      &
                                     CUTEST_work_global( 1 ),                   &
                                     status, n, X, f,                           &
                                     nnzg, lg, G_val, G_var, grad )
       RETURN
 
-!  end of subroutine CUTEST_cofsg
+!  end of subroutine CUTEST_cofsg_r
 
-      END SUBROUTINE CUTEST_cofsg
+      END SUBROUTINE CUTEST_cofsg_r
 
 !-*-*-*-  C U T E S T   C O F G _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -95,7 +97,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_cofsg_threaded( status, n, X, f,                       &
+      SUBROUTINE CUTEST_cofsg_threaded_r( status, n, X, f,                     &
                                         nnzg, lg, G_val, G_var, grad, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -130,15 +132,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cofsg_threadsafe( CUTEST_data_global,                        &
+      CALL CUTEST_cofsg_threadsafe_r( CUTEST_data_global,                      &
                                     CUTEST_work_global( thread ),              &
                                     status, n, X, f,                           &
                                     nnzg, lg, G_val, G_var, grad )
       RETURN
 
-!  end of subroutine CUTEST_cofsg_threaded
+!  end of subroutine CUTEST_cofsg_threaded_r
 
-      END SUBROUTINE CUTEST_cofsg_threaded
+      END SUBROUTINE CUTEST_cofsg_threaded_r
 
 !-*-*-  C U T E S T   C O F G _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -149,7 +151,7 @@
 !   fortran 77 version originally released in CUTE, April 1992
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_cofsg_threadsafe( data, work, status, n, X, f,         &
+      SUBROUTINE CUTEST_cofsg_threadsafe_r( data, work, status, n, X, f,       &
                                           nnzg, lg, G_val, G_var, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -182,7 +184,6 @@
       INTEGER ( KIND = ip_ ) :: nin, nvarel, nelow, nelup
       REAL ( KIND = rp_ ) :: ftt, gi, scalee
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -218,7 +219,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,              &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -229,7 +230,7 @@
 !  evaluate the element function derivatives
 
       IF ( grad )                                                              &
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,          &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -315,7 +316,7 @@
             work%ICALCF( icnt ) = ig
           END IF
         END DO
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,           &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .FALSE., igstat )
@@ -355,7 +356,7 @@
 
       IF ( grad ) THEN
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,       &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -399,7 +400,7 @@
 !  the iel-th element has an internal representation
 
                 nin = data%INTVAR( iel + 1 ) - k
-                CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
@@ -504,7 +505,7 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cofsg_threadsafe
+!  end of subroutine CUTEST_cofsg_threadsafe_r
 
-      END SUBROUTINE CUTEST_cofsg_threadsafe
+      END SUBROUTINE CUTEST_cofsg_threadsafe_r
 

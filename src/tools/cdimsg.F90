@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C D I M S G    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 17th October 2023
 
-      SUBROUTINE CUTEST_cdimsg( status, nnzg )
+      SUBROUTINE CUTEST_cdimsg_r( status, nnzg )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -23,14 +24,14 @@
 !  function initially written in Standard Input Format (SIF). 
 !  -------------------------------------------------------------
 
-      CALL CUTEST_cdimsg_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cdimsg_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, nnzg )
       RETURN
 
-!  end of subroutine CUTEST_cdimsg
+!  end of subroutine CUTEST_cdimsg_r
 
-      END SUBROUTINE CUTEST_cdimsg
+      END SUBROUTINE CUTEST_cdimsg_r
 
 !-*-  C U T E S T   C D I M S G _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -40,7 +41,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 17th October 2023
 
-      SUBROUTINE CUTEST_cdimsg_threadsafe( data, work, status, nnzg )
+      SUBROUTINE CUTEST_cdimsg_threadsafe_r( data, work, status, nnzg )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -58,7 +59,6 @@
 !  local variables
 
       INTEGER ( KIND = ip_ ) :: i, k, ig, ig1, ll
-      EXTERNAL :: RANGE
 
 !  Use ISWKSP to flag which variables have nonzero partial derivatives
 
@@ -118,6 +118,6 @@
 
       RETURN
 
-!  end of subroutine CUTEST_cdimsg_threadsafe
+!  end of subroutine CUTEST_cdimsg_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdimsg_threadsafe
+      END SUBROUTINE CUTEST_cdimsg_threadsafe_r

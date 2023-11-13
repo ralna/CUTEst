@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-03 AT 08:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T    C O H P R O D S P   S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprodsp( status, nnzohp, lohp, IND )
+      SUBROUTINE CUTEST_cohprodsp_r( status, nnzohp, lohp, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -27,14 +28,14 @@
 !  product H(x) v occur in IND(k), k = 1,...,nnzohp
 !  ----------------------------------------------------------------------------
 
-      CALL CUTEST_cohprodsp_threadsafe( CUTEST_data_global,                    &
+      CALL CUTEST_cohprodsp_threadsafe_r( CUTEST_data_global,                  &
                                         CUTEST_work_global( 1 ),               &
                                         status, nnzohp, lohp, IND )
       RETURN
 
-!  end of subroutine CUTEST_cohprodsp
+!  end of subroutine CUTEST_cohprodsp_r
 
-      END SUBROUTINE CUTEST_cohprodsp
+      END SUBROUTINE CUTEST_cohprodsp_r
 
 !-  C U T E S T  C O H P R O D S P _ t h r e a d s a f e  S U B R O U T I N E  -
 
@@ -44,7 +45,7 @@
 !  History -
 !   modern fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprodsp_threadsafe( data, work, status,              &
+      SUBROUTINE CUTEST_cohprodsp_threadsafe_r( data, work, status,            &
                                               nnzohp, lohp, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -135,8 +136,8 @@
 
       RETURN
 
-!  end of subroutine CUTEST_cohprodsp_threadsafe
+!  end of subroutine CUTEST_cohprodsp_threadsafe_r
 
-      END SUBROUTINE CUTEST_cohprodsp_threadsafe
+      END SUBROUTINE CUTEST_cohprodsp_threadsafe_r
 
 

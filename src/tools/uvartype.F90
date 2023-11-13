@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    U V A R T Y P E   S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 23rd December 2012
 
-      SUBROUTINE CUTEST_uvartype( status, n, X_type )
+      SUBROUTINE CUTEST_uvartype_r( status, n, X_type )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -24,12 +25,12 @@
 !  Determine the type (continuous, 0-1, integer) of each variable
 !  --------------------------------------------------------------
 
-      CALL CUTEST_uvartype_threadsafe( CUTEST_data_global, status, n, X_type )
+      CALL CUTEST_uvartype_threadsafe_r( CUTEST_data_global, status, n, X_type )
       RETURN
 
-!  end of subroutine CUTEST_uvartype
+!  end of subroutine CUTEST_uvartype_r
 
-      END SUBROUTINE CUTEST_uvartype
+      END SUBROUTINE CUTEST_uvartype_r
 
 !-  C U T E S T    U V A R T Y P E _ t h r e a d s a f e  S U B R O U T I N E  -
 
@@ -40,7 +41,7 @@
 !   fortran 77 version originally released as UVARTY in CUTEr, December 1999
 !   fortran 2003 version released in CUTEst, 20th November 2012
 
-      SUBROUTINE CUTEST_uvartype_threadsafe( data, status, n, X_type )
+      SUBROUTINE CUTEST_uvartype_threadsafe_r( data, status, n, X_type )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -61,6 +62,6 @@
       status = 0
       RETURN
 
-!  end of subroutine CUTEST_uvartype_threadsafe
+!  end of subroutine CUTEST_uvartype_threadsafe_r
 
-      END SUBROUTINE CUTEST_uvartype_threadsafe
+      END SUBROUTINE CUTEST_uvartype_threadsafe_r

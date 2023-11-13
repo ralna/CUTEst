@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-  C U T E S T    C D H    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cdh( status, n, m, X, Y, lh1, H_val )
+      SUBROUTINE CUTEST_cdh_r( status, n, m, X, Y, lh1, H_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -32,14 +33,14 @@
 !    the derivative with respect to variables X(i) and X(j).
 !  -----------------------------------------------------------
 
-      CALL CUTEST_cdh_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_cdh_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( 1 ),                     &
                                   status, n, m, X, Y, lh1, H_val )
       RETURN
 
-!  end of subroutine CUTEST_cdh
+!  end of subroutine CUTEST_cdh_r
 
-      END SUBROUTINE CUTEST_cdh
+      END SUBROUTINE CUTEST_cdh_r
 
 !-*-*-*-  C U T E S T    C D H _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -49,7 +50,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cdh_threaded( status, n, m, X, Y, lh1, H_val, thread )
+      SUBROUTINE CUTEST_cdh_threaded_r( status, n, m, X, Y, lh1, H_val, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -82,14 +83,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cdh_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_cdh_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( thread ),                &
                                   status, n, m, X, Y, lh1, H_val )
       RETURN
 
-!  end of subroutine CUTEST_cdh_threaded
+!  end of subroutine CUTEST_cdh_threaded_r
 
-      END SUBROUTINE CUTEST_cdh_threaded
+      END SUBROUTINE CUTEST_cdh_threaded_r
 
 !-*-*-  C U T E S T    C D H _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -100,7 +101,7 @@
 !   fortran 77 version originally released in CUTE, November 1991
 !   fortran 2003 version released in CUTEst, 24th November 2012
 
-      SUBROUTINE CUTEST_cdh_threadsafe( data, work, status, n, m, X, Y,        &
+      SUBROUTINE CUTEST_cdh_threadsafe_r( data, work, status, n, m, X, Y,      &
                                         lh1, H_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -131,7 +132,7 @@
       REAL ( KIND = rp_ ) :: ftt
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -151,7 +152,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -161,7 +162,7 @@
 
 !  evaluate the element function Hessian values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -198,7 +199,7 @@
 !  evaluate the group derivative values
 
       IF ( .NOT. data%altriv ) THEN
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .TRUE., igstat )
@@ -227,7 +228,7 @@
                work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),        &
                work%GSCALE_used, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),  &
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE, &
-               work%ISTAJC, work%W_ws, work%W_el, RANGE )
+               work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
       ELSE
         CALL CUTEST_form_gradients( n, data%ng, data%nel, data%ntotel,         &
                data%nvrels, data%nnza, data%nvargp, work%firstg, data%ICNA,    &
@@ -236,7 +237,7 @@
                work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),        &
                data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),       &
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE, &
-               work%ISTAJC, work%W_ws, work%W_el, RANGE )
+               work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
       END IF
       work%firstg = .FALSE.
 
@@ -250,7 +251,7 @@
                data%ISTADG, data%ISTAEV, data%ISTAGV, data%ISVGRP, data%A,     &
                work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,             &
                work%GVALS( : , 2 ), work%GVALS( :  , 3 ), work%GSCALE_used,    &
-               data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE,       &
+               data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,     &
                0, data%out, data%out, .TRUE., .FALSE.,                         &
                n, status, alloc_status, bad_alloc,                             &
                work%array_status, work%lh_row, work%lh_col, work%lh_val,       &
@@ -267,7 +268,7 @@
                data%ISTADG, data%ISTAEV, data%ISTAGV, data%ISVGRP, data%A,     &
                work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,             &
                work%GVALS( : , 2 ), work%GVALS( :  , 3 ), data%GSCALE,         &
-               data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE,       &
+               data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,     &
                0, data%out, data%out, .TRUE., .FALSE.,                         &
                n, status, alloc_status, bad_alloc,                             &
                work%array_status, work%lh_row, work%lh_col, work%lh_val,       &
@@ -317,6 +318,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cdh_threadsafe
+!  end of subroutine CUTEST_cdh_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdh_threadsafe
+      END SUBROUTINE CUTEST_cdh_threadsafe_r

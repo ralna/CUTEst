@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    P N A M E    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 3rd April 2014
 
-      SUBROUTINE CUTEST_pname( status, input, pname )
+      SUBROUTINE CUTEST_pname_r( status, input, pname )
 
       USE CUTEST_KINDS_precision
 
@@ -33,6 +34,6 @@
       status = 0
       RETURN
 
-!  End of subroutine CUTEST_pname
+!  End of subroutine CUTEST_pname_r
 
-      END SUBROUTINE CUTEST_pname
+      END SUBROUTINE CUTEST_pname_r

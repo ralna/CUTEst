@@ -1,4 +1,4 @@
-      SUBROUTINE RANGE( IELEMN, TRANSP, W1, W2, nelvar, ninvar,
+      SUBROUTINE RANGE_s( IELEMN, TRANSP, W1, W2, nelvar, ninvar,
      *                  itype, LW1, LW2 )
       INTEGER IELEMN, nelvar, ninvar, itype, LW1, LW2
       LOGICAL TRANSP

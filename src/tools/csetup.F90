@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T  C I N T _  C S E T U P    S U B R O U T I N E  -*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_csetup( status, input, out, io_buffer,            &
+      SUBROUTINE CUTEST_Cint_csetup_r( status, input, out, io_buffer,          &
                                      n, m, X, X_l, X_u, Y, C_l, C_u,           &
                                      EQUATN, LINEAR, e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
@@ -35,7 +36,7 @@
 
       LOGICAL, DIMENSION( m ) :: EQUATN_FORTRAN, LINEAR_FORTRAN
 
-      CALL CUTEST_csetup( status, input, out,                                  &
+      CALL CUTEST_csetup_r( status, input, out,                                &
                           io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,           &
                           EQUATN_FORTRAN, LINEAR_FORTRAN,                      &
                           e_order, l_order, v_order )
@@ -47,9 +48,9 @@
 
       RETURN
 
-!  End of subroutine CUTEST_Cint_csetup
+!  End of subroutine CUTEST_Cint_csetup_r
 
-      END SUBROUTINE CUTEST_Cint_csetup
+      END SUBROUTINE CUTEST_Cint_csetup_r
 
 !-*-*-*-*-*-*-  C U T E S T    C S E T U P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -59,7 +60,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_csetup( status, input, out,                            &
+      SUBROUTINE CUTEST_csetup_r( status, input, out,                          &
                                 io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,     &
                                 EQUATN, LINEAR, e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
@@ -93,7 +94,7 @@
 
 !  set the data
 
-      CALL CUTEST_csetup_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_csetup_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, input, out, io_buffer,            &
                                      n, m, X, X_l, X_u, Y, C_l, C_u,           &
@@ -111,9 +112,9 @@
            TRIM( bad_alloc ), alloc_status
       RETURN
 
-!  End of subroutine CUTEST_csetup
+!  End of subroutine CUTEST_csetup_r
 
-      END SUBROUTINE CUTEST_csetup
+      END SUBROUTINE CUTEST_csetup_r
 
 !-*-  C U T E S T    C S E T U P  _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -123,7 +124,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_csetup_threaded( status, input, out, threads,          &
+      SUBROUTINE CUTEST_csetup_threaded_r( status, input, out, threads,        &
                                          IO_BUFFERS, n, m, X, X_l, X_u,        &
                                          Y, C_l, C_u, EQUATN, LINEAR,          &
                                          e_order, l_order, v_order )
@@ -163,7 +164,7 @@
 
 !  set the data
 
-      CALL CUTEST_csetup_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_csetup_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, input, out, IO_BUFFERS( 1 ),      &
                                      n, m, X, X_l, X_u, Y, C_l, C_u,           &
@@ -209,9 +210,9 @@
        &  ' positive, execution terminating ' )" )
       RETURN
 
-!  End of subroutine CUTEST_csetup_threaded
+!  End of subroutine CUTEST_csetup_threaded_r
 
-      END SUBROUTINE CUTEST_csetup_threaded
+      END SUBROUTINE CUTEST_csetup_threaded_r
 
 !-*-  C U T E S T   C S E T U P _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -222,7 +223,7 @@
 !   fortran 77 version originally released in CUTE, 30th October, 1991
 !   fortran 2003 version released in CUTEst, 4th November 2012
 
-      SUBROUTINE CUTEST_csetup_threadsafe( data, work, status, input, out,     &
+      SUBROUTINE CUTEST_csetup_threadsafe_r( data, work, status, input, out,   &
                                 io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,     &
                                 EQUATN, LINEAR, e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
@@ -1453,6 +1454,6 @@
                  ' too small.', /, ' -- Increase the dimension to at least ',  &
                  I0, ' and restart.' )
 
-!  End of subroutine CUTEST_csetup_threadsafe
+!  End of subroutine CUTEST_csetup_threadsafe_r
 
-      END SUBROUTINE CUTEST_csetup_threadsafe
+      END SUBROUTINE CUTEST_csetup_threadsafe_r

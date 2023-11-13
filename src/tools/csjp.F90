@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-  C U T E S T    C S J P  S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 22nd February 2018
 
-      SUBROUTINE CUTEST_csjp( status, nnzj, lj, J_var, J_con )
+      SUBROUTINE CUTEST_csjp_r( status, nnzj, lj, J_var, J_con )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -29,14 +30,14 @@
 !  J_con(i) with respect to variable J_var(i) for  i = 1,...,nnzj
 !  ----------------------------------------------------------------------
 
-      CALL CUTEST_csjp_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_csjp_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( 1 ),                    &
                                    status, nnzj, lj, J_var, J_con )
       RETURN
 
-!  end of subroutine CUTEST_csjp
+!  end of subroutine CUTEST_csjp_r
 
-      END SUBROUTINE CUTEST_csjp
+      END SUBROUTINE CUTEST_csjp_r
 
 
 !-*-*-  C U T E S T    C S J P _ t h r e a d s a f e  S U B R O U T I N E  -*-
@@ -47,7 +48,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 22nd February 2018
 
-      SUBROUTINE CUTEST_csjp_threadsafe( data, work, status,                   &
+      SUBROUTINE CUTEST_csjp_threadsafe_r( data, work, status,                 &
                                          nnzj, lj, J_var, J_con )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -123,6 +124,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_csjp_threadsafe
+!  end of subroutine CUTEST_csjp_threadsafe_r
 
-      END SUBROUTINE CUTEST_csjp_threadsafe
+      END SUBROUTINE CUTEST_csjp_threadsafe_r

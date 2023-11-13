@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T    P R O B N A M E     S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 23rd Decemeber 2012
 
-      SUBROUTINE CUTEST_probname( status, pname )
+      SUBROUTINE CUTEST_probname_r( status, pname )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -23,12 +24,12 @@
 !  obtain the name of the problem
 !  ------------------------------
 
-      CALL CUTEST_probname_threadsafe( CUTEST_data_global, status, pname )
+      CALL CUTEST_probname_threadsafe_r( CUTEST_data_global, status, pname )
       RETURN
 
-!  end of subroutine CUTEST_probname
+!  end of subroutine CUTEST_probname_r
 
-      END SUBROUTINE CUTEST_probname
+      END SUBROUTINE CUTEST_probname_r
 
 !-  C U T E S T    P R O B N A M E _ t h r e a d s a f e   S U B R O U T I N E -
 
@@ -39,7 +40,7 @@
 !   fortran 77 version originally released as PBNAME in CUTEr, August 2005
 !   fortran 2003 version released in CUTEst, 19th November 2012
 
-      SUBROUTINE CUTEST_probname_threadsafe( data, status, pname )
+      SUBROUTINE CUTEST_probname_threadsafe_r( data, status, pname )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -57,6 +58,6 @@
       status = 0
       RETURN
 
-!  end of subroutine CUTEST_probname_threadsafe
+!  end of subroutine CUTEST_probname_threadsafe_r
 
-      END SUBROUTINE CUTEST_probname_threadsafe
+      END SUBROUTINE CUTEST_probname_threadsafe_r

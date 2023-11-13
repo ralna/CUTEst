@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C D I M C H P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_cdimchp( status, nnzchp )
+      SUBROUTINE CUTEST_cdimchp_r( status, nnzchp )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -24,12 +25,12 @@
 !  in Standard Input Format (SIF)
 !  -----------------------------------------------------------------
 
-      CALL CUTEST_cdimchp_threadsafe( CUTEST_data_global, status, nnzchp )
+      CALL CUTEST_cdimchp_threadsafe_r( CUTEST_data_global, status, nnzchp )
       RETURN
 
-!  end of sunroutine CUTEST_cdimchp
+!  end of sunroutine CUTEST_cdimchp_r
 
-      END SUBROUTINE CUTEST_cdimchp
+      END SUBROUTINE CUTEST_cdimchp_r
 
 !-  C U T E S T   C D I M C H P _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -39,7 +40,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_cdimchp_threadsafe( data, status, nnzchp )
+      SUBROUTINE CUTEST_cdimchp_threadsafe_r( data, status, nnzchp )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -65,13 +66,13 @@
 !  allow space for constraint groups
 
       DO ig = 1, data%ng
-        IF ( data%KNDOFC( ig ) /= 0 )                                         &
+        IF ( data%KNDOFC( ig ) /= 0 )                                          &
           nnzchp = nnzchp + data%ISTAGV( ig + 1 ) - data%ISTAGV( ig )
       END DO
 
       status = 0
       RETURN
 
-!  end of sunroutine CUTEST_cdimchp_threadsafe
+!  end of sunroutine CUTEST_cdimchp_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdimchp_threadsafe
+      END SUBROUTINE CUTEST_cdimchp_threadsafe_r

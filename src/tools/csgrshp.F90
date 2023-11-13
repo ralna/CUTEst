@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C S G R S H P   S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
-      SUBROUTINE CUTEST_csgrshp( status, n, nnzj, lj, J_var, J_fun,            &
+      SUBROUTINE CUTEST_csgrshp_r( status, n, nnzj, lj, J_var, J_fun,          &
                                  nnzh, lh, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -36,15 +37,15 @@
 !  H_row(i) and column index H_col(i) for i = 1, ...., nnzh
 !  -----------------------------------------------------------------------
 
-      CALL CUTEST_csgrshp_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_csgrshp_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( 1 ),                 &
                                       status, n, nnzj, lj, J_var, J_fun,       &
                                       nnzh, lh, H_row, H_col )
       RETURN
 
-!  end of subroutine CUTEST_csgrshp
+!  end of subroutine CUTEST_csgrshp_r
 
-      END SUBROUTINE CUTEST_csgrshp
+      END SUBROUTINE CUTEST_csgrshp_r
 
 !-*-  C U T E S T   C S G R S H P _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -54,7 +55,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
-      SUBROUTINE CUTEST_csgrshp_threadsafe( data, work, status, n,             &
+      SUBROUTINE CUTEST_csgrshp_threadsafe_r( data, work, status, n,           &
                                             nnzj, lj, J_var, J_fun,            &
                                             nnzh, lh, H_row, H_col )
       USE CUTEST_KINDS_precision
@@ -171,6 +172,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_csgrshp_threadsafe
+!  end of subroutine CUTEST_csgrshp_threadsafe_r
 
-      END SUBROUTINE CUTEST_csgrshp_threadsafe
+      END SUBROUTINE CUTEST_csgrshp_threadsafe_r

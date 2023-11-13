@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-  C U T E S T    C F N    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_cfn( status, n, m, X, f, C )
+      SUBROUTINE CUTEST_cfn_r( status, n, m, X, f, C )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -27,14 +28,14 @@
 !  of a function initially written in Standard Input Format (SIF)
 !  ---------------------------------------------------------------------
 
-      CALL CUTEST_cfn_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_cfn_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( 1 ),                     &
                                   status, n, m, X, f, C )
       RETURN
 
-!  end of subroutine CUTEST_cfn
+!  end of subroutine CUTEST_cfn_r
 
-      END SUBROUTINE CUTEST_cfn
+      END SUBROUTINE CUTEST_cfn_r
 
 !-*-*-*-  C U T E S T    C F N _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -44,7 +45,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_cfn_threaded( status, n, m, X, f, C, thread )
+      SUBROUTINE CUTEST_cfn_threaded_r( status, n, m, X, f, C, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -72,14 +73,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cfn_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_cfn_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( thread ),                &
                                   status, n, m, X, f, C )
       RETURN
 
-!  end of subroutine CUTEST_cfn_threaded
+!  end of subroutine CUTEST_cfn_threaded_r
 
-      END SUBROUTINE CUTEST_cfn_threaded
+      END SUBROUTINE CUTEST_cfn_threaded_r
 
 !-*-*-  C U T E S T    C F N _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -90,7 +91,7 @@
 !   fortran 77 version originally released in CUTE, October 1991
 !   fortran 2003 version released in CUTEst, 20th November 2012
 
-      SUBROUTINE CUTEST_cfn_threadsafe( data, work, status, n, m, X, f, C )
+      SUBROUTINE CUTEST_cfn_threadsafe_r( data, work, status, n, m, X, f, C )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -125,7 +126,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -163,7 +164,7 @@
 !  evaluate the group function values
 
       ELSE
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .FALSE., igstat )
@@ -225,6 +226,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cfn_threadsafe
+!  end of subroutine CUTEST_cfn_threadsafe_r
 
-      END SUBROUTINE CUTEST_cfn_threadsafe
+      END SUBROUTINE CUTEST_cfn_threadsafe_r

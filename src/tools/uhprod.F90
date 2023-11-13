@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T   C I N T _ U H P R O D   S U B R O U T I N E  -*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_uhprod( status, n, goth, X, VECTOR, RESULT )
+      SUBROUTINE CUTEST_Cint_uhprod_r( status, n, goth, X, VECTOR, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -35,12 +36,12 @@
       LOGICAL :: goth_fortran
 
       goth_fortran = goth
-      CALL CUTEST_uhprod( status, n, goth_fortran, X, VECTOR, RESULT )
+      CALL CUTEST_uhprod_r( status, n, goth_fortran, X, VECTOR, RESULT )
       RETURN
 
-!  end of subroutine CUTEST_Cint_uhprod
+!  end of subroutine CUTEST_Cint_uhprod_r
 
-      END SUBROUTINE CUTEST_Cint_uhprod
+      END SUBROUTINE CUTEST_Cint_uhprod_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    U H P R O D   S U B R O U T I N E  -*-*-*-*-*-
 
@@ -50,7 +51,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_uhprod( status, n, goth, X, VECTOR, RESULT )
+      SUBROUTINE CUTEST_uhprod_r( status, n, goth, X, VECTOR, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -71,14 +72,14 @@
 !  with the Hessian evaluated at X. X is not used if  goth = .TRUE.
 !  ------------------------------------------------------------------
 
-      CALL CUTEST_uhprod_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_uhprod_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, n, goth, X, VECTOR, RESULT )
       RETURN
 
-!  end of subroutine CUTEST_uhprod
+!  end of subroutine CUTEST_uhprod_r
 
-      END SUBROUTINE CUTEST_uhprod
+      END SUBROUTINE CUTEST_uhprod_r
 
 !-*-*-  C U T E S T    U H P R O D _ t h r e a d e d  S U B R O U T I N E  -*-*-
 
@@ -88,8 +89,8 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_uhprod_threaded( status, n, goth, X, VECTOR, RESULT,   &
-                                         thread )
+      SUBROUTINE CUTEST_uhprod_threaded_r( status, n, goth, X, VECTOR,         &
+                                          RESULT, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -121,14 +122,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_uhprod_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_uhprod_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( thread ),             &
                                      status, n, goth, X, VECTOR, RESULT )
       RETURN
 
-!  end of subroutine CUTEST_uhprod_threaded
+!  end of subroutine CUTEST_uhprod_threaded_r
 
-      END SUBROUTINE CUTEST_uhprod_threaded
+      END SUBROUTINE CUTEST_uhprod_threaded_r
 
 !-*-  C U T E S T    U H P R O D _ t h r e a d s a f e  S U B R O U T I N E  -*-
 
@@ -139,7 +140,7 @@
 !   fortran 77 version originally released as UPROD in CUTE, July 1991
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_uhprod_threadsafe( data, work, status, n, goth,        &
+      SUBROUTINE CUTEST_uhprod_threadsafe_r( data, work, status, n, goth,      &
                                            X, VECTOR, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -168,7 +169,7 @@
       INTEGER ( KIND = ip_ ) :: i, ig, j, ifstat, igstat
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -181,7 +182,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -191,7 +192,7 @@
 
 !  evaluate the element function gradient and Hessian values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -228,7 +229,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -244,7 +245,7 @@
              work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),          &
              data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),         &
              data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE,   &
-             work%ISTAJC, work%W_ws, work%W_el, RANGE )
+             work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
         work%firstg = .FALSE.
       END IF
 
@@ -258,12 +259,12 @@
           data%n, data%ng, data%nel, data%ntotel, data%nvrels, data%nvargp,    &
           data%alllin, data%ISTAEV, data%ISTADH,                               &
           data%INTVAR, data%IELING, data%IELVAR, VECTOR, RESULT,               &
-          work%GVALS( : , 2 ) , work%GVALS( : , 3 ),                           &
+          work%GVALS( : , 2 ), work%GVALS( : , 3 ),                            &
           work%FUVALS( data%lgrjac + 1 ),                                      &
           data%GSCALE, data%ESCALE, work%FUVALS( : data%lnhuvl ),              &
           data%lnhuvl, data%GXEQX, data%INTREP, data%IGCOLJ,                   &
           data%ISLGRP, data%ITYPEE, data%ISYMMH, work%ISTAJC,                  &
-          work%W_ws, work%W_el, work%W_in, work%H_in, RANGE )
+          work%W_ws, work%W_el, work%W_in, work%H_in, RANGE_r )
 
 !  update the counters for the report tool
 
@@ -288,8 +289,8 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_uhprod_threadsafe
+!  end of subroutine CUTEST_uhprod_threadsafe_r
 
-      END SUBROUTINE CUTEST_uhprod_threadsafe
+      END SUBROUTINE CUTEST_uhprod_threadsafe_r
 
 

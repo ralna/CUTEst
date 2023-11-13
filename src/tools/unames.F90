@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    U N A M E S   S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 23rd December 2012
 
-      SUBROUTINE CUTEST_unames( status, n, pname, VNAME )
+      SUBROUTINE CUTEST_unames_r( status, n, pname, VNAME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -25,13 +26,13 @@
 !  Obtain the names of the problem and its variables
 !  -------------------------------------------------
 
-      CALL CUTEST_unames_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_unames_threadsafe_r( CUTEST_data_global,                     &
                                      status, n, pname, VNAME )
       RETURN
 
-!  end of subroutine CUTEST_unames
+!  end of subroutine CUTEST_unames_r
 
-      END SUBROUTINE CUTEST_unames
+      END SUBROUTINE CUTEST_unames_r
 
 !-  C U T E S T    U N A M E S  _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -42,7 +43,7 @@
 !   fortran 77 version originally released in CUTE, September 1992
 !   fortran 2003 version released in CUTEst, 19th November 2012
 
-      SUBROUTINE CUTEST_unames_threadsafe( data, status, n, pname, VNAME )
+      SUBROUTINE CUTEST_unames_threadsafe_r( data, status, n, pname, VNAME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -68,6 +69,6 @@
       status = 0
       RETURN
 
-!  end of subroutine CUTEST_unames_threadsafe
+!  end of subroutine CUTEST_unames_threadsafe_r
 
-      END SUBROUTINE CUTEST_unames_threadsafe
+      END SUBROUTINE CUTEST_unames_threadsafe_r

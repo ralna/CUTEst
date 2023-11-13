@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T   C I N T _  C C I F G    S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_ccifg( status, n, icon, X, ci, GCI, grad )
+      SUBROUTINE CUTEST_Cint_ccifg_r( status, n, icon, X, ci, GCI, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -36,13 +37,13 @@
       LOGICAL :: grad_fortran
 
       grad_fortran = grad
-      CALL CUTEST_ccifg( status, n, icon, X, ci, GCI, grad_fortran )
+      CALL CUTEST_ccifg_r( status, n, icon, X, ci, GCI, grad_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_ccifg
+!  end of subroutine CUTEST_Cint_ccifg_r
 
-      END SUBROUTINE CUTEST_Cint_ccifg
+      END SUBROUTINE CUTEST_Cint_ccifg_r
 
 !-*-*-*-*-*-*-  C U T E S T    C C I F G    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -52,7 +53,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccifg( status, n, icon, X, ci, GCI, grad )
+      SUBROUTINE CUTEST_ccifg_r( status, n, icon, X, ci, GCI, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -74,14 +75,14 @@
 !  calculations for a sparse constraint gradient vector.)
 !  -----------------------------------------------------------------
 
-      CALL CUTEST_ccifg_threadsafe( CUTEST_data_global,                        &
+      CALL CUTEST_ccifg_threadsafe_r( CUTEST_data_global,                      &
                                     CUTEST_work_global( 1 ),                   &
                                     status, n, icon, X, ci, GCI, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccifg
+!  end of subroutine CUTEST_ccifg_r
 
-      END SUBROUTINE CUTEST_ccifg
+      END SUBROUTINE CUTEST_ccifg_r
 
 !-*-*-  C U T E S T    C C I F G _ t h r e a d e d   S U B R O U T I N E  -*-*-
 
@@ -91,7 +92,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccifg_threaded( status, n, icon, X, ci, GCI, grad,     &
+      SUBROUTINE CUTEST_ccifg_threaded_r( status, n, icon, X, ci, GCI, grad,   &
                                         thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -125,14 +126,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_ccifg_threadsafe( CUTEST_data_global,                        &
+      CALL CUTEST_ccifg_threadsafe_r( CUTEST_data_global,                      &
                                     CUTEST_work_global( thread ),              &
                                     status, n, icon, X, ci, GCI, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccifg_threaded
+!  end of subroutine CUTEST_ccifg_threaded_r
 
-      END SUBROUTINE CUTEST_ccifg_threaded
+      END SUBROUTINE CUTEST_ccifg_threaded_r
 
 !-*-  C U T E S T    C C I F G _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -143,7 +144,7 @@
 !   fortran 77 version originally released in CUTE, September 1994
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_ccifg_threadsafe( data, work,                          &
+      SUBROUTINE CUTEST_ccifg_threadsafe_r( data, work,                        &
                                           status, n, icon, X, ci, GCI, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -177,7 +178,6 @@
       REAL :: time_in, time_out
       LOGICAL :: nontrv
       INTEGER ( KIND = ip_ ), DIMENSION( 1 ) :: ICALCG
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -221,7 +221,7 @@
 
 !  evaluate the element functions
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,            &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -259,7 +259,7 @@
 
       ELSE
         ICALCG( 1 ) = ig
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,              &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
                     data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,              &
                     data%lstgp, 1, data%lcalcg, data%lgpvlu,                   &
                     .FALSE., igstat )
@@ -285,7 +285,7 @@
 
 !  evaluate the element function derivatives
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,        &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -296,7 +296,7 @@
 !  evaluate the group derivative
 
         IF ( .NOT. data%GXEQX( ig ) ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
                       data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
                       .TRUE., igstat )
@@ -337,7 +337,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,            &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
                           nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
@@ -412,6 +412,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_ccifg_threadsafe
+!  end of subroutine CUTEST_ccifg_threadsafe_r
 
-      END SUBROUTINE CUTEST_ccifg_threadsafe
+      END SUBROUTINE CUTEST_ccifg_threadsafe_r

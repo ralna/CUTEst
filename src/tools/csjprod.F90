@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T   C I N T _ C S J P R O D    S U B R O U T I N E  -*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 1st October 2014
 
-      SUBROUTINE CUTEST_Cint_csjprod( status, n, m, gotj, jtrans, X,           &
+      SUBROUTINE CUTEST_Cint_csjprod_r( status, n, m, gotj, jtrans, X,         &
                                       nnz_vector, INDEX_nz_vector,             &
                                       VECTOR, lvector,                         &
                                       nnz_result, INDEX_nz_result,             &
@@ -48,15 +49,15 @@
 
       gotj_fortran = gotj
       jtrans_fortran = jtrans
-      CALL CUTEST_csjprod( status, n, m, gotj_fortran, jtrans_fortran, X,      &
+      CALL CUTEST_csjprod_r( status, n, m, gotj_fortran, jtrans_fortran, X,    &
                            nnz_vector, INDEX_nz_vector, VECTOR, lvector,       &
                            nnz_result, INDEX_nz_result, RESULT, lresult )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_csjprod
+!  end of subroutine CUTEST_Cint_csjprod_r
 
-      END SUBROUTINE CUTEST_Cint_csjprod
+      END SUBROUTINE CUTEST_Cint_csjprod_r
 
 !-*-*-*-*-*-*-  C U T E S T    C S J P R O D    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -66,7 +67,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 1st October 2014
 
-      SUBROUTINE CUTEST_csjprod( status, n, m, gotj, jtrans, X,                &
+      SUBROUTINE CUTEST_csjprod_r( status, n, m, gotj, jtrans, X,              &
                                  nnz_vector, INDEX_nz_vector, VECTOR, lvector, &
                                  nnz_result, INDEX_nz_result, RESULT, lresult )
       USE CUTEST_KINDS_precision
@@ -97,7 +98,7 @@
 !  nonzero, and the remaining components of RESULT may not have been set.
 !  -----------------------------------------------------------------------
 
-      CALL CUTEST_csjprod_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_csjprod_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( 1 ),                 &
                                       status, n, m, gotj, jtrans, X,           &
                                       nnz_vector, INDEX_nz_vector,             &
@@ -106,9 +107,9 @@
                                       RESULT, lresult )
       RETURN
 
-!  end of subroutine CUTEST_csjprod
+!  end of subroutine CUTEST_csjprod_r
 
-      END SUBROUTINE CUTEST_csjprod
+      END SUBROUTINE CUTEST_csjprod_r
 
 !-*-*-  C U T E S T   C S J P R O D _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -118,7 +119,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 1st October 2014
 
-      SUBROUTINE CUTEST_csjprod_threaded( status, n, m, gotj, jtrans, X,       &
+      SUBROUTINE CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,     &
                                           nnz_vector, INDEX_nz_vector,         &
                                           VECTOR, lvector,                     &
                                           nnz_result, INDEX_nz_result,         &
@@ -163,7 +164,7 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_csjprod_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_csjprod_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( thread ),            &
                                       status, n, m, gotj, jtrans, X,           &
                                       nnz_vector, INDEX_nz_vector,             &
@@ -172,9 +173,9 @@
                                       RESULT, lresult )
       RETURN
 
-!  end of subroutine CUTEST_csjprod_threaded
+!  end of subroutine CUTEST_csjprod_threaded_r
 
-      END SUBROUTINE CUTEST_csjprod_threaded
+      END SUBROUTINE CUTEST_csjprod_threaded_r
 
 !-*-  C U T E S T   C S J P R O D _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -185,7 +186,7 @@
 !   fortran 77 version originally released as CPROD in CUTE, November 1991
 !   fortran 2003 version released in CUTEst, 1st October 2014
 
-      SUBROUTINE CUTEST_csjprod_threadsafe( data, work, status, n, m,          &
+      SUBROUTINE CUTEST_csjprod_threadsafe_r( data, work, status, n, m,        &
                                             gotj, jtrans, X,                   &
                                             nnz_vector, INDEX_nz_vector,       &
                                             VECTOR, lvector,                   &
@@ -228,7 +229,6 @@
       REAL ( KIND = rp_ ) :: ftt, pi, prod, scalee
       REAL :: time_in, time_out
       LOGICAL :: skip
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
       IF ( data%numcon == 0 ) GO TO 990
@@ -257,7 +257,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -267,7 +267,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -301,7 +301,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -344,7 +344,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
                           nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
               DO i = 1, nvarel
                 j = data%IELVAR( l )
@@ -437,7 +437,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,            &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
               DO i = 1, nvarel
                IF ( work%IUSED( data%IELVAR( l ) ) == 1 ) prod = prod          &
@@ -493,7 +493,7 @@
 
   930 CONTINUE
       IF ( data%out > 0 ) WRITE( data%out,                                     &
-        "( ' ** SUBROUTINE CSJPROD: error flag raised during SIF evaluation' )" )
+        "( ' ** SUBROUTINE CSJPROD: error flag raised during SIF evaluation')" )
       status = 3
 
 !  update elapsed CPU time if required
@@ -505,6 +505,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_csjprod_threadsafe
+!  end of subroutine CUTEST_csjprod_threadsafe_r
 
-      END SUBROUTINE CUTEST_csjprod_threadsafe
+      END SUBROUTINE CUTEST_csjprod_threadsafe_r

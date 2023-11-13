@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    C D I M S J    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cdimsj( status, nnzj )
+      SUBROUTINE CUTEST_cdimsj_r( status, nnzj )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -24,12 +25,12 @@
 !  in Standard Input Format (SIF)
 !  --------------------------------------------------------------
 
-      CALL CUTEST_cdimsj_threadsafe( CUTEST_data_global, status, nnzj )
+      CALL CUTEST_cdimsj_threadsafe_r( CUTEST_data_global, status, nnzj )
       RETURN
 
-!  end of sunroutine CUTEST_cdimsj
+!  end of sunroutine CUTEST_cdimsj_r
 
-      END SUBROUTINE CUTEST_cdimsj
+      END SUBROUTINE CUTEST_cdimsj_r
 
 !-*-  C U T E S T   C D I M S J _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -40,7 +41,7 @@
 !   fortran 77 version originally released in CUTEr, April 1999
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_cdimsj_threadsafe( data, status, nnzj )
+      SUBROUTINE CUTEST_cdimsj_threadsafe_r( data, status, nnzj )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -66,7 +67,7 @@
 !  allow space for constraint groups
 
       DO ig = 1, data%ng
-        IF ( data%KNDOFC( ig ) /= 0 )                                         &
+        IF ( data%KNDOFC( ig ) /= 0 )                                          &
           nnzj = nnzj + data%ISTAGV( ig + 1 ) - data%ISTAGV( ig )
       END DO
 
@@ -76,6 +77,6 @@
       status = 0
       RETURN
 
-!  end of sunroutine CUTEST_cdimsj_threadsafe
+!  end of sunroutine CUTEST_cdimsj_threadsafe_r
 
-      END SUBROUTINE CUTEST_cdimsj_threadsafe
+      END SUBROUTINE CUTEST_cdimsj_threadsafe_r

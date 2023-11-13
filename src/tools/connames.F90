@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T    C O N N A M E S    S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_connames( status, m, CNAME )
+      SUBROUTINE CUTEST_connames_r( status, m, CNAME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -24,12 +25,12 @@
 !  obtain the names of the general constraints
 !  -------------------------------------------
 
-      CALL CUTEST_connames_threadsafe( CUTEST_data_global, status, m, CNAME )
+      CALL CUTEST_connames_threadsafe_r( CUTEST_data_global, status, m, CNAME )
       RETURN
 
-!  end of subroutine CUTEST_connames
+!  end of subroutine CUTEST_connames_r
 
-      END SUBROUTINE CUTEST_connames
+      END SUBROUTINE CUTEST_connames_r
 
 !-  C U T E S T   C O N N A M E S _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -40,7 +41,7 @@
 !   fortran 77 version originally released in CUTEr, August 2005
 !   fortran 2003 version released in CUTEst, 19th November 2012
 
-      SUBROUTINE CUTEST_connames_threadsafe( data, status, m, CNAME )
+      SUBROUTINE CUTEST_connames_threadsafe_r( data, status, m, CNAME )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -68,6 +69,6 @@
       status = 0
       RETURN
 
-!  end of subroutine CUTEST_connames_threadsafe
+!  end of subroutine CUTEST_connames_threadsafe_r
 
-      END SUBROUTINE CUTEST_connames_threadsafe
+      END SUBROUTINE CUTEST_connames_threadsafe_r

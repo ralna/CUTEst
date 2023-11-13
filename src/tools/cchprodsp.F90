@@ -1,6 +1,8 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T    C C H P R O D S P   S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +12,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29 March 2017
 
-      SUBROUTINE CUTEST_cchprodsp( status, m, lchp, CHP_ind, CHP_ptr )
+      SUBROUTINE CUTEST_cchprodsp_r( status, m, lchp, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -29,14 +31,14 @@
 !  occur in CHP_ind), k = CHP_ptr(i),..., CHP_ptr(i+1)-1, i = 1, ..., m.
 !  ----------------------------------------------------------------------------
 
-      CALL CUTEST_cchprodsp_threadsafe( CUTEST_data_global,                    &
+      CALL CUTEST_cchprodsp_threadsafe_r( CUTEST_data_global,                  &
                                         CUTEST_work_global( 1 ),               &
                                         status, m, lchp, CHP_ind, CHP_ptr )
       RETURN
 
-!  end of subroutine CUTEST_cchprodsp
+!  end of subroutine CUTEST_cchprodsp_r
 
-      END SUBROUTINE CUTEST_cchprodsp
+      END SUBROUTINE CUTEST_cchprodsp_r
 
 !-  C U T E S T  C C H P R O D S P _ t h r e a d s a f e  S U B R O U T I N E  -
 
@@ -46,7 +48,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29 March 2017
 
-      SUBROUTINE CUTEST_cchprodsp_threadsafe( data, work, status, m,           &
+      SUBROUTINE CUTEST_cchprodsp_threadsafe_r( data, work, status, m,         &
                                               lchp, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -98,8 +100,8 @@
 
       RETURN
 
-!  end of subroutine CUTEST_cchprodsp_threadsafe
+!  end of subroutine CUTEST_cchprodsp_threadsafe_r
 
-      END SUBROUTINE CUTEST_cchprodsp_threadsafe
+      END SUBROUTINE CUTEST_cchprodsp_threadsafe_r
 
 

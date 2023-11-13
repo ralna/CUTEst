@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
 
@@ -10,7 +10,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_Cint_cchprods( status, n, m, goth, X, VECTOR,          &
+      SUBROUTINE CUTEST_Cint_cchprods_r( status, n, m, goth, X, VECTOR,        &
                                        lchp, CHP_val, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -40,13 +40,13 @@
       LOGICAL :: goth_fortran
 
       goth_fortran = goth
-      CALL CUTEST_cchprods( status, n, m, goth_fortran, X, VECTOR, lchp,       &
+      CALL CUTEST_cchprods_r( status, n, m, goth_fortran, X, VECTOR, lchp,     &
                            CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
-!  end of subroutine CUTEST_Cint_cchprods
+!  end of subroutine CUTEST_Cint_cchprods_r
 
-      END SUBROUTINE CUTEST_Cint_cchprods
+      END SUBROUTINE CUTEST_Cint_cchprods_r
 
 !-*-*-*-*-*-  C U T E S T    C C H P R O D S    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -56,7 +56,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_cchprods( status, n, m, goth, X, VECTOR,               &
+      SUBROUTINE CUTEST_cchprods_r( status, n, m, goth, X, VECTOR,             &
                                   lchp, CHP_val, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -82,15 +82,15 @@
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
 
-      CALL CUTEST_cchprods_threadsafe( CUTEST_data_global,                     &
+      CALL CUTEST_cchprods_threadsafe_r( CUTEST_data_global,                   &
                                        CUTEST_work_global( 1 ),                &
                                        status, n, m, goth, X, VECTOR, lchp,    &
                                        CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
-!  end of subroutine CUTEST_cchprods
+!  end of subroutine CUTEST_cchprods_r
 
-      END SUBROUTINE CUTEST_cchprods
+      END SUBROUTINE CUTEST_cchprods_r
 
 !-*-  C U T E S T   C C H P R O D S _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -100,8 +100,9 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_cchprods_threaded( status, n, m, goth, X, VECTOR, lchp,&
-                                           CHP_val, CHP_ind, CHP_ptr, thread )
+      SUBROUTINE CUTEST_cchprods_threaded_r( status, n, m, goth, X, VECTOR,    &
+                                             lchp, CHP_val, CHP_ind, CHP_ptr,  &
+                                             thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -137,15 +138,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cchprods_threadsafe( CUTEST_data_global,                     &
+      CALL CUTEST_cchprods_threadsafe_r( CUTEST_data_global,                   &
                                        CUTEST_work_global( thread ),           &
                                        status, n, m, goth, X, VECTOR, lchp,    &
                                        CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
-!  end of subroutine CUTEST_cchprods_threaded
+!  end of subroutine CUTEST_cchprods_threaded_r
 
-      END SUBROUTINE CUTEST_cchprods_threaded
+      END SUBROUTINE CUTEST_cchprods_threaded_r
 
 !-  C U T E S T   C C H P R O D S _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -155,7 +156,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
-      SUBROUTINE CUTEST_cchprods_threadsafe( data, work, status, n, m, goth,   &
+      SUBROUTINE CUTEST_cchprods_threadsafe_r( data, work, status, n, m, goth, &
                                              X, VECTOR, lchp, CHP_val, CHP_ind,&
                                              CHP_ptr)
       USE CUTEST_KINDS_precision
@@ -192,7 +193,7 @@
       REAL ( KIND = rp_ ) :: ftt, gdash, g2dash, gi, pi, prod, scalee
       REAL :: time_in, time_out
       LOGICAL :: nullwk
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -205,7 +206,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -215,7 +216,7 @@
 
 !  evaluate the element function gradient and Hessian values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -252,7 +253,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -268,7 +269,7 @@
                work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),        &
                data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),       &
                data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV,              &
-               data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE )
+               data%ITYPEE, work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
 
 !  set the indices for the nonzeros for each constraint Hessian product in turn
 
@@ -318,7 +319,7 @@
 
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
-              CALL RANGE( iel, .TRUE., work%FUVALS( k : k + nin - 1 ),         &
+              CALL RANGE_r( iel, .TRUE., work%FUVALS( k : k + nin - 1 ),       &
                           work%H_el, nvarel, nin, data%ITYPEE( iel ),          &
                           nin, nvarel )
               DO i = 1, nvarel
@@ -410,7 +411,7 @@
 !  find the internal variables, W_in
 
                nin = data%INTVAR( iel + 1 ) - data%INTVAR( iel )
-               CALL RANGE( iel, .FALSE., work%W_el, work%W_in, nvarel, nin,    &
+               CALL RANGE_r( iel, .FALSE., work%W_el, work%W_in, nvarel, nin,  &
                            data%ITYPEE( iel ), nvarel, nin )
 
 !  multiply the internal variables by the element Hessian and put the
@@ -433,7 +434,7 @@
 
 !  scatter the product back onto the elemental variables, W
 
-               CALL RANGE( iel, .TRUE., work%H_in, work%W_el, nvarel, nin,     &
+               CALL RANGE_r( iel, .TRUE., work%H_in, work%W_el, nvarel, nin,   &
                            data%ITYPEE( iel ), nin, nvarel )
 
 !  add the scattered product to Q
@@ -486,7 +487,7 @@
 !       work%GSCALE_used, data%ESCALE, work%FUVALS( : data%lnhuvl ),           &
 !       data%lnhuvl, data%GXEQX, data%INTREP, data%IGCOLJ,                     &
 !       data%ISLGRP, data%ITYPEE, data%ISYMMH, work%ISTAJC,                    &
-!       work%W_ws, work%W_el, work%W_in, work%H_in, RANGE )
+!       work%W_ws, work%W_el, work%W_in, work%H_in, RANGE_r )
 
 !  update the counters for the report tool
 
@@ -514,8 +515,8 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cchprods_threadsafe
+!  end of subroutine CUTEST_cchprods_threadsafe_r
 
-      END SUBROUTINE CUTEST_cchprods_threadsafe
+      END SUBROUTINE CUTEST_cchprods_threadsafe_r
 
 

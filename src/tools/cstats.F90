@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T   C S T A T S    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 12th January 2013
 
-      SUBROUTINE CUTEST_cstats( status, nonlinear_variables_objective,         &
+      SUBROUTINE CUTEST_cstats_r( status, nonlinear_variables_objective,       &
                                 nonlinear_variables_constraints,               &
                                 equality_constraints, linear_constraints )
       USE CUTEST_KINDS_precision
@@ -34,15 +35,15 @@
 
 !  ------------------------------------------------------------------------
 
-      CALL CUTEST_cstats_threadsafe( CUTEST_data_global, status,               &
+      CALL CUTEST_cstats_threadsafe_r( CUTEST_data_global, status,             &
                                      nonlinear_variables_objective,            &
                                      nonlinear_variables_constraints,          &
                                      equality_constraints, linear_constraints )
       RETURN
 
-!  end of subroutine CUTEST_cstats
+!  end of subroutine CUTEST_cstats_r
 
-      END SUBROUTINE CUTEST_cstats
+      END SUBROUTINE CUTEST_cstats_r
 
 !-*-  C U T E S T   C S T A T S _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -53,7 +54,7 @@
 !   fortran 77 version originally released in CUTEr, August 1999
 !   fortran 2003 version released in CUTEst, 24th November 2012
 
-      SUBROUTINE CUTEST_cstats_threadsafe( data, status,                       &
+      SUBROUTINE CUTEST_cstats_threadsafe_r( data, status,                     &
                                            nonlinear_variables_objective,      &
                                            nonlinear_variables_constraints,    &
                                            equality_constraints,               &
@@ -88,6 +89,6 @@
       status = 0
       RETURN
 
-!  end of subroutine CUTEST_cstats_threadsafe
+!  end of subroutine CUTEST_cstats_threadsafe_r
 
-      END SUBROUTINE CUTEST_cstats_threadsafe
+      END SUBROUTINE CUTEST_cstats_threadsafe_r

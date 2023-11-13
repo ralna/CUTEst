@@ -1,6 +1,6 @@
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
-
+#include "cutest_routines.h"
 #include "cutest_modules.h"
 
 !-*-*-*-*-  C U T E S T    C T E R M I N A T E    S U B R O U T I N E  -*-*-*-*-
@@ -11,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28nd December 2012
 
-      SUBROUTINE CUTEST_cterminate( status )
+      SUBROUTINE CUTEST_cterminate_r( status )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -55,8 +55,8 @@
       END IF
       RETURN
 
-!  End of subroutine CUTEST_cterminate
+!  End of subroutine CUTEST_cterminate_r
 
-      END SUBROUTINE CUTEST_cterminate
+      END SUBROUTINE CUTEST_cterminate_r
 
 

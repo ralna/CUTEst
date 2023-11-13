@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-*-*- C U T E S T _ P R O B L E M     M O D U l E -*-*-*-*-*-*-*-
 
@@ -22,7 +23,7 @@
       IMPLICIT None
 
       PRIVATE
-      PUBLIC :: CUTEST_problem_setup, CUTEST_problem_terminate
+      PUBLIC :: CUTEST_problem_setup_r, CUTEST_problem_terminate_r
 
 !----------------------
 !   P a r a m e t e r s
@@ -98,7 +99,7 @@
 
     CONTAINS
 
-      SUBROUTINE CUTEST_problem_setup( status, problem, input )
+      SUBROUTINE CUTEST_problem_setup_r( status, problem, input )
 !
 ! Allocate main problem data structure
 !
@@ -112,7 +113,7 @@
 !
 ! Obtain problem dimensions
 ! 
-      CALL CUTEST_cdimen( status, input, problem%n, problem%m )
+      CALL CUTEST_cdimen_r( status, input, problem%n, problem%m )
       IF ( status /= 0 ) RETURN
 !
 ! Trap invalid input
@@ -120,7 +121,7 @@
       IF ( problem%n <= 0 .Or. problem%m < 0 ) THEN
          WRITE( error_device, "( 'CUTEST_problem_setup:: invalid problem ',    &
         &  'dimensions: n = ', I0, ', m = ', I0 )" ) problem%n, problem%m
-         Call CUTEST_problem_terminate( status, problem )
+         Call CUTEST_problem_terminate_r( status, problem )
          RETURN
       ENDIF
 !
@@ -152,7 +153,7 @@
 ! Allocate memory for Hessian if required
 !
       IF ( problem%allocate_H ) Then
-         Call CUTEST_cdimsh( status, problem%nnzh )
+         Call CUTEST_cdimsh_r( status, problem%nnzh )
          IF ( status /= 0 ) RETURN
          ALLOCATE( problem%H_row( problem%nnzh ), STAT = ierr )
          IF ( ierr /= 0 ) Then
@@ -203,7 +204,7 @@
 ! Allocate memory for Jacobian if required
 !
          IF ( problem%allocate_J ) Then
-            CALL CUTEST_cdimsj( status, problem%nnzj )
+            CALL CUTEST_cdimsj_r( status, problem%nnzj )
             ALLOCATE( problem%J_row( problem%nnzj ), STAT = ierr )
             IF ( ierr /= 0 ) Then
                nerr = nerr + 1
@@ -227,13 +228,13 @@
         status = 1
       END IF
 
-!  end of subroutine CUTEST_problem_setup
+!  end of subroutine CUTEST_problem_setup_r
 
-      END SUBROUTINE CUTEST_problem_setup
+      END SUBROUTINE CUTEST_problem_setup_r
 
   !============================================================================
 
-      SUBROUTINE CUTEST_problem_terminate( status, problem )
+      SUBROUTINE CUTEST_problem_terminate_r( status, problem )
 
 ! Deallocates dynamically-allocated memory for problem storage
 
@@ -328,8 +329,8 @@
         status = 1
       END IF
 
-!  end of subroutine CUTEST_problem_terminate
+!  end of subroutine CUTEST_problem_terminate_r
 
-      End Subroutine CUTEST_problem_terminate
+      End Subroutine CUTEST_problem_terminate_r
 
     END MODULE CUTEST_PROBLEM_precision

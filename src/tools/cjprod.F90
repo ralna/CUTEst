@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-  C U T E S T   C I N T _ C J P R O D    S U B R O U T I N E  -*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
-      SUBROUTINE CUTEST_Cint_cjprod( status, n, m, gotj, jtrans, X,            &
+      SUBROUTINE CUTEST_Cint_cjprod_r( status, n, m, gotj, jtrans, X,          &
                                      VECTOR, lvector, RESULT, lresult )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -39,14 +40,14 @@
 
       gotj_fortran = gotj
       jtrans_fortran = jtrans
-      CALL CUTEST_cjprod( status, n, m, gotj_fortran, jtrans_fortran, X,       &
+      CALL CUTEST_cjprod_r( status, n, m, gotj_fortran, jtrans_fortran, X,     &
                           VECTOR, lvector, RESULT, lresult )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_cjprod
+!  end of subroutine CUTEST_Cint_cjprod_r
 
-      END SUBROUTINE CUTEST_Cint_cjprod
+      END SUBROUTINE CUTEST_Cint_cjprod_r
 
 !-*-*-*-*-*-*-  C U T E S T    C J P R O D    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -56,7 +57,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cjprod( status, n, m, gotj, jtrans, X,                 &
+      SUBROUTINE CUTEST_cjprod_r( status, n, m, gotj, jtrans, X,               &
                                 VECTOR, lvector, RESULT, lresult )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -80,15 +81,15 @@
 !  X is not used if gotj = .TRUE.
 !   -------------------------------------------------------------------
 
-      CALL CUTEST_cjprod_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cjprod_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( 1 ),                  &
                                      status, n, m, gotj, jtrans, X,            &
                                      VECTOR, lvector, RESULT, lresult )
       RETURN
 
-!  end of subroutine CUTEST_cjprod
+!  end of subroutine CUTEST_cjprod_r
 
-      END SUBROUTINE CUTEST_cjprod
+      END SUBROUTINE CUTEST_cjprod_r
 
 !-*-*-  C U T E S T   C J P R O D _ t h r e a d e d   S U B R O U T I N E  -*-*-
 
@@ -98,7 +99,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_cjprod_threaded( status, n, m, gotj, jtrans, X,        &
+      SUBROUTINE CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X,      &
                                          VECTOR, lvector, RESULT, lresult,     &
                                          thread )
       USE CUTEST_KINDS_precision
@@ -134,15 +135,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_cjprod_threadsafe( CUTEST_data_global,                       &
+      CALL CUTEST_cjprod_threadsafe_r( CUTEST_data_global,                     &
                                      CUTEST_work_global( thread ),             &
                                      status, n, m, gotj, jtrans, X,            &
                                      VECTOR, lvector, RESULT, lresult )
       RETURN
 
-!  end of subroutine CUTEST_cjprod_threaded
+!  end of subroutine CUTEST_cjprod_threaded_r
 
-      END SUBROUTINE CUTEST_cjprod_threaded
+      END SUBROUTINE CUTEST_cjprod_threaded_r
 
 !-*-  C U T E S T   C J P R O D _ t h r e a d s a f e   S U B R O U T I N E  -*-
 
@@ -153,7 +154,7 @@
 !   fortran 77 version originally released in CUTEr, June 2003
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
-      SUBROUTINE CUTEST_cjprod_threadsafe( data, work, status, n, m, gotj,     &
+      SUBROUTINE CUTEST_cjprod_threadsafe_r( data, work, status, n, m, gotj,   &
                                            jtrans, X, VECTOR, lvector,         &
                                            RESULT, lresult )
       USE CUTEST_KINDS_precision
@@ -186,7 +187,6 @@
       INTEGER ( KIND = ip_ ) :: ifstat, igstat, nvarel, nin
       REAL ( KIND = rp_ ) :: ftt, prod, scalee
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
       IF ( data%numcon == 0 ) GO TO 990
@@ -215,7 +215,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -225,7 +225,7 @@
 
 !  evaluate the element function values
 
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -259,7 +259,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -303,7 +303,7 @@
 !  the iel-th element has an internal representation
 
                 nin = data%INTVAR( iel + 1 ) - k
-                CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
@@ -361,7 +361,7 @@
 !  the iel-th element has an internal representation
 
                 nin = data%INTVAR( iel + 1 ) - k
-                CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
@@ -425,6 +425,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cjprod_threadsafe
+!  end of subroutine CUTEST_cjprod_threadsafe_r
 
-      END SUBROUTINE CUTEST_cjprod_threadsafe
+      END SUBROUTINE CUTEST_cjprod_threadsafe_r

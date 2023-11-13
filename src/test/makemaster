@@ -141,8 +141,9 @@ run_test_cutest_unconstrained: utools test_cutest_unconstrained
 run_test_cutest_constrained: ctools test_cutest_constrained
 	echo " Exhaustive test of constrained tools"
 	$(CP) ../test/ctest.F90 $(OBJ)/ctest.F90
-#	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-#            $(C_TEST) ctest.F90 -L$(OBJ) $(LIBS)"
+	cd $(OBJ) ; echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
+            $(C_TEST) ctest.F90 -L$(OBJ) $(LIBS)"
+#	cd $(OBJ) ; $(FORTRAN) -cpp -dI -DCUTEST_DOUBLE -I $(CUTEST)/include ctest.F90
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
             $(C_TEST) ctest.F90 -L$(OBJ) $(LIBS)
 #	valgrind -v --tool=memcheck --leak-check=yes --show-reachable=yes --track-origins=yes $(OBJ)/run_test

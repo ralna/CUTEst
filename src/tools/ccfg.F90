@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-  C U T E S T   C I N T _  C C F G    S U B R O U T I N E  -*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_Cint_ccfg( status, n, m, X, C, jtrans,                 &
+      SUBROUTINE CUTEST_Cint_ccfg_r( status, n, m, X, C, jtrans,               &
                                    lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -45,14 +46,14 @@
 
       jtrans_fortran = jtrans
       grad_fortran = grad
-      CALL CUTEST_ccfg( status, n, m, X, C, jtrans_fortran,                    &
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans_fortran,                  &
                        lcjac1, lcjac2, CJAC, grad_fortran )
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_ccfg
+!  end of subroutine CUTEST_Cint_ccfg_r
 
-      END SUBROUTINE CUTEST_Cint_ccfg
+      END SUBROUTINE CUTEST_Cint_ccfg_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    C C F G    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -62,7 +63,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccfg( status, n, m, X, C, jtrans,                      &
+      SUBROUTINE CUTEST_ccfg_r( status, n, m, X, C, jtrans,                    &
                               lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -92,15 +93,15 @@
 !        of the i-th constraint function.
 ! ------------------------------------------------------------------------
 
-      CALL CUTEST_ccfg_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_ccfg_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( 1 ),                    &
                                    status, n, m, X, C,                         &
                                    jtrans, lcjac1, lcjac2, CJAC, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccfg
+!  end of subroutine CUTEST_ccfg_r
 
-      END SUBROUTINE CUTEST_ccfg
+      END SUBROUTINE CUTEST_ccfg_r
 
 !-*-*-*-  C U T E S T   C C F G _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -110,7 +111,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
-      SUBROUTINE CUTEST_ccfg_threaded( status, n, m, X, C, jtrans,             &
+      SUBROUTINE CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,           &
                                        lcjac1, lcjac2, CJAC, grad, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -151,15 +152,15 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_ccfg_threadsafe( CUTEST_data_global,                         &
+      CALL CUTEST_ccfg_threadsafe_r( CUTEST_data_global,                       &
                                    CUTEST_work_global( thread ),               &
                                    status, n, m, X, C,                         &
                                    jtrans, lcjac1, lcjac2, CJAC, grad )
       RETURN
 
-!  end of subroutine CUTEST_ccfg_threaded
+!  end of subroutine CUTEST_ccfg_threaded_r
 
-      END SUBROUTINE CUTEST_ccfg_threaded
+      END SUBROUTINE CUTEST_ccfg_threaded_r
 
 !-*-*-  C U T E S T   C C F G _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -170,7 +171,7 @@
 !   fortran 77 version originally released in CUTE, April 1992
 !   fortran 2003 version released in CUTEst, 21st November 2012
 
-      SUBROUTINE CUTEST_ccfg_threadsafe( data, work, status, n, m, X, C,       &
+      SUBROUTINE CUTEST_ccfg_threadsafe_r( data, work, status, n, m, X, C,     &
                                          jtrans, lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -209,7 +210,6 @@
       INTEGER ( KIND = ip_ ) :: icnt, ifstat, igstat, nelup, istrgv, iendgv
       REAL ( KIND = rp_ ) :: ftt, gi, scalee
       REAL :: time_in, time_out
-      EXTERNAL :: RANGE
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -259,7 +259,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,              &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -270,7 +270,7 @@
 !  evaluate the element function derivatives
 
       IF ( grad )                                                              &
-        CALL ELFUN( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,          &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
@@ -330,7 +330,7 @@
             work%ICALCF( icnt ) = ig
           END IF
         END DO
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,           &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .FALSE., igstat )
@@ -362,7 +362,7 @@
 !  evaluate the group derivative values
 
         IF ( .NOT. data%altriv ) THEN
-          CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,       &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                       .TRUE., igstat )
@@ -412,7 +412,7 @@
 
               IF ( data%INTREP( iel ) ) THEN
                 nin = data%INTVAR( iel + 1 ) - k
-                CALL RANGE( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
+                CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
@@ -505,7 +505,7 @@
  2000 FORMAT( ' ** SUBROUTINE CCFG: Increase the leading dimension of CJAC' )
  2010 FORMAT( ' ** SUBROUTINE CCFG: Increase the second dimension of CJAC' )
 
-!  end of subroutine CUTEST_ccfg_threadsafe
+!  end of subroutine CUTEST_ccfg_threadsafe_r
 
-      END SUBROUTINE CUTEST_ccfg_threadsafe
+      END SUBROUTINE CUTEST_ccfg_threadsafe_r
 

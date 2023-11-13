@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-  C U T E S T    T R E P O R T    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 25th February 2016
 
-      SUBROUTINE CUTEST_timings( status, name, time )
+      SUBROUTINE CUTEST_timings_r( status, name, time )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -27,14 +28,14 @@
 !  by calling with name = 'stop'; initially timings are switched off
 !  ---------------------------------------------------------------------------
 
-      CALL CUTEST_timings_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_timings_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( 1 ),                 &
                                       status, name, time )
       RETURN
 
-!  End of subroutine CUTEST_timings
+!  End of subroutine CUTEST_timings_r
 
-      END SUBROUTINE CUTEST_timings
+      END SUBROUTINE CUTEST_timings_r
 
 !-*-  C U T E S T    T R E P O R T _ t h r e a d e d   S U B R O U T I N E  -*-
 
@@ -44,7 +45,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 25th February 2016
 
-      SUBROUTINE CUTEST_timings_threaded( status, name, time, thread )
+      SUBROUTINE CUTEST_timings_threaded_r( status, name, time, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -73,14 +74,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_timings_threadsafe( CUTEST_data_global,                      &
+      CALL CUTEST_timings_threadsafe_r( CUTEST_data_global,                    &
                                       CUTEST_work_global( thread ),            &
                                       status, name, time )
       RETURN
 
-!  End of subroutine CUTEST_timings_threaded
+!  End of subroutine CUTEST_timings_threaded_r
 
-      END SUBROUTINE CUTEST_timings_threaded
+      END SUBROUTINE CUTEST_timings_threaded_r
 
 !-  C U T E S T    T R E P O R T _ t h r e a d s a f e   S U B R O U T I N E  -
 
@@ -90,7 +91,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 25th February 2016
 
-      SUBROUTINE CUTEST_timings_threadsafe( data, work, status, name, time )
+      SUBROUTINE CUTEST_timings_threadsafe_r( data, work, status, name, time )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -233,6 +234,6 @@
 
       RETURN
 
-!  End of subroutine CUTEST_timings_threadsafe
+!  End of subroutine CUTEST_timings_threadsafe_r
 
-      END SUBROUTINE CUTEST_timings_threadsafe
+      END SUBROUTINE CUTEST_timings_threadsafe_r

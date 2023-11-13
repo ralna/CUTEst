@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-  C U T E S T    U S H    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -10,7 +11,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_ush( status, n, X, nnzh, lh, H_val, H_row, H_col )
+      SUBROUTINE CUTEST_ush_r( status, n, X, nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -29,14 +30,14 @@
 !  H_col(i) for i = 1, ...., nnzh
 !  ------------------------------------------------------------------
 
-      CALL CUTEST_ush_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( 1 ), status, n, X,       &
                                   nnzh, lh, H_val, H_row, H_col )
       RETURN
 
-!  end of subroutine CUTEST_ush
+!  end of subroutine CUTEST_ush_r
 
-      END SUBROUTINE CUTEST_ush
+      END SUBROUTINE CUTEST_ush_r
 
 !-*-*-*-  C U T E S T    U S H _ t h r e a d e d   S U B R O U T I N E  -*-*-*-
 
@@ -46,7 +47,7 @@
 !  History -
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
-      SUBROUTINE CUTEST_ush_threaded( status, n, X,                            &
+      SUBROUTINE CUTEST_ush_threaded_r( status, n, X,                          &
                                       nnzh, lh, H_val, H_row, H_col, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -77,14 +78,14 @@
 
 !  evaluate using specified thread
 
-      CALL CUTEST_ush_threadsafe( CUTEST_data_global,                          &
+      CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
                                   CUTEST_work_global( thread ), status, n, X,  &
                                   nnzh, lh, H_val, H_row, H_col )
       RETURN
 
-!  end of subroutine CUTEST_ush_threaded
+!  end of subroutine CUTEST_ush_threaded_r
 
-      END SUBROUTINE CUTEST_ush_threaded
+      END SUBROUTINE CUTEST_ush_threaded_r
 
 !-*-*-  C U T E S T    U S H  _ t h r e a d s a f e   S U B R O U T I N E  -*-*-
 
@@ -95,7 +96,7 @@
 !   fortran 77 version originally released in CUTE, July 1991
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
-      SUBROUTINE CUTEST_ush_threadsafe( data, work, status, n, X,              &
+      SUBROUTINE CUTEST_ush_threadsafe_r( data, work, status, n, X,            &
                                         nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -123,7 +124,7 @@
       REAL ( KIND = rp_ ) :: ftt
       REAL :: time_in, time_out
       CHARACTER ( LEN = 80 ) :: bad_alloc = REPEAT( ' ', 80 )
-      EXTERNAL :: RANGE
+      EXTERNAL :: RANGE_r
 
       IF ( work%record_times ) CALL CPU_TIME( time_in )
 
@@ -135,7 +136,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -145,7 +146,7 @@
 
 !  evaluate the element function values
 
-      CALL ELFUN( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,          &
+      CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
                   data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
                   data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
                   data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
@@ -182,7 +183,7 @@
 !  evaluate the group derivative values
 
       IF ( .NOT. data%altriv ) THEN
-        CALL GROUP( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,        &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
                     data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
                     data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
                     .TRUE., igstat )
@@ -198,7 +199,7 @@
              work%FUVALS, data%lnguvl, work%FUVALS( data%lggfx + 1 ),          &
              data%GSCALE, data%ESCALE, work%FUVALS( data%lgrjac + 1 ),         &
              data%GXEQX, data%INTREP, data%ISVGRP, data%ISTAGV, data%ITYPEE,   &
-             work%ISTAJC, work%W_ws, work%W_el, RANGE )
+             work%ISTAJC, work%W_ws, work%W_el, RANGE_r )
       work%firstg = .FALSE.
 
 !  assemble the Hessian
@@ -210,7 +211,7 @@
              data%ISTADG, data%ISTAEV, data%ISTAGV, data%ISVGRP, data%A,       &
              work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,               &
              work%GVALS( : , 2 ), work%GVALS( :  , 3 ), data%GSCALE,           &
-             data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE,         &
+             data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,       &
              0, data%out, data%out, .TRUE., .FALSE.,                           &
              n, status, alloc_status, bad_alloc,                               &
              work%array_status, work%lh_row, work%lh_col, work%lh_val,         &
@@ -252,6 +253,6 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_ush_threadsafe
+!  end of subroutine CUTEST_ush_threadsafe_r
 
-      END SUBROUTINE CUTEST_ush_threadsafe
+      END SUBROUTINE CUTEST_ush_threadsafe_r

@@ -1,6 +1,7 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 14:50 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-*-*-*-*- C U T E S T  L Q P  M O D U l E -*-*-*-*-*-*-*-*-*-*-
 
@@ -146,7 +147,7 @@
 
 !  determine the number of variables and constraints
 
-      CALL CUTEST_cdimen( status, input, n, m )
+      CALL CUTEST_cdimen_r( status, input, n, m )
       IF ( status /= 0 ) RETURN
 
 !  allocate suitable arrays
@@ -158,15 +159,15 @@
 
 !  set up the data structures necessary to hold the problem
 
-      CALL CUTEST_csetup( status, input, out, io_buffer, n, m, X, X_l, X_u,    &
-                          Y, C_l, C_u, EQUATN, LINEAR, 0, 0, 0 )
+      CALL CUTEST_csetup_r( status, input, out, io_buffer, n, m, X, X_l, X_u,  &
+                            Y, C_l, C_u, EQUATN, LINEAR, 0, 0, 0 )
       IF ( status /= 0 ) RETURN
       DEALLOCATE( LINEAR, STAT = alloc_status )
       IF ( alloc_status /= 0 ) GO TO 990
 
 !  determine the names of the problem, variables and constraints.
 
-      CALL CUTEST_cnames( status, n, m, p_name, X_names, C_names )
+      CALL CUTEST_cnames_r( status, n, m, p_name, X_names, C_names )
       IF ( status /= 0 ) RETURN
 
 !  if required, determine the variable types
@@ -174,7 +175,7 @@
       IF ( PRESENT( X_type ) ) THEN
         ALLOCATE( X_type( n ), STAT = alloc_status )
         IF ( alloc_status /= 0 ) GO TO 990
-        CALL CUTEST_cvartype( status, n, X_type )
+        CALL CUTEST_cvartype_r( status, n, X_type )
         IF ( status /= 0 ) RETURN
       END IF
 
@@ -194,7 +195,7 @@
 
 !  evaluate the constant terms of the objective (f) and constraint functions (C)
 
-      CALL CUTEST_cfn( status, n, m, X0, f, C( : m ) )
+      CALL CUTEST_cfn_r( status, n, m, X0, f, C( : m ) )
       IF ( status /= 0 ) RETURN
       DO i = 1, m 
         IF ( EQUATN( i ) ) THEN 
@@ -214,14 +215,14 @@
       IF ( a_type == 'D' ) THEN
         ALLOCATE( A_dense( m, n ), STAT = alloc_status )
         IF ( alloc_status /= 0 ) GO TO 990
-        CALL CUTEST_cgr( status, n, m, X0, Y, .FALSE., G, .FALSE.,             &
-                         m, n, A_dense )
+        CALL CUTEST_cgr_r( status, n, m, X0, Y, .FALSE., G, .FALSE.,           &
+                           m, n, A_dense )
         IF ( status /= 0 ) RETURN
 
 !  determine the number of nonzeros in the Jacobian
 
       ELSE
-        CALL CUTEST_cdimsj( status, la )
+        CALL CUTEST_cdimsj_r( status, la )
         IF ( status /= 0 ) RETURN
         la = MAX( la, 1 )
         G( : n ) = zero
@@ -237,8 +238,8 @@
 
 !  evaluate the linear terms of the constraint functions
 
-          CALL CUTEST_csgr( status, n, m, X0, Y, .FALSE., nea, la,             &
-                            A_val, A_col, A_row )
+          CALL CUTEST_csgr_r( status, n, m, X0, Y, .FALSE., nea, la,           &
+                              A_val, A_col, A_row )
           IF ( status /= 0 ) RETURN
 
 !  exclude zeros; set the linear term for the objective function
@@ -268,8 +269,8 @@
 
 !  evaluate the linear terms of the constraint functions
 
-          CALL CUTEST_csgr( status, n, m, X0, Y, .FALSE., nea, la,             &
-                            A_val, A_tmp, A_row )
+          CALL CUTEST_csgr_r( status, n, m, X0, Y, .FALSE., nea, la,           &
+                              A_val, A_tmp, A_row )
           IF ( status /= 0 ) RETURN
 
 !  exclude zeros; set the linear term for the objective function
@@ -314,8 +315,8 @@
 
 !  evaluate the linear terms of the constraint functions
 
-          CALL CUTEST_csgr( status, n, m, X0, Y, .FALSE., nea, la,             &
-                            A_val, A_col, A_tmp )
+          CALL CUTEST_csgr_r( status, n, m, X0, Y, .FALSE., nea, la,           &
+                              A_val, A_col, A_tmp )
           IF ( status /= 0 ) RETURN
 
 !  exclude zeros; set the linear term for the objective function
@@ -356,7 +357,7 @@
       IF ( h_type == 'D' ) THEN
         ALLOCATE( H_dense( n, n ), STAT = alloc_status )
         IF ( alloc_status /= 0 ) GO TO 990
-        CALL CUTEST_cdh( status, n, m, X0, Y, n, H_dense )
+        CALL CUTEST_cdh_r( status, n, m, X0, Y, n, H_dense )
         IF ( status /= 0 ) RETURN
         IF ( pert_hess ) THEN
           DO i = 1, n
@@ -367,7 +368,7 @@
 !  determine the number of nonzeros in the Hessian
 
       ELSE IF ( h_type /= 'N' ) THEN
-        CALL CUTEST_cdimsh( status, lh )
+        CALL CUTEST_cdimsh_r( status, lh )
         IF ( status /= 0 ) RETURN
         IF ( pert_hess ) lh = lh + n
         lh = MAX( lh, 1 )
@@ -386,7 +387,7 @@
 
 !  evaluate the Hessian of the Lagrangian function at the origin
 
-          CALL CUTEST_csh( status, n, m, X0, Y, neh, lh, H_val, H_row, H_col )
+          CALL CUTEST_csh_r( status, n, m, X0, Y, neh, lh, H_val, H_row, H_col )
           IF ( status /= 0 ) RETURN
 
 !  remove out of range entries and only store the upper triangle
@@ -440,7 +441,7 @@
 
 !  evaluate the Hessian of the Lagrangian function at the origin
 
-          CALL CUTEST_csh( status, n, m, X0, Y, neh, lh, H_val, H_row, H_tmp )
+          CALL CUTEST_csh_r( status, n, m, X0, Y, neh, lh, H_val, H_row, H_tmp )
           IF ( status /= 0 ) RETURN
 
 !  remove out of range entries and only store the upper triangle
@@ -506,7 +507,7 @@
 
 !  evaluate the Hessian of the Lagrangian function at the origin
 
-          CALL CUTEST_csh( status, n, m, X0, Y, neh, lh, H_val, H_tmp, H_col )
+          CALL CUTEST_csh_r( status, n, m, X0, Y, neh, lh, H_val, H_tmp, H_col )
           IF ( status /= 0 ) RETURN
 
 !  remove out of range entries and only store the upper triangle
@@ -566,9 +567,9 @@
       DEALLOCATE( X0, STAT = alloc_status )
       IF ( alloc_status /= 0 ) GO TO 990
       IF ( PRESENT( dont_terminate_cutest ) ) THEN
-        IF ( .NOT. dont_terminate_cutest ) CALL CUTEST_cterminate( status )
+        IF ( .NOT. dont_terminate_cutest ) CALL CUTEST_cterminate_r( status )
       ELSE
-        CALL CUTEST_cterminate( status )
+        CALL CUTEST_cterminate_r( status )
       END IF
       RETURN
         
