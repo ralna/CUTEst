@@ -8,6 +8,12 @@ minimization.
 CALL CUTEST_csetup_threaded( status, input, out, threads, IO_BUFFERS, 
 n, m, X, X_l, X_u, Y, C_l, C_u, 
 EQUATN, LINEAR, e_order, l_order, v_order )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csetup_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_csetup_threaded subroutine sets up the correct data structures for
 subsequent threaded computations on the problem decoded from a SIF file by

@@ -7,6 +7,12 @@ of a vector with the Hessian matrix of the objective function.
 .HP 1i
 CALL CUTEST_cohprods_threaded( status, goth, X, VECTOR, 
 nnzohp, lohp, RESULT, IND, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cohprods_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cohprods_threaded subroutine forms the product of a vector with
 the Hessian matrix of the objective function

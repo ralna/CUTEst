@@ -5,6 +5,12 @@ CUTEST_uofg \- CUTEst tool to evaluate function value and possibly gradient.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_uofg( status, n, X, f, G, grad )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_uofg_s( ... )
 .SH DESCRIPTION
 The CUTEST_uofg subroutine evaluates the value of the objective function of
 the problem decoded from a SIF file by the script \fIsifdecoder\fP at

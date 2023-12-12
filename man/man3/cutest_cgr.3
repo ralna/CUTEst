@@ -7,6 +7,12 @@ objective/Lagrangian function.
 .HP 1i
 CALL CUTEST_cgr( status, n, m, X, Y, grlagf, G, jtrans,
 lj1, lj2, J_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cgr_s( ... )
 .SH DESCRIPTION
 The CUTEST_cgr subroutine evaluates the gradients of the general
 constraints and of either the objective function 

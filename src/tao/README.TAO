@@ -3,28 +3,39 @@
 **************************************************
 
 Requirements: 
-Before you can run the 'sdtao' or 'tao' CUTEst scripts, you must have:
 
-1. TAO 1.10 installed on your system (see http://www.mcs.anl.gov/tao), 
-	which also requires 
+Before you can run the 'runcutest' CUTEst scripts, you must have:
 
-2. PETSc 3.1 (http://www.mcs.anl.gov/petsc)
-
-3. and an implementation of MPI (if you don't have any MPI installed, 
+1. An implementation of MPI (if you don't have any MPI installed, 
    then you can configure PETSc using --download-mpich=1 option)
 
+2. PETSc 3 (see https://petsc.org/release/install/install_tutorial/)
 
 Installing for CUTEst:
 
-1. Install CUTEst, TAO, PETSc, and MPI according to package directions.
+1. Install CUTEst, MPI and PETSc according to package directions.
 
-2. Set environment variables TAO_DIR, PETSC_DIR, and PETSC_ARCH (See 
-PETSc and TAO documentation for details)
+2. Set environment variables PETSC_DIR, and PETSC_ARCH (See PETSc 
+documentation for details)
 
-[old: 3. CUTEst only builds tao scripts if TAO_DIR environment variable is 
-set, so you may need to update/reinstall CUTEst]
+3. The TAO interface tools require two input files:
 
-4. To run with CUTEst, use the runcutest command with the -p tao option.
+   probname.SIF   specifies the problem in SIF format
+   TAO.SPC        sets values for TAO run-time parameters
+
+If no TAO.SPC file is present in the current directory, the default
+version is copied from the $CUTEST/src/tao directory. 
+This default file is as follows:
+
+      tron      optimization method employed
+      -1.0      stop if ||g(x)|| <= gatol
+      -1.0      stop if ||g(x)|| / |f(x)| <= grtol
+      -1.0      stop if ||g(x)|| / ||g(x_0)|| <= gttol
+      -1.0      the initial trust-region radius
+        -1      the maximum number of function evaluations
+        -1      the maximum number of iterations
+
+To run with CUTEst, use the runcutest command with the -p tao option.
 See the man page for runcutest for more details of other options.
 
 For documentation on TAO, see the TAO website 

@@ -7,6 +7,12 @@ problem function, in sparse format.
 .HP 1i
 CALL CUTEST_cish_threaded( status, n, X, iprob, 
 nnzh, lh, H_val, H_row, H_col, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cish_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cish_threaded subroutine evaluates the Hessian of a particular 
 constraint function or the objective function for the problem decoded

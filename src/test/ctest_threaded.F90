@@ -42,8 +42,7 @@
       INTEGER ( KIND = ip_ ) :: nnz_vector, nnz_result
       INTEGER ( KIND = ip_ ) :: CHP_ne, l_chp, l_j2_1, l_j2_2, l_j, icon, iprob
       REAL ( KIND = rp_ ) :: f, ci, y0
-      LOGICAL :: grad, byrows, goth, gotj
-      LOGICAL :: grlagf, jtrans
+      LOGICAL :: grad, byrows, goth, gotj, grlagf, jtrans, noobj
       CHARACTER ( len = 10 ) ::  p_name
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: X_type
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_row, H_col
@@ -73,6 +72,13 @@
       WRITE( out, "( ' CALL CUTEST_cdimen ' )" )
       CALL CUTEST_cdimen_r( status, input, n, m )
       WRITE( out, "( ' * n = ', I0, ', m = ', I0 )" ) n, m
+      WRITE( out, "( ' CALL CUTEST_cnoobj ' )" )
+      CALL CUTEST_cnoobj_r( status, input, noobj )
+      IF ( noobj ) THEN
+        WRITE( out, "( ' there is no objective function' )" )
+      ELSE
+        WRITE( out, "( ' there is an objective function' )" )
+      END IF
       l_h2_1 = n
       ALLOCATE( X( n ), X_l( n ), X_u( n ), G( n ), Ji( n ),                   &
                 X_names( n ), X_type( n ), INDEX_nz_vector( n ),               &
@@ -93,9 +99,9 @@
 !  set up SIF data
 
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
-      CALL CUTEST_csetup_threaded_r( status, input, out, threads, BUFFER,        &
-                      n, m, X, X_l, X_u,                                       &
-                      Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+      CALL CUTEST_csetup_threaded_r( status, input, out, threads, BUFFER,      &
+                                     n, m, X, X_l, X_u,                        &
+                                     Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_X( out, n, X, X_l, X_u )
       CALL WRITE_Y( out, m, Y, C_l, C_u, EQUATION, LINEAR )
@@ -105,9 +111,9 @@
 !  obtain numbers of nonlinear variables, and equality and linear constraints
 
       WRITE( out, "( ' CALL CUTEST_cstats' )" )
-      CALL CUTEST_cstats_r( status, nonlinear_variables_objective,               &
-                          nonlinear_variables_constraints,                     &
-                          equality_constraints, linear_constraints )
+      CALL CUTEST_cstats_r( status, nonlinear_variables_objective,             &
+                            nonlinear_variables_constraints,                   &
+                            equality_constraints, linear_constraints )
       IF ( status /= 0 ) GO to 900
       WRITE( out, "( ' * nonlinear_variables_objective = ', I0, /,             &
      &               ' * nonlinear_variables_constraints = ', I0, /,           &
@@ -168,32 +174,32 @@
       grlagf = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .TRUE. and ',             &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,         &
-                l_j2_1, l_j2_2, J2_val, thread )
+      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+                                   l_j2_1, l_j2_2, J2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_JT_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
       grlagf = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .TRUE. and ',             &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,         &
-                l_j2_1, l_j2_2, J2_val, thread )
+      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+                                  l_j2_1, l_j2_2, J2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_J_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
       grlagf = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .FALSE. and ',            &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,         &
-                l_j2_1, l_j2_2, J2_val, thread )
+      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+                                    l_j2_1, l_j2_2, J2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_JT_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
       grlagf = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgr with grlagf = .FALSE. and ',            &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,         &
-                l_j2_1, l_j2_2, J2_val, thread )
+      CALL CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+                                  l_j2_1, l_j2_2, J2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_J_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
@@ -227,14 +233,14 @@
       IF ( alloc_stat /= 0 ) GO TO 990
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cofsg with grad = .FALSE.' )" )
-      CALL CUTEST_cofsg_threaded_r( status, n, X, f,                             &
-                         G_ne, l_g, G_val, G_var, grad, thread )
+      CALL CUTEST_cofsg_threaded_r( status, n, X, f,                           &
+                                    G_ne, l_g, G_val, G_var, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_f( out, f )
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cofsg with grad = .TRUE.' )" )
-      CALL CUTEST_cofsg_threaded_r( status, n, X, f,                             &
-                         G_ne, l_g, G_val, G_var, grad, thread )
+      CALL CUTEST_cofsg_threaded_r( status, n, X, f,                           &
+                                    G_ne, l_g, G_val, G_var, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_f( out, f )
       CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
@@ -243,8 +249,8 @@
 
       icon = 0
       WRITE( out, "( ' CALL CUTEST_cisgr for the objective function' )" )
-      CALL CUTEST_cisgr_threaded_r( status, n, icon, X,                          &
-                                  G_ne, l_g, G_val, G_var, thread )
+      CALL CUTEST_cisgr_threaded_r( status, n, icon, X,                        &
+                                    G_ne, l_g, G_val, G_var, thread )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_SG( out, G_ne, l_g, G_val, G_var )
 
@@ -284,14 +290,14 @@
 
       grlagf = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgr with grlagf = .TRUE.' )" )
-      CALL CUTEST_csgr_threaded_r( status, n, m, X, Y, grlagf,                   &
-                        J_ne, l_j, J_val, J_var, J_fun, thread )
+      CALL CUTEST_csgr_threaded_r( status, n, m, X, Y, grlagf,                 &
+                                   J_ne, l_j, J_val, J_var, J_fun, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       grlagf = .FALSE.
       WRITE( out, "( ' CALL CUTEST_csgr with grlagf = .FALSE.' )" )
-      CALL CUTEST_csgr_threaded_r( status, n, m, X, Y, grlagf,                   &
-                        J_ne, l_j, J_val, J_var, J_fun, thread )
+      CALL CUTEST_csgr_threaded_r( status, n, m, X, Y, grlagf,                 &
+                                   J_ne, l_j, J_val, J_var, J_fun, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
 
@@ -300,31 +306,31 @@
       grad = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .TRUE. and ',              &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                   &
-                        l_j2_1, l_j2_2, J2_val, grad, thread )
+      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                 &
+                                   l_j2_1, l_j2_2, J2_val, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
       CALL WRITE_JT_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
       grad = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .TRUE. and ',              &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                   &
-                        l_j2_1, l_j2_2, J2_val, grad, thread )
+      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                 &
+                                   l_j2_1, l_j2_2, J2_val, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
       CALL WRITE_J_dense( out, n, m, l_j2_1, l_j2_2, J2_val )
       grad = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .FALSE. and ',             &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                   &
-                        l_j2_1, l_j2_2, J2_val, grad, thread )
+      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                 &
+                                   l_j2_1, l_j2_2, J2_val, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
       grad = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfg with grad = .FALSE. and ',             &
      &               'jtrans = .FALSE.' )" )
-      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                   &
-                        l_j2_1, l_j2_2, J2_val, grad, thread )
+      CALL CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,                 &
+                                   l_j2_1, l_j2_2, J2_val, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
 
@@ -332,15 +338,15 @@
 
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccfsg with grad = .TRUE.' )" )
-      CALL CUTEST_ccfsg_threaded_r( status, n, m, X, C,                          &
-                         J_ne, l_j, J_val, J_var, J_fun, grad, thread )
+      CALL CUTEST_ccfsg_threaded_r( status, n, m, X, C, J_ne, l_j, J_val,      &
+                                    J_var, J_fun, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfsg with grad = .FALSE.' )" )
-      CALL CUTEST_ccfsg_threaded_r( status, n, m, X, C,                          &
-                         J_ne, l_j, J_val, J_var, J_fun, grad, thread )
+      CALL CUTEST_ccfsg_threaded_r( status, n, m, X, C, J_ne, l_j, J_val,      &
+                                   J_var, J_fun, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
 
@@ -385,14 +391,14 @@
 
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccifsg with grad = .FALSE.' )" )
-      CALL CUTEST_ccifsg_threaded_r( status, n, icon, X, ci,                     &
-                          Ji_ne, n, Ji, J_var, grad, thread )
+      CALL CUTEST_ccifsg_threaded_r( status, n, icon, X, ci,                   &
+                                     Ji_ne, n, Ji, J_var, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_CI( out, icon, ci )
       grad = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ccifsg with grad = .TRUE.' )" )
-      CALL CUTEST_ccifsg_threaded_r( status, n, icon, X, ci,                     &
-                          Ji_ne, n, Ji, J_var, grad, thread )
+      CALL CUTEST_ccifsg_threaded_r( status, n, icon, X, ci,                   &
+                                     Ji_ne, n, Ji, J_var, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_CI( out, icon, ci )
       CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
@@ -400,8 +406,8 @@
 !  compute just its sparse gradient
 
       WRITE( out, "( ' CALL CUTEST_cisgr for a constraint' )" )
-      CALL CUTEST_cisgr_threaded_r( status, n, icon, X,                          &
-                                  Ji_ne, n, Ji, J_var, thread )
+      CALL CUTEST_cisgr_threaded_r( status, n, icon, X,                        &
+                                    Ji_ne, n, Ji, J_var, thread )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_SJI( out, icon, Ji_ne, n, Ji, J_var )
 
@@ -444,7 +450,7 @@
       grlagf = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .TRUE. and ',           &
      &               'jtrans = .TRUE.' )" )
-      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,     &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -452,7 +458,7 @@
       grlagf = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .TRUE. and ',           &
      &               'jtrans = .FALSE.' )")
-      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,     &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -460,7 +466,7 @@
       grlagf = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .FALSE. and ',          &
      &               'jtrans = .TRUE.' )")
-      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,     &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -468,7 +474,7 @@
       grlagf = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CUTEST_cgrdh with grlagf = .FALSE. and ',          &
      &               'jtrans = .FALSE.')")
-      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,       &
+      CALL CUTEST_cgrdh_threaded_r( status, n, m, X, Y, grlagf, G, jtrans,     &
                          l_j2_1, l_j2_2, J2_val, l_h2_1, H2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -495,16 +501,16 @@
 !  compute the sparse Hessian value
 
       WRITE( out, "( ' CALL CUTEST_csh' )" )
-      CALL CUTEST_csh_threaded_r( status, n, m, X, Y,                            &
-                       H_ne, l_h, H_val, H_row, H_col, thread )
+      CALL CUTEST_csh_threaded_r( status, n, m, X, Y,                          &
+                                  H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
 !  compute the sparse Hessian value without the objective
 
       WRITE( out, "( ' CALL CUTEST_cshc' )" )
-      CALL CUTEST_cshc_threaded_r( status, n, m, X, Y,                           &
-                        H_ne, l_h, H_val, H_row, H_col, thread )
+      CALL CUTEST_cshc_threaded_r( status, n, m, X, Y,                         &
+                                   H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
@@ -512,8 +518,8 @@
 
       y0 = 2.0_rp_
       WRITE( out, "( ' CALL CUTEST_cshj' )" )
-      CALL CUTEST_cshj_threaded_r( status, n, m, X, y0, Y,                       &
-                        H_ne, l_h, H_val, H_row, H_col, thread )
+      CALL CUTEST_cshj_threaded_r( status, n, m, X, y0, Y,                     &
+                                   H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
@@ -521,22 +527,22 @@
 
       iprob = 0
       WRITE( out, "( ' CALL CUTEST_cish for objective' )" )
-      CALL CUTEST_cish_threaded_r( status, n, X, iprob,                          &
-                        H_ne, l_h, H_val, H_row, H_col, thread )
+      CALL CUTEST_cish_threaded_r( status, n, X, iprob,                        &
+                                   H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
       iprob = 1
       WRITE( out, "( ' CALL CUTEST_cish for a constraint' )" )
-      CALL CUTEST_cish_threaded_r( status, n, X, iprob,                          &
-                        H_ne, l_h, H_val, H_row, H_col, thread )
+      CALL CUTEST_cish_threaded_r( status, n, X, iprob,                        &
+                                   H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
 !  compute the sparsity pattern of the gradients and Hessian
 
       WRITE( out, "( ' Call CUTEST_csgrshp' )" )
-      CALL CUTEST_csgrshp_r( status, n, J_ne, l_j, J_var, J_fun,                 &
-                           H_ne, l_h, H_row, H_col )
+      CALL CUTEST_csgrshp_r( status, n, J_ne, l_j, J_var, J_fun,               &
+                             H_ne, l_h, H_row, H_col )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
       CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
@@ -545,14 +551,14 @@
 
       grlagf = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgrsh with grlagf = .TRUE.' )" )
-      CALL CUTEST_csgrsh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgrsh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                 J_val, J_var, J_fun, H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
       grlagf = .FALSE.
       WRITE( out, "( ' CALL CUTEST_csgrsh with grlagf = .FALSE.' )" )
-      CALL CUTEST_csgrsh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgrsh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                 J_val, J_var, J_fun, H_ne, l_h, H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
@@ -577,7 +583,7 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ceh with byrows = .FALSE.' )" )
-      CALL CUTEST_ceh_threaded_r( status, n, m, X, Y, HE_nel, lhe_ptr,           &
+      CALL CUTEST_ceh_threaded_r( status, n, m, X, Y, HE_nel, lhe_ptr,         &
                                 HE_row_ptr, HE_val_ptr, lhe_row, HE_row,       &
                                 lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
@@ -585,7 +591,7 @@
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_ceh with byrows = .TRUE.' )" )
-      CALL CUTEST_ceh_threaded_r( status, n, m, X, Y, HE_nel, lhe_ptr,           &
+      CALL CUTEST_ceh_threaded_r( status, n, m, X, Y, HE_nel, lhe_ptr,         &
                                 HE_row_ptr, HE_val_ptr, lhe_row, HE_row,       &
                                 lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
@@ -598,7 +604,7 @@
       grlagf = .TRUE. ; byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgreh with grlagf = .TRUE. and ',          &
      &               'byrows = .TRUE.')" )
-      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val,        &
                           byrows, thread )
@@ -609,7 +615,7 @@
       grlagf = .TRUE. ; byrows = .FALSE.
       WRITE( out, "(' CALL CUTEST_csgreh with grlagf = .TRUE. and ',           &
      &               'byrows = .FALSE.')" )
-      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val,        &
                           byrows, thread )
@@ -620,7 +626,7 @@
       grlagf = .FALSE. ; byrows = .TRUE.
       WRITE( out, "( ' CALL CUTEST_csgreh with grlagf = .FALSE. and ',         &
      &               'byrows = .TRUE.')")
-      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val,        &
                           byrows, thread )
@@ -631,7 +637,7 @@
       grlagf = .FALSE. ; byrows = .FALSE.
       WRITE( out, "(' CALL CUTEST_csgreh with grlagf = .FALSE. and ',          &
      &               'byrows = .FALSE.')")
-      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,      &
+      CALL CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, J_ne, l_j,    &
                           J_val, J_var, J_fun, HE_nel, lhe_ptr, HE_row_ptr,    &
                           HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val,        &
                           byrows, thread )
@@ -645,14 +651,14 @@
       VECTOR( 1 ) = one ; VECTOR( 2 : n ) = zero
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_chprod with goth = .FALSE.' )" )
-      CALL CUTEST_chprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT,   &
-                                   thread )
+      CALL CUTEST_chprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT, &
+                                     thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_chprod with goth = .TRUE.' )" )
-      CALL CUTEST_chprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT,   &
-                                   thread )
+      CALL CUTEST_chprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT, &
+                                     thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
 
@@ -661,7 +667,7 @@
       nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
-      CALL CUTEST_cshprod_threaded_r( status, n, m, goth, X, Y,                  &
+      CALL CUTEST_cshprod_threaded_r( status, n, m, goth, X, Y,                &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -670,7 +676,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
-      CALL CUTEST_cshprod_threaded_r( status, n, m, goth, X, Y,                  &
+      CALL CUTEST_cshprod_threaded_r( status, n, m, goth, X, Y,                &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -681,14 +687,14 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_chcprod with goth = .FALSE.' )" )
-      CALL CUTEST_chcprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT,  &
-                                    thread )
+      CALL CUTEST_chcprod_threaded_r( status, n, m, goth, X, Y, VECTOR,        &
+                                      RESULT, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_chcprod with goth = .TRUE.' )" )
-      CALL CUTEST_chcprod_threaded_r( status, n, m, goth, X, Y, VECTOR, RESULT,  &
-                                    thread )
+      CALL CUTEST_chcprod_threaded_r( status, n, m, goth, X, Y, VECTOR,        &
+                                      RESULT, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
 
@@ -696,7 +702,7 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .FALSE.' )" )
-      CALL CUTEST_cshcprod_threaded_r( status, n, m, goth, X, Y,                 &
+      CALL CUTEST_cshcprod_threaded_r( status, n, m, goth, X, Y,               &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -705,7 +711,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cshprod with goth = .TRUE.' )" )
-      CALL CUTEST_cshcprod_threaded_r( status, n, m, goth, X, Y,                 &
+      CALL CUTEST_cshcprod_threaded_r( status, n, m, goth, X, Y,               &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -717,22 +723,22 @@
       VECTOR( 1 ) = one ; VECTOR( 2 : MAX( n, m ) ) = zero
       gotj = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CJPROD with gotj = .FALSE. and jtrans = .FALSE.')" )
-      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, n,   &
+      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, n, &
                                    RESULT, m, thread )
       CALL WRITE_RESULT2( out, n, VECTOR, m, RESULT )
       gotj = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CJPROD with gotj = .TRUE. and jtrans = .FALSE.' )" )
-      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, n,   &
+      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, n, &
                                    RESULT, m, thread )
       CALL WRITE_RESULT2( out, n, VECTOR, m, RESULT )
       gotj = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CJPROD with gotj = .FALSE. and jtrans = .TRUE.')" )
-      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, m,   &
+      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, m, &
                                    RESULT, n, thread )
       CALL WRITE_RESULT2( out, m, VECTOR, n, RESULT )
       gotj = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CJPROD with gotj = .TRUE. and jtrans = .TRUE.' )" )
-      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, m,   &
+      CALL CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X, VECTOR, m, &
                                    RESULT, n, thread )
       CALL WRITE_RESULT2( out, m, VECTOR, n, RESULT )
 
@@ -740,28 +746,28 @@
 
       gotj = .FALSE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .FALSE. and jtrans = .FALSE.')")
-      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,             &
+      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,           &
                            nnz_vector, INDEX_nz_vector, VECTOR, n,             &
                            nnz_result, INDEX_nz_result, RESULT, m, thread )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,        &
                            nnz_result, INDEX_nz_result, RESULT, m )
       gotj = .TRUE. ; jtrans = .FALSE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .TRUE. and jtrans = .FALSE.')" )
-      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,             &
+      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,           &
                            nnz_vector, INDEX_nz_vector, VECTOR, n,             &
                            nnz_result, INDEX_nz_result, RESULT, m, thread )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, n,        &
                            nnz_result, INDEX_nz_result, RESULT, m )
       gotj = .FALSE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .FALSE. and jtrans = .TRUE.')" )
-      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,             &
+      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,           &
                            nnz_vector, INDEX_nz_vector, VECTOR, m,             &
                            nnz_result, INDEX_nz_result, RESULT, n, thread )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,        &
                            nnz_result, INDEX_nz_result, RESULT, n )
       gotj = .TRUE. ; jtrans = .TRUE.
       WRITE( out, "( ' CALL CSJPROD with gotj = .TRUE. and jtrans = .TRUE.' )" )
-      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,             &
+      CALL CUTEST_csjprod_threaded_r( status, n, m, gotj, jtrans, X,           &
                            nnz_vector, INDEX_nz_vector, VECTOR, m,             &
                            nnz_result, INDEX_nz_result, RESULT, n, thread )
       CALL WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR, m,        &
@@ -792,14 +798,14 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_cchprods with goth = .FALSE.' )" )
-      CALL CUTEST_cchprods_threaded_r( status, n, m, goth, X, VECTOR, l_chp,     &
-                                     CHP_val, CHP_ind, CHP_ptr, thread )
+      CALL CUTEST_cchprods_threaded_r( status, n, m, goth, X, VECTOR, l_chp,   &
+                                       CHP_val, CHP_ind, CHP_ptr, thread )
       CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_cchprods with goth = .TRUE.' )" )
-      CALL CUTEST_cchprods_threaded_r( status, n, m, goth, X, VECTOR, l_chp,     &
-                                     CHP_val, CHP_ind, CHP_ptr, thread )
+      CALL CUTEST_cchprods_threaded_r( status, n, m, goth, X, VECTOR, l_chp,   &
+                                       CHP_val, CHP_ind, CHP_ptr, thread )
       CALL WRITE_CHP( out, m, l_chp, CHP_val, CHP_ind, CHP_ptr )
 
 !  calls and time report
@@ -1072,21 +1078,22 @@
       INTEGER ( KIND = ip_ ), DIMENSION( l_g ) :: G_ind
       INTEGER ( KIND = ip_ ) :: i
       WRITE( out, "( ' * G(sparse)' )" )
-      WRITE( out, "( ' * ', 5( '    ind' ) )" )
-      DO i = 1, G_ne, 5
-        IF ( i + 4 <= G_ne ) THEN
-          WRITE( out, "( ' * ',  5( I7 ) )" )                                  &
-            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 ), G_ind( i + 3 ),        &
-            G_ind( i + 4 )
+      WRITE( out, "( ' * ', 8( '    ind' ) )" )
+      DO i = 1, G_ne, 8
+        IF ( i + 7 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  8I7 )" ) G_ind(  i: i + 7 )
+        ELSE IF ( i + 6 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  7I7 )" ) G_ind(  i: i + 6 )
+        ELSE IF ( i + 5 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  6I7 )" ) G_ind(  i: i + 5 )
+        ELSE IF ( i + 4 <= G_ne ) THEN
+          WRITE( out, "( ' * ',  5I7 )" ) G_ind(  i: i + 4 )
         ELSE IF ( i + 3 <= G_ne ) THEN
-          WRITE( out, "( ' * ',  4( I7 ) )" )                                  &
-            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 ), G_ind( i + 3 )
+          WRITE( out, "( ' * ',  4I7 )" ) G_ind(  i: i + 3 )
         ELSE IF ( i + 2 <= G_ne ) THEN
-          WRITE( out, "( ' * ',  3( I7 ) )" )                                  &
-            G_ind( i ), G_ind( i + 1 ), G_ind( i + 2 )
+          WRITE( out, "( ' * ',  3I7 )" ) G_ind( i : i + 2 )
         ELSE IF ( i + 1 <= G_ne ) THEN
-          WRITE( out, "( ' * ',  2( I7 ) )" )                                  &
-            G_ind( i ), G_ind( i + 1 )
+          WRITE( out, "( ' * ',  2I7 )" ) G_ind( i : i + 1 )
         ELSE
           WRITE( out, "( ' * ',  I7 )" ) G_ind( i )
         END IF

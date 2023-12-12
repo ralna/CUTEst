@@ -6,4 +6,4 @@ function [varargout] = cutest_hprod( varargin )
 %         r = cutest_hprod( x, p )      Same, for unconstrained problems
 %         r = cutest_hprod( p )         assumes H(x,v) was computed previously
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('hprod',varargin{:});
+    [varargout{:}] = ocutest('hprod',varargin{:});

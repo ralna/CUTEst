@@ -7,6 +7,12 @@ Hessian of Lagrangian function and gradient of objective/Lagrangian function.
 .HP 1i
 CALL CUTEST_cgrdh_threaded( status, n, m, X, Y, grlagf, G, jtrans,
 lj1, lj2, J_val, lh1, H_val, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cgrdh_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cgrdh_threaded subroutine evaluates the gradients of the general
 constraints and of either the objective function 

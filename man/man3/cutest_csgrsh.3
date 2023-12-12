@@ -9,6 +9,12 @@ in sparse format.
 CALL CUTEST_csgrsh( status, n, m, X, Y, grlagf,
 nnzj, lj, J_val, J_var, J_fun,
 nnzh, lh, H_val, H_row, H_col )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csgrsh_s( ... )
 .SH DESCRIPTION
 The CUTEST_csgrsh subroutine evaluates the gradients of the general
 constraints, the Hessian matrix of the Lagrangian function

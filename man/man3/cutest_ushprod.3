@@ -8,6 +8,12 @@ the Hessian matrix.
 CALL CUTEST_ushprod( status, n, goth, X, 
 nnz_vector, INDEX_nz_vector, VECTOR,
 nnz_result, INDEX_nz_result, RESULT )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ushprod_s( ... )
 .SH DESCRIPTION
 The CUTEST_ushprod subroutine forms the product of a sparse 
 vector with the Hessian

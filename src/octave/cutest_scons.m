@@ -4,4 +4,4 @@ function [varargout] = cutest_scons( varargin )
 % Usage: [c,J] = cutest_scons(x)
 %        [ci, sgci] = cutest_scons( prob.x, i )
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('scons',varargin{:});
+    [varargout{:}] = ocutest('scons',varargin{:});

@@ -6,6 +6,12 @@ function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cidh_threaded( status, n, X, iprob, lh1, H_val, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cidh_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cidh_threaded subroutine evaluates the Hessian matrix of either the
 objective function or a constraint function for the problem decoded

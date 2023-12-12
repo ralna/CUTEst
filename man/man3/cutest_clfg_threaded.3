@@ -6,6 +6,12 @@ nd possibly gradient.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_clfg_threaded( status, n, m, X, Y, f, G, grad, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_clfg_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_clfg_threaded subroutine evaluates the value of the Lagrangian 
 function 

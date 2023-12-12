@@ -5,6 +5,12 @@ CUTEST_cdh \- CUTEst tool to evaluate the Hessian of the Lagrangian.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cdh( status, n, m, X, Y, lh1, H_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cdh_s( ... )
 .SH DESCRIPTION
 The CUTEST_cdh subroutine evaluates the Hessian matrix of the Lagrangian
 function 

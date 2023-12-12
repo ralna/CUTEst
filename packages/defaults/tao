@@ -18,9 +18,21 @@ export PACKOBJS=""
 
 # Define package and system libraries using -llibrary to include library.a
 # or library.so together with any nonstandard library paths using -L(path)
-export PACKLIBS="-Wl,-rpath,$TAO_DIR/lib/lib$BOPT/$PETSC_ARCH -Wl,-rpath,$PETSC_DIR/lib/lib$BOPT/$PETSC_ARCH -L$TAO_DIR/lib/lib$BOPT/$PETSC_ARCH -ltaofortran -ltao -L$PETSC_DIR/lib/lib$BOPT/$PETSC_ARCH -lpetscfortran -lpetscsnes -lpetscsles -lpetscdm -lpetscmat -lpetscvec -lpetsc $MPI_LIB"
+export PACKLIBS="-Wl,-rpath,$PETSC_DIR/$PETSC_ARCH/lib \
+ -L$PETSC_DIR/$PETSC_ARCH/lib \
+ -Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib/fortran/gfortran \
+ -L/usr/lib/x86_64-linux-gnu/openmpi/lib/fortran/gfortran \
+ -Wl,-rpath,/usr/lib/gcc/x86_64-linux-gnu/11 \
+ -L/usr/lib/gcc/x86_64-linux-gnu/11 \
+ -lpetsc -lopenblas -lm -lX11 -lmpi_usempif08 -lmpi_usempi_ignore_tkr \
+ -lmpi_mpifh -lmpi -lopen-rte -lopen-pal -lhwloc -levent_core \
+ -levent_pthreads -lgfortran -lm -lz -lgfortran -lm -lgfortran -lgcc_s \
+ -lquadmath -lstdc++ -lquadmath"
 
 # Define the name of the package specification file if any. This possibly
 # precision-dependent file must either lie in the current directory or in
 # ${CUTEST}/src/${PACKDIR}
-export SPECS=""
+export SPECS="TAO.SPC"
+
+
+

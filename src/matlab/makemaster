@@ -1,14 +1,24 @@
 #  Main body of the installation makefile for CUTEst Matlab programs
 
 #  N. Gould, D. Orban and Ph. L. Toint.
-#  This version: 16 I 2013
+#  This version: 2023-12-04
 
-#  package
+#  include standard CUTEst makefile defaults before package-specifics
 
-PACKAGE = MATLAB
+include $(CUTEST)/src/makedefs/defaults
+
+#  ===========================================================================
+#  ====================  package-dependent parts  ============================
+#  ===========================================================================
+
+#  package name 
+
+PACKAGE = MATLAB_CUTEST
 package = matlab
 
-SHELL = /bin/$(BINSHELL)
+#  ===========================================================================
+#  =================  end of package-dependent parts  ========================
+#  ===========================================================================
 
 #  Mex compiler
 
@@ -17,79 +27,15 @@ MEX = $(MYMATLAB)/bin/mex
 #  compiler flags
 
 MATLABINC = -I$(MATLAB)/extern/include
-FFLAGS    = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(MATLABINC)
-FFLAGSN    = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(MATLABINC)
-
-CFLAGS    = $(CCBASIC) $(CCISO) $(OPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include
-CFLAGSN   = $(CCBASIC) $(CCISO) $(NOOPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include
-CRUNFFLAGS = $(OPTIMIZATION) $(CCDEBUG) -I$(CUTEST)/include $(CCFFLAGS)
-
 MFFLAGS   = $(MBASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES)
-#MFFLAGS   = $(OPTIMIZATION) $(DEBUG) $(MODULES)
 MFLAGS    = CC='$(CC)' FC='$(FORTRAN)' GCC='$(CC)' \
             FFLAGS='$(MFFLAGS) $(OPENMP)' \
             LD='$(FORTRAN) $(MFFLAGS) $(OPENMP)' \
             -g -largeArrayDims $(MATLABINC)
 
-#  names of random libraries
+#  include standard CUTEst makefile definitions
 
-LC  = $(OBJ)/libcutest.a
-LCS = $(OBJS)/libcutest.a
-LCD = $(OBJD)/libcutest.a
-
-BLC  = $(OBJ)/libcutest_blas.a
-BLCS = $(OBJS)/libcutest_blas.a
-BLCD = $(OBJD)/libcutest_blas.a
-
-DLC  = $(OBJ)/libcutest_dummy.a
-DLCS = $(OBJS)/libcutest_dummy.a
-DLCD = $(OBJD)/libcutest_dummy.a
-
-LLC  = $(OBJ)/libcutest_lapack.a
-LLCS = $(OBJS)/libcutest_lapack.a
-LLCD = $(OBJD)/libcutest_lapack.a
-
-MLC  = $(OBJ)/libcutest_matlab.a
-MLCS = $(OBJS)/libcutest_matlab.a
-MLCD = $(OBJD)/libcutest_matlab.a
-
-#  Libraries used
-
-#LIBS = -lcutest -lcutest_lapack -lcutest_blas
-LIBS = -lcutest_matlab -lcutest
-PLIBS = $(LIBS) -lcutest_problem
-
-#  Archive manipulation strings
-
-ARR = $(AR) $(ARREPFLAGS) $(LC)
-RMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LC)
-RMOBFILE = $(CUTEST)/bin/rmobfile $(RM) $(OBJ)
-
-BARR = $(AR) $(ARREPFLAGS) $(BLC)
-BRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(BLC)
-
-DARR = $(AR) $(ARREPFLAGS) $(DLC)
-
-LARR = $(AR) $(ARREPFLAGS) $(LLC)
-LRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LLC)
-
-MARR = $(AR) $(ARREPFLAGS) $(MLC)
-MRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(MLC)
-
-#  Derived type dependencies
-
-MAT_BASIC = $(MLC)(gtools.o)
-
-#  compilation agenda
-
-GEN77 =  $(OBJ)/gen77.o  $(OBJ)/gen77_main.o
-GEN90 =  $(OBJ)/gen90.o  $(OBJ)/gen90_main.o
-GENC = $(OBJ)/genc.o $(OBJ)/genc_main.o
-
-U_TEST = u_elfun.o u_group.o u_range.o
-C_TEST = c_elfun.o c_group.o c_range.o
-
-SUCC = precision version) compiled successfully
+include $(CUTEST)/src/makedefs/definitions
 
 #  main compilations and runs
 
@@ -98,13 +44,12 @@ all: $(package)
 #  basic packages
 
 $(package): $(package)_$(PRECIS)
-	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
-#$(package)_single: $(OBJS)/utools.o $(OBJS)/ctools.o $(OBJS)/mcutest.o
-#$(package)_double: $(OBJD)/utools.o $(OBJD)/ctools.o $(OBJD)/mcutest.o
-$(package)_single: $(OBJS)/mcutest.o
+$(package)_single: 
+	@printf ' %-21s\n' "$(package) is not available in single precision"
 $(package)_double: $(OBJD)/mcutest.o
+	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
 
-#  dependent packages
+#  compile tools
 
 tools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -118,61 +63,13 @@ ctools:
 
 #  individual compilations
 
-#  utools
-
-utools.o: $(OBJ)/utools.o
-
-$(OBJ)/utools.o: utools $(MAT_BASIC) utools.F
-	@printf ' %-9s %-15s\t\t' "Compiling" "utools"
-	$(SED) -f $(SEDS) utools.F > $(OBJ)/utools.F
-	cd $(OBJ) ; $(MEX) -c $(MFLAGS) utools.F
-	$(RM) $(OBJ)/utools.F
-	@printf '[ OK ]\n'
-
-#  ctools
-
-ctools.o: $(OBJ)/ctools.o
-
-$(OBJ)/ctools.o: ctools $(MAT_BASIC) ctools.F
-	@printf ' %-9s %-15s\t\t' "Compiling" "ctools"
-	$(SED) -f $(SEDS) ctools.F > $(OBJ)/ctools.F
-	cd $(OBJ) ; $(MEX) -c $(MFLAGS) ctools.F
-	$(RM) $(OBJ)/ctools.F
-	@printf '[ OK ]\n'
-
 #  mcutest
 
 mcutest.o: $(OBJ)/mcutest.o
 
-$(OBJ)/mcutest.o: tools mcutest.c
+$(OBJ)/mcutest.o: mcutest.c
 	@printf ' %-9s %-15s\t\t' "Compiling" "mcutest"
 	$(CP) mcutest.c $(OBJ)/mcutest.c
 	cd $(OBJ) ; $(MEX) -c $(MFLAGS) -I$(CUTEST)/include mcutest.c
 	$(RM) $(OBJ)/mcutest.c
 	@printf '[ OK ]\n'
-
-#  main copying utilities
-
-gtools.o: $(MLC)(gtools.o)
-
-$(MLC)(gtools.o): gtools.F
-	@printf ' %-9s %-15s\t\t' "Compiling" "gtools"
-	$(CP) gtools.F $(OBJ)/gtools.F
-	cd $(OBJ) ; $(MEX) $(MFLAGS) -c gtools.F
-	cd $(OBJ) ; $(MARR) gtools.o
-	$(RM) $(OBJ)/utools.o $(OBJ)/ctools.o
-	@printf '[ OK ]\n'
-
-#  book keeping
-
-clean:
-	@printf ' %-9s\t\t' "Cleaning"
-	$(RM) $(OBJ)/*
-	@printf '[ OK ]\n'
-
-cleanall:
-	@printf ' %-14s\t\t' \
-          "Removing all $(PRECIS) precision object and module files"
-	$(RM) $(OBJ)/* $(MOD)/*
-	@printf '[ OK ]\n'
-

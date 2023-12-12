@@ -8,6 +8,12 @@ spaarse vector with the Hessian matrix of the constraint part of the Lagrangian.
 CALL CUTEST_cshcprod_threaded( status, n, goth, X, Y,
 nnz_vector, INDEX_nz_vector, VECTOR,
 nnz_result, INDEX_nz_result, RESULT, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cshcprod_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cshcprod_threaded subroutine forms the product of a sparse vector 
 with the Hessian matrix of the constraint part of the Lagrangian function 

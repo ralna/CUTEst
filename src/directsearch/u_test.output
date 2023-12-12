@@ -2,8 +2,8 @@
 ************************ CUTEst statistics ************************
 
  Package used            :  DIRECTSEARCH
- Problem                 :  ALLINITU  
- # variables             =               4
+ Problem                 :  ALLINITU3 
+ # variables             =               5
  # objective functions   =            1.00
  Exit code               =               1
  Final f                 =   0.1300000E+02

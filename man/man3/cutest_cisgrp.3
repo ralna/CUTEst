@@ -6,6 +6,12 @@ the gradient of a problem function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cisgrp( status, n, iprob, nnzg, lg, G_var )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cisgrp_s( ... )
 .SH DESCRIPTION
 The CUTEST_cisgrp subroutine evaluates the sparsity pattern of 
 the gradient of either the objective function or a constraint function

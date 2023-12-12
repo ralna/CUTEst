@@ -3,15 +3,15 @@
 # Each option must be specified on a new line
 # Empty lines are ignored.
 
- time_limit = 1e70
+ time_limit = 1e35
  infinite_cost = 1e20
  infinite_bound = 1e20
  small_matrix_value = 1e-9
  large_matrix_value = 1e15
  primal_feasibility_tolerance = 1e-7
  dual_feasibility_tolerance = 1e-7
- objective_bound = 1e70
- objective_target = -1e70
+ objective_bound = 1e35
+ objective_target = -1e35
  highs_random_seed = 0
  highs_debug_level = 0
  highs_analysis_level = 0

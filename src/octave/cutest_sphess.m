@@ -6,4 +6,4 @@ function [varargout] = cutest_sphess( varargin )
 % Usage:  H = cutest_sphess( x ) if the problem has no general constraints, or
 %         H = cutest_sphess( x, v ) otherwise.
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('sphess',varargin{:});
+    [varargout{:}] = ocutest('sphess',varargin{:});

@@ -7,6 +7,12 @@ value and possibly gradient in sparse format.
 .HP 1i
 CALL CUTEST_ccifsg_threaded( status, n, icon, X, ci, 
 nnzgci, lgci, GCI_val, GCI_var, grad, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ccifsg_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_ccifsg_threaded subroutine evaluates the value of a particular 
 constraint function of the problem decoded from a SIF file by the 

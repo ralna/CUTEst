@@ -7,6 +7,6 @@ function [varargout] = cutest_setup( varargin )
 %                         1 (first derivatives required)
 %                         2 (first and derivatives required, default)
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('setup',varargin{:});
+    [varargout{:}] = ocutest('setup',varargin{:});
 
 

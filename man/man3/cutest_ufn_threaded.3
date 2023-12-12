@@ -5,6 +5,12 @@ CUTEST_ufn_threaded \- CUTEst tool to evaluate function value.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_ufn_threaded( status, n, X, f, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ufn_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_ufn_threaded subroutine evaluates the value of the objective function of
 the problem decoded from a SIF file by the script

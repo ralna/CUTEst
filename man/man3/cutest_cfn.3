@@ -5,6 +5,12 @@ CUTEST_cfn \- CUTEst tool to evaluate function and constraints values.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cfn( status, n, m, X, f, C )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cfn_s( ... )
 .SH DESCRIPTION
 The CUTEST_cfn subroutine evaluates the value of the objective function and
 general constraint functions of the problem decoded from a SIF file by

@@ -3,4 +3,4 @@ function [varargout] = cutest_sgrad( varargin )
 %   sparse gradient of i-th constraint
 % Usage:  sg = cutest_sgrad(x) or sg = cutest_sgrad(x,i)
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('sgrad',varargin{:});
+    [varargout{:}] = ocutest('sgrad',varargin{:});

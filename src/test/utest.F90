@@ -200,14 +200,14 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' Call CUTEST_ueh with byrows = .FALSE.' )" )
-      CALL CUTEST_ueh_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,              &
+      CALL CUTEST_ueh_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,            &
                 HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' Call CUTEST_ueh with byrows = .TRUE.' )" )
-      CALL CUTEST_ueh_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,              &
+      CALL CUTEST_ueh_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,            &
                 HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
@@ -217,7 +217,7 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' Call CUTEST_ugreh with byrows = .FALSE' )" )
-      CALL CUTEST_ugreh_r( status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr,         &
+      CALL CUTEST_ugreh_r( status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr,       &
                   HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -225,7 +225,7 @@
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' Call CUTEST_ugreh with byrows = .TRUE.' )" )
-      CALL CUTEST_ugreh_r( status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr,         &
+      CALL CUTEST_ugreh_r( status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr,       &
                   HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
@@ -251,7 +251,7 @@
       nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_ushprod with goth = .FALSE.' )" )
-      CALL CUTEST_ushprod_r( status, n, goth, X,                                 &
+      CALL CUTEST_ushprod_r( status, n, goth, X,                               &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO to 900
@@ -260,7 +260,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_ushprod with goth = .TRUE.' )" )
-      CALL CUTEST_ushprod_r( status, n, goth, X,                                 &
+      CALL CUTEST_ushprod_r( status, n, goth, X,                               &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT )
       IF ( status /= 0 ) GO to 900

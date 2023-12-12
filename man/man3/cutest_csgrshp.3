@@ -7,6 +7,12 @@ and the Hessian of the Lagrangian.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_csgrshp( status, n, nnzj, lj, J_var, J_fun, nnzh, lh, H_row, H_col )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csgrshp_s( ... )
 .SH DESCRIPTION
 The CUTEST_csgrshp subroutine evaluates sparsity pattern used when storing the
 gradients of the general constraints and of either the objective function

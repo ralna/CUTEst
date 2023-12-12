@@ -6,6 +6,12 @@ with the Hessian matrix of the objective function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cohprods( status, n, goth, X, VECTOR, nnzohp, lohp, RESULT, IND )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cohprods_s( ... )
 .SH DESCRIPTION
 The CUTEST_cohprods subroutine forms the product of a vector with 
 the Hessian matrix of the objective function

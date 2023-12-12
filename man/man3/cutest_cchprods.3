@@ -7,6 +7,12 @@ with each of the Hessian matrices of the constraint functions.
 .HP 1i
 CALL CUTEST_cchprods( status, n, m, goth, X, Y, VECTOR,
 lchp, CHP_val, CHP_ind, CHP_ptr )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cchprods_s( ... )
 .SH DESCRIPTION
 The CUTEST_cchprods subroutine forms the product of a vector with each of
 the Hessian matrices of the constraint functions

@@ -6,6 +6,12 @@ matrix of the objective function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_ushp( status, n, nnzh, lh, H_row, H_col )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ushp_s( ... )
 .SH DESCRIPTION
 The CUTEST_ushp subroutine evaluates the sparsity pattern of the 
 Hessian matrix of

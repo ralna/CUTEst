@@ -5,6 +5,12 @@ CUTEST_cidh \- CUTEst tool to evaluate the Hessian of a problem function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cidh( status, n, X, iprob, lh1, H_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cidh_s( ... )
 .SH DESCRIPTION
 The CUTEST_cidh subroutine evaluates the Hessian matrix of either the
 objective function or a constraint function for the problem decoded

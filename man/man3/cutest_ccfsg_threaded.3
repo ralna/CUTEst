@@ -7,6 +7,12 @@ and possibly their gradients in sparse format.
 .HP 1i
 CALL CUTEST_ccfsg_threaded( status, n, m, X, C, 
 nnzj, lj, J_val, J_var, J_fun, grad, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ccfsg_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_ccfsg_threaded subroutine evaluates the values of the
 constraint functions of

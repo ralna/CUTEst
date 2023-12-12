@@ -8,6 +8,12 @@ finite element format.
 CALL CUTEST_ceh( status, n, m, X, Y, 
 ne, lhe_ptr, HE_row_ptr, HE_val_ptr, 
 lhe_row, HE_row, lhe_val, HE_val, byrows )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ceh_s( ... )
 .SH DESCRIPTION
 The CUTEST_ceh subroutine evaluates the Hessian matrix of the Lagrangian
 function 

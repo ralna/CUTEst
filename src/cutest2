@@ -1,55 +1,55 @@
-package        interface      updated
-tools                         2023-11-03
-test                          2023-11-06
+tools
+test
+stats
 
-algencan       f
-bobyqa         f90
-cg_descent     c & f
-cgplus         f
-cobyla         f & f90
-curvi          f90
-derchk         c
-dfo            f90
-directsearch   f90
-e04nqf         f90
-filtersd       f
-filtersqp      f
-gen77          f
-gen90          f90
-genc           c
-gen            f & f90 & c
-gsl            c
-highs          f90
-hrb            f90
-ipopt          f
-knitro         c
-la04           f
-lbfgsb         f
-lbfgs          f
-lincoa         f90
-loqo           c
-minos          f
-newuoa         f90
-nitsol         f
-nlpqlp         f
-nomad          c
-npsol          f
-osqp           c
-pds            f
-pennlp         f
-praxis         f
-ql             f
-qplib          f90
-ral_nlls       f90
-snopt          f
-spg            f
-sqic           f90
-stats          f90
-stenmin        f
-tao            F
-tenmin         f
-test           f90
-tron           f
-uncmin         f              2023-11-07
-vf13           f
-worhp          c
+
+* algencan
+* bobyqa
+* cg_descent
+* cgplus
+* cobyla
+* curvi
+* derchk
+* dfo
+* directsearch
+* e04nqf
+* filtersd
+* filtersqp
+* gen77
+* gen90
+* genc
+* gsl           (no single)
+* highs
+* hrb
+* ipopt
+* knitro        (no single)
+* la04
+* lbfgs
+* lbfgsb
+* lincoa
+* loqo          (no single)
+* matlab
+* minos
+* newuoa
+* nitsol
+* nlpqlp
+* nomad
+* npsol
+* octave
+* osqp
+* pds
+* pennlp
+* praxis
+* ql
+* qplib
+* ral_nlls
+* snopt
+* spg
+* sqic
+* stenmin
+- tao          (broken)
+* tenmin
+* tron
+* uncmin
+* vf13
+* worhp        (no single)

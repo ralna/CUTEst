@@ -3,7 +3,7 @@
 
 # ifdef __cplusplus
 extern "C" {
-# endif // ifdef __cplusplus
+# endif /* ifdef __cplusplus */
 
 # include "glob_opts.h"
 # include "constants.h"
@@ -18,7 +18,7 @@ extern "C" {
  */
 typedef struct {
   c_int    nzmax; ///< maximum number of entries.
-  c_int    m;     ///< number of rows
+  c_int    m;     //< number of rows
   c_int    n;     ///< number of columns
   c_int   *p;     ///< column pointers (size n+1) (col indices (size nzmax)
                   // start from 0 when using triplet format (direct KKT matrix

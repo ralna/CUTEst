@@ -210,14 +210,14 @@
         CLOSE( input )
         IF ( out > 0 ) WRITE( out,                                             &
           "( /, ' ** SUNROUTINE CUTEST_usetup: the problem uses no variables.',&
-         &       ' Execution terminating ' )" )
+         &      ' Execution terminating ' )" )
         status = 2 ; RETURN
       END IF
       IF ( data%ng <= 0 ) THEN
         CLOSE( input )
         IF ( out > 0 ) WRITE( out,                                             &
-           "( /, ' ** SUBROUTINE CUTEST_usetup: the problem is vacuous.',      &
-          &      ' Execution terminating ' )" )
+           "( /, ' ** SUBROUTINE CUTEST_usetup: the problem is vacuous.', /,   &
+          &      '    Execution terminating ' )" )
         status = 2 ; RETURN
       END IF
       IF ( SIZE( X ) < n ) THEN
@@ -480,7 +480,7 @@
             CLOSE( input )
             IF ( out > 0 ) WRITE( out,                                         &
               "( /, ' ** Program CUTEST_usetup: the problem includes general', &
-             &      ' constraints. Execution terminating ' )" )
+             &      ' constraints.', /, '    Execution terminating ' )" )
             status = 2 ; RETURN
           END IF
         END DO

@@ -9,4 +9,4 @@ function [varargout] = cutest_gradhess( varargin )
 %                 jtrans = true : returns the transpose Jacobian in J
 %                 jtrans = false: returns the Jacobian in J
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('gradhess',varargin{:});
+    [varargout{:}] = ocutest('gradhess',varargin{:});

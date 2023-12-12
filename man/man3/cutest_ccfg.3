@@ -7,6 +7,12 @@ possibly gradients.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_ccfg( status, n, m, X, C, jtrans, lj1, lj2, J_val, grad )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ccfg_s( ... )
 .SH DESCRIPTION
 The CUTEST_ccfg subroutine evaluates the values of the constraint functions of
 the problem decoded from a SIF file by the script \fIsifdecoder\fP at the

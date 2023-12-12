@@ -1,7 +1,7 @@
-#  Standard GALAHAD makefile definitions
+#  Standard CUTEst makefile definitions
 
 #  Nick Gould, for GALAHAD production
-#  This version: 2023-05-18
+#  This version: 2023-11-22
 
 #  makefile shell
 
@@ -16,19 +16,25 @@ endif
 #  compiler flags
 
 F90FLAGS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(USUAL) \
-              $(DPREC) -I $(CUTEST)/include
-F90FLAGSFS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL) \
-               $(DPREC) -I $(CUTEST)/include
-F90FLAGSFN = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90) \
-               $(DPREC) -I $(CUTEST)/include
+              $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
+F90FLAGSS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL) \
+               $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
+F90FLAGSN = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90) \
+               $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
 FFLAGS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
-            $(DPREC) -I $(CUTEST)/include
+            $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
 FFLAGSS = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL) \
-             $(DPREC) -I $(CUTEST)/include
+             $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
 FFLAGSN  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL) \
-             $(DPREC) -I $(CUTEST)/include
+             $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
+CFLAGS = $(CCBASIC) $(CCISO) $(OPTIMIZATION) $(CCDEBUG) \
+              $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
+CFLAGSN = $(CCBASIC) $(CCISO) $(NOOPTIMIZATION) $(CCDEBUG) \
+              $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES)
 RUNFFLAGS = $(OPTIMIZATION) $(DEBUG) $(MODULES) \
-              $(DPREC) -I $(CUTEST)/include
+              $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES) -lstdc++
+CRUNFFLAGS = $(OPTIMIZATION) $(CCDEBUG) \
+              $(DPREC) -I $(CUTEST)/include $(EXTRAINCLUDES) $(CCFFLAGS)
 
 #  names of random libraries
 
@@ -47,6 +53,14 @@ DLCD = $(OBJD)/libcutest_dummy.a
 LLC  = $(OBJ)/libcutest_lapack.a
 LLCS = $(OBJS)/libcutest_lapack.a
 LLCD = $(OBJD)/libcutest_lapack.a
+
+MLC  = $(OBJ)/libcutest_matlab.a
+MLCS = $(OBJS)/libcutest_matlab.a
+MLCD = $(OBJD)/libcutest_matlab.a
+
+OLC  = $(OBJ)/libcutest_octave.a
+OLCS = $(OBJS)/libcutest_octave.a
+OLCD = $(OBJD)/libcutest_octave.a
 
 #  Libraries used
 
@@ -71,3 +85,15 @@ LRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LLC)
 #  strings
 
 SUCC = precision version) compiled successfully
+
+#  main component
+
+$(PACKAGE) = $(OBJ)/$(package)_main.o
+
+#  test example components
+
+#U_TEST = $(OBJ)/u_elfun.o $(OBJ)/u_group.o $(OBJ)/u_range.o $(OBJ)/u_exter.o
+#C_TEST = $(OBJ)/c_elfun.o $(OBJ)/c_group.o $(OBJ)/c_range.o $(OBJ)/c_exter.o
+U_TEST = $(OBJ)/u_elfun.o $(OBJ)/u_group.o $(OBJ)/u_range.o
+C_TEST = $(OBJ)/c_elfun.o $(OBJ)/c_group.o $(OBJ)/c_range.o
+Q_TEST = $(OBJ)/q_elfun.o $(OBJ)/q_group.o $(OBJ)/q_range.o

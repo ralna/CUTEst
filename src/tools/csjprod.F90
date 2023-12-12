@@ -204,7 +204,8 @@
       LOGICAL, INTENT( IN ) :: gotj, jtrans
       INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
                               INTENT( IN ) :: INDEX_nz_vector
-      INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
+      INTEGER ( KIND = ip_ ), DIMENSION( MAX( m, n ) ),                        &
+                              INTENT( OUT ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lvector ) :: VECTOR
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lresult ) :: RESULT

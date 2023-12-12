@@ -72,8 +72,8 @@
 !  set up SIF data
 
       WRITE( out, "( ' Call CUTEST_usetup ' )" )
-      CALL CUTEST_usetup_threaded_r( status, input, out, threads, BUFFER,        &
-                                   n, X, X_l, X_u )
+      CALL CUTEST_usetup_threaded_r( status, input, out, threads, BUFFER,      &
+                                     n, X, X_l, X_u )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_X( out, n, X, X_l, X_u )
 
@@ -173,16 +173,16 @@
 !  compute the sparse Hessian value
 
       WRITE( out, "( ' Call CUTEST_ush' )" )
-      CALL CUTEST_ush_threaded_r( status, n, X, H_ne, l_h, H_val, H_row, H_col,  &
-                                thread )
+      CALL CUTEST_ush_threaded_r( status, n, X, H_ne, l_h,                     &
+                                  H_val, H_row, H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
 
 !  compute the gradient and sparse Hessian values
 
       WRITE( out, "( ' Call CUTEST_ugrsh' )" )
-      CALL CUTEST_ugrsh_threaded_r( status, n, X, G, H_ne, l_h, H_val, H_row,    &
-                                  H_col, thread )
+      CALL CUTEST_ugrsh_threaded_r( status, n, X, G, H_ne, l_h, H_val, H_row,  &
+                                    H_col, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
@@ -206,14 +206,14 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' Call CUTEST_ueh with byrows = .FALSE.' )" )
-      CALL CUTEST_ueh_threaded_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,     &
+      CALL CUTEST_ueh_threaded_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,   &
                 HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' Call CUTEST_ueh with byrows = .TRUE.' )" )
-      CALL CUTEST_ueh_threaded_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,     &
+      CALL CUTEST_ueh_threaded_r( status, n, X, HE_nel, lhe_ptr, HE_row_ptr,   &
                 HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
@@ -223,18 +223,18 @@
 
       byrows = .FALSE.
       WRITE( out, "( ' Call CUTEST_ugreh with byrows = .FALSE' )" )
-      CALL CUTEST_ugreh_threaded_r( status, n, X, G, HE_nel, lhe_ptr,            &
-                                  HE_row_ptr, HE_val_ptr, lhe_row,             &
-                                  HE_row, lhe_val, HE_val, byrows, thread )
+      CALL CUTEST_ugreh_threaded_r( status, n, X, G, HE_nel, lhe_ptr,          &
+                                    HE_row_ptr, HE_val_ptr, lhe_row,           &
+                                    HE_row, lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
                             HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val )
       byrows = .TRUE.
       WRITE( out, "( ' Call CUTEST_ugreh with byrows = .TRUE.' )" )
-      CALL CUTEST_ugreh_threaded_r( status, n, X, G, HE_nel, lhe_ptr,            &
-                                  HE_row_ptr, HE_val_ptr, lhe_row,             &
-                                  HE_row, lhe_val, HE_val, byrows, thread )
+      CALL CUTEST_ugreh_threaded_r( status, n, X, G, HE_nel, lhe_ptr,          &
+                                    HE_row_ptr, HE_val_ptr, lhe_row,           &
+                                    HE_row, lhe_val, HE_val, byrows, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_G( out, n, G )
       CALL WRITE_H_element( out, HE_nel, lhe_ptr, HE_row_ptr,                  &
@@ -245,12 +245,14 @@
       VECTOR( 1 ) = one ; VECTOR( 2 : n ) = zero
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_uhprod with goth = .FALSE.' )" )
-      CALL CUTEST_uhprod_threaded_r( status, n, goth, X, VECTOR, RESULT, thread )
+      CALL CUTEST_uhprod_threaded_r( status, n, goth, X, VECTOR, RESULT,       &
+                                     thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_uhprod with goth = .TRUE.' )" )
-      CALL CUTEST_uhprod_threaded_r( status, n, goth, X, VECTOR, RESULT, thread )
+      CALL CUTEST_uhprod_threaded_r( status, n, goth, X, VECTOR, RESULT,       &
+                                      thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
 
@@ -259,7 +261,7 @@
       nnz_vector = 1 ; INDEX_nz_vector( nnz_vector ) = 1
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_ushprod with goth = .FALSE.' )" )
-      CALL CUTEST_ushprod_threaded_r( status, n, goth, X,                        &
+      CALL CUTEST_ushprod_threaded_r( status, n, goth, X,                      &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -268,7 +270,7 @@
 
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_ushprod with goth = .TRUE.' )" )
-      CALL CUTEST_ushprod_threaded_r( status, n, goth, X,                        &
+      CALL CUTEST_ushprod_threaded_r( status, n, goth, X,                      &
                            nnz_vector, INDEX_nz_vector, VECTOR,                &
                            nnz_result, INDEX_nz_result, RESULT, thread )
       IF ( status /= 0 ) GO to 900
@@ -284,15 +286,15 @@
 
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_ubandh with goth = .FALSE.' )" )
-      CALL CUTEST_ubandh_threaded_r( status, n, X, nsemib, H_band, lbandh,       &
-                                   maxsbw, thread )
+      CALL CUTEST_ubandh_threaded_r( status, n, X, nsemib, H_band, lbandh,     &
+                                     maxsbw, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib )
 !     CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib, maxsbw )
       goth = .TRUE.
       WRITE( out, "( ' Call CUTEST_ubandh with goth = .TRUE.' )" )
-      CALL CUTEST_ubandh_threaded_r( status, n, X, nsemib, H_band, lbandh,       &
-                                   maxsbw, thread )
+      CALL CUTEST_ubandh_threaded_r( status, n, X, nsemib, H_band, lbandh,     &
+                                     maxsbw, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib )
 !     CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib, maxsbw )

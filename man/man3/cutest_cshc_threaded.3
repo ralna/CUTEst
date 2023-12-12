@@ -7,6 +7,12 @@ part of the Lagrangian, in sparse format.
 .HP 1i
 CALL CUTEST_cshc_threaded( status, n, m, X, Y, 
 nnzh, lh, H_val, H_row, H_col, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cshc_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cshc_threaded subroutine evaluates 
 the Hessian matrix of the constraint part 

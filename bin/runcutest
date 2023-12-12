@@ -55,6 +55,9 @@ Initialize_Settings() {
     # PRECISION = single (single precision), = double (double precision)
     PRECISION="double"
 
+    # PSUFFIX = _s (single precision), = (double precision)
+    PSUFFIX=""
+
     # KEEP = 0 (discard f load module after use), = 1 (keep it)
     let KEEP=0
 
@@ -152,6 +155,8 @@ Parse_Arguments() {
                            shift
                            ;;
             -sp|--single)  PRECISION="single"
+                           PSUFFIX="_s"
+                           sd_opts=( ${sd_opts[@]} "-sp" )
                            ;;
             -h|--help)     Display_Usage
                            exit 0
@@ -220,11 +225,11 @@ Decode_Problem() {
     # Temporary working dir is passed as argument #2
     cd $2
     ${RM} ${EXEC}/run_${PACKAGE}
-    ${RM} ELFUN.f GROUP.f RANGE.f EXTER.f
-    ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
+    ${RM} ${FUNSF} ${FUNSO}
     if [[ ${SIFDECODE+set} == 'set' ]]; then
-        echo "sifdecoder -A ${ARCH} -st ${START} ${sd_opts[@]} $1"
-        ${SIFDECODE}/bin/sifdecoder -A ${ARCH} ${sd_opts[@]} $1
+        command="${SIFDECODE}/bin/sifdecoder -A ${ARCH} ${sd_opts[@]} $1"
+        (( show_commands )) && echo $command
+        $command
         cd - 2>&1 >/dev/null
         [[ $? != 0 ]] && exit $?
     else
@@ -277,7 +282,7 @@ Clean_Up() {
     # Tidy up the current directory, deleting all junk.
     if (( KEEP == 0 )); then
         ${RM} ${EXEC}/run_${PACKAGE}
-        ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
+        ${RM} ${FUNSO}
     fi
 }
 
@@ -345,6 +350,11 @@ if (( show_config )); then
   echo "Working in $WorkingDir"
 fi
 
+# Record problem-specfic functions and object files
+
+FUNSF="ELFUN${PSUFFIX}.f GROUP${PSUFFIX}.f RANGE${PSUFFIX}.f EXTER${PSUFFIX}.f"
+FUNSO="ELFUN${PSUFFIX}.o GROUP${PSUFFIX}.o RANGE${PSUFFIX}.o EXTER${PSUFFIX}.o"
+
 # Decode problem if required
 (( problem_set )) && Decode_Problem ${PROBLEM} $WorkingDir
 
@@ -389,7 +399,8 @@ if [[ ! -e ${LIBDIR}/libcutest.a  ]]; then
     [[ -w $LIBDIR ]] && let writable=1 || let writable=0
     if (( writable )); then
         cd ${LIBDIR}
-        ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} cutest_silent
+        ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} \
+          PRECIS=$(PRECISION) cutest_silent
         cd ${WorkingDir}
     else
         error "${LIBDIR}/libcutest.a does not exist and
@@ -402,7 +413,7 @@ fi
 [[ -w ${CUTEST}/objects ]] && let writable=1 || let writable=0
 if (( writable )); then
     cd ${CUTEST}/src/${PKG}
-    ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} tools ${PKG}
+    ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} PRECIS=${PRECISION} tools ${PKG}
 else
     warning "You do not have write permissions to ${CUTEST}/objects
 Attempting to continue..."
@@ -427,10 +438,12 @@ if [[ ${SPECS} != "" ]]; then
   fi
 fi
 
+FUNSO="ELFUN${PSUFFIX}.o GROUP${PSUFFIX}.o RANGE${PSUFFIX}.o"
+
 # Ensure that the current test problem has been compiled.
 (( OUTPUT )) && printf '\nCompiling current test problem if necessary ...\n'
-(( RECOMPILE )) && ${RM} ELFUN.o GROUP.o RANGE.o EXTER.o
-for i in  ELFUN GROUP RANGE
+(( RECOMPILE )) && ${RM} ${FUNSO}
+for i in  ELFUN${PSUFFIX} GROUP${PSUFFIX} RANGE${PSUFFIX}
 do
     if [[ ! -e ${i}.o  ]]; then
         ${CP} ${i}.f ${i}.f90
@@ -442,16 +455,16 @@ do
     fi
 done
 
-EXTER=""
-[[ -e EXTER.f && ! -s EXTER.f ]] && ${RM} EXTER.f
-if [[ -e EXTER.f ]]; then
-    ${CP} EXTER.f EXTER.f90
-    command="${FORTRAN} ${PROBFLAGS} EXTER.f90"
+[[ -e EXTER${PSUFFIX}.f && ! -s EXTER${PSUFFIX}.f ]] && ${RM} EXTER${PSUFFIX}.f
+if [[ -e EXTER${PSUFFIX}.f ]]; then
+    ${CP} EXTER${PSUFFIX}.f EXTER${PSUFFIX}.f90
+    command="${FORTRAN} ${PROBFLAGS} EXTER${PSUFFIX}.f90"
     (( show_commands )) && echo $command
     $command
     [[ $? != 0 ]] && exit $?
-    ${RM} EXTER.f90
-    [[ -e EXTER.o && -z EXTER.o ]] && ${RM} EXTER.o || EXTER="EXTER.o"
+    ${RM} EXTER${PSUFFIX}.f90
+    [[ -e EXTER${PSUFFIX}.o && -z EXTER${PSUFFIX}.o ]] \
+      && ${RM} EXTER${PSUFFIX}.o || FUNSO="${FUNSO} EXTER${PSUFFIX}.o"
 fi
 
 # The package-dependent object files are either fully in full-specified
@@ -460,7 +473,8 @@ PACKOBJS=( ${PACKOBJS} )
 nobjs=${#PACKOBJS[@]}
 for (( i = 0; i < nobjs ; i++ ))
 do
-    [[ ! -e ${PACKOBJS[$i]} ]] && PACKOBJS[$i]=${CUTEST}/objects/${ARCH}/${PRECISION}/${PACKOBJS[$i]}
+    [[ ! -e ${PACKOBJS[$i]} ]] && \
+      PACKOBJS[$i]=${CUTEST}/objects/${ARCH}/${PRECISION}/${PACKOBJS[$i]}
 done
 cd ${WorkingDir}
 
@@ -477,7 +491,9 @@ if [[ ${PKG} == "matlab" ]]; then
     fi
     (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
     outputName=mcutest
-    command="${MEXFORTRAN} -cxx -I${CUTEST}/include -output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -lgfortran -g"
+    command="${MEXFORTRAN} -cxx -I${CUTEST}/include -output ${outputName} \
+${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ${FUNSO} -L${LIBDIR} \
+-lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -lgfortran -g"
     (( show_commands )) && echo "$command"
     $command
     Run_Post
@@ -490,8 +506,10 @@ elif [[ ${PKG} == "octave" ]]; then
         exit 11
     fi
     (( OUTPUT )) && printf '\nBuilding MEX file ...\n'
-    outputName=mcutest
-    command="${MEXFORTRAN} --mex -I${CUTEST}/include --output ${outputName} ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ELFUN.o GROUP.o RANGE.o ${EXTER} -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -g"
+    outputName=ocutest
+    command="${MEXFORTRAN} --mex -I${CUTEST}/include --output ${outputName} \
+${CUTEST}/objects/${ARCH}/${PRECISION}/ocutest.o  ${FUNSO} \
+-L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -g"
     (( show_commands )) && echo "$command"
     $command
     Run_Post
@@ -500,7 +518,10 @@ elif [[ ${PKG} == "octave" ]]; then
 elif [[ ${PKG} == "nomad" ]]; then
     # Link all the PACK and tools files together.
     (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
-    command="${FORTRAN} ${FFLAGS} -o ${DRIVER} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
+    command="${FORTRAN} ${FFLAGS} -o ${DRIVER} ${FUNSO} \
+${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} \
+${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} \
+-lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
     $command
     command="$CP $CUTEST/src/nomad/run_nomad ./"
@@ -510,7 +531,10 @@ elif [[ ${PKG} == "nomad" ]]; then
 else
     # Link all the PACK and tools files together.
     (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
-    command="${FORTRAN} ${FFLAGS} -o run_${PACKAGE} ELFUN.o GROUP.o RANGE.o ${EXTER} ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} -lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
+    command="${FORTRAN} ${FFLAGS} -o run_${PACKAGE} ${FUNSO} \
+${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} \
+${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} \
+-lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
     $command
 fi

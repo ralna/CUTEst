@@ -1,12 +1,12 @@
 #ifndef UTIL_H
-# define UTIL_H
+#define UTIL_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif // ifdef __cplusplus
+#endif /* ifdef __cplusplus */
 
-# include "types.h"
-# include "constants.h"
+#include "types.h"
+#include "constants.h"
 
 /******************
 * Versioning     *
@@ -23,7 +23,7 @@ const char* osqp_version(void);
 * Utility Functions  *
 **********************/
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /**
  * Copy settings creating a new settings structure (uses MALLOC)
@@ -32,7 +32,7 @@ const char* osqp_version(void);
  */
 OSQPSettings* copy_settings(OSQPSettings *settings);
 
-# endif // #ifndef EMBEDDED
+#endif /* #ifndef EMBEDDED */
 
 /**
  * Custom string copy to avoid string.h library
@@ -43,7 +43,7 @@ void c_strcpy(char       dest[],
               const char source[]);
 
 
-# ifdef PRINTING
+#ifdef PRINTING
 
 /**
  * Print Header before running the algorithm
@@ -77,7 +77,7 @@ void print_footer(OSQPInfo *info,
                   c_int     polish);
 
 
-# endif // ifdef PRINTING
+#endif /* ifdef PRINTING */
 
 
 /*********************************
@@ -86,12 +86,12 @@ void print_footer(OSQPInfo *info,
 
 /*! \cond PRIVATE */
 
-# ifdef PROFILING
+#ifdef PROFILING
 
-// Windows
-#  ifdef IS_WINDOWS
+/* Windows */
+#ifdef IS_WINDOWS
 
-#   include <windows.h>
+#include <windows.h>
 
 struct OSQP_TIMER {
   LARGE_INTEGER tic;
@@ -99,10 +99,10 @@ struct OSQP_TIMER {
   LARGE_INTEGER freq;
 };
 
-// Mac
-#  elif defined IS_MAC
+/* Mac */
+#elif defined IS_MAC
 
-#   include <mach/mach_time.h>
+#include <mach/mach_time.h>
 
 /* Use MAC OSX  mach_time for timing */
 struct OSQP_TIMER {
@@ -111,12 +111,12 @@ struct OSQP_TIMER {
   mach_timebase_info_data_t tinfo;
 };
 
-// Linux
-#  else // ifdef IS_WINDOWS
+/* Linux */
+#else /* ifdef IS_WINDOWS */
 
 /* Use POSIX clocl_gettime() for timing on non-Windows machines */
-#   include <time.h>
-#   include <sys/time.h>
+#include <time.h>
+#include <sys/time.h>
 
 
 struct OSQP_TIMER {
@@ -124,7 +124,7 @@ struct OSQP_TIMER {
   struct timespec toc;
 };
 
-#  endif // ifdef IS_WINDOWS
+#endif /* ifdef IS_WINDOWS */
 
 /*! \endcond */
 
@@ -145,7 +145,7 @@ void    tic(OSQPTimer *t);
  */
 c_float toc(OSQPTimer *t);
 
-# endif /* END #ifdef PROFILING */
+#endif /* END #ifdef PROFILING */
 
 
 /* ================================= DEBUG FUNCTIONS ======================= */
@@ -153,7 +153,7 @@ c_float toc(OSQPTimer *t);
 /*! \cond PRIVATE */
 
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /* Compare CSC matrices */
 c_int is_eq_csc(csc    *A,
@@ -163,11 +163,11 @@ c_int is_eq_csc(csc    *A,
 /* Convert sparse CSC to dense */
 c_float* csc_to_dns(csc *M);
 
-# endif // #ifndef EMBEDDED
+#endif /* #ifndef EMBEDDED */
 
 
-# ifdef PRINTING
-#  include <stdio.h>
+#ifdef PRINTING
+#include <stdio.h>
 
 
 /* Print a csc sparse matrix */
@@ -198,18 +198,18 @@ void dump_vec(c_float    *v,
               c_int       len,
               const char *file_name);
 
-// Print int array
+/* Print int array */
 void print_vec_int(c_int      *x,
                    c_int       n,
                    const char *name);
 
-# endif // ifdef PRINTING
+#endif /* ifdef PRINTING */
 
 /*! \endcond */
 
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif // ifdef __cplusplus
+#endif /* ifdef __cplusplus */
 
-#endif // ifndef UTIL_H
+#endif /* ifndef UTIL_H */

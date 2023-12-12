@@ -8,6 +8,12 @@ sparse vector with the Hessian matrix of the Lagrangian.
 CALL CUTEST_cshprod( status, n, goth, X, Y,
 nnz_vector, INDEX_nz_vector, VECTOR,
 nnz_result, INDEX_nz_result, RESULT )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cshprod_s( ... )
 .SH DESCRIPTION
 The CUTEST_cshprod subroutine forms the product of a sparse vector with the
 Hessian matrix of the Lagrangian function

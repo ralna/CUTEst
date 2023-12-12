@@ -5,6 +5,12 @@ CUTEST_cigr \- CUTEst tool to evaluate the gradient of a problem function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cigr( status, n, iprob, X, G_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cigr_s( ... )
 .SH DESCRIPTION
 The CUTEST_cigr subroutine evaluates the gradient of either the
 objective function or a constraint function

@@ -7,6 +7,12 @@ gradient of objective/Lagrangian function.
 .HP 1i
 CALL CUTEST_csgr_threaded( status, n, m, X, Y, grlagf, 
 nnzj, lj, J_val, J_var, J_fun, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csgr_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_csgr_threaded subroutine evaluates the gradients of the general
 constraints and of either the objective function or the Lagrangian function

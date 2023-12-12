@@ -3,4 +3,4 @@ function [varargout] = cutest_terminate( varargin )
 % Usage: cutest_terminate()
 
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('terminate',varargin{:});
+    [varargout{:}] = ocutest('terminate',varargin{:});

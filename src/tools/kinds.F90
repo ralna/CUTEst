@@ -25,10 +25,11 @@
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
     PRIVATE
-    PUBLIC :: ip_, ipc_
+    PUBLIC :: ip_, ipc_, ip_long_
 
 !  Integer kinds (standard 32 bit integer)
 
+    INTEGER, PARAMETER :: iplong_ = INT64
     INTEGER, PARAMETER :: ip_ = INT32
     INTEGER, PARAMETER :: ipc_ = C_INT32_T
 
@@ -41,10 +42,11 @@
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
     PRIVATE
-    PUBLIC :: ip_, ipc_
+    PUBLIC :: ip_, ipc_, iplong_
 
 !  Integer kinds (long 64 bit integer)
 
+    INTEGER, PARAMETER :: iplong_ = INT64
     INTEGER, PARAMETER :: ip_ = INT64
     INTEGER, PARAMETER :: ipc_ = C_INT64_T
 

@@ -3,4 +3,4 @@ function [varargout] = cutest_jprod( varargin )
 % Usage:  r = cutest_jprod( x, p )  --> recomputes J(x)
 %         r = cutest_jprod( p )     --> assumes J(x) was computed previously
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('Jprod',varargin{:});
+    [varargout{:}] = ocutest('Jprod',varargin{:});

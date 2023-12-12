@@ -6,6 +6,12 @@ the Hessian of the constraint part of the Lagrangian.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cdhc( status, n, m, X, Y, lh1, H_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cdhc_s( ... )
 .SH DESCRIPTION
 The CUTEST_cdhc subroutine evaluates the Hessian matrix of the constraint part 
 of the Lagrangian function 

@@ -1,3 +1,4 @@
+/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
 
 /* ============================================
  * CUTEst interface for generic package
@@ -14,6 +15,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <string.h>
+
 #define GENCMA
 
 #ifdef __cplusplus
@@ -21,15 +24,16 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 #endif
 
 #include "cutest.h"
+#include "cutest_routines.h"
 
 #define GENC    genc
 #define GENSPC  genspc
 #define GETINFO getinfo
 
-doublereal GENC( doublereal );
+rp_ GENC( rp_ );
 void GENSPC( integer, char * );
-void GETINFO( integer, integer, doublereal *, doublereal *,
-              doublereal *, doublereal *, logical *, logical *,
+void GETINFO( integer, integer, rp_ *, rp_ *,
+              rp_ *, rp_ *, logical *, logical *,
               VarTypes * );
 
 
@@ -50,8 +54,8 @@ int MAINENTRY( void ){
 
     VarTypes vtypes;
 
-    doublereal *x, *bl, *bu, *dummy1, *dummy2;
-    doublereal *v = NULL, *cl = NULL, *cu = NULL;
+    rp_ *x, *bl, *bu, *dummy1, *dummy2;
+    rp_ *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
     char *pname, *vnames, *gnames, *cptr;
     char **Vnames, **Gnames; /* vnames and gnames as arrays of strings */
@@ -59,9 +63,9 @@ int MAINENTRY( void ){
     integer e_order = 1, l_order = 0, v_order = 0;
     logical constrained = FALSE_;
 
-    doublereal calls[7], cpu[4];
+    rp_ calls[7], cpu[4];
     integer nlin = 0, nbnds = 0, neq = 0;
-    doublereal dummy;
+    rp_ dummy;
     integer ExitCode;
     int i, j;
 
@@ -75,7 +79,7 @@ int MAINENTRY( void ){
     }
 
     /* Determine problem size */
-    CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
 
     if ( status )
     {
@@ -88,21 +92,21 @@ int MAINENTRY( void ){
 
     /* Reserve memory for variables, bounds, and multipliers */
     /* and call appropriate initialization routine for CUTEst */
-    MALLOC( x,      CUTEst_nvar, doublereal );
-    MALLOC( bl,     CUTEst_nvar, doublereal );
-    MALLOC( bu,     CUTEst_nvar, doublereal );
+    MALLOC( x,      CUTEst_nvar, rp_ );
+    MALLOC( bl,     CUTEst_nvar, rp_ );
+    MALLOC( bu,     CUTEst_nvar, rp_ );
     if ( constrained )
     {
         MALLOC( equatn, CUTEst_ncon, logical    );
         MALLOC( linear, CUTEst_ncon, logical    );
-        MALLOC( v,      CUTEst_ncon, doublereal );
-        MALLOC( cl,     CUTEst_ncon, doublereal );
-        MALLOC( cu,     CUTEst_ncon, doublereal );
-        CUTEST_csetup( &status, &funit, &iout, &io_buffer,
+        MALLOC( v,      CUTEst_ncon, rp_ );
+        MALLOC( cl,     CUTEst_ncon, rp_ );
+        MALLOC( cu,     CUTEst_ncon, rp_ );
+        CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
                        &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
                        v, cl, cu, equatn, linear,
                        &e_order, &l_order, &v_order );
-        /*        printf("CUTEst_nvar = %d\n", CUTEst_nvar);
+        /*printf("CUTEst_nvar = %d\n", CUTEst_nvar);
         printf("CUTEst_ncon = %d\n", CUTEst_ncon);
         printf("x = ");
         for (i = 0; i < CUTEst_nvar ; i++)
@@ -138,9 +142,10 @@ int MAINENTRY( void ){
             printf("\n"); */
     }
     else
-        CUTEST_usetup( &status, &funit, &iout, &io_buffer,
-                       &CUTEst_nvar, x, bl, bu );
-
+    {    CUTEST_usetup_r( &status, &funit, &iout, &io_buffer,
+                         &CUTEst_nvar, x, bl, bu );
+    /*    printf("CUTEst_nvar = %d\n", CUTEst_nvar); */
+    }
     if ( status )
     {
         printf("** CUTEst error, status = %d, aborting\n", status);
@@ -160,12 +165,12 @@ int MAINENTRY( void ){
         MALLOC(Gnames, CUTEst_ncon, char *);          /* Array of strings */
         for (i = 0; i < CUTEst_ncon; i++)
             MALLOC(Gnames[i], FSTRING_LEN + 1, char);
-        CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
+        CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
                        pname, vnames, gnames );
     }
     else
     {
-        CUTEST_unames( &status, &CUTEst_nvar, pname, vnames );
+        CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames );
     }
 
     if ( status )
@@ -176,6 +181,8 @@ int MAINENTRY( void ){
 
     /* Make sure to null-terminate problem name */
     pname[FSTRING_LEN] = '\0';
+
+    printf(" Problem                 : %-s\n", pname);
 
     /* Transfer variables and constraint names into arrays of
      * null-terminated strings.
@@ -232,7 +239,7 @@ int MAINENTRY( void ){
     ExitCode = 0;
 
     /* Get CUTEst statistics */
-    CUTEST_creport( &status, calls, cpu );
+    CUTEST_creport_r( &status, calls, cpu );
 
     if ( status )
     {
@@ -278,9 +285,9 @@ int MAINENTRY( void ){
     FREE( linear );
 
     if ( constrained )
-      CUTEST_cterminate( &status );
+      CUTEST_cterminate_r( &status );
     else
-      CUTEST_uterminate( &status );
+      CUTEST_uterminate_r( &status );
 
     return 0;
 

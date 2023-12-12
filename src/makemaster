@@ -43,8 +43,8 @@ all_single: tools_single
                    hrb  PRECIS=single PWD=$(PWD)/hrb )
 	( cd ipopt  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    ipopt  PRECIS=single PWD=$(PWD)/ipopt )
-	( cd knitro  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                   knitro  PRECIS=single PWD=$(PWD)/knitro )
+#	( cd knitro  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#                   knitro  PRECIS=single PWD=$(PWD)/knitro )
 	( cd la04  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    la04  PRECIS=single PWD=$(PWD)/la04 )
 	( cd lbfgs  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -53,8 +53,8 @@ all_single: tools_single
                    lbfgsb  PRECIS=single PWD=$(PWD)/lbfgsb )
 	( cd lincoa  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    lincoa  PRECIS=single PWD=$(PWD)/lincoa )
-	( cd loqo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                   loqo  PRECIS=single PWD=$(PWD)/loqo )
+#	( cd loqo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#                   loqo  PRECIS=single PWD=$(PWD)/loqo )
 	( cd minos  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    minos  PRECIS=single PWD=$(PWD)/minos )
 	( cd newuoa  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -95,8 +95,8 @@ all_single: tools_single
                    uncmin  PRECIS=single PWD=$(PWD)/uncmin )
 	( cd vf13  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    vf13  PRECIS=single PWD=$(PWD)/vf13 )
-	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                   worhp  PRECIS=single PWD=$(PWD)/worhp )
+#	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#                  worhp  PRECIS=single PWD=$(PWD)/worhp )
 all_double: tools_double
 	( cd algencan  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    algencan PRECIS=double PWD=$(PWD)/algencan )
@@ -201,7 +201,7 @@ all_2008_double: all_double
 
 #  all tools (including gsl) and interfaces
 
-all_with_gsl: all_with_tao_$(PRECIS)
+all_with_gsl: all_with_gsl_$(PRECIS)
 all_with_gsl_single: all_single
 	( cd gsl  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    gsl  PRECIS=single PWD=$(PWD)/gsl )
@@ -301,8 +301,8 @@ run_test_single: tools_single test_single
              run_test PRECIS=single PWD=$(PWD)/cgplus )
 	( cd cobyla  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=single PWD=$(PWD)/cobyla )
-#	( cd derchk  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-#             run_test PRECIS=single PWD=$(PWD)/derchk )
+	( cd derchk  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+             run_test PRECIS=single PWD=$(PWD)/derchk )
 	( cd dfo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=single PWD=$(PWD)/dfo )
 	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -323,8 +323,8 @@ run_test_single: tools_single test_single
              run_test PRECIS=single PWD=$(PWD)/hrb )
 	( cd ipopt  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=single PWD=$(PWD)/ipopt )
-	( cd knitro  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-             run_test PRECIS=single PWD=$(PWD)/knitro )
+#	( cd knitro  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#            run_test PRECIS=single PWD=$(PWD)/knitro )
 	( cd la04  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=single PWD=$(PWD)/la04 )
 	( cd lbfgs  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -383,8 +383,8 @@ run_test_double: tools_double test_double
              run_test PRECIS=double PWD=$(PWD)/cgplus )
 	( cd cobyla  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=double PWD=$(PWD)/cobyla )
-#	( cd derchk  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-#             run_test PRECIS=double PWD=$(PWD)/derchk )
+	( cd derchk  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+             run_test PRECIS=double PWD=$(PWD)/derchk )
 	( cd dfo  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test PRECIS=double PWD=$(PWD)/dfo )
 	( cd e04nqf  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \

@@ -7,6 +7,12 @@ with each of the Hessian matrices of the constraint functions.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cchprodsp( status, n, m, lchp, CHP_ind, CHP_ptr )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cchprodsp_s( ... )
 .SH DESCRIPTION
 The CUTEST_cchprodsp subroutine obtins the sparsity structure used when
 forming the product of a vector with each of

@@ -8,13 +8,11 @@
  */
 
 #define ELFUN_r ELFUN_s
+#define ELFUN_flexible_r ELFUN_flexible_s
 #define GROUP_r GROUP_s
 #define RANGE_r RANGE_s
 #define CUTEST_allocate_array_integer_r CUTEST_allocate_array_integer_s
 #define CUTEST_allocate_array_real_r CUTEST_allocate_array_real_s
-#define CUTEST_assemble_element_hessian_r CUTEST_assemble_element_hessian_s
-#define CUTEST_assemble_hessian_pattern_r CUTEST_assemble_hessian_pattern_s
-#define CUTEST_assemble_hessian_r CUTEST_assemble_hessian_s
 #define CUTEST_ccfg_r CUTEST_ccfg_s
 #define CUTEST_ccfg_threaded_r CUTEST_ccfg_threaded_s
 #define CUTEST_ccfg_threadsafe_r CUTEST_ccfg_threadsafe_s
@@ -129,6 +127,7 @@
 #define CUTEST_clfg_threadsafe_r CUTEST_clfg_threadsafe_s
 #define CUTEST_cnames_r CUTEST_cnames_s
 #define CUTEST_cnames_threadsafe_r CUTEST_cnames_threadsafe_s
+#define CUTEST_cnoobj_r CUTEST_cnoobj_s
 #define CUTEST_cofg_r CUTEST_cofg_s
 #define CUTEST_cofg_threaded_r CUTEST_cofg_threaded_s
 #define CUTEST_cofg_threadsafe_r CUTEST_cofg_threadsafe_s
@@ -191,11 +190,7 @@
 #define CUTEST_cvartype_threadsafe_r CUTEST_cvartype_threadsafe_s
 #define CUTEST_extend_array_integer_r CUTEST_extend_array_integer_s
 #define CUTEST_extend_array_real_r CUTEST_extend_array_real_s
-#define CUTEST_form_gradients_r CUTEST_form_gradients_s
-#define CUTEST_hessian_times_sp_vector_r CUTEST_hessian_times_sp_vector_s
-#define CUTEST_hessian_times_vector_r CUTEST_hessian_times_vector_s
 #define CUTEST_initialize_thread_r CUTEST_initialize_thread_s
-#define CUTEST_initialize_workspace_r CUTEST_initialize_workspace_s
 #define CUTEST_LQP_create_r CUTEST_LQP_create_s
 #define CUTEST_newthread_threadsafe_r CUTEST_newthread_threadsafe_s
 #define CUTEST_pname_r CUTEST_pname_s
@@ -204,8 +199,6 @@
 #define CUTEST_probname_r CUTEST_probname_s
 #define CUTEST_probname_threadsafe_r CUTEST_probname_threadsafe_s
 #define CUTEST_reorder_by_rows_r CUTEST_reorder_by_rows_s
-#define CUTEST_size_element_hessian_r CUTEST_size_element_hessian_s
-#define CUTEST_size_sparse_hessian_r CUTEST_size_sparse_hessian_s
 #define CUTEST_sparse_hessian_by_rows_r CUTEST_sparse_hessian_by_rows_s
 #define CUTEST_symmh_r CUTEST_symmh_s
 #define CUTEST_terminate_data_r CUTEST_terminate_data_s

@@ -7,42 +7,42 @@
 
 $(OBJ)/%.o : %.c
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ \
+	$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(CC) -c $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(CC) $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'
 
 $(OBJ)/%.o : %.C
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ \
+	$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(CC) -c $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(CC) $(CFLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'
 
 $(OBJ)/%.o : %.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(FORTRAN) -c $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
+	$(FORTRAN) $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(FORTRAN) -c $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(FORTRAN) $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'
 
 $(OBJ)/%.o : %.f90
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(FORTRAN) -c $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
+	$(FORTRAN) $(F90FLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(FORTRAN) -c $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(FORTRAN) $(F90FLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'
 
 $(OBJ)/%.o : %.F
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(FORTRAN) -c $(FFLAGS) $(CPPFLAGS) $< -o $@ \
+	$(FORTRAN) $(FFLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(FORTRAN) -c $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(FORTRAN) $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'
 
 $(OBJ)/%.o : %.f
 	@printf ' %-9s %-15s\t\t' "Compiling" "$*"
-	$(FORTRAN) -c $(FFLAGS) $(CPPFLAGS) $< -o $@ \
+	$(FORTRAN) $(FFLAGS) $(CPPFLAGS) $< -o $@ \
           ||  ( printf ' %-26s' "=> Disabling optimization " ; \
-            $(FORTRAN) -c $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
+            $(FORTRAN) $(FFLAGSN) $(CPPFLAGS) $< -o $@ )
 	@printf '[ OK ]\n'

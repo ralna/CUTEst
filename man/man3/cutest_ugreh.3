@@ -8,6 +8,12 @@ in finite element format.
 CALL CUTEST_ugreh( status, n, X, G, ne, lhe_ptr, 
 HE_row_ptr, HE_val_ptr, lhe_row, HE_row, 
 lhe_val, HE_val, byrows )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_ugreh_s( ... )
 .SH DESCRIPTION
 The CUTEST_ugreh subroutine evaluates the gradient and Hessian matrix of
 the objective function of the problem decoded from a SIF file by the

@@ -1,11 +1,11 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-07 AT 11:20 GMT.
 
 #include "cutest_modules.h"
+#include "cutest_routines.h"
 
       PROGRAM UNCMIN_main
 
       USE CUTEST_KINDS_precision
-      USE CUTEST_problem_precision
 
       IMPLICIT NONE
 
@@ -26,7 +26,7 @@
       REAL ( KIND = rp_ ), PARAMETER :: biginf = REAL( 9.0D+19, KIND = rp_ )
       LOGICAL :: bounds
       CHARACTER ( LEN = 10 ) :: pname
-      REAL ( KIND = rp_ ) :: CPU( 2 ), CALLS( 4 )
+      REAL ( KIND = rp_ ) :: CPU( 4 ), CALLS( 4 )
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: X, BL, BU, TYPSIZ
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: XPLS, GPLS
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , :) :: A, WRK
@@ -69,7 +69,7 @@
 
 !  find the problem dimension
 
-      CALL CUTEST_udimen( status, input, n )
+      CALL CUTEST_udimen_r( status, input, n )
       IF ( status /= 0 ) GO TO 910
 
 !  allocate workspace
@@ -81,11 +81,12 @@
 
 !  set up SIF data
 
-      CALL CUTEST_usetup( status, input, out, io_buffer, n, X, BL, BU )
+      CALL CUTEST_usetup_r( status, input, out, io_buffer, n, X, BL, BU )
+      CLOSE( input )
 
 !  obtain variable names
 
-      CALL CUTEST_unames( status, n, pname, XNAMES )
+      CALL CUTEST_unames_r( status, n, pname, XNAMES )
       IF ( status /= 0 ) GO TO 910
 
 !  set up algorithmic input data
@@ -109,7 +110,7 @@
 
 !  output solution
 
-      CALL CUTEST_ureport( status, CALLS, CPU )
+      CALL CUTEST_ureport_r( status, CALLS, CPU )
       IF ( status /= 0 ) GO TO 910
 
       gnorm = zero
@@ -122,7 +123,8 @@
       END DO
       WRITE ( out, 2000 ) pname, n, ( CALLS( i ), i = 1, 3 ),                  &
                           itrmcd, fpls, CPU( 1 ), CPU( 2 )
-      CLOSE( input  )
+
+      CALL CUTEST_uterminate_r( status )
       STOP
 
   910 CONTINUE
@@ -165,7 +167,7 @@
 
       INTEGER ( KIND = ip_ ) :: status
       INTEGER ( KIND = ip_ ), PARAMETER :: out = 6
-      CALL CUTEST_ufn( status, n, X, f )
+      CALL CUTEST_ufn_r( status, n, X, f )
       IF ( status .NE. 0 ) THEN
         WRITE( out, "( ' CUTEst error, status = ', i0, ', stopping' )")        &
            status
@@ -180,7 +182,7 @@
       REAL ( KIND = rp_ ) :: X( n ), G( n )
       INTEGER ( KIND = ip_ ) :: status
       INTEGER ( KIND = ip_ ), PARAMETER :: out = 6
-      CALL CUTEST_ugr( status, n, X, G )
+      CALL CUTEST_ugr_r( status, n, X, G )
       IF ( status .NE. 0 ) THEN
         WRITE( out, "( ' CUTEst error, status = ', i0, ', stopping' )" )       &
            status
@@ -195,7 +197,7 @@
       REAL ( KIND = rp_ ) ::X( n ), H( nr, n )
       INTEGER ( KIND = ip_ ) :: status
       INTEGER ( KIND = ip_ ), PARAMETER :: out = 6
-      CALL CUTEST_udh( status, n, X, nr, H )
+      CALL CUTEST_udh_r( status, n, X, nr, H )
       IF ( status .NE. 0 ) THEN
         WRITE( out, "( ' CUTEst error, status = ', i0, ', stopping' )" )       &
            status

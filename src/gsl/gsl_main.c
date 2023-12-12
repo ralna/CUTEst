@@ -1,9 +1,11 @@
-/* ============================================
+/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 13:20 GMT */
+
+/* =================================================
  * CUTEst interface for GNU Scientific Library (GSL)
  *
  * J. Hogg 2015
  * Based on GENC interface
- * ============================================
+ * =================================================
  */
 
 #include <stdio.h>
@@ -23,16 +25,17 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 #endif
 
 #include "cutest.h"
+#include "cutest_routines.h"
 
 #define GENC    genc
 #define GENSPC  genspc
 #define GETINFO getinfo
 #define DEBUG
 
-double GENC( doublereal );
+rp_ GENC( rp_ );
 void GENSPC( integer, char * );
-void GETINFO( integer, integer, doublereal *, doublereal *,
-              doublereal *, doublereal *, logical *, logical *,
+void GETINFO( integer, integer, rp_ *, rp_ *,
+              rp_ *, rp_ *, logical *, logical *,
               VarTypes * );
 
 integer CUTEst_nvar;        /* number of variables */
@@ -46,54 +49,87 @@ struct param_data {
    int n;
 };
 
+#ifdef CUTEST_SINGLE
+int eval_fn( const gsl_vector_float *x, void *params, gsl_vector_float *f ) {
+#else
 int eval_fn( const gsl_vector *x, void *params, gsl_vector *f ) {
+#endif
    struct param_data *data = (struct param_data*) params;
    int status;
-   double obj, i;
-   const double *xptr = gsl_vector_const_ptr(x, 0);
-   double *fptr = gsl_vector_ptr(f, 0);
-   CUTEST_cfn( &status, &data->n, &data->m, xptr, &obj, fptr);
+   rp_ obj, i;
+#ifdef CUTEST_SINGLE
+   const rp_ *xptr = gsl_vector_float_const_ptr(x, 0);
+   rp_ *fptr = gsl_vector_float_ptr(f, 0);
+#else
+   const rp_ *xptr = gsl_vector_const_ptr(x, 0);
+   rp_ *fptr = gsl_vector_ptr(f, 0);
+#endif
+   CUTEST_cfn_r( &status, &data->n, &data->m, xptr, &obj, fptr);
    return GSL_SUCCESS;
 }
-int eval_jacobian( const gsl_vector *x, void *params, gsl_matrix *J ) {
+
+#ifdef CUTEST_SINGLE
+int eval_jacobian( const gsl_vector_float *x, void *params, 
+                   gsl_matrix_float *J ) {
+#else
+int eval_jacobian( const gsl_vector *x, void *params, 
+                   gsl_matrix *J ) {
+#endif
    struct param_data *data = (struct param_data*) params;
-   double *y = (double *) malloc(data->m*sizeof(double));
-   double *g = (double *) malloc(data->n*sizeof(double));
+   rp_ *y = (rp_ *) malloc(data->m*sizeof(rp_));
+   rp_ *g = (rp_ *) malloc(data->n*sizeof(rp_));
    bool grlagf;
    bool jtrans;
-   const double *xptr;
-   double *Jptr;
+   const rp_ *xptr;
+   rp_ *Jptr;
    int status, ldJ;
    grlagf = false;
    jtrans = true; /* GSL uses row major */
+#ifdef CUTEST_SINGLE
+   xptr = gsl_vector_float_const_ptr(x, 0);
+   Jptr = gsl_matrix_float_ptr(J, 0, 0);
+#else
    xptr = gsl_vector_const_ptr(x, 0);
    Jptr = gsl_matrix_ptr(J, 0, 0);
+#endif
    ldJ = J->tda;
-   CUTEST_cgr( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
+   CUTEST_cgr_r( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
          &ldJ, &data->m, Jptr );
    free(y); free(g); /* Values ignored */
    return GSL_SUCCESS;
 }
-int eval_fn_jacobian( const gsl_vector *x, void *params, gsl_vector *f,
-      gsl_matrix *J ) {
+
+#ifdef CUTEST_SINGLE
+int eval_fn_jacobian( const gsl_vector_float *x, void *params, 
+                      gsl_vector_float *f, gsl_matrix_float *J ) {
+#else
+int eval_fn_jacobian( const gsl_vector *x, void *params, 
+                      gsl_vector *f, gsl_matrix *J ) {
+#endif
    struct param_data *data = (struct param_data*) params;
-   double *y = (double *) malloc(data->m*sizeof(double));
-   double *g = (double *) malloc(data->n*sizeof(double));
+   rp_ *y = (rp_ *) malloc(data->m*sizeof(rp_));
+   rp_ *g = (rp_ *) malloc(data->n*sizeof(rp_));
    bool grlagf;
    bool jtrans;
-   const double *xptr;
-   double *fptr, *Jptr;
+   const rp_ *xptr;
+   rp_ *fptr, *Jptr;
    int status, ldJ;
-   double obj;
+   rp_ obj;
    grlagf = false;
    jtrans = true; /* GSL uses row major */
+#ifdef CUTEST_SINGLE
+   xptr = gsl_vector_float_const_ptr(x, 0);
+   Jptr = gsl_matrix_float_ptr(J, 0, 0);
+   fptr = gsl_vector_float_ptr(f, 0);
+#else
    xptr = gsl_vector_const_ptr(x, 0);
    Jptr = gsl_matrix_ptr(J, 0, 0);
    fptr = gsl_vector_ptr(f, 0);
-   CUTEST_cfn( &status, &data->n, &data->m, xptr, &obj, fptr);
+#endif
+   CUTEST_cfn_r( &status, &data->n, &data->m, xptr, &obj, fptr);
    ldJ = J->tda;
-   CUTEST_cgr( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
-         &ldJ, &data->m, Jptr );
+   CUTEST_cgr_r( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
+                 &ldJ, &data->m, Jptr );
    free(y); free(g); /* Values ignored */
    return GSL_SUCCESS;
 }
@@ -114,8 +150,8 @@ int MAINENTRY( void ){
 
     VarTypes vtypes;
 
-    doublereal *x, *bl, *bu, *dummy1, *dummy2;
-    doublereal *v = NULL, *cl = NULL, *cu = NULL;
+    rp_ *x, *bl, *bu, *dummy1, *dummy2;
+    rp_ *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
     char *pname, *vnames, *gnames, *cptr;
     char **Vnames; /* vnames and gnames as arrays of strings */
@@ -123,25 +159,30 @@ int MAINENTRY( void ){
     integer e_order = 1, l_order = 0, v_order = 0;
     logical constrained = FALSE_;
 
-    doublereal calls[7], cpu[4];
+    rp_ calls[7], cpu[4];
     integer nlin = 0, nbnds = 0, neq = 0;
     integer ExitCode;
     int i, j;
 
     int maxiter, iter;
-    double epsabs, epsrel;
+    rp_ epsabs, epsrel;
     struct param_data params;
+
+#ifdef CUTEST_SINGLE
+    gsl_vector_float_view xview;
+#else
     gsl_vector_view xview;
+#endif
     gsl_vector *gradient;
     gsl_multifit_function_fdf fdf;
     gsl_multifit_fdfsolver *gsl;
     int info;
-    double fnval;
+    rp_ fnval;
 
     int write_summary, summary_size, write_iter_summary;
     int stopping_test;
-    double normJf, normf;
-    double tol_gradient, tol_func;
+    rp_ normJf, normf;
+    rp_ tol_gradient, tol_func;
     char summary_file[20], iter_summary_file[20];
     int fnevals, jacevals, hessevals;
 
@@ -155,7 +196,7 @@ int MAINENTRY( void ){
     }
 
     /* Determine problem size */
-    CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
 
     if ( status )
     {
@@ -168,20 +209,20 @@ int MAINENTRY( void ){
 
     /* Reserve memory for variables, bounds, and multipliers */
     /* and call appropriate initialization routine for CUTEst */
-    MALLOC( x,      CUTEst_nvar, doublereal );
-    MALLOC( bl,     CUTEst_nvar, doublereal );
-    MALLOC( bu,     CUTEst_nvar, doublereal );
+    MALLOC( x,      CUTEst_nvar, rp_ );
+    MALLOC( bl,     CUTEst_nvar, rp_ );
+    MALLOC( bu,     CUTEst_nvar, rp_ );
     if ( constrained )
     {
         MALLOC( equatn, CUTEst_ncon, logical    );
         MALLOC( linear, CUTEst_ncon, logical    );
-        MALLOC( v,      CUTEst_ncon, doublereal );
-        MALLOC( cl,     CUTEst_ncon, doublereal );
-        MALLOC( cu,     CUTEst_ncon, doublereal );
-        CUTEST_csetup( &status, &funit, &iout, &io_buffer,
-                       &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
-                       v, cl, cu, equatn, linear,
-                       &e_order, &l_order, &v_order );
+        MALLOC( v,      CUTEst_ncon, rp_ );
+        MALLOC( cl,     CUTEst_ncon, rp_ );
+        MALLOC( cu,     CUTEst_ncon, rp_ );
+        CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+                         &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
+                         v, cl, cu, equatn, linear,
+                         &e_order, &l_order, &v_order );
         /*        printf("CUTEst_nvar = %d\n", CUTEst_nvar);
         printf("CUTEst_ncon = %d\n", CUTEst_ncon);
         printf("x = ");
@@ -218,8 +259,8 @@ int MAINENTRY( void ){
             printf("\n"); */
     }
     else
-        CUTEST_usetup( &status, &funit, &iout, &io_buffer,
-                       &CUTEst_nvar, x, bl, bu );
+        CUTEST_usetup_r( &status, &funit, &iout, &io_buffer,
+                         &CUTEst_nvar, x, bl, bu );
 
     if ( status )
     {
@@ -237,12 +278,12 @@ int MAINENTRY( void ){
     if ( constrained )
     {
         MALLOC(gnames, CUTEst_ncon * FSTRING_LEN, char);   /* For Fortran */
-        CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
-                       pname, vnames, gnames );
+        CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+                         pname, vnames, gnames );
     }
     else
     {
-        CUTEST_unames( &status, &CUTEst_nvar, pname, vnames );
+        CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames );
     }
 
     if ( status )
@@ -296,7 +337,11 @@ int MAINENTRY( void ){
     fdf.p = CUTEst_nvar;
     fdf.params = &params;
     /* Set up optimizer with function and initial guess */
+#ifdef CUTEST_SINGLE
+    xview = gsl_vector_float_view_array(x, CUTEst_nvar);
+#else
     xview = gsl_vector_view_array(x, CUTEst_nvar);
+#endif
     gsl_multifit_fdfsolver_set(gsl, &fdf, &xview.vector);
 
     /* Convergence parameters */
@@ -313,18 +358,24 @@ int MAINENTRY( void ){
     }
     rewind( indr );
 
+#ifdef CUTEST_SINGLE
+    char pf[ ]="%f%*[^\n]\n";
+#else
+    char pf[ ]="%lf%*[^\n]\n";
+#endif
+
     ierr = fscanf( indr, "%i%*[^\n]\n", &maxiter);
     if (ierr != 1) {
       printf("Error: failed to read max iterations from GSL.SPC; using default (1000). \n");
       maxiter = 1000;
     }
-    ierr = fscanf( indr, "%lf%*[^\n]\n", &epsabs);
+    ierr = fscanf( indr, pf, &epsabs);
     if (ierr != 1) {
       printf("ierr = %i",ierr);
       printf("Error: failed to read abs tolerance from GSL.SPC; using default (1e-6). \n");
       epsabs = 1e-6;
     }
-    ierr = fscanf( indr, "%lf%*[^\n]\n", &epsrel);
+    ierr = fscanf( indr, pf, &epsrel);
     if (ierr != 1) {
       printf("Error: failed to read abs tolerance from GSL.SPC; using default (1e-6). \n");
       epsrel = 1e-6;
@@ -508,7 +559,7 @@ int MAINENTRY( void ){
 	  fnval = 0.5*normf*normf;*/
 
     /* Get CUTEst statistics */
-    CUTEST_creport( &status, calls, cpu );
+    CUTEST_creport_r( &status, calls, cpu );
 
     if ( status )
     {
@@ -596,16 +647,16 @@ int MAINENTRY( void ){
     FREE(Vnames);
 
     if ( constrained )
-      CUTEST_cterminate( &status );
+      CUTEST_cterminate_r( &status );
     else
-      CUTEST_uterminate( &status );
+      CUTEST_uterminate_r( &status );
 
     return 0;
 
 }
 
-void getinfo( integer n, integer m, doublereal *bl, doublereal *bu,
-              doublereal *cl, doublereal *cu, logical *equatn,
+void getinfo( integer n, integer m, rp_ *bl, rp_ *bu,
+              rp_ *cl, rp_ *cu, logical *equatn,
               logical *linear, VarTypes *vartypes )
 {
 

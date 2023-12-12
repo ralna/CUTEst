@@ -8,13 +8,11 @@
  */
 
 #define ELFUN_r ELFUN
+#define ELFUN_flexible_r ELFUN_flexible
 #define GROUP_r GROUP
 #define RANGE_r RANGE
 #define CUTEST_allocate_array_integer_r CUTEST_allocate_array_integer
 #define CUTEST_allocate_array_real_r CUTEST_allocate_array_real
-#define CUTEST_assemble_element_hessian_r CUTEST_assemble_element_hessian
-#define CUTEST_assemble_hessian_pattern_r CUTEST_assemble_hessian_pattern
-#define CUTEST_assemble_hessian_r CUTEST_assemble_hessian
 #define CUTEST_ccfg_r CUTEST_ccfg
 #define CUTEST_ccfg_threaded_r CUTEST_ccfg_threaded
 #define CUTEST_ccfg_threadsafe_r CUTEST_ccfg_threadsafe
@@ -129,6 +127,7 @@
 #define CUTEST_clfg_threadsafe_r CUTEST_clfg_threadsafe
 #define CUTEST_cnames_r CUTEST_cnames
 #define CUTEST_cnames_threadsafe_r CUTEST_cnames_threadsafe
+#define CUTEST_cnoobj_r CUTEST_cnoobj
 #define CUTEST_cofg_r CUTEST_cofg
 #define CUTEST_cofg_threaded_r CUTEST_cofg_threaded
 #define CUTEST_cofg_threadsafe_r CUTEST_cofg_threadsafe
@@ -191,11 +190,7 @@
 #define CUTEST_cvartype_threadsafe_r CUTEST_cvartype_threadsafe
 #define CUTEST_extend_array_integer_r CUTEST_extend_array_integer
 #define CUTEST_extend_array_real_r CUTEST_extend_array_real
-#define CUTEST_form_gradients_r CUTEST_form_gradients
-#define CUTEST_hessian_times_sp_vector_r CUTEST_hessian_times_sp_vector
-#define CUTEST_hessian_times_vector_r CUTEST_hessian_times_vector
 #define CUTEST_initialize_thread_r CUTEST_initialize_thread
-#define CUTEST_initialize_workspace_r CUTEST_initialize_workspace
 #define CUTEST_LQP_create_r CUTEST_LQP_create
 #define CUTEST_newthread_threadsafe_r CUTEST_newthread_threadsafe
 #define CUTEST_pname_r CUTEST_pname
@@ -204,8 +199,6 @@
 #define CUTEST_probname_r CUTEST_probname
 #define CUTEST_probname_threadsafe_r CUTEST_probname_threadsafe
 #define CUTEST_reorder_by_rows_r CUTEST_reorder_by_rows
-#define CUTEST_size_element_hessian_r CUTEST_size_element_hessian
-#define CUTEST_size_sparse_hessian_r CUTEST_size_sparse_hessian
 #define CUTEST_sparse_hessian_by_rows_r CUTEST_sparse_hessian_by_rows
 #define CUTEST_symmh_r CUTEST_symmh
 #define CUTEST_terminate_data_r CUTEST_terminate_data

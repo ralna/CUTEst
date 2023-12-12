@@ -6,6 +6,12 @@ Jacobian of constraints gradients.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_csjp( status, nnzj, lj, J_var, J_con )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csjp_s( ... )
 .SH DESCRIPTION
 The CUTEST_csjp subroutine evaluates the sparsity pattern used when storing the
 Jacobian matrix of gradients of the general constraints

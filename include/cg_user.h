@@ -20,6 +20,14 @@
 #define NULL 0
 #endif
 
+/* added by nick gould to allow single (float) precision */
+
+#ifdef CUTEST_SINGLE
+typedef float    rp_;
+#else
+typedef double   rp_;
+#endif
+
 /*============================================================================
    cg_parameter is a structure containing parameters used in cg_descent
    cg_default assigns default values to these parameters */
@@ -56,25 +64,25 @@ typedef struct cg_parameter_struct /* user controlled parameters */
 
     /* when relative distance from current gradient to subspace <= eta0,
        enter subspace if subspace dimension = mem */
-    double eta0 ;
+    rp_ eta0 ;
 
     /* when relative distance from current gradient to subspace >= eta1,
        leave subspace */
-    double eta1 ;
+    rp_ eta1 ;
 
     /* when relative distance from current direction to subspace <= eta2,
        always enter subspace (invariant space) */
-    double eta2 ;
+    rp_ eta2 ;
 
     /* T => use approximate Wolfe line search
        F => use ordinary Wolfe line search, switch to approximate Wolfe when
                 |f_k+1-f_k| < AWolfeFac*C_k, C_k = average size of cost  */
     int    AWolfe ;
-    double AWolfeFac ;
+    rp_ AWolfeFac ;
 
     /* factor in [0, 1] used to compute average cost magnitude C_k as follows:
        Q_k = 1 + (Qdecay)Q_k-1, Q_0 = 0,  C_k = C_k-1 + (|f_k| - C_k-1)/Q_k */
-    double Qdecay ;
+    rp_ Qdecay ;
 
     /* terminate after nslow iterations without strict improvement in
        either function value or gradient */
@@ -84,41 +92,41 @@ typedef struct cg_parameter_struct /* user controlled parameters */
        T => ||proj_grad||_infty <= max(grad_tol,initial ||grad||_infty*StopFact)
        F => ||proj_grad||_infty <= grad_tol*(1 + |f_k|) */
     int    StopRule ;
-    double StopFac ;
+    rp_ StopFac ;
 
     /* T => estimated error in function value is eps*Ck,
        F => estimated error in function value is eps */
     int    PertRule ;
-    double eps ;
+    rp_ eps ;
 
     /* factor by which eps grows when line search fails during contraction */
-    double egrow ;
+    rp_ egrow ;
 
     /* T => attempt quadratic interpolation in line search when
                 |f_k+1 - f_k|/f_k <= QuadCutoff
        F => no quadratic interpolation step */
     int    QuadStep ;
-    double QuadCutOff ;
+    rp_ QuadCutOff ;
 
     /* maximum factor by which a quad step can reduce the step size */
-    double QuadSafe ;
+    rp_ QuadSafe ;
 
     /* T => when possible, use a cubic step in the line search */
     int UseCubic ;
 
     /* use cubic step when |f_k+1 - f_k|/|f_k| > CubicCutOff */
-    double CubicCutOff ;
+    rp_ CubicCutOff ;
 
     /* |f| < SmallCost*starting cost => skip QuadStep and set PertRule = FALSE*/
-    double SmallCost ;
+    rp_ SmallCost ;
 
     /* T => check that f_k+1 - f_k <= debugtol*C_k
        F => no checking of function values */
     int    debug ;
-    double debugtol ;
+    rp_ debugtol ;
 
     /* if step is nonzero, it is the initial step of the initial line search */
-    double step ;
+    rp_ step ;
 
     /* abort cg after maxit iterations */
     INT maxit ;
@@ -127,15 +135,15 @@ typedef struct cg_parameter_struct /* user controlled parameters */
     int ntries ;
 
     /* maximum factor secant step increases stepsize in expansion phase */
-    double ExpandSafe ;
+    rp_ ExpandSafe ;
 
     /* factor by which secant step is amplified during expansion phase
        where minimizer is bracketed */
-    double SecantAmp ;
+    rp_ SecantAmp ;
 
     /* factor by which rho grows during expansion phase where minimizer is
        bracketed */
-    double RhoGrow ;
+    rp_ RhoGrow ;
 
     /* maximum number of times that eps is updated */
     int neps ;
@@ -147,49 +155,49 @@ typedef struct cg_parameter_struct /* user controlled parameters */
     int nline ;
 
     /* conjugate gradient method restarts after (n*restart_fac) iterations */
-    double restart_fac ;
+    rp_ restart_fac ;
 
     /* stop when -alpha*dphi0 (estimated change in function value) <= feps*|f|*/
-    double feps ;
+    rp_ feps ;
 
     /* after encountering nan, growth factor when searching for
        a bracketing interval */
-    double nan_rho ;
+    rp_ nan_rho ;
 
     /* after encountering nan, decay factor for stepsize */
-    double nan_decay ;
+    rp_ nan_decay ;
 
 /*============================================================================
        technical parameters which the user probably should not touch
   ----------------------------------------------------------------------------*/
-    double           delta ; /* Wolfe line search parameter */
-    double           sigma ; /* Wolfe line search parameter */
-    double           gamma ; /* decay factor for bracket interval width */
-    double             rho ; /* growth factor when searching for initial
+    rp_           delta ; /* Wolfe line search parameter */
+    rp_           sigma ; /* Wolfe line search parameter */
+    rp_           gamma ; /* decay factor for bracket interval width */
+    rp_             rho ; /* growth factor when searching for initial
                                 bracketing interval */
-    double            psi0 ; /* factor used in starting guess for iteration 1 */
-    double          psi_lo ; /* in performing a QuadStep, we evaluate at point
+    rp_            psi0 ; /* factor used in starting guess for iteration 1 */
+    rp_          psi_lo ; /* in performing a QuadStep, we evaluate at point
                                 betweeen [psi_lo, psi_hi]*psi2*previous step */
-    double          psi_hi ;
-    double            psi1 ; /* for approximate quadratic, use gradient at
+    rp_          psi_hi ;
+    rp_            psi1 ; /* for approximate quadratic, use gradient at
                                 psi1*psi2*previous step for initial stepsize */
-    double            psi2 ; /* when starting a new cg iteration, our initial
+    rp_            psi2 ; /* when starting a new cg iteration, our initial
                                 guess for the line search stepsize is
                                 psi2*previous step */
     int       AdaptiveBeta ; /* T => choose beta adaptively, F => use theta */
-    double       BetaLower ; /* lower bound factor for beta */
-    double           theta ; /* parameter describing the cg_descent family */
-    double            qeps ; /* parameter in cost error for quadratic restart
+    rp_       BetaLower ; /* lower bound factor for beta */
+    rp_           theta ; /* parameter describing the cg_descent family */
+    rp_            qeps ; /* parameter in cost error for quadratic restart
                                 criterion */
-    double           qrule ; /* parameter used to decide if cost is quadratic */
+    rp_           qrule ; /* parameter used to decide if cost is quadratic */
     int           qrestart ; /* number of iterations the function should be
                                 nearly quadratic before a restart */
 } cg_parameter ;
 
 typedef struct cg_stats_struct /* statistics returned to user */
 {
-    double               f ; /*function value at solution */
-    double           gnorm ; /* max abs component of gradient */
+    rp_               f ; /*function value at solution */
+    rp_           gnorm ; /* max abs component of gradient */
     INT               iter ; /* number of iterations */
     INT            IterSub ; /* number of subspace iterations */
     INT             NumSub ; /* total number subspaces */
@@ -214,17 +222,17 @@ int cg_descent /*  return:
                        9 (debugger is on and the function value increases)
                       10 (out of memory) */
 (
-    double            *x, /* input: starting guess, output: the solution */
+    rp_            *x, /* input: starting guess, output: the solution */
     INT                n, /* problem dimension */
     cg_stats      *Stats, /* structure with statistics (see cg_descent.h) */
     cg_parameter  *UParm, /* user parameters, NULL = use default parameters */
-    double      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
+    rp_      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
                                            StopFac*initial |g|_infty) [default]
                              StopRule = 0: |g|_infty <= grad_tol(1+|f|) */
-    double        (*value) (double *, INT),  /* f = value (x, n) */
-    void           (*grad) (double *, double *, INT), /* grad (g, x, n) */
-    double      (*valgrad) (double *, double *, INT), /* f = valgrad (g,x,n)*/
-    double         *Work  /* either size 4n work array or NULL */
+    rp_        (*value) (rp_ *, INT),  /* f = value (x, n) */
+    void           (*grad) (rp_ *, rp_ *, INT), /* grad (g, x, n) */
+    rp_      (*valgrad) (rp_ *, rp_ *, INT), /* f = valgrad (g,x,n)*/
+    rp_         *Work  /* either size 4n work array or NULL */
 ) ;
 
 void cg_default /* set default parameter values */

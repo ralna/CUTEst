@@ -7,6 +7,12 @@ sparse format.
 .HP 1i
 CALL CUTEST_csh_threaded( status, n, m, X, Y,
 nnzh, lh, H_val, H_row, H_col, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csh_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_csh_threaded subroutine evaluates the Hessian of the Lagrangian 
 function constraints, the Hessian matrix of the Lagrangian function 

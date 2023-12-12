@@ -7,6 +7,12 @@ function, in sparse format.
 .HP 1i
 CALL CUTEST_cish( status, n, X, iprob, 
 nnzh, lh, H_val, H_row, H_col )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cish_s( ... )
 .SH DESCRIPTION
 The CUTEST_cish subroutine evaluates the Hessian of a particular constraint
 function or the objective function for the problem decoded

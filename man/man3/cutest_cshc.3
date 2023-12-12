@@ -7,6 +7,12 @@ the Lagrangian, in sparse format.
 .HP 1i
 CALL CUTEST_cshc( status, n, m, X, Y, 
 nnzh, lh, H_val, H_row, H_col )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cshc_s( ... )
 .SH DESCRIPTION
 The CUTEST_cshc subroutine evaluates the Hessian matrix of the constraint part 
 of the Lagrangian function 

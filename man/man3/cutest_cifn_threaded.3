@@ -5,6 +5,12 @@ CUTEST_cifn_threaded \- CUTEst tool to evaluate a problem function value.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cifn_threaded( status, n, iprob, X, fn, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cifn_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cifn_threaded subroutine evaluates the value of either the
 objective function or a constraint function

@@ -6,6 +6,12 @@ problem function in sparse format
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cisgr_threaded( status, n, iprob, X, nnzg, lg, G_val, G_var, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cisgr_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cisgr_threaded subroutine evaluates the gradient of either the
 objective function or a constraint function

@@ -8,6 +8,12 @@ the Jacobian of the constraints, or its transpose.
 .HP 1i
 CALL CUTEST_cjprod( status, n, m, gotj, jtrans, X,
 VECTOR, lvector, RESULT, lresult )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cjprod_s( ... )
 .SH DESCRIPTION
 The CUTEST_cjprod subroutine forms the product of a vector with the Jacobian
 matrix, or with its transpose,  of the constraint functions

@@ -1,17 +1,17 @@
 #ifndef AUXIL_H
-# define AUXIL_H
+#define AUXIL_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif // ifdef __cplusplus
+#endif /* ifdef __cplusplus */
 
-# include "types.h"
+#include "types.h"
 
 
 /***********************************************************
 * Auxiliary functions needed to compute ADMM iterations * *
 ***********************************************************/
-# if EMBEDDED != 1
+#if EMBEDDED != 1
 
 /**
  * Compute rho estimate from residuals
@@ -42,7 +42,7 @@ void    set_rho_vec(OSQPWorkspace *work);
  */
 c_int   update_rho_vec(OSQPWorkspace *work);
 
-# endif // EMBEDDED
+#endif /* EMBEDDED */
 
 /**
  * Swap c_float vector pointers
@@ -149,7 +149,7 @@ c_int check_termination(OSQPWorkspace *work,
                         c_int          approximate);
 
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /**
  * Validate problem data
@@ -166,11 +166,11 @@ c_int validate_data(const OSQPData *data);
  */
 c_int validate_settings(const OSQPSettings *settings);
 
-# endif // #ifndef EMBEDDED
+#endif /* #ifndef EMBEDDED */
 
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif // ifdef __cplusplus
+#endif /* ifdef __cplusplus */
 
-#endif // ifndef AUXIL_H
+#endif /* ifndef AUXIL_H */

@@ -6,4 +6,4 @@ function [varargout] = cutest_hess( varargin )
 % Usage:  H = cutest_hess( x ) if the problem has no general constraints, or
 %         H = cutest_hess( x, v ) otherwise.
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('hess',varargin{:});
+    [varargout{:}] = ocutest('hess',varargin{:});

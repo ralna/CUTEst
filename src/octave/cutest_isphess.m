@@ -3,4 +3,4 @@ function [varargout] = cutest_isphess( varargin )
 % function index is ignored if the problem is unconstrained.
 % Usage:  Hi = cutest_isphess( x, i ).
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('isphess',varargin{:});
+    [varargout{:}] = ocutest('isphess',varargin{:});

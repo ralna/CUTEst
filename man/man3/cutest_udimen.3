@@ -5,6 +5,12 @@ CUTEST_udimen \- CUTEst tool to get the number of variables involved.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_udimen( status, input, n )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_udimen_s( ... )
 .SH DESCRIPTION
 The CUTEST_udimen subroutine discovers how many variables are involved in
 the problem decoded from a SIF file by the script \fIsifdecoder\fP.

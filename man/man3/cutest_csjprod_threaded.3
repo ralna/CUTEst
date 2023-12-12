@@ -9,6 +9,12 @@ sparse vector with the Jacobian of the constraints, or its transpose.
 CALL CUTEST_csjprod_threaded( status, n, m, gotj, jtrans, X,
 nnz_vector, INDEX_nz_vector, VECTOR, lvector,
 nnz_result, INDEX_nz_result, RESULT, lresult, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csjprod_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_csjprod_threaded subroutine forms the product of a sparse 
 vector with the Jacobian matrix, or with its transpose, 

@@ -6,6 +6,12 @@ constraints gradients and gradient of objective/Lagrangian function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_csgrp( status, n, nnzj, lj, J_var, J_fun )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csgrp_s( ... )
 .SH DESCRIPTION
 The CUTEST_csgrp subroutine evaluates the sparsity pattern used when storing the
 gradients of the general constraints and of either the objective function

@@ -1,171 +1,37 @@
 #  Main body of the installation makefile for CUTEst E04NQF interface
 
-#  N. Gould, D. Orban and Ph. L. Toint.
-#  This version: 26 II 2013
+#  Nick Gould, for GALAHAD productions
+#  This version: 2023-11-25
 
-#  package
+#  include standard CUTEst makefile defaults before package-specifics
+
+include $(CUTEST)/src/makedefs/defaults
+
+#  ===========================================================================
+#  ====================  package-dependent parts  ============================
+#  ===========================================================================
+
+#  package name 
 
 PACKAGE = E04NQF
 package = e04nqf
 
-SHELL = /bin/$(BINSHELL)
+#  ===========================================================================
+#  =================  end of package-dependent parts  ========================
+#  ===========================================================================
 
-#  compiler flags
+#  include standard CUTEst makefile definitions
 
-#FFLAGS    = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) \
-#            -I$(E04NQF)/mod $(F90) $(USUAL)
-#FFLAGSS   = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) \
-#            -I$(E04NQF)/mod $(F90) $(SPECIAL)
-#FFLAGSN   = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) -I$(E04NQF)/mod $(F90)
-#FFLAGS77  = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) -I$(E04NQF)/mod \
-#            $(F77) $(USUAL)
-#FFLAGS77S = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) -I$(E04NQF)/mod \
-#            $(F77) $(SPECIAL)
-#FFLAGS7N  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) -I$(E04NQF)/mod \
-#            $(F77) $(USUAL)
-#RUNFFLAGS =          $(OPTIMIZATION) $(DEBUG) $(MODULES) -I$(E04NQF)/mod
+include $(CUTEST)/src/makedefs/definitions
 
-FFLAGS    = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(USUAL)
-FFLAGSS   = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F90) $(SPECIAL)
-FFLAGSN   = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F90)
-FFLAGS77  = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL)
-FFLAGS77S = $(BASIC) $(OPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(SPECIAL)
-FFLAGS7N  = $(BASIC) $(NOOPTIMIZATION) $(DEBUG) $(MODULES) $(F77) $(USUAL)
-RUNFFLAGS =          $(OPTIMIZATION) $(DEBUG) $(MODULES)
+#  include compilation and run instructions
 
-#  names of random libraries
+include $(CUTEST)/src/makedefs/instructions
 
-LC  = $(OBJ)/libcutest.a
-LCS = $(OBJS)/libcutest.a
-LCD = $(OBJD)/libcutest.a
+#  select specific run test
 
-BLC  = $(OBJ)/libcutest_blas.a
-BLCS = $(OBJS)/libcutest_blas.a
-BLCD = $(OBJD)/libcutest_blas.a
+run_test: run_qp_test
 
-DLC  = $(OBJ)/libcutest_dummy.a
-DLCS = $(OBJS)/libcutest_dummy.a
-DLCD = $(OBJD)/libcutest_dummy.a
+#  include standard package compilation instructions
 
-LLC  = $(OBJ)/libcutest_lapack.a
-LLCS = $(OBJS)/libcutest_lapack.a
-LLCD = $(OBJD)/libcutest_lapack.a
-
-#  Libraries used
-
-#LIBS = -lcutest -lcutest_lapack -lcutest_blas
-LIBS = -lcutest
-PLIBS = $(LIBS) -lcutest_problem
-
-#  Archive manipulation strings
-
-ARR = $(AR) $(ARREPFLAGS) $(LC)
-RMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LC)
-RMOBFILE = $(CUTEST)/bin/rmobfile $(RM) $(OBJ)
-
-BARR = $(AR) $(ARREPFLAGS) $(BLC)
-BRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(BLC)
-
-DARR = $(AR) $(ARREPFLAGS) $(DLC)
-
-LARR = $(AR) $(ARREPFLAGS) $(LLC)
-LRMARFILE = $(CUTEST)/bin/rmarfile $(AR) $(GREP) $(LLC)
-
-#  compilation agenda
-
-#$(PACKAGE) = $(OBJ)/$(package)_main.o
-C_TEST = c_elfun.o c_group.o c_range.o
-
-SUCC = precision version) compiled successfully
-
-#  main compilations and runs
-
-all: $(package)
-
-#  basic packages
-
-$(package): $(package)_$(PRECIS)
-	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
-#$(package)_single: $(OBJ)/$(package)_dummy.o $(OBJ)/$(package)_main.o
-#$(package)_double: $(OBJ)/$(package)_dummy.o $(OBJ)/$(package)_main.o
-$(package)_single: $(OBJ)/$(package)_main.o
-$(package)_double: $(OBJ)/$(package)_main.o
-
-# run example tests
-
-run_test: tools test_cutest_constrained $(package) $(OBJ)/$(package)_test.o
-	echo " Test of constrained $(package)"
-	echo "$(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(package)_main.o $(package)_test.o $(C_TEST) -L$(OBJ) $(LIBS)"
-	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_test \
-            $(package)_main.o $(package)_test.o $(C_TEST) -L$(OBJ) $(LIBS)
-	ln -fs $(CUTEST)/src/test/c_OUTSDIF.d ../$(package)/OUTSDIF.d
-	- $(OBJ)/run_test >& ../$(package)/c_test.output
-	cat ../$(package)/c_test.output
-	rm $(OBJ)/run_test ../$(package)/OUTSDIF.d
-
-test_cutest_constrained:
-	( cd ../test ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-            test_cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../test )
-tools:
-	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
-utools:
-	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
-ctools:
-	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
-
-#  individual compilations
-
-$(OBJ)/$(package)_test.o: ../$(package)/$(package)_test.f90
-	@printf ' %-9s %-15s\t\t' "Compiling" "$(package)_test"
-	$(SED) -f $(SEDS) ../$(package)/$(package)_test.f90 > \
-          $(OBJ)/$(package)_test.f90
-	cd $(OBJ); $(FORTRAN) -o $(package)_test.o $(FFLAGS) \
-          $(package)_test.f90 \
-            || ( printf ' %-26s' "=> Disabling optimization " ; \
-             $(FORTRAN) -o $(package)_test.o $(FFLAGSN) $(package)_test.f90 )
-	$(RM) $(OBJ)/$(package)_test.f90
-	@printf '[ OK ]\n'
-
-#  CUTEst interface main programs
-
-$(OBJ)/$(package)_main.o: ../$(package)/$(package)_main.f90
-	@printf ' %-9s %-15s\t\t' "Compiling" "$(package)_main"
-	$(SED) -f $(SEDS) ../$(package)/$(package)_main.f90 > \
-          $(OBJ)/$(package)_main.f90
-	cd $(OBJ); $(FORTRAN) -o $(package)_main.o $(FFLAGS) \
-             $(package)_main.f90 \
-              || ( printf ' %-26s' "=> Disabling optimization " ; \
-              $(FORTRAN) -o $(package)_main.o $(FFLAGS77N) $(package)_main.f90 )
-	$(RM) $(OBJ)/$(package)_main.f90 $(OBJ)/*.mod
-	@printf '[ OK ]\n'
-
-$(OBJ)/$(package)_dummy.o: ../$(package)/$(package)_dummy.f90
-	@printf ' %-9s %-15s\t\t' "Compiling" "$(package)_dummy"
-	$(SED) -f $(SEDS) ../$(package)/$(package)_dummy.f90 > \
-          $(OBJ)/$(package)_dummy.f90
-	cd $(OBJ); $(FORTRAN) -o $(package)_dummy.o $(FFLAGS) \
-             $(package)_dummy.f90 \
-              || ( printf ' %-26s' "=> Disabling optimization " ; \
-              $(FORTRAN) -o $(package)_dummy.o $(FFLAGS77N) \
-                $(package)_dummy.f90 )
-	$(RM) $(OBJ)/$(package)_dummy.f90 $(OBJ)/$(package)_dummy.o
-	$(RMOBFILE) $(package)_main.o
-	@printf '[ OK ]\n'
-
-#  book keeping
-
-clean:
-	@printf ' %-9s\t\t' "Cleaning"
-	$(RM) $(OBJ)/*
-	@printf '[ OK ]\n'
-
-cleanall:
-	@printf ' %-14s\t\t' \
-          "Removing all $(PRECIS) precision object and module files"
-	$(RM) $(OBJ)/* $(MOD)/*
-	@printf '[ OK ]\n'
-
+include $(CUTEST)/src/makedefs/compile

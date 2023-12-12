@@ -5,6 +5,12 @@ CUTEST_udh \- CUTEst tool to evaluate the Hessian matrix.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_udh( status, n, X, lh1, H_val )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_udh_s( ... )
 .SH DESCRIPTION
 The CUTEST_udh subroutine evaluates the Hessian matrix of the objective
 function of the problem decoded from a SIF file by the script

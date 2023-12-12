@@ -5,6 +5,12 @@ CUTEST_uofg_threaded \- CUTEst tool to evaluate function value and possibly grad
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_uofg_threaded( status, n, X, f, G, grad, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_uofg_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_uofg_threaded subroutine evaluates the value of the objective function of
 the problem decoded from a SIF file by the script \fIsifdecoder\fP at

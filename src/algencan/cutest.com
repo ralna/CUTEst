@@ -4,7 +4,7 @@ C     COMMON SCALARS
 
 C     COMMON ARRAYS
       integer ccor(mmax),cmap(mmax),slaind(mmax)
-      double precision ca(mmax),cb(mmax)
+      real ( kind = rp_ ) ca(mmax),cb(mmax)
 
 C     COMMON BLOCKS
       common /probdata/ ca,cb,ccor,cmap,slaind,mcutest,ncutest,

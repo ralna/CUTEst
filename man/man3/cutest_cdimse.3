@@ -5,6 +5,12 @@ CUTEST_cdimse \- CUTEst tool to determine the number of nonzeros
 required to store the Hessian of the Lagrangian.
 .SH SYNOPSIS
 CALL CUTEST_cdimse( status, ne, he_val_ne, he_row_ne )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cdimse_s( ... )
 .SH DESCRIPTION
 The CUTEST_cdimse subroutine determines the number of nonzero elements
 required to store the Hessian matrix of the Lagrangian function for

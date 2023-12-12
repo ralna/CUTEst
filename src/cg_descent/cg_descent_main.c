@@ -1,3 +1,5 @@
+/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
+
 /* ====================================================
  * CUTEst interface for cg_descent     April. 5, 2014
  *
@@ -27,6 +29,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 */
 
 #include "cutest.h"
+#include "cutest_routines.h"
 #include "cg_user.h"
 
   /*
@@ -38,23 +41,23 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
   */
 
 /* prototypes */
-double cg_value
+rp_ cg_value
 (
-    double *x,
+    rp_ *x,
     INT     n
 ) ;
 
 void cg_grad
 (
-    double  *g,
-    double  *x,
+    rp_  *g,
+    rp_  *x,
     INT      n
 ) ;
 
-double cg_valgrad
+rp_ cg_valgrad
 (
-    double  *g,
-    double  *x,
+    rp_  *g,
+    rp_  *x,
     INT      n
 ) ;
 
@@ -68,24 +71,24 @@ double cg_valgrad
         /* wall clock: */
 /*      struct timeval tv ;
         int sec, usec ;
-        double walltime ; */
+        rp_ walltime ; */
         char *fname = "OUTSDIF.d"; /* CUTEst data file */
         integer funit = 42;        /* FORTRAN unit number for OUTSDIF.d */
         integer io_buffer = 11;    /* FORTRAN unit for internal i/o */
         integer iout = 6;          /* FORTRAN unit number for error output */
         integer ierr;              /* Exit flag from OPEN and CLOSE */
         integer status;            /* Exit flag from CUTEst tools */
-        double  grad_tol = 1.e-6; /* required gradient tolerance */
+        rp_  grad_tol = 1.e-6; /* required gradient tolerance */
 
         VarTypes vtypes;
 
         integer    ncon_dummy ;
-        doublereal *x, *bl, *bu ;
+        rp_ *x, *bl, *bu ;
         char       *pname, *vnames ;
         logical     efirst = FALSE_, lfirst = FALSE_, nvfrst = FALSE_, grad;
         logical     constrained = FALSE_;
 
-        doublereal  calls[7], cpu[4];
+        rp_  calls[7], cpu[4];
         integer     nlin = 0, nbnds = 0, neq = 0;
         integer     ExitCode;
         int         i, status_cg_descent ;
@@ -100,6 +103,7 @@ double cg_valgrad
         /* Open problem description file OUTSDIF.d */
         ierr = 0;
 
+        printf("a\n") ;
         FORTRAN_open( &funit, fname, &ierr ) ;
         if( ierr ) {
             printf("Error opening file OUTSDIF.d.\nAborting.\n") ;
@@ -109,7 +113,7 @@ double cg_valgrad
         /* Get problem name (this works under gfortran, but not all compilers*/
         /*
         MALLOC( pname,  FSTRING_LEN+1, char );
-        CUTEST_pname( &status, &funit, pname ) ;
+        CUTEST_pname_r( &status, &funit, pname ) ;
         if (status) {
             printf("** CUTEst error, status = %d, aborting\n", status);
             exit(status);
@@ -126,7 +130,7 @@ double cg_valgrad
         /* printf (" ** the problem is %s\n", pname ) ; */
 
         /* Determine problem size */
-        CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon) ;
+        CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon) ;
         if (status) {
             printf("** CUTEst error, status = %d, aborting\n", status);
             exit(status);
@@ -147,11 +151,11 @@ double cg_valgrad
 
         /* Reserve memory for variables, bounds, and multipliers */
         /* and call appropriate initialization routine for CUTEst */
-        MALLOC( x,  CUTEst_nvar, doublereal ) ;
-        MALLOC( bl, CUTEst_nvar, doublereal ) ;
-        MALLOC( bu, CUTEst_nvar, doublereal ) ;
-        CUTEST_usetup( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
-                       x, bl, bu ) ;
+        MALLOC( x,  CUTEst_nvar, rp_ ) ;
+        MALLOC( bl, CUTEst_nvar, rp_ ) ;
+        MALLOC( bu, CUTEst_nvar, rp_ ) ;
+        CUTEST_usetup_r( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
+                         x, bl, bu ) ;
         if (status) {
             printf("** CUTEst error, status = %d, aborting\n", status);
             exit(status);
@@ -160,7 +164,7 @@ double cg_valgrad
         /* Get problem name */
 
         MALLOC( pname,  FSTRING_LEN+1, char );
-        CUTEST_probname( &status, pname ) ;
+        CUTEST_probname_r( &status, pname ) ;
         if (status) {
             printf("** CUTEst error, status = %d, aborting\n", status);
             exit(status);
@@ -177,7 +181,7 @@ double cg_valgrad
         /*printf ("Problem: %s (n = %i)\n", pname, CUTEst_nvar ) ;*/
 
         /* MALLOC(vnames, CUTEst_nvar*FSTRING_LEN, char);
-           CUTEST_unames( &status, &CUTEst_nvar, pname, vnames);
+           CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames);
            if( status ) {
               printf("** CUTEst error, status = %d, aborting\n", status);
               exit(status);
@@ -199,6 +203,12 @@ double cg_valgrad
 
         spec = fopen ("CG_DESCENT.SPC", "r") ;
 
+#ifdef CUTEST_SINGLE
+        char pg[ ]="%g";
+#else
+        char pg[ ]="%lg";
+#endif
+
         if ( spec != NULL )
         {
            while (fgets (s, MAXLINE, spec) != (char *) NULL)
@@ -208,7 +218,7 @@ double cg_valgrad
                sl = strlen("grad_tol") ;
                if (strncmp (s, "grad_tol", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &grad_tol) ;
+                   sscanf (s+sl, pg, &grad_tol) ;
                    continue ;
                }
                sl = strlen("PrintFinal") ;
@@ -256,19 +266,19 @@ double cg_valgrad
                sl = strlen("eta0") ;
                if (strncmp (s, "eta0", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.eta0) ;
+                   sscanf (s+sl, pg, &cg_parm.eta0) ;
                    continue ;
                }
                sl = strlen("eta1") ;
                if (strncmp (s, "eta1", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.eta1) ;
+                   sscanf (s+sl, pg, &cg_parm.eta1) ;
                    continue ;
                }
                sl = strlen("eta2") ;
                if (strncmp (s, "eta2", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.eta2) ;
+                   sscanf (s+sl, pg, &cg_parm.eta2) ;
                    continue ;
                }
                sl = strlen("AWolfe") ;
@@ -280,13 +290,13 @@ double cg_valgrad
                sl = strlen("AWolfeFac") ;
                if (strncmp (s, "AWolfeFac", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.AWolfeFac) ;
+                   sscanf (s+sl, pg, &cg_parm.AWolfeFac) ;
                    continue ;
                }
                sl = strlen("Qdecay") ;
                if (strncmp (s, "Qdecay", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.Qdecay) ;
+                   sscanf (s+sl, pg, &cg_parm.Qdecay) ;
                    continue ;
                }
                sl = strlen("StopRule") ;
@@ -298,7 +308,7 @@ double cg_valgrad
                sl = strlen("StopFac") ;
                if (strncmp (s, "StopFac", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.StopFac) ;
+                   sscanf (s+sl, pg, &cg_parm.StopFac) ;
                    continue ;
                }
                sl = strlen("PertRule") ;
@@ -310,13 +320,13 @@ double cg_valgrad
                sl = strlen("eps") ;
                if (strncmp (s, "eps", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.eps) ;
+                   sscanf (s+sl, pg, &cg_parm.eps) ;
                    continue ;
                }
                sl = strlen("egrow") ;
                if (strncmp (s, "egrow", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.egrow) ;
+                   sscanf (s+sl, pg, &cg_parm.egrow) ;
                    continue ;
                }
                sl = strlen("QuadStep") ;
@@ -328,13 +338,13 @@ double cg_valgrad
                sl = strlen("QuadCutOff") ;
                if (strncmp (s, "QuadCutOff", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.QuadCutOff) ;
+                   sscanf (s+sl, pg, &cg_parm.QuadCutOff) ;
                    continue ;
                }
                sl = strlen("QuadSafe") ;
                if (strncmp (s, "QuadSafe", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.QuadSafe) ;
+                   sscanf (s+sl, pg, &cg_parm.QuadSafe) ;
                    continue ;
                }
                sl = strlen("UseCubic") ;
@@ -346,13 +356,13 @@ double cg_valgrad
                sl = strlen("CubicCutOff") ;
                if (strncmp (s, "CubicCutOff", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.CubicCutOff) ;
+                   sscanf (s+sl, pg, &cg_parm.CubicCutOff) ;
                    continue ;
                }
                sl = strlen("SmallCost") ;
                if (strncmp (s, "SmallCost", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.SmallCost) ;
+                   sscanf (s+sl, pg, &cg_parm.SmallCost) ;
                    continue ;
                }
                sl = strlen("debug") ;
@@ -364,13 +374,13 @@ double cg_valgrad
                sl = strlen("debugtol") ;
                if (strncmp (s, "debugtol", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.debugtol) ;
+                   sscanf (s+sl, pg, &cg_parm.debugtol) ;
                    continue ;
                }
                sl = strlen("step") ;
                if (strncmp (s, "step", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.step) ;
+                   sscanf (s+sl, pg, &cg_parm.step) ;
                    continue ;
                }
                sl = strlen("maxit") ;
@@ -388,19 +398,19 @@ double cg_valgrad
                sl = strlen("ExpandSafe") ;
                if (strncmp (s, "ExpandSafe", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.ExpandSafe) ;
+                   sscanf (s+sl, pg, &cg_parm.ExpandSafe) ;
                    continue ;
                }
                sl = strlen("SecantAmp") ;
                if (strncmp (s, "SecantAmp", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.SecantAmp) ;
+                   sscanf (s+sl, pg, &cg_parm.SecantAmp) ;
                    continue ;
                }
                sl = strlen("RhoGrow") ;
                if (strncmp (s, "RhoGrow", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.RhoGrow) ;
+                   sscanf (s+sl, pg, &cg_parm.RhoGrow) ;
                    continue ;
                }
                sl = strlen("neps") ;
@@ -424,25 +434,25 @@ double cg_valgrad
                sl = strlen("restart_fac") ;
                if (strncmp (s, "restart_fac", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.restart_fac) ;
+                   sscanf (s+sl, pg, &cg_parm.restart_fac) ;
                    continue ;
                }
                sl = strlen("feps") ;
                if (strncmp (s, "feps", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.feps) ;
+                   sscanf (s+sl, pg, &cg_parm.feps) ;
                    continue ;
                }
                sl = strlen("nan_rho") ;
                if (strncmp (s, "nan_rho", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.nan_rho) ;
+                   sscanf (s+sl, pg, &cg_parm.nan_rho) ;
                    continue ;
                }
                sl = strlen("nan_decay") ;
                if (strncmp (s, "nan_decay", sl) == 0)
                {
-                   sscanf (s+sl, "%lg", &cg_parm.nan_decay) ;
+                   sscanf (s+sl, pg, &cg_parm.nan_decay) ;
                    continue ;
                }
            }
@@ -458,12 +468,12 @@ double cg_valgrad
         status_cg_descent = cg_descent (x, CUTEst_nvar, &Stats, &cg_parm,
                             grad_tol, cg_value, cg_grad, cg_valgrad, NULL) ;
 /*      gettimeofday (&tv, NULL) ;
-        walltime = tv.tv_sec - sec + (double) (tv.tv_usec - usec) /1.e6 ;*/
+        walltime = tv.tv_sec - sec + (rp_) (tv.tv_usec - usec) /1.e6 ;*/
 
         ExitCode = 0;
 
         /* Get CUTEst statistics */
-        CUTEST_creport( &status, calls, cpu) ;
+        CUTEST_creport_r( &status, calls, cpu) ;
         if (status) {
           printf("** CUTEst error, status = %d, aborting\n", status);
           exit(status);
@@ -505,7 +515,7 @@ double cg_valgrad
         FREE( pname ) ;
         FREE( x ) ; FREE( bl ) ; FREE( bu ) ;
 
-        CUTEST_uterminate( &status ) ;
+        CUTEST_uterminate_r( &status ) ;
 
         return 0;
     }
@@ -513,16 +523,16 @@ double cg_valgrad
 #ifdef __cplusplus
 }    /* Closing brace for  extern "C"  block */
 #endif
-double cg_value
+rp_ cg_value
 (
-    double *x,
+    rp_ *x,
     INT     n
 )
 {
-    double f ;
+    rp_ f ;
     integer status;
 
-    CUTEST_ufn( &status, &CUTEst_nvar, x, &f) ;
+    CUTEST_ufn_r( &status, &CUTEst_nvar, x, &f) ;
     if ((status == 1) || (status == 2)) {
         printf("** CUTEst error, status = %d, aborting\n", status);
         exit(status);
@@ -533,31 +543,31 @@ double cg_value
 
 void cg_grad
 (
-    double  *g,
-    double  *x,
+    rp_  *g,
+    rp_  *x,
     INT      n
 )
 {
     integer status;
-    CUTEST_ugr( &status, &CUTEst_nvar, x, g) ;
+    CUTEST_ugr_r( &status, &CUTEst_nvar, x, g) ;
     if ((status == 1) || (status == 2)) {
         printf("** CUTEst error, status = %d, aborting\n", status);
         exit(status);
     }
 }
 
-double cg_valgrad
+rp_ cg_valgrad
 (
-    double  *g,
-    double  *x,
+    rp_  *g,
+    rp_  *x,
     INT      n
 )
 {
     logical grad ;
-    double f ;
+    rp_ f ;
     integer status;
     grad = 1 ;
-    CUTEST_uofg( &status, &CUTEst_nvar, x, &f, g, &grad ) ;
+    CUTEST_uofg_r( &status, &CUTEst_nvar, x, &f, g, &grad ) ;
     if ((status == 1) || (status == 2)) {
         printf("** CUTEst error, status = %d, aborting\n", status);
         exit(status);

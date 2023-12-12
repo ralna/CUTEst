@@ -6,6 +6,12 @@ vector with the Hessian matrix of the John function.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_chjprod_threaded( status, n, m, goth, X, y0, Y, VECTOR, RESULT, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_chjprod_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_chjprod_threaded subroutine forms the product of a vector with 
 the Hessian matrix of the John function 

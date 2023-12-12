@@ -7,6 +7,12 @@ decoded from a SIF file by the script \fIsifdecoder\fP.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cdimsg( status, nnzg )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cdimsg_s( ... )
 .SH DESCRIPTION
 The CUTEST_cdimsg subroutine determines the number of nonzero elements
 required to store the gradient of the objective function for

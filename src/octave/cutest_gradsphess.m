@@ -7,4 +7,4 @@ function [varargout] = cutest_gradsphess( varargin )
 %                  gradf = true : returns the gradient of the objective in g
 %                          false: returns the gradient of the Lagrangian in g
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('gradsphess',varargin{:});
+    [varargout{:}] = ocutest('gradsphess',varargin{:});

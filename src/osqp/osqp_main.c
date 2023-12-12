@@ -1,3 +1,4 @@
+/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 08:20 GMT */
 
 /* ===========================================
  * CUTEst interface to OSQP
@@ -21,6 +22,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 #endif
 
 #include "cutest.h"
+#include "cutest_routines.h"
 
 #define MAXLINE 256
 
@@ -30,12 +32,12 @@ integer CUTEst_nnza;  /* number of nonzeros in Jacobian */
 integer CUTEst_nnzh;  /* number of nonzeros in upper triangular
                         part of the Hessian of the Lagrangian */
 
-void coo2csc(integer n, integer nz, doublereal *coo_val, integer *coo_row,
+void coo2csc(integer n, integer nz, rp_ *coo_val, integer *coo_row,
              integer *coo_col, c_float *csr_val, c_int *csr_col,
              c_int *row_start);
 void sort(c_int *ind, c_float *val, c_int start, c_int end);
-void getinfo( integer, integer, doublereal*, doublereal*,
-              doublereal*, doublereal*, logical*, logical*,
+void getinfo( integer, integer, rp_*, rp_*,
+              rp_*, rp_*, logical*, logical*,
               VarTypes* );
 
 /* main program for calls to OSQP */
@@ -54,9 +56,9 @@ int MAINENTRY(void) {
      integer ncon_dummy, nb, ncon_total, nnza_dummy, nnzh_dummy, a_ne;
      integer *A_row, *A_col, *H_row, *H_col;
 
-     doublereal f;
-     doublereal *x, *x0, *xl, *xu, *A_val, *H_val;
-     doublereal *y = NULL, *y0 = NULL, *c = NULL, *cl = NULL, *cu = NULL;
+     rp_ f;
+     rp_ *x, *x0, *xl, *xu, *A_val, *H_val;
+     rp_ *y = NULL, *y0 = NULL, *c = NULL, *cl = NULL, *cu = NULL;
 
      logical *equatn = NULL, *linear = NULL;
 
@@ -70,10 +72,10 @@ int MAINENTRY(void) {
      integer e_order = 0, l_order = 0, v_order = 0;
      logical constrained = FALSE_;
 
-     doublereal calls[7], cpu[4];
+     rp_ calls[7], cpu[4];
      integer nlin = 0, nbnds = 0, neq = 0;
-     double r_string;
-     doublereal dummy;
+     rp_ r_string;
+     rp_ dummy;
      int i_string;
      integer ExitCode;
      int i, j, m, n, nc ;
@@ -81,8 +83,8 @@ int MAINENTRY(void) {
 
      FILE *spec, *solution, *results ;
 
-     doublereal h, fxp, fxm, approx, derr, xi;
-     doublereal *cxp, *cxm, *g;
+     rp_ h, fxp, fxm, approx, derr, xi;
+     rp_ *cxp, *cxm, *g;
      int nerr = 0;
      char s [MAXLINE+1] ;
 
@@ -96,7 +98,7 @@ int MAINENTRY(void) {
 
      /* determine problem size */
 
-     CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
+     CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
      if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
@@ -113,27 +115,27 @@ int MAINENTRY(void) {
      /* reserve memory for variables, bounds, and multipliers */
      /* and call appropriate initialization routine for CUTEst */
 
-     MALLOC(x, CUTEst_nvar, doublereal);
-     MALLOC(xl, CUTEst_nvar, doublereal);
-     MALLOC(xu, CUTEst_nvar, doublereal);
+     MALLOC(x, CUTEst_nvar, rp_);
+     MALLOC(xl, CUTEst_nvar, rp_);
+     MALLOC(xu, CUTEst_nvar, rp_);
      if (constrained) {
        MALLOC(equatn, CUTEst_ncon+1, logical);
        MALLOC(linear, CUTEst_ncon+1, logical);
-       MALLOC(y, CUTEst_ncon, doublereal);
-       MALLOC(cl, CUTEst_ncon, doublereal);
-       MALLOC(cu, CUTEst_ncon, doublereal);
-       CUTEST_csetup( &status, &funit, &iout, &io_buffer,
-                      &CUTEst_nvar, &CUTEst_ncon, x, xl, xu,
-                      y, cl, cu, equatn, linear,
-                      &e_order, &l_order, &v_order );
+       MALLOC(y, CUTEst_ncon, rp_);
+       MALLOC(cl, CUTEst_ncon, rp_);
+       MALLOC(cu, CUTEst_ncon, rp_);
+       CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+                        &CUTEst_nvar, &CUTEst_ncon, x, xl, xu,
+                        y, cl, cu, equatn, linear,
+                        &e_order, &l_order, &v_order );
        if (status) {
            printf("CUTEst error.\nAborting.\n");
            exit(2);
        }
       FREE(y);
      } else {
-       CUTEST_usetup( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
-                      x, xl, xu);
+       CUTEST_usetup_r( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
+                        x, xl, xu);
        if (status) {
            printf("CUTEst error.\nAborting.\n");
            exit(2);
@@ -153,14 +155,14 @@ int MAINENTRY(void) {
          MALLOC(Cnames, CUTEst_ncon, char*);              /* Array of strings */
          for (i = 0; i < CUTEst_ncon; i++)
              MALLOC(Cnames[i], FSTRING_LEN+1, char);
-         CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
-                        pname, xnames, cnames);
+         CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+                          pname, xnames, cnames);
          if (status) {
              printf("CUTEst error.\nAborting.\n");
              exit(2);
          }
      } else {
-         CUTEST_unames( &status, &CUTEst_nvar, pname, xnames);
+         CUTEST_unames_r( &status, &CUTEst_nvar, pname, xnames);
          if (status) {
              printf("CUTEst error.\nAborting.\n");
              exit(2);
@@ -223,7 +225,7 @@ int MAINENTRY(void) {
      /* set x0 to zero to determine the constant and derivative terms for the
         problem functions */
 
-     MALLOC(x0, CUTEst_nvar, doublereal);
+     MALLOC(x0, CUTEst_nvar, rp_);
      for (i = 0; i < CUTEst_nvar; i++) {
        x0[i] = 0.0;
      }
@@ -231,14 +233,14 @@ int MAINENTRY(void) {
      /* evaluate the problem functions at x0 */
 
      if (constrained) {
-       MALLOC(c, CUTEst_ncon, doublereal);
-       CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, x0, &f, c);
+       MALLOC(c, CUTEst_ncon, rp_);
+       CUTEST_cfn_r( &status, &CUTEst_nvar, &CUTEst_ncon, x0, &f, c);
        if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
        }
      } else {
-       CUTEST_ufn( &status, &CUTEst_nvar, x0, &f);
+       CUTEST_ufn_r( &status, &CUTEst_nvar, x0, &f);
        if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
@@ -293,9 +295,9 @@ int MAINENTRY(void) {
 
   /* determine the number of nonzeros in the Hessian and, if needed, Jacobian */
 
-     CUTEST_cdimsh( &status, &CUTEst_nnzh );
-     MALLOC(g, CUTEst_nvar, doublereal);
-     MALLOC( H_val, CUTEst_nnzh, doublereal );
+     CUTEST_cdimsh_r( &status, &CUTEst_nnzh );
+     MALLOC(g, CUTEst_nvar, rp_);
+     MALLOC( H_val, CUTEst_nnzh, rp_ );
      MALLOC( H_row, CUTEst_nnzh, integer );
      MALLOC( H_col, CUTEst_nnzh, integer );
 
@@ -311,7 +313,7 @@ int MAINENTRY(void) {
      if (constrained) {
 
        /* Determine the number of nonzeros in Jacobian */
-       CUTEST_cdimsj( &status, &CUTEst_nnza );
+       CUTEST_cdimsj_r( &status, &CUTEst_nnza );
 
        if( status ) {
           printf("** CUTEst error, status = %d, aborting\n", status);
@@ -321,19 +323,19 @@ int MAINENTRY(void) {
       /* set y0 to zero to determine the derivative terms for the
         problem functions */
 
-       MALLOC(y0, CUTEst_ncon, doublereal);
+       MALLOC(y0, CUTEst_ncon, rp_);
        for (i = 0; i < CUTEst_ncon; i++) {
          y0[i] = 0.0;
        }
 
-       MALLOC( A_val, CUTEst_nnza + nb, doublereal );
+       MALLOC( A_val, CUTEst_nnza + nb, rp_ );
        MALLOC( A_row, CUTEst_nnza + nb, integer );
        MALLOC( A_col, CUTEst_nnza + nb, integer );
        grlagf = FALSE_;
        /* Here, dummys will be set to nnza/nnzh again */
-       CUTEST_csgrsh( &status, &CUTEst_nvar, &CUTEst_ncon, x0, y0, &grlagf,
-                      &nnza_dummy, &CUTEst_nnza, A_val, A_col, A_row,
-                      &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
+       CUTEST_csgrsh_r( &status, &CUTEst_nvar, &CUTEst_ncon, x0, y0, &grlagf,
+                        &nnza_dummy, &CUTEst_nnza, A_val, A_col, A_row,
+                        &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
        /*
        printf(" h_nnz = %d %d\n", nnzh_dummy, CUTEst_nnzh );
        */
@@ -370,8 +372,8 @@ int MAINENTRY(void) {
          }
        }
      } else {
-       CUTEST_ugrsh( &status, &CUTEst_nvar, x0, g,
-                     &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
+       CUTEST_ugrsh_r( &status, &CUTEst_nvar, x0, g,
+                       &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
      }
 
      /* Convert H to 0-based indexing */
@@ -473,7 +475,7 @@ int MAINENTRY(void) {
 /* define Solver settings as default */
 
     OSQPSettings * settings = (OSQPSettings *)c_malloc(sizeof(OSQPSettings));
-    set_default_settings(settings);
+    osqp_set_default_settings(settings);
 
 /* Parameter settings are overwritten using any values stored in the
    OSQP.SPC file. The format of the file is parameter name at the start
@@ -482,6 +484,12 @@ int MAINENTRY(void) {
    SPC file.  Note that the parameter names are case sensitive. See
    $OSQP/include/types.h for the parameter names and descriptions and
    $OSQP/include/constants.h for default values  */
+
+#ifdef CUTEST_SINGLE
+    char pg[ ]="%g";
+#else
+    char pg[ ]="%lg";
+#endif
 
     spec = fopen ("OSQP.SPC", "r") ;
     if ( spec != NULL )
@@ -495,14 +503,14 @@ int MAINENTRY(void) {
            sl = strlen("rho") ;
            if (strncmp (s, "rho", sl) == 0)
            {
-               sscanf (s+sl, "%lg", &r_string );
+               sscanf (s+sl, pg, &r_string );
                settings->rho = r_string ;
                continue ;
            }
            sl = strlen("sigma") ;
            if (strncmp (s, "sigma", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->sigma = r_string ;
                continue ;
            }
@@ -531,7 +539,7 @@ int MAINENTRY(void) {
            sl = strlen("adaptive_rho_tolerance") ;
            if (strncmp (s, "adaptive_rho_tolerance", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->adaptive_rho_tolerance = r_string ;
                continue ;
            }
@@ -539,7 +547,7 @@ int MAINENTRY(void) {
            sl = strlen("adaptive_rho_fraction") ;
            if (strncmp (s, "adaptive_rho_fraction", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->adaptive_rho_fraction = r_string ;
                continue ;
            }
@@ -555,35 +563,35 @@ int MAINENTRY(void) {
            sl = strlen("eps_abs") ;
            if (strncmp (s, "eps_abs", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->eps_abs = r_string ;
                continue ;
            }
            sl = strlen("eps_rel") ;
            if (strncmp (s, "eps_rel", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->eps_rel = r_string ;
                continue ;
            }
            sl = strlen("eps_prim_inf") ;
            if (strncmp (s, "eps_prim_inf", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->eps_prim_inf = r_string ;
                continue ;
            }
            sl = strlen("eps_dual_inf") ;
            if (strncmp (s, "eps_dual_inf", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->eps_dual_inf = r_string ;
                continue ;
            }
            sl = strlen("alpha") ;
            if (strncmp (s, "alpha", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->alpha = r_string ;
                continue ;
            }
@@ -598,7 +606,7 @@ int MAINENTRY(void) {
            sl = strlen("delta") ;
            if (strncmp (s, "delta", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->delta = r_string ;
                continue ;
            }
@@ -649,7 +657,7 @@ int MAINENTRY(void) {
            sl = strlen("time_limit") ;
            if (strncmp (s, "time_limit", sl) == 0)
            {
-             sscanf (s+sl, "%lg", &r_string );
+             sscanf (s+sl, pg, &r_string );
                settings->time_limit = r_string ;
                continue ;
            }
@@ -708,7 +716,7 @@ int MAINENTRY(void) {
 
       /* compute the residual A x */
 
-        MALLOC( c, data->m, doublereal);
+        MALLOC( c, data->m, rp_);
         for (i = 0 ; i < data->m ; i++) c[i]=0.0;
         for (j = 0 ; j < data->n ; j++) {
           for (i = osqp_A_p[j] ; i < osqp_A_p[j+1] ; i++) {
@@ -751,7 +759,7 @@ int MAINENTRY(void) {
 
  /* Get CUTEst statistics */
 
-    CUTEST_creport( &status, calls, cpu);
+    CUTEST_creport_r( &status, calls, cpu);
     if (status) {
       printf("CUTEst error.\nAborting.\n");
       exit(2);
@@ -806,9 +814,9 @@ int MAINENTRY(void) {
     /* free CUTEst workspace */
 
     if (constrained) {
-      CUTEST_cterminate( &status );
+      CUTEST_cterminate_r( &status );
     } else {
-      CUTEST_uterminate( &status );
+      CUTEST_uterminate_r( &status );
     }
 
 /* Cleanup */
@@ -829,7 +837,7 @@ int MAINENTRY(void) {
    for i=0:nnz-1 to compact sparse column format(row,val)[j] for
    j=ptr[i]:ptr[i+1]-1 and i=0:n-1 */
 
-void coo2csc(integer n, integer nz, doublereal *coo_val, integer *coo_row,
+void coo2csc(integer n, integer nz, rp_ *coo_val, integer *coo_row,
              integer *coo_col, c_float *csr_val, c_int *csr_row,
              c_int *col_start)
 {
@@ -890,8 +898,8 @@ void sort(c_int *ind, c_float *val, c_int start, c_int end)
 
 /* obtain information about the problem */
 
-void getinfo( integer n, integer m, doublereal *xl, doublereal *xu,
-              doublereal *cl, doublereal *cu, logical *equatn,
+void getinfo( integer n, integer m, rp_ *xl, rp_ *xu,
+              rp_ *cl, rp_ *cu, logical *equatn,
               logical *linear, VarTypes *vartypes ) {
 
   int i;

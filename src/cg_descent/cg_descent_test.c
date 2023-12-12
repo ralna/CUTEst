@@ -1,9 +1,13 @@
+/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
+
 #include <limits.h>
 #include <float.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+
+#include "cutest.h"
 
 #define INT long int
 #define INT_INF LONG_MAX
@@ -38,8 +42,8 @@ void cg_default
 
 typedef struct cg_stats_struct /* statistics returned to user */
 {
-    double               f ; /*function value at solution */
-    double           gnorm ; /* max abs component of gradient */
+    rp_               f ; /*function value at solution */
+    rp_           gnorm ; /* max abs component of gradient */
     INT               iter ; /* number of iterations */
     INT            IterSub ; /* number of subspace iterations */
     INT             NumSub ; /* total number subspaces */
@@ -63,18 +67,18 @@ int cg_descent /*  return status of solution process:
                       11 (function nan or +-INF and could not be repaired)
                       12 (invalid choice for memory parameter) */
 (
-    double            *x, /* input: starting guess, output: the solution */
+    rp_            *x, /* input: starting guess, output: the solution */
     INT                n, /* problem dimension */
     cg_stats       *Stat, /* structure with statistics (can be NULL) */
     cg_parameter  *UParm, /* user parameters, NULL = use default parameters */
-    double      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
+    rp_      grad_tol, /* StopRule = 1: |g|_infty <= max (grad_tol,
                                            StopFac*initial |g|_infty) [default]
                              StopRule = 0: |g|_infty <= grad_tol(1+|f|) */
-    double      (*value) (double *, INT),  /* f = value (x, n) */
-    void         (*grad) (double *, double *, INT), /* grad (g, x, n) */
-    double    (*valgrad) (double *, double *, INT), /* f = valgrad (g, x, n),
+    rp_      (*value) (rp_ *, INT),  /* f = value (x, n) */
+    void         (*grad) (rp_ *, rp_ *, INT), /* grad (g, x, n) */
+    rp_    (*valgrad) (rp_ *, rp_ *, INT), /* f = valgrad (g, x, n),
                           NULL = compute value & gradient using value & grad */
-    double         *Work  /* NULL => let code allocate memory
+    rp_         *Work  /* NULL => let code allocate memory
                              not NULL => use array Work for required memory
                              The amount of memory needed depends on the value
                              of the parameter memory in the Parm structure.
@@ -84,9 +88,9 @@ int cg_descent /*  return status of solution process:
 )
 {
   int status, i ;
-  double f, gnorm, t, gi ;
-  double *g ;
-  g = (double *) malloc (n*sizeof (double)) ;
+  rp_ f, gnorm, t, gi ;
+  rp_ *g ;
+  g = (rp_ *) malloc (n*sizeof (rp_)) ;
 
   printf (" Calling dummy cg_descent\n");
   f = value (x, n);

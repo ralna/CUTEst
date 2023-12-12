@@ -3,9 +3,9 @@
 #  Nick Gould, for GALAHAD productions
 #  This version: 2023-11-06
 
-#  include standard GALAHAD makefile defaults before package-specifics
+#  include standard CUTEst makefile defaults before package-specifics
 
-include $(GALAHAD)/src/makedefs/defaults
+include $(CUTEST)/src/makedefs/defaults
 
 #  ===========================================================================
 #  ====================  package-dependent parts  ============================
@@ -27,6 +27,10 @@ include $(CUTEST)/src/makedefs/definitions
 #  include compilation and run instructions
 
 include $(CUTEST)/src/makedefs/instructions
+
+#  select specific run test
+
+run_test: run_unconstrained_test
 
 #  include standard package compilation instructions
 

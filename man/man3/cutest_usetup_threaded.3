@@ -7,6 +7,12 @@ for unconstrained or bound-constrained minimization.
 .HP 1i
 CALL CUTEST_usetup_threaded( status, input, out, threads, IO_BUFFERS, 
 n, X, X_l, X_u )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_usetup_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_usetup_threaded subroutine sets up the correct data structures for
 subsequent threaded computations in the case where the only possible

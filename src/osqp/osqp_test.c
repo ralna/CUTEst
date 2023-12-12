@@ -26,7 +26,7 @@
 
 /* set default settings */
 
-void set_default_settings(OSQPSettings * settings) {
+void osqp_set_default_settings(OSQPSettings * settings) {
     settings->scaling = SCALING;
 #if EMBEDDED != 1
     settings->adaptive_rho = ADAPTIVE_RHO;
@@ -56,7 +56,7 @@ void set_default_settings(OSQPSettings * settings) {
     settings->warm_start = WARM_START;
 #ifdef PROFILING
     settings->time_limit = TIME_LIMIT;
-#ifdef PROFILING
+#endif
 }
 
 /* dummy setup */

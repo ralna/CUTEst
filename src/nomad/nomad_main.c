@@ -1,3 +1,5 @@
+/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 12:40 GMT */
+
 /* ====================================================
  * CUTEst interface simulating a black box for NOMAD.
  * April 25, 2013
@@ -8,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {   /* To prevent C++ compilers from mangling symbols */
@@ -20,6 +23,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 #endif
 
 #include "cutest.h"
+#include "cutest_routines.h"
 
   integer CUTEst_nvar;        /* number of variables */
   integer CUTEst_ncon;        /* number of constraints */
@@ -38,15 +42,15 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
 
     integer ncon_dummy;
-    doublereal *x, *bl, *bu;
-    doublereal *v = NULL, *cl = NULL, *cu = NULL;
+    rp_ *x, *bl, *bu;
+    rp_ *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
     integer efirst = 0, lfirst = 0, nvfrst = 0;
     logical constrained = FALSE_;
 
-    real calls[7], cpu[2];
+    real calls[7], cpu[4];
     integer nlin = 0, nbnds = 0, neq = 0;
-    doublereal obj;
+    rp_ obj;
     int i;
 
     /* Open problem description file OUTSDIF.d */
@@ -58,7 +62,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     }
 
     /* Determine problem size */
-    CUTEST_cdimen( &ierr, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen_r( &ierr, &funit, &CUTEst_nvar, &CUTEst_ncon );
     if ( ierr ) {
       return_infinity();
       return -2;
@@ -69,19 +73,19 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     /* Reserve memory for variables, bounds, and multipliers */
     /* and call appropriate initialization routine for CUTEst */
-    MALLOC( x,      CUTEst_nvar, doublereal );
-    MALLOC( bl,     CUTEst_nvar, doublereal );
-    MALLOC( bu,     CUTEst_nvar, doublereal );
+    MALLOC( x,      CUTEst_nvar, rp_ );
+    MALLOC( bl,     CUTEst_nvar, rp_ );
+    MALLOC( bu,     CUTEst_nvar, rp_ );
 
     if( constrained ) {
       MALLOC( equatn, CUTEst_ncon+1, logical    );
       MALLOC( linear, CUTEst_ncon+1, logical    );
-      MALLOC( v,      CUTEst_ncon+1, doublereal );
-      MALLOC( cl,     CUTEst_ncon+1, doublereal );
-      MALLOC( cu,     CUTEst_ncon+1, doublereal );
-      CUTEST_csetup( &ierr, &funit, &iout, &io_buffer,
-                     &CUTEst_nvar, &CUTEst_ncon,
-                     x, bl, bu, v, cl, cu,
+      MALLOC( v,      CUTEst_ncon+1, rp_ );
+      MALLOC( cl,     CUTEst_ncon+1, rp_ );
+      MALLOC( cu,     CUTEst_ncon+1, rp_ );
+      CUTEST_csetup_r( &ierr, &funit, &iout, &io_buffer,
+                       &CUTEst_nvar, &CUTEst_ncon,
+                       x, bl, bu, v, cl, cu,
                      equatn, linear, &efirst, &lfirst, &nvfrst );
       if ( ierr ) {
         return_infinity();
@@ -91,10 +95,10 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     else {
       MALLOC( equatn, 1, logical    );
       MALLOC( linear, 1, logical    );
-      MALLOC( cl, 1, doublereal );
-      MALLOC( cu, 1, doublereal );
-      CUTEST_usetup( &ierr, &funit, &iout, &io_buffer,
-                     &CUTEst_nvar, x, bl, bu );
+      MALLOC( cl, 1, rp_ );
+      MALLOC( cu, 1, rp_ );
+      CUTEST_usetup_r( &ierr, &funit, &iout, &io_buffer,
+                       &CUTEst_nvar, x, bl, bu );
       if ( ierr ) {
         return_infinity();
         return -3;
@@ -113,10 +117,16 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
         return 0;
       }
 
+#ifdef CUTEST_SINGLE
+      char pf[ ]="%f";
+#else
+      char pf[ ]="%lf";
+#endif
+
       /* See if initial guess is requested */
       if (strcmp(argv[1], "--x0") == 0) {
         for ( i = 0; i < CUTEst_nvar; i++ )
-          printf("%lf ", x[i]);
+          printf(pf, x[i]);
         printf("\n");
         return 0;
       }
@@ -124,7 +134,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       f = fopen(argv[1], "r");
 
       for ( i = 0 ; i < CUTEst_nvar ; i++ )
-        fscanf(f, "%lf" , &x[i]);
+        if(fscanf(f, pf, &x[i]));
 
       /*
       for ( i = 0 ; i < CUTEst_nvar ; i++ )
@@ -136,7 +146,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     if( constrained ) {
       /* Recycle the array v to store constraint values */
-      CUTEST_cfn( &ierr, &CUTEst_nvar, &CUTEst_ncon, x, &obj, v );
+      CUTEST_cfn_r( &ierr, &CUTEst_nvar, &CUTEst_ncon, x, &obj, v );
       if ( ierr ) {
         return_infinity();
         return -4;
@@ -147,7 +157,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       printf("\n");
     }
     else {
-      CUTEST_ufn( &ierr, &CUTEst_nvar , x , &obj);
+      CUTEST_ufn_r( &ierr, &CUTEst_nvar , x , &obj);
       if ( ierr ) {
         return_infinity();
         return -4;

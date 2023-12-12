@@ -5,6 +5,12 @@ CUTEST_cdh_threaded \- CUTEst tool to evaluate the Hessian of the Lagrangian.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cdh_threaded( status, n, m, X, Y, lh1, H_val, thread )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cdh_threaded_s( ... )
 .SH DESCRIPTION
 The CUTEST_cdh_threaded subroutine evaluates the Hessian matrix of the 
 Lagrangian function 

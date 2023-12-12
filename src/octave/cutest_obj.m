@@ -4,4 +4,4 @@ function [varargout] = cutest_obj( varargin )
 % Usage:  f = cutest_obj(x)  or  [f,g] = cutest_obj(x)
     
     varargout = cell(1,nargout);
-    [varargout{:}] = mcutest('obj',varargin{:});
+    [varargout{:}] = ocutest('obj',varargin{:});

@@ -233,6 +233,13 @@
        INTEGER ( KIND = ip_ ), INTENT( OUT ) :: cutest_status, n, m
        END SUBROUTINE CUTEST_cdimen_r
 
+       SUBROUTINE CUTEST_cnoobj_r( status, input, noobj )
+       USE CUTEST_KINDS_precision
+       INTEGER ( KIND = ip_ ), INTENT( IN ) :: input
+       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+       LOGICAL, INTENT( OUT ) :: noobj
+       END SUBROUTINE CUTEST_cnoobj_r
+
        SUBROUTINE CUTEST_csetup_r( cutest_status, input, out, io_buffer,       &
                                    n, m, X, X_l, X_u,                          &
                                    Y, C_l, C_u, EQUATN, LINEAR,                &

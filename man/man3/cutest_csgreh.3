@@ -9,6 +9,12 @@ the objective/Lagrangian in sparse format.
 CALL CUTEST_csgreh( status, n, m, X, Y, grlagf, 
 nnzj, lj, J_val, J_var, J_fun, 
 ne, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csgreh_s( ... )
 .SH DESCRIPTION
 The CUTEST_csgreh subroutine evaluates both the gradients of the general
 constraint functions and

@@ -8,6 +8,12 @@ minimization.
 CALL CUTEST_csetup( status, input, out, io_buffer, 
 n, m, X, X_l, X_u, Y, C_l, C_u, 
 EQUATN, LINEAR, e_order, l_order, v_order )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csetup_s( ... )
 .SH DESCRIPTION
 The CUTEST_csetup subroutine sets up the correct data structures for
 subsequent computations on the problem decoded from a SIF file by

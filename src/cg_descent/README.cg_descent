@@ -119,15 +119,23 @@ BLAS = "-L/data/GotoBLAS2 -lpthread"
 To run with CUTEst, use the runcutest command with the -p cg_descent option.
 See the man page for runcutest for more details of other options.
 
-REFERENCE
----------
+REFERENCES
+----------
 
-See http://www.gnu.org/software/gsl/manual/gsl-ref.pdf (PDF) or
-    http://www.gnu.org/software/gsl/manual/html_node/  (HTML)
+W. W. Hager and H. Zhang, 
+  A new conjugate gradient method with guaranteed descent 
+  and an efficient line search,
+  SIAM Journal on Optimization, 16 (2005), 170-192.
 
-The manual has also been published as a printed book (under the GNU Free 
-Documentation License), the latest edition is
+W. W. Hager and H. Zhang, 
+  Algorithm 851: CG_DESCENT, A conjugate gradient method with 
+  guaranteed descent,
+  ACM Transactions on Mathematical Software, 32 (2006), 113-137.
 
- GNU Scientific Library Reference Manual - Third Edition (January 2009),
- M. Galassi et al, ISBN 0954612078 (paperback) RRP $39.95.
+W. W. Hager and H. Zhang, 
+  A survey of nonlinear conjugate gradient methods,
+  Pacific Journal of Optimization, 2 (2006), pp. 35-58.
 
+W. W. Hager and H. Zhang, 
+  Limited memory conjugate gradients,
+  SIAM Journal on Optimization, 23 (2013), 2150-2168.

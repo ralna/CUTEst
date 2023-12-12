@@ -6,6 +6,12 @@ the Hessian matrix of the constraint part of the Lagrangian.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_chcprod( status, n, m, goth, X, Y, VECTOR, RESULT )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_chcprod_s( ... )
 .SH DESCRIPTION
 The CUTEST_chcprod subroutine forms the product of a vector with the Hessian
 matrix of the constraint part of the Lagrangian function 

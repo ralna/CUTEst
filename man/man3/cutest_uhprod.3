@@ -6,6 +6,12 @@ the Hessian matrix.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_uhprod( status, n, goth, X, VECTOR, RESULT )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_uhprod_s( ... )
 .SH DESCRIPTION
 The CUTEST_uhprod subroutine forms the product of a vector with the Hessian
 matrix of the objective function of the problem decoded from a SIF file

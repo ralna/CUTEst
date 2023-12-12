@@ -1,19 +1,22 @@
 #ifndef OSQP_H
-# define OSQP_H
+#define OSQP_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif // ifdef __cplusplus
+#endif 
+/* ifdef __cplusplus */
 
 /* Includes */
-# include "types.h"
-# include "util.h" // Needed for osqp_set_default_settings functions
+#include "types.h"
+#include "util.h"
+/* Needed for osqp_set_default_settings functions */
 
 
-// Library to deal with sparse matrices enabled only if embedded not defined
-# ifndef EMBEDDED
-#  include "cs.h"
-# endif // ifndef EMBEDDED
+/* Library to deal with sparse matrices enabled only if embedded not defined */
+#ifndef EMBEDDED
+#include "cs.h"
+#endif
+/* ifndef EMBEDDED */
 
 /********************
 * Main Solver API  *
@@ -32,7 +35,7 @@ extern "C" {
 void osqp_set_default_settings(OSQPSettings *settings);
 
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /**
  * Initialize OSQP solver allocating memory.
@@ -57,7 +60,7 @@ void osqp_set_default_settings(OSQPSettings *settings);
 OSQPWorkspace* osqp_setup(const OSQPData *data,
                           OSQPSettings   *settings);
 
-# endif // #ifndef EMBEDDED
+#endif /* #ifndef EMBEDDED */
 
 /**
  * Solve quadratic program
@@ -78,7 +81,7 @@ OSQPWorkspace* osqp_setup(const OSQPData *data,
 c_int osqp_solve(OSQPWorkspace *work);
 
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /**
  * Cleanup workspace by deallocating memory
@@ -89,7 +92,7 @@ c_int osqp_solve(OSQPWorkspace *work);
  */
 c_int osqp_cleanup(OSQPWorkspace *work);
 
-# endif // ifndef EMBEDDED
+#endif /* ifndef EMBEDDED */
 
 /** @} */
 
@@ -179,7 +182,7 @@ c_int osqp_warm_start_y(OSQPWorkspace *work,
                         c_float       *y);
 
 
-# if EMBEDDED != 1
+#if EMBEDDED != 1
 
 /**
  * Update elements of matrix P (upper-diagonal)
@@ -264,7 +267,7 @@ c_int osqp_update_P_A(OSQPWorkspace *work,
 c_int osqp_update_rho(OSQPWorkspace *work,
                       c_float        rho_new);
 
-# endif // if EMBEDDED != 1
+#endif /* if EMBEDDED != 1 */
 
 /** @} */
 
@@ -364,7 +367,7 @@ c_int osqp_update_check_termination(OSQPWorkspace *work,
                                     c_int          check_termination_new);
 
 
-# ifndef EMBEDDED
+#ifndef EMBEDDED
 
 /**
  * Update regularization parameter in polish
@@ -406,9 +409,9 @@ c_int osqp_update_verbose(OSQPWorkspace *work,
                           c_int          verbose_new);
 
 
-# endif // #ifndef EMBEDDED
+#endif /* #ifndef EMBEDDED */
 
-# ifdef PROFILING
+#ifdef PROFILING
 
 /**
  * Update time_limit setting
@@ -418,13 +421,13 @@ c_int osqp_update_verbose(OSQPWorkspace *work,
  */
 c_int osqp_update_time_limit(OSQPWorkspace *work,
                              c_float        time_limit_new);
-# endif // ifdef PROFILING
+#endif /* ifdef PROFILING */
 
 /** @} */
 
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif // ifdef __cplusplus
+#endif /* ifdef __cplusplus */
 
-#endif // ifndef OSQP_H
+#endif /* ifndef OSQP_H */

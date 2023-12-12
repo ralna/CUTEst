@@ -5,6 +5,12 @@ CUTEST_cnames \- CUTEst tool to obtain the names of the problem and its variable
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_cnames( status, n, m, pname, VNAMES, CNAMES )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_cnames_s( ... )
 .SH DESCRIPTION
 The CUTEST_cnames subroutine obtains the names of the problem, its
 variables and general constraints.

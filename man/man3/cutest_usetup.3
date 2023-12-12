@@ -6,6 +6,12 @@ for unconstrained or bound-constrained minimization.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_usetup( status, input, out, io_buffer, n, X, X_l, X_u )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_usetup_s( ... )
 .SH DESCRIPTION
 The CUTEST_usetup subroutine sets up the correct data structures for
 subsequent computations in the case where the only possible
