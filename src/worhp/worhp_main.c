@@ -94,7 +94,8 @@ int MAINENTRY() {
     /* Adapt these as appropriate */
     const char cutest_problem[STRING_LENGTH] = THIS_PROBLEM_NAME;
     const char *outsdifd_filename = OUTSDIFD_FILENAME;
-    char buffer[STRING_LENGTH];
+    /* char buffer[STRING_LENGTH]; */
+    char buffer[STRING_LENGTH+20];
 
     /* Check Version of library and header files */
     CHECK_WORHP_VERSION
@@ -234,8 +235,8 @@ int MAINENTRY() {
         MALLOC(j_var, jac_nnz_init, integer);
         MALLOC(j_fun, jac_nnz_init, integer);
 
-        CUTEST_ccfsg_r(&cutest_status, &opt.n, &cutest_m, opt.X, opt.G, 
-                       &jac_nnz, &jac_nnz_init, j_val, j_var, j_fun, 
+        CUTEST_ccfsg_r(&cutest_status, &opt.n, &cutest_m, opt.X, opt.G,
+                       &jac_nnz, &jac_nnz_init, j_val, j_var, j_fun,
                        &evaluate_derivative);
         assert(jac_nnz + opt.n == jac_nnz_init);
         wsp.DG.nnz = jac_nnz;
