@@ -1,0 +1,70 @@
+#!/bin/bash
+###############################################################################
+#
+# cutest2matlab_macos: build the bridge between CUTEst and Matlab on macOS
+# without relying on Matlab gfortran support
+#
+# Adapted from cutest2matlab_osx by E. Tansley and J. Fowkes, December 2023. 
+# Original version by D. Orban, June 2017, itself adapted from 
+# cutest2matlab by Nick Gould for GALAHAD Productions, January 2013
+#
+###############################################################################
+
+function help() {
+  echo 'Use this script on macOS with gfortran and Apple Silicon Matlab R2023b or later.'
+  echo 'The script *will not* work with earlier Legacy Intel versions of Matlab.'
+  echo
+  echo "Use: $(basename $0) PROBLEM[.SIF]"
+  exit 0
+}
+
+[[ $# > 0 && ("$1" == '-h' || "$1" == '--help') ]] && help
+
+if [[ -z "$MYMATLABARCH" ]]; then
+  if [[ -z "$MYARCH" ]]; then
+    echo ' neither environment variable MYMATLABARCH nor MYARCH is set.'
+    echo ' Set MYMATLABARCH as a gfortran-installed version from the list '
+    /bin/ls -1 $CUTEST/versions 2>/dev/null
+    echo ' and re-run.'
+    exit 1
+  else
+    ARCH=${MYARCH}
+  fi
+else
+  ARCH=${MYMATLABARCH}
+fi
+echo $ARCH
+
+#  check that the architecture provided in MYMATLABARCH or MYARCH exists
+
+if [[ ! -e $CUTEST/versions/$ARCH ]] ; then
+    echo ' The architecture provided by the environment variables MYMATLABARCH'
+    echo '  and MYARCH has not been installed. Install a gfortran version of'
+    echo ' CUTEst unsing install_cutest and re-run.'
+    exit 2
+fi
+
+#  check that a gfortran version is used (as this is what Matlab supports!)
+
+if [[ ${ARCH##*.} != 'gfo' && ${ARCH##*.} != 'gfo47' ]] ; then
+    echo ' The architecture provided by the environment variables MYMATLABARCH'
+    echo ' (or otherwise MYARCH) must use the gfortran compiler. Install a '
+    echo ' gfortran version of CUTEst unsing install_cutest and re-run.'
+    exit 3
+fi
+
+# decode
+[[ $# > 0 ]] && sifdecoder -A $ARCH -st $1
+
+# build small shared library specific to problem being decoded
+EXTERF=$([[ -f "EXTER.f" ]] && echo "EXTER.f" || echo "")
+EXTERO=$([[ -f "EXTER.f" ]] && echo "EXTER.o" || echo "")
+gfortran -I/opt/homebrew/opt/cutest/libexec/modules/mac64.osx.gfo/ -c -fPIC -fno-second-underscore -flat_namespace -O -ffixed-form ELFUN.f RANGE.f GROUP.f $EXTERF
+PROB=$(basename $1 .SIF)
+gfortran -shared -o lib${PROB}.dylib ELFUN.o RANGE.o GROUP.o $EXTERO -L/opt/homebrew/lib -lcutest
+
+# build and link mex file
+[[ -f ${PWD}/mcutest.o ]] || ${MYMATLAB}/bin/mex -c -I/opt/homebrew/opt/cutest/libexec/include /opt/homebrew/opt/cutest/libexec/src/matlab/mcutest.c
+${MYMATLAB}/bin/mex -cxx -I/opt/homebrew/opt/cutest/libexec/include -output mcutest ${PWD}/mcutest.o -L${PWD} -l${PROB} -L/opt/homebrew/lib -lcutest
+
+exit 0

@@ -52,20 +52,41 @@ PKGDIR=$CUTEST/packages/$VERSION
 
 echo "$MACHINE ($OPSYS) $COMPUSED" > $CUTEST/versions/$VERSION
 
+
 if [[ ! -e $OBJDIR ]]; then
     $MKDIR $OBJDIR
-    $MKDIR $OBJDIR/double $OBJDIR/single
+    $MKDIR $OBJDIR/double $OBJDIR/single $OBJDIR/double_64 $OBJDIR/single_64
 else
-    [[ ! -e $OBJDIR/double ]] && $MKDIR $OBJDIR/double
-    [[ ! -e $OBJDIR/single ]] && $MKDIR $OBJDIR/single
+    if [[ ! -e $OBJDIR/double ]]; then
+    $MKDIR $OBJDIR/double
+    fi
+    if [[ ! -e $OBJDIR/single ]]; then
+    $MKDIR $OBJDIR/single
+    fi
+    if [[ ! -e $OBJDIR/double_64 ]]; then
+    $MKDIR $OBJDIR/double_64
+    fi
+    if [[ ! -e $OBJDIR/single_64 ]]; then
+    $MKDIR $OBJDIR/single_64
+    fi
 fi
 
 if [[ ! -e $MODDIR ]]; then
     $MKDIR $MODDIR
-    $MKDIR $MODDIR/double $MODDIR/single
+    $MKDIR $MODDIR/double $MODDIR/single $OBJDIR/double_64 $OBJDIR/single_64
 else
-    [[ ! -e $MODDIR/double ]] && $MKDIR $MODDIR/double
-    [[ ! -e $MODDIR/single ]] && $MKDIR $MODDIR/single
+    if [[ ! -e $MODDIR/double ]]; then
+    $MKDIR $MODDIR/double
+    fi
+    if [[ ! -e $MODDIR/single ]]; then
+    $MKDIR $MODDIR/single
+    fi
+    if [[ ! -e $OBJDIR/double_64 ]]; then
+    $MKDIR $OBJDIR/double_64
+    fi
+    if [[ ! -e $OBJDIR/single_64 ]]; then
+    $MKDIR $OBJDIR/single_64
+    fi
 fi
 
 [[ ! -e $PKGDIR ]] && $MKDIR $PKGDIR
@@ -119,6 +140,8 @@ echo 'PRECIS = double'                                             >> $MAKEFILE
 echo 'OBJ = $(CUTEST)/objects/$(VERSION)/$(PRECIS)'                >> $MAKEFILE
 echo 'OBJS = $(CUTEST)/objects/$(VERSION)/single'                  >> $MAKEFILE
 echo 'OBJD = $(CUTEST)/objects/$(VERSION)/double'                  >> $MAKEFILE
+echo 'OBJS64 = $(CUTEST)/objects/$(VERSION)/single_64'             >> $MAKEFILE
+echo 'OBJD64 = $(CUTEST)/objects/$(VERSION)/double_64'             >> $MAKEFILE
 echo 'MOD = $(CUTEST)/modules/$(VERSION)/$(PRECIS)'                >> $MAKEFILE
 echo 'SEDS = $(CUTEST)/seds/$(PRECIS).sed'                         >> $MAKEFILE
 echo 'MVMODS = '"$MVMODS"                                          >> $MAKEFILE
@@ -144,6 +167,7 @@ echo 'F95SUFFIX  = '$F95SUFFIX                                     >> $MAKEFILE
 echo 'TIMER = '$TIMER                                              >> $MAKEFILE
 echo 'NOT95 = '$NOT95                                              >> $MAKEFILE
 echo 'NOT64 = '$NOT64                                              >> $MAKEFILE
+echo 'INTEGER = '$INTEGER                                          >> $MAKEFILE
 echo ' '                                                           >> $MAKEFILE
 echo 'AMPLDIR   = '$AMPLLIBDIR                                     >> $MAKEFILE
 echo 'CC        = '$CC                                             >> $MAKEFILE
