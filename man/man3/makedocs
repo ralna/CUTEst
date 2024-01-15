@@ -130,12 +130,14 @@
 #               cutest_ush_threaded \
 #               cutest )
 
-foreach pack ( cutest_cdimohp cutest_cdimsg \
-               cutest_chjprod cutest_chjprod_threaded \
-               cutest_cisgrp cutest_cohprods \
-               cutest_cohprodsp cutest_cohprods_threaded \
-               cutest_cshj cutest_cshj_threaded \
-               cutest_timings_threaded )
+foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+
+#foreach pack ( cutest_cdimohp cutest_cdimsg \
+#               cutest_chjprod cutest_chjprod_threaded \
+#               cutest_cisgrp cutest_cohprods \
+#               cutest_cohprodsp cutest_cohprods_threaded \
+#               cutest_cshj cutest_cshj_threaded \
+#               cutest_timings_threaded )
 
 #foreach pack ( cutest_uterminate cutest_cterminate )
 #foreach pack ( cutest_csjp cutest )

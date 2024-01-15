@@ -144,8 +144,9 @@
 
 !  compute a Hessian-of-the-John-function-vector product
 
-      y0 = 1.0_rp_
-      VECTOR( 1 ) = one ; VECTOR( 2 : n ) = zero
+      y0 = 3.5_rp_
+!     VECTOR( 1 ) = one ; VECTOR( 2 : n ) = zero
+      VECTOR = 3.0_rp_
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_chjprod with goth = .FALSE.' )" )
       CALL CUTEST_chjprod_r( status, n, m, goth, X, y0, Y, VECTOR, RESULT )
@@ -166,6 +167,25 @@
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
 
+!  compute the number of nonzeros in the sparse Hessian
+
+      WRITE( out, "( ' CALL CUTEST_cdimsh' )" )
+      CALL CUTEST_cdimsh_r( status, H_ne )
+      IF ( status /= 0 ) GO TO 900
+      WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+
+      l_h = H_ne
+      ALLOCATE( H_val( l_h ), H_row( l_h ), H_col( l_h ), stat = alloc_stat )
+      IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the sparse Hessian of the John function at the new point
+
+      WRITE( out, "( ' CALL CUTEST_cshj' )" )
+      CALL CUTEST_cshj_r( status, n, m, X, y0, Y,                              &
+                          H_ne, l_h, H_val, H_row, H_col )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+
 !  recompute the Hessian-of-the-John-function-vector product
 
       goth = .TRUE.
@@ -175,6 +195,11 @@
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
       goth = .FALSE.
       WRITE( out, "( ' Call CUTEST_chjprod with goth = .FALSE.' )" )
+      CALL CUTEST_chjprod_r( status, n, m, goth, X, y0, Y, VECTOR, RESULT )
+      IF ( status /= 0 ) GO TO 900
+      CALL WRITE_RESULT( out, n, VECTOR, RESULT )
+      goth = .TRUE.
+      WRITE( out, "( ' Call CUTEST_chpjrod with goth = .TRUE.' )" )
       CALL CUTEST_chjprod_r( status, n, m, goth, X, y0, Y, VECTOR, RESULT )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_RESULT( out, n, VECTOR, RESULT )
