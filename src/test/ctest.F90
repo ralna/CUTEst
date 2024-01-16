@@ -425,6 +425,14 @@
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
 
+!  compute the dense Hessian value of the John function
+
+      y0 = 2.0_rp_
+      WRITE( out, "( ' CALL CUTEST_cdhj' )" )
+      CALL CUTEST_cdhj_r( status, n, m, X, y0, Y, l_h2_1, H2_val )
+      IF ( status /= 0 ) GO to 900
+      CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
+
 !  compute the dense Hessian value without the objective function
 
       WRITE( out, "( ' CALL CUTEST_cdhc' )" )
@@ -516,7 +524,6 @@
 
 !  compute the sparse Hessian of the John function
 
-      y0 = 1.0_rp_
       WRITE( out, "( ' CALL CUTEST_cshj' )" )
       CALL CUTEST_cshj_r( status, n, m, X, y0, Y,                              &
                           H_ne, l_h, H_val, H_row, H_col )

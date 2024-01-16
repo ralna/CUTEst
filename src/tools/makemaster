@@ -54,7 +54,7 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(ccfg_single.o) $(LCS)(clfg_single.o) \
            $(LCS)(ccfsg_single.o) $(LCS)(ccifg_single.o) \
            $(LCS)(ccifsg_single.o) $(LCS)(cdh_single.o) \
-           $(LCS)(cdhc_single.o) $(LCS)(ceh_single.o) \
+           $(LCS)(cdhc_single.o) $(LCS)(cdhj_single.o) $(LCS)(ceh_single.o) \
            $(LCS)(cgrdh_single.o) $(LCS)(cifn_single.o) \
            $(LCS)(cigr_single.o) $(LCS)(cdimsg_single.o) \
            $(LCS)(cisgr_single.o) $(LCS)(cisgrp_single.o) \
@@ -103,7 +103,7 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(ccfg_double.o) $(LCD)(clfg_double.o) \
            $(LCD)(ccfsg_double.o) $(LCD)(ccifg_double.o) \
            $(LCD)(ccifsg_double.o) $(LCD)(cdh_double.o) \
-           $(LCD)(cdhc_double.o) $(LCD)(ceh_double.o) \
+           $(LCD)(cdhc_double.o) $(LCD)(cdhj_double.o) $(LCD)(ceh_double.o) \
            $(LCD)(cgrdh_double.o) $(LCD)(cifn_double.o) \
            $(LCD)(cigr_double.o) $(LCD)(cdimsg_double.o) \
            $(LCD)(cisgr_double.o) $(LCD)(cisgrp_double.o) \
@@ -227,6 +227,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) ccifsg_$(PRECIS).o
 	$(RMARFILE) cdh_$(PRECIS).o
 	$(RMARFILE) cdhc_$(PRECIS).o
+	$(RMARFILE) cdhj_$(PRECIS).o
 	$(RMARFILE) ceh_$(PRECIS).o
 	$(RMARFILE) cgrdh_$(PRECIS).o
 	$(RMARFILE) cifn_$(PRECIS).o
@@ -589,6 +590,19 @@ $(LC)(cdhc_$(PRECIS).o): ../tools/cdhc.F90
                    $(FORTRAN) -o cdhc_$(PRECIS).o $(F90FLAGSN) cdhc.F90 )
 	cd $(OBJ); $(ARR) cdhc_$(PRECIS).o; \
           $(RM) cdhc.F90 cdhc_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cdhj.o: $(LC)(cdhj_$(PRECIS).o)
+
+$(LC)(cdhj_$(PRECIS).o): ../tools/cdhj.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "cdhj"
+	$(CP) ../tools/cdhj.F90 $(OBJ)/cdhj.F90
+	cd $(OBJ); $(FORTRAN) -o cdhj_$(PRECIS).o $(F90FLAGS) cdhj.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o cdhj_$(PRECIS).o $(F90FLAGSN) cdhj.F90 )
+	cd $(OBJ); $(ARR) cdhj_$(PRECIS).o; \
+          $(RM) cdhj.F90 cdhj_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

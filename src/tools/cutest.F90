@@ -146,6 +146,7 @@
         REAL :: time_ccifsg = 0.0
         REAL :: time_cdh = 0.0
         REAL :: time_cdhc = 0.0
+        REAL :: time_cdhj = 0.0
         REAL :: time_cdimchp = 0.0
         REAL :: time_ceh = 0.0
         REAL :: time_cfn = 0.0

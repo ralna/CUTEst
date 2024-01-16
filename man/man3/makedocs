@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh -vx
 
 #foreach pack ( cutest_ccfg \
 #               cutest_ccfsg \
@@ -8,6 +8,7 @@
 #               cutest_ccifsg \
 #               cutest_cdh \
 #               cutest_cdhc \
+#               cutest_cdhj \
 #               cutest_cdimchp \
 #               cutest_cdimen \
 #               cutest_cdimohp \
@@ -83,8 +84,9 @@
 #               cutest_cchprods_threaded \
 #               cutest_ccifg_threaded \
 #               cutest_ccifsg_threaded \
-#               cutest_cdhc_threaded \
 #               cutest_cdh_threaded \
+#               cutest_cdhc_threaded \
+#               cutest_cdhj_threaded \
 #               cutest_ceh_threaded \
 #               cutest_cfn_threaded \
 #               cutest_cgrdh_threaded \
@@ -130,7 +132,9 @@
 #               cutest_ush_threaded \
 #               cutest )
 
-foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+#foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+
+foreach pack ( cutest_cdhj cutest_cdhj_threaded )
 
 #foreach pack ( cutest_cdimohp cutest_cdimsg \
 #               cutest_chjprod cutest_chjprod_threaded \
