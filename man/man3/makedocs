@@ -1,4 +1,4 @@
-#!/bin/csh -vx
+#!/bin/csh
 
 #foreach pack ( cutest_ccfg \
 #               cutest_ccfsg \
