@@ -163,6 +163,7 @@ typedef struct VarTypes {
 #define CUTEST_cgrdh      FUNDERSCORE(cutest_cint_cgrdh)
 #define CUTEST_cdh        FUNDERSCORE(cutest_cdh)
 #define CUTEST_cdhc       FUNDERSCORE(cutest_cdhc)
+#define CUTEST_cdhj       FUNDERSCORE(cutest_cdhj)
 #define CUTEST_cshp       FUNDERSCORE(cutest_cshp)
 #define CUTEST_csh        FUNDERSCORE(cutest_csh)
 #define CUTEST_cshc       FUNDERSCORE(cutest_cshc)
@@ -250,6 +251,7 @@ typedef struct VarTypes {
 #define CUTEST_cgrdh_s      FUNDERSCORE(cutest_cint_cgrdh_s)
 #define CUTEST_cdh_s        FUNDERSCORE(cutest_cdh_s)
 #define CUTEST_cdhc_s       FUNDERSCORE(cutest_cdhc_s)
+#define CUTEST_cdhj_s       FUNDERSCORE(cutest_cdhj_s)
 #define CUTEST_cshp_s       FUNDERSCORE(cutest_cshp_s)
 #define CUTEST_csh_s        FUNDERSCORE(cutest_csh_s)
 #define CUTEST_cshc_s       FUNDERSCORE(cutest_cshc_s)
@@ -427,6 +429,10 @@ void CUTEST_cdh     ( integer *status, const integer *n, const integer *m,
 void CUTEST_cdhc    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y,
                       const integer *lh1, doublereal *h );
+void CUTEST_cdhj    ( integer *status, const integer *n, const integer *m,
+                      const doublereal *x, const doublereal *y0,
+                      const doublereal *y, const integer *lh1, 
+                      doublereal *h );
 void CUTEST_cshp    ( integer *status, const integer *n, integer *nnzh,
                       const integer *lh, integer *irnh, integer *icnh );
 void CUTEST_csh     ( integer *status, const integer *n, const integer *m,
@@ -669,6 +675,9 @@ void CUTEST_cdh_s     ( integer *status, const integer *n, const integer *m,
                       const integer *lh1, real *h );
 void CUTEST_cdhc_s    ( integer *status, const integer *n, const integer *m,
                       const real *x, const real *y,
+                      const integer *lh1, real *h );
+void CUTEST_cdhj_s   ( integer *status, const integer *n, const integer *m,
+                      const real *x, const real *y0, const real *y,
                       const integer *lh1, real *h );
 void CUTEST_cshp_s    ( integer *status, const integer *n, integer *nnzh,
                       const integer *lh, integer *irnh, integer *icnh );
