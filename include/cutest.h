@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2023-11-16
+ * this version 2024-01-18
  *
  * ======================================================================
  */
@@ -68,7 +68,7 @@ typedef double   rp_;
 typedef double   rpc_;
 #endif
 
-#ifdef CUTEST_LONG
+#ifdef CUTEST_64BIT_INTEGER
 typedef long long  ip_;
 typedef long long  ipc_;
 #else
@@ -320,6 +320,7 @@ void CUTEST_cdimsg  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh  ( integer *status, integer *nnzh );
 void CUTEST_cdimcop ( integer *status, integer *nnzohp );
+void CUTEST_cdimohp ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp ( integer *status, integer *nnzchp );
 void CUTEST_cdimse  ( integer *status, integer *ne, integer *nzh,
                       integer *nzirnh );
@@ -431,7 +432,7 @@ void CUTEST_cdhc    ( integer *status, const integer *n, const integer *m,
                       const integer *lh1, doublereal *h );
 void CUTEST_cdhj    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y0,
-                      const doublereal *y, const integer *lh1, 
+                      const doublereal *y, const integer *lh1,
                       doublereal *h );
 void CUTEST_cshp    ( integer *status, const integer *n, integer *nnzh,
                       const integer *lh, integer *irnh, integer *icnh );
@@ -567,6 +568,7 @@ void CUTEST_cdimsg_s  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj_s  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh_s  ( integer *status, integer *nnzh );
 void CUTEST_cdimcop_s ( integer *status, integer *nnzohp );
+void CUTEST_cdimohp_s ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp_s ( integer *status, integer *nnzchp );
 void CUTEST_cdimse_s  ( integer *status, integer *ne, integer *nzh,
                       integer *nzirnh );

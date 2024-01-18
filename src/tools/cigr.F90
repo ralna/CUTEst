@@ -255,17 +255,17 @@
 
         ELSE
           ICALCG( 1 ) = ig
-          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
+                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
                       .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative
 
-          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
+                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
                       .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF

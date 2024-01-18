@@ -252,7 +252,7 @@
                work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,             &
                work%GVALS( : , 2 ), work%GVALS( :  , 3 ), work%GSCALE_used,    &
                data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,     &
-               0, data%out, data%out, .TRUE., .FALSE.,                         &
+               0_ip_, data%out, data%out, .TRUE., .FALSE.,                     &
                n, status, alloc_status, bad_alloc,                             &
                work%array_status, work%lh_row, work%lh_col, work%lh_val,       &
                work%H_row, work%H_col, work%H_val, work%ROW_start,             &
@@ -269,7 +269,7 @@
                work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,             &
                work%GVALS( : , 2 ), work%GVALS( :  , 3 ), data%GSCALE,         &
                data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,     &
-               0, data%out, data%out, .TRUE., .FALSE.,                         &
+               0_ip_, data%out, data%out, .TRUE., .FALSE.,                     &
                n, status, alloc_status, bad_alloc,                             &
                work%array_status, work%lh_row, work%lh_col, work%lh_val,       &
                work%H_row, work%H_col, work%H_val, work%ROW_start,             &

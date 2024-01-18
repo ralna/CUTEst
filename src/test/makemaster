@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for CUTEST test programs
 
 #  Nick Gould, for GALAHAD productions
-#  This version: 2023-11-21
+#  This version: 2024-01-18
 
 #  include standard CUTEst makefile defaults before package-specifics
 
@@ -11,7 +11,7 @@ include $(CUTEST)/src/makedefs/defaults
 #  ====================  package-dependent parts  ============================
 #  ===========================================================================
 
-#  package name 
+#  package name
 
 PACKAGE = TEST
 package = test
@@ -32,8 +32,10 @@ all: $(package)
 
 $(package): $(package)_$(PRECIS)
 	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
-$(package)_single: $(OBJ)/$(package)_main.o
-$(package)_double: $(OBJ)/$(package)_main.o
+$(package)_single: $(OBJS)/$(package)_main.o
+$(package)_double: $(OBJD)/$(package)_main.o
+$(package)_single_64: $(OBJS64)/$(package)_main.o
+$(package)_double_64: $(OBJD64)/$(package)_main.o
 
 test_cutest: test_cutest_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: tests ($(PRECIS) $(SUCC)"
@@ -41,11 +43,17 @@ test_cutest_single: test_cutest_unconstrained_single \
                     test_cutest_constrained_single
 test_cutest_double: test_cutest_unconstrained_double \
                     test_cutest_constrained_double
+test_cutest_single_64: test_cutest_unconstrained_single_64 \
+                       test_cutest_constrained_single_64
+test_cutest_double_64: test_cutest_unconstrained_double_64 \
+                       test_cutest_constrained_double_64
 
 test_cutest_unconstrained: test_cutest_unconstrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: unconstrained tests ($(PRECIS) $(SUCC)"
 test_cutest_unconstrained_single: $(U_TEST)
 test_cutest_unconstrained_double: $(U_TEST)
+test_cutest_unconstrained_single_64: $(U_TEST)
+test_cutest_unconstrained_double_64: $(U_TEST)
 
 test_cutest_constrained: test_cutest_constrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: constrained tests ($(PRECIS) $(SUCC)"
@@ -56,6 +64,8 @@ test_cutest_quadratic: test_cutest_quadratic_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: quadratic tests ($(PRECIS) $(SUCC)"
 test_cutest_quadratic_single: $(Q_TEST)
 test_cutest_quadratic_double: $(Q_TEST)
+test_cutest_quadratic_single_64: $(Q_TEST)
+test_cutest_quadratic_double_64: $(Q_TEST)
 
 # run example tests
 
@@ -161,13 +171,16 @@ run_debug_cutest_constrained: ctools test_cutest_constrained
 
 tools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+                     cutest PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
+                     PWD=$(PWD)/../tools )
 utools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+                     cutest_unconstrained PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
+                     PWD=$(PWD)/../tools )
 ctools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
+                     cutest_constrained PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
+                     PWD=$(PWD)/../tools )
 
 #  individual compilations
 

@@ -1048,7 +1048,7 @@
              data%INTVAR, data%ISTADH, data%ICNA, data%ISTADA,                 &
              data%GXEQX, data%alllin, data%altriv, data%lfxi, data%lgxi,       &
              data%lhxi, data%lggfx, data%ldx, data%lgrjac, data%lnguvl,        &
-             data%lnhuvl, data%ntotin, data%maxsel, data%maxsin, 0,            &
+             data%lnhuvl, data%ntotin, data%maxsel, data%maxsin, 0_ip_,        &
              out, work%io_buffer, data%l_link_e_u_v, work%nbprod,              &
              work%FUVALS, data%lfuval, data%LINK_elem_uses_var,                &
              work%ISWKSP, work%IUSED, work%ISTAJC, data%ISTAGV, data%ISVGRP,   &

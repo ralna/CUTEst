@@ -12,7 +12,7 @@
 !   Essence contained in GALAHAD-CUTEr QP interfaces, April 2004
 !   Stand-alone CUTEst module, March 2013
 
-!  For full documentation, see 
+!  For full documentation, see
 !   http://galahad.rl.ac.uk/galahad-www/specs.html
 
     MODULE CUTEST_LQP_precision
@@ -47,7 +47,7 @@
 !  ------------------------------------------------
 !  build the data for the linear program
 
-!    minimize    f + g^T x 
+!    minimize    f + g^T x
 !    subject to  c_l <= A x <= c_l
 !    and         x_l <=  x  <= x_l
 
@@ -77,7 +77,7 @@
 !  if ne, row, col and val are present, sparse co-ordinate storage is required
 !  if row, ptr and val are present, column-wise storage is required
 !  if col, ptr and val are present, row-wise storage is required
-!  otherwise an error will be flagged with status = -1 (A_) or 
+!  otherwise an error will be flagged with status = -1 (A_) or
 !  H will be ignored, i.e., and LP will be formed (H_)
 
 !  if h_pert is present, this value will be added to the diagonal of the Hessian
@@ -136,7 +136,7 @@
       ELSE
         h_type = 'N'
       END IF
-      
+
 !  check to see if there is any diagonal Hessian perturbation
 
       IF ( PRESENT( H_pert ) ) THEN
@@ -160,7 +160,7 @@
 !  set up the data structures necessary to hold the problem
 
       CALL CUTEST_csetup_r( status, input, out, io_buffer, n, m, X, X_l, X_u,  &
-                            Y, C_l, C_u, EQUATN, LINEAR, 0, 0, 0 )
+                            Y, C_l, C_u, EQUATN, LINEAR, 0_ip_, 0_ip_, 0_ip_ )
       IF ( status /= 0 ) RETURN
       DEALLOCATE( LINEAR, STAT = alloc_status )
       IF ( alloc_status /= 0 ) GO TO 990
@@ -191,20 +191,20 @@
 
 !  set X0 to zero to determine the constant terms for the problem functions
 
-      X0 = zero 
+      X0 = zero
 
 !  evaluate the constant terms of the objective (f) and constraint functions (C)
 
       CALL CUTEST_cfn_r( status, n, m, X0, f, C( : m ) )
       IF ( status /= 0 ) RETURN
-      DO i = 1, m 
-        IF ( EQUATN( i ) ) THEN 
+      DO i = 1, m
+        IF ( EQUATN( i ) ) THEN
           C_l( i ) = C_l( i ) - C( i )
           C_u( i ) = C_l( i )
         ELSE
           C_l( i ) = C_l( i ) - C( i )
           C_u( i ) = C_u( i ) - C( i )
-        END IF 
+        END IF
       END DO
 
       DEALLOCATE( EQUATN, C, STAT = alloc_status )
@@ -249,12 +249,12 @@
             IF ( A_val( i ) /= zero ) THEN
               IF ( A_row( i ) > 0 ) THEN
                 A_ne = A_ne + 1
-                A_row( A_ne ) = A_row( i ) 
+                A_row( A_ne ) = A_row( i )
                 A_col( A_ne ) = A_col( i )
                 A_val( A_ne ) = A_val( i )
               ELSE
                 G( A_col( i ) ) = A_val( i )
-              END IF  
+              END IF
             END IF
           END DO
 
@@ -280,12 +280,12 @@
             IF ( A_val( i ) /= zero ) THEN
               IF ( A_row( i ) > 0 ) THEN
                 la = la + 1
-                A_row( la ) = A_row( i ) 
+                A_row( la ) = A_row( i )
                 A_tmp( la ) = A_tmp( i )
                 A_val( la ) = A_val( i )
               ELSE
                 G( A_tmp( i ) ) = A_val( i )
-              END IF  
+              END IF
             END IF
           END DO
 
@@ -326,12 +326,12 @@
             IF ( A_val( i ) /= zero ) THEN
               IF ( A_tmp( i ) > 0 ) THEN
                 la = la + 1
-                A_tmp( la ) = A_tmp( i ) 
+                A_tmp( la ) = A_tmp( i )
                 A_col( la ) = A_col( i )
                 A_val( la ) = A_val( i )
               ELSE
                 G( A_col( i ) ) = A_val( i )
-              END IF  
+              END IF
             END IF
           END DO
 
@@ -393,7 +393,7 @@
 !  remove out of range entries and only store the upper triangle
 
           H_ne = 0
-          DO l = 1, neh    
+          DO l = 1, neh
             i = H_row( l ) ; j = H_col( l )
             IF ( i < 1 .OR. i > n .OR. j < 1 .OR. j > n ) CYCLE
             IF ( H_val( l ) /= zero ) THEN
@@ -403,7 +403,7 @@
               ELSE
                 H_row( H_ne ) = i ; H_col( H_ne ) = j
               END IF
-            END IF           
+            END IF
 
 !  add digonal perturbations if any
 
@@ -447,7 +447,7 @@
 !  remove out of range entries and only store the upper triangle
 
           lh = 0
-          DO l = 1, neh    
+          DO l = 1, neh
             i = H_row( l ) ; j = H_tmp( l )
             IF ( i < 1 .OR. i > n .OR. j < 1 .OR. j > n ) CYCLE
             IF ( H_val( l ) /= zero ) THEN
@@ -513,7 +513,7 @@
 !  remove out of range entries and only store the upper triangle
 
           lh = 0
-          DO l = 1, neh    
+          DO l = 1, neh
             i = H_tmp( l ) ; j = H_col( l )
             IF ( i < 1 .OR. i > n .OR. j < 1 .OR. j > n ) CYCLE
             IF ( H_val( l ) /= zero ) THEN
@@ -572,7 +572,7 @@
         CALL CUTEST_cterminate_r( status )
       END IF
       RETURN
-        
+
   990 CONTINUE
       WRITE( out, "( ' Allocation error, status = ', I0 )" ) alloc_status
       status = 1
@@ -603,25 +603,25 @@
 !  nnz    integer, which gives the number of nonzeros in A.
 !         nnz must be non-negative.
 !
-!  A_row  integer array of length la. On entry, A_row(k), k = 1, ..., nnz give 
+!  A_row  integer array of length la. On entry, A_row(k), k = 1, ..., nnz give
 !         the row indices of A. On exit, A_row will have been reordered, but
 !         A_row(k) will still be the row index corresponding to the
 !         entry with column index A_col(k).
 !
-!  A_col  integer array of length la. On entry, A_col(k), k = 1, ..., nnz give 
-!         the column indices of A. On exit, A_col will have been reordered so 
-!         that entries in row i appear directly before those in row i+1 for 
+!  A_col  integer array of length la. On entry, A_col(k), k = 1, ..., nnz give
+!         the column indices of A. On exit, A_col will have been reordered so
+!         that entries in row i appear directly before those in row i+1 for
 !         i = 1, ..., nr-1.
 !
 !  la    integer, which gives the actual dimension of A_val.
 !        la must be at least nnz.
 !
-!  A_val  real array of length la. On entry, A_val(k), k = 1, ..., nnz give 
+!  A_val  real array of length la. On entry, A_val(k), k = 1, ..., nnz give
 !         the values of A. On exit, A_val will have been reordered so that
-!         entries in row i appear directly before those in row i+1 for 
+!         entries in row i appear directly before those in row i+1 for
 !         i = 1, ..., nr-1 and correspond to those in A_row and A_col.
 !
-!  A_ptr  integer array of length lptr. On exit, A_ptr(i), i = 1, ..., nr give 
+!  A_ptr  integer array of length lptr. On exit, A_ptr(i), i = 1, ..., nr give
 !         the starting addresses for the entries in A_row/A_col/A_val in
 !         row i, while A_ptr(nr+1) gives the index of the first non-occupied
 !         component of A.
@@ -640,7 +640,7 @@
 !  warning integer, which gives the output unit number for warning messages.
 !        Warning messages only occur if warning > 0.
 !
-!  inform integer, which gives the exit status of SORT_reorder_by_rows. 
+!  inform integer, which gives the exit status of SORT_reorder_by_rows.
 !         Possible values are:
 !
 !          0   A has been successfully re-orderered.
@@ -675,7 +675,7 @@
       INTEGER ( KIND = ip_ ) :: i, j, k, k1, k2, l, nzi, ie, iep, je, jep
       INTEGER ( KIND = ip_ ) :: loc, idup, iout, jout, nzout
       REAL ( KIND = rp_ ) :: ae, aep
-  
+
 ! Initialize data
 
       inform = 0
@@ -720,7 +720,7 @@
         END IF
         RETURN
       END IF
-  
+
 !  If the matrix has no rows or no entries, exit accordingly
 
       IF ( nr == 0 ) THEN
@@ -780,7 +780,7 @@
       END IF
 
 !  If all the data is faulty, exit
-  
+
       IF ( iout + jout == nnz ) THEN
         inform = 5
         IF ( error > 0 ) THEN
@@ -791,7 +791,7 @@
         RETURN
       END IF
 
-!  nzout gives the number of nonzero entries following removals. Now sort the 
+!  nzout gives the number of nonzero entries following removals. Now sort the
 !  pattern of a sparse matrix from arbitary order to row order. The
 !  order within each row is unimportant
 
@@ -803,8 +803,8 @@
         IW( i ) = IW( i ) + 1
       END DO
 
-!  Record the positions where each row would begin, in a compressed format 
-!  with the rows in natural order, in A_ptr and IW 
+!  Record the positions where each row would begin, in a compressed format
+!  with the rows in natural order, in A_ptr and IW
 
       A_ptr( 1 ) = 1
       DO i = 2, nr + 1
@@ -813,7 +813,7 @@
       END DO
 
 !  Reorder the elements into row order. Fill in each row from the front,
-!  and increase the pointer IW( k ) by 1 as a new entry is placed in row k 
+!  and increase the pointer IW( k ) by 1 as a new entry is placed in row k
 
       DO l = 1, nr
         DO k = IW( l ), A_ptr( l + 1 ) - 1
@@ -827,7 +827,7 @@
             ie = iep ; je = jep ; ae = aep
           END DO
           A_row( k ) = ie ; A_col( k ) = je ; A_val( k ) = ae
-        END DO  
+        END DO
       END DO
 
 !  Check for duplicates

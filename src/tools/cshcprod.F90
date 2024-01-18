@@ -325,7 +325,7 @@
       IF ( data%numcon > 0 ) THEN
         CALL CUTEST_hessian_times_sp_vector(                                   &
             data%n, data%ng, data%nel, data%ntotel, data%nvrels, data%nvargp,  &
-            1, nnz_vector, nnz_result, work%nbprod, data%alllin,               &
+            1_ip_, nnz_vector, nnz_result, work%nbprod, data%alllin,           &
             INDEX_nz_vector, data%ISTAEV, data%ISTADH, data%INTVAR,            &
             data%IELING, data%IELVAR, work%ISWKSP, INDEX_nz_result,            &
             VECTOR, RESULT, work%GVALS( : , 2 ) , work%GVALS( : , 3 ),         &
@@ -338,7 +338,7 @@
       ELSE
         CALL CUTEST_hessian_times_sp_vector(                                   &
             data%n, data%ng, data%nel, data%ntotel, data%nvrels, data%nvargp,  &
-            1, nnz_vector, nnz_result, work%nbprod, data%alllin,               &
+            1_ip_, nnz_vector, nnz_result, work%nbprod, data%alllin,           &
             INDEX_nz_vector, data%ISTAEV, data%ISTADH, data%INTVAR,            &
             data%IELING, data%IELVAR, work%ISWKSP, INDEX_nz_result,            &
             VECTOR, RESULT, work%GVALS( : , 2 ) , work%GVALS( : , 3 ),         &
@@ -379,5 +379,3 @@
 !  end of subroutine CUTEST_cshcprod_threadsafe_r
 
       END SUBROUTINE CUTEST_cshcprod_threadsafe_r
-
-

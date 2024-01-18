@@ -413,7 +413,7 @@
                         work%H_el, work%H_in, RANGE_r,                         &
                         ne, lhe_ptr, lhe_row_int,                              &
                         lhe_val_int, work%H_row, HE_row_ptr, work%H_val,       &
-                        HE_val_ptr, byrows, 0, data%out, data%out,             &
+                        HE_val_ptr, byrows, 0_ip_, data%out, data%out,         &
                         work%io_buffer, alloc_status, bad_alloc, status )
       ELSE
         CALL CUTEST_assemble_element_hessian(                                  &
@@ -430,7 +430,7 @@
                         work%H_el, work%H_in, RANGE_r,                         &
                         ne, lhe_ptr, lhe_row_int,                              &
                         lhe_val_int, work%H_row, HE_row_ptr, work%H_val,       &
-                        HE_val_ptr, byrows, 0, data%out, data%out,             &
+                        HE_val_ptr, byrows, 0_ip_, data%out, data%out,         &
                         work%io_buffer, alloc_status, bad_alloc, status )
       END IF
 
@@ -487,6 +487,3 @@
 !  end of subroutine CUTEST_ceh_threadsafe_r
 
       END SUBROUTINE CUTEST_ceh_threadsafe_r
-
-
-

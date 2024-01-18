@@ -235,7 +235,7 @@
              work%FUVALS, data%lnguvl, work%FUVALS, data%lnhuvl,               &
              work%GVALS( : , 2 ), work%GVALS( :  , 3 ), data%GSCALE,           &
              data%ESCALE, data%GXEQX, data%ITYPEE, data%INTREP, RANGE_r,       &
-             0, data%out, data%out, .FALSE., .TRUE.,                           &
+             0_ip_, data%out, data%out, .FALSE., .TRUE.,                       &
              nsemiw, status, alloc_status, bad_alloc,                          &
              work%array_status, work%lh_row, work%lh_col, work%lh_val,         &
              work%H_row, work%H_col, work%H_val, work%ROW_start,               &
@@ -266,4 +266,3 @@
 !  end of subroutine CUTEST_ubandh_threadsafe_r
 
       END SUBROUTINE CUTEST_ubandh_threadsafe_r
-

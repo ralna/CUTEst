@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 08:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-01-18 AT 12:15 GMT.
 
 !-**-*-*-*-*-*-  S P A R S E _ H S L _ K I N D S   M O D U L E S -*-*-*-*-*-*-*-
 
@@ -25,19 +25,19 @@
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
     PRIVATE
-    PUBLIC :: ip_, ipc_, ip_long_
+    PUBLIC :: ip_, ipc_, long_
 
 !  Integer kinds (standard 32 bit integer)
 
-    INTEGER, PARAMETER :: iplong_ = INT64
+    INTEGER, PARAMETER :: long_ = INT64
     INTEGER, PARAMETER :: ip_ = INT32
     INTEGER, PARAMETER :: ipc_ = C_INT32_T
 
   END MODULE CUTEST_KINDS_int
 
-!-*-*-*-*-*-*-  C U T E S T _  K I N D S _ L O N G   M O D U L E   -*-*-*-*-*-*-
+!-*-*-*-*-*-*-  C U T E S T _  K I N D S _ 6 4    M O D U L E   -*-*-*-*-*-*-
 
-  MODULE CUTEST_KINDS_long
+  MODULE CUTEST_KINDS_64
 
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
@@ -46,11 +46,11 @@
 
 !  Integer kinds (long 64 bit integer)
 
-    INTEGER, PARAMETER :: iplong_ = INT64
+    INTEGER, PARAMETER :: long_ = INT64
     INTEGER, PARAMETER :: ip_ = INT64
     INTEGER, PARAMETER :: ipc_ = C_INT64_T
 
-  END MODULE CUTEST_KINDS_long
+  END MODULE CUTEST_KINDS_64
 
 ! ..............................................................................
 !
@@ -198,34 +198,34 @@
     PUBLIC
   END MODULE CUTEST_KINDS_quadruple
 
-!-*-*-*-  C U T E S T _  K I N D S _ H A L F _ L O N G   M O D U L E  -*-*-*-
+!-*-*-*-  C U T E S T _  K I N D S _ H A L F _ 6 4 B I T   M O D U L E  -*-*-*-
 
-  MODULE CUTEST_KINDS_half_long
-    USE CUTEST_KINDS_long
+  MODULE CUTEST_KINDS_half_64
+    USE CUTEST_KINDS_64
     USE CUTEST_KINDS_r2
     PUBLIC
-  END MODULE CUTEST_KINDS_half_long
+  END MODULE CUTEST_KINDS_half_64
 
-!-*-*-*-  C U T E S T _  K I N D S _ S I N G L E _ L O N G   M O D U L E -*-*-*-
+!-*-*-  C U T E S T _  K I N D S _ S I N G L E _ 6 4 B I T   M O D U L E -*-*-
 
-  MODULE CUTEST_KINDS_single_long
-    USE CUTEST_KINDS_long
+  MODULE CUTEST_KINDS_single_64
+    USE CUTEST_KINDS_64
     USE CUTEST_KINDS_r4
     PUBLIC
-  END MODULE CUTEST_KINDS_single_long
+  END MODULE CUTEST_KINDS_single_64
 
-!-*-*-*-  C U T E S T _  K I N D S _ D O U B L E _ L O N G   M O D U L E -*-*-*-
+!-*-*-  C U T E S T _  K I N D S _ D O U B L E _ 6 4 B I T   M O D U L E -*-*-
 
-  MODULE CUTEST_KINDS_double_long
-    USE CUTEST_KINDS_long
+  MODULE CUTEST_KINDS_double_64
+    USE CUTEST_KINDS_64
     USE CUTEST_KINDS_r8
     PUBLIC
-  END MODULE CUTEST_KINDS_double_long
+  END MODULE CUTEST_KINDS_double_64
 
-!-*-*- C U T E S T _  K I N D S _ Q U A D R U P L E _ L O N G  M O D U L E -*-*-
+!-*- C U T E S T _  K I N D S _ Q U A D R U P L E _ 6 4 B I T  M O D U L E -*-
 
-  MODULE CUTEST_KINDS_quadruple_long
-    USE CUTEST_KINDS_long
+  MODULE CUTEST_KINDS_quadruple_64
+    USE CUTEST_KINDS_64
     USE CUTEST_KINDS_r16
     PUBLIC
-  END MODULE CUTEST_KINDS_quadruple_long
+  END MODULE CUTEST_KINDS_quadruple_64

@@ -394,7 +394,7 @@
                         work%H_el, work%H_in, RANGE_r,                         &
                         ne, lhe_ptr, lhe_row_int,                              &
                         lhe_val_int, work%H_row, HE_row_ptr, work%H_val,       &
-                        HE_val_ptr, byrows, 0, data%out, data%out,             &
+                        HE_val_ptr, byrows, 0_ip_, data%out, data%out,         &
                         work%io_buffer, alloc_status, bad_alloc, status )
 
 !  check for errors in the assembly

@@ -2,27 +2,26 @@
 
 /*
  * assign names for each CUTEst package using the C pre-processor.
- * possibilities are long (i8) and normal (i4, default) integers and
+ * possibilities are 64 bit (i8) and normal (32 bit) (i4, default) integers and
  * half (r2), single (r4), double (r8, default) and quadruple (r16) reals
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-02
- * this version 2023-11-02
+ * this version 2024-01-18
  */
-
-#ifdef CUTEST_LONG
-#define CUTEST_KINDS_integer CUTEST_KINDS_long
+#ifdef CUTEST_64BIT_INTEGER
+#define CUTEST_KINDS_integer CUTEST_KINDS_64
 #else
 #define CUTEST_KINDS_integer CUTEST_KINDS_int
 #endif
 
 #if defined CUTEST_HALF
-#ifdef CUTEST_LONG
-#define CUTEST_KINDS_precision CUTEST_KINDS_half_long
-#define CUTEST_precision CUTEST_half_long
-#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_half_long
-#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_half_long
-#define CUTEST_LQP_precision CUTEST_LQP_half_long
+#ifdef CUTEST_64BIT_INTEGER
+#define CUTEST_KINDS_precision CUTEST_KINDS_half_64
+#define CUTEST_precision CUTEST_half_64
+#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_half_64
+#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_half_64
+#define CUTEST_LQP_precision CUTEST_LQP_half_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_half
 #define CUTEST_precision CUTEST_half
@@ -31,12 +30,12 @@
 #define CUTEST_LQP_precision CUTEST_LQP_half
 #endif
 #elif defined CUTEST_SINGLE
-#ifdef CUTEST_LONG
-#define CUTEST_KINDS_precision CUTEST_KINDS_single_long
-#define CUTEST_precision CUTEST_single_long
-#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_single_long
-#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_single_long
-#define CUTEST_LQP_precision CUTEST_LQP_single_long
+#ifdef CUTEST_64BIT_INTEGER
+#define CUTEST_KINDS_precision CUTEST_KINDS_single_64
+#define CUTEST_precision CUTEST_single_64
+#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_single_64
+#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_single_64
+#define CUTEST_LQP_precision CUTEST_LQP_single_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_single
 #define CUTEST_precision CUTEST_single
@@ -45,12 +44,12 @@
 #define CUTEST_LQP_precision CUTEST_LQP_single
 #endif
 #elif defined CUTEST_QUAD
-#ifdef CUTEST_LONG
-#define CUTEST_KINDS_precision CUTEST_KINDS_quadruple_long
-#define CUTEST_precision CUTEST_quadruple_long
-#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_quadruple_long
-#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_quadruple_long
-#define CUTEST_LQP_precision CUTEST_LQP_quadruple_long
+#ifdef CUTEST_64BIT_INTEGER
+#define CUTEST_KINDS_precision CUTEST_KINDS_quadruple_64
+#define CUTEST_precision CUTEST_quadruple_64
+#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_quadruple_64
+#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_quadruple_64
+#define CUTEST_LQP_precision CUTEST_LQP_quadruple_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_quadruple
 #define CUTEST_precision CUTEST_quadruple
@@ -59,12 +58,12 @@
 #define CUTEST_LQP_precision CUTEST_LQP_quadruple
 #endif
 #else
-#ifdef CUTEST_LONG
-#define CUTEST_KINDS_precision CUTEST_KINDS_double_long
-#define CUTEST_precision CUTEST_double_long
-#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_double_long
-#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_double_long
-#define CUTEST_LQP_precision CUTEST_LQP_double_long
+#ifdef CUTEST_64BIT_INTEGER
+#define CUTEST_KINDS_precision CUTEST_KINDS_double_64
+#define CUTEST_precision CUTEST_double_64
+#define CUTEST_PROBLEM_precision CUTEST_PROBLEM_double_64
+#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_double_64
+#define CUTEST_LQP_precision CUTEST_LQP_double_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_double
 #define CUTEST_precision CUTEST_double

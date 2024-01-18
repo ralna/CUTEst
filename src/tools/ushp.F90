@@ -79,7 +79,7 @@
              n, data%ng, data%nel, data%ntotel, data%nvrels, data%nvargp,      &
              data%IELVAR, data%IELING, data%ISTADG,                            &
              data%ISTAEV, data%ISTAGV, data%ISVGRP, data%GXEQX,                &
-             0, data%out, data%out, status, alloc_status, bad_alloc,           &
+             0_ip_, data%out, data%out, status, alloc_status, bad_alloc,       &
              work%hessian_setup_complete, work%lh_row, work%lh_col,            &
              work%H_row, work%H_col, work%ROW_start, work%POS_in_H, work%USED, &
              work%FILLED, work%lrowst, work%lpos, work%lused, work%lfilled,    &

@@ -77,6 +77,7 @@
       ELSE
 !       only_print_small = .TRUE.
         only_print_small = n <= 5 .AND. m <= 5
+!       only_print_small = n <= 100 .AND. m <= 100
       END IF
 
       IF ( m == 0 ) THEN
@@ -413,7 +414,7 @@
 
         WRITE( out, "( ' CALL CUTEST_csetup ' )" )
         CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,   &
-                        Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+                        Y, C_l, C_u, EQUATION, LINEAR, 1_ip_, 1_ip_, 1_ip_ )
         IF ( status /= 0 ) GO to 900
         IF ( only_print_small )                                                &
           CALL WRITE_X( out, n, X, X_l, X_u )
@@ -1286,7 +1287,8 @@
 
         WRITE( out, "( ' CALL CUTEST_csetup ' )" )
         CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,   &
-                               Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+                               Y, C_l, C_u, EQUATION, LINEAR,                  &
+                               1_ip_, 1_ip_, 1_ip_ )
         IF ( status /= 0 ) GO to 900
 
 !  ... and terminal exit

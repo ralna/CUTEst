@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for basic CUTEST tools packages
 
 #  Nick Gould, for GALAHAD productions
-#  This version: 2023-11-21
+#  This version: 2024-01-18
 
 #  include standard CUTEst makefile defaults before package-specifics
 
@@ -11,7 +11,7 @@ include $(CUTEST)/src/makedefs/defaults
 #  ====================  package-dependent parts  ============================
 #  ===========================================================================
 
-#  package name 
+#  package name
 
 PACKAGE = TOOLS
 package = tools
@@ -32,6 +32,24 @@ BASICS = $(LCS)(kinds_single.o) $(LCS)(cutest_single.o) \
          $(LCS)(problem_single.o) $(LCS)(fortran_ops_single.o) \
          $(LCS)(interface_single.o) $(LCS)(ccutest_single.o) \
          $(LCS)(timings_single.o)
+BASICD = $(LCD)(kinds_double.o) $(LCD)(cutest_double.o) \
+         $(LCD)(pname_double.o) $(LCD)(probname_double.o) \
+         $(LCD)(varnames_double.o) $(LCD)(newthread_double.o) \
+         $(LCD)(problem_double.o) $(LCD)(fortran_ops_double.o) \
+         $(LCD)(interface_double.o) $(LCD)(ccutest_double.o) \
+         $(LCD)(timings_double.o)
+BASICS64 = $(LCS64)(kinds_single.o) $(LCS64)(cutest_single_64.o) \
+         $(LCS64)(pname_single_64.o) $(LCS64)(probname_single_64.o) \
+         $(LCS64)(varnames_single_64.o) $(LCS64)(newthread_single_64.o) \
+         $(LCS64)(problem_single_64.o) $(LCS64)(fortran_ops_single_64.o) \
+         $(LCS64)(interface_single_64.o) $(LCS64)(ccutest_single_64.o) \
+         $(LCS64)(timings_single_64.o)
+BASICD64 = $(LCD64)(kinds_double.o) $(LCD64)(cutest_double_64.o) \
+         $(LCD64)(pname_double_64.o) $(LCD64)(probname_double_64.o) \
+         $(LCD64)(varnames_double_64.o) $(LCD64)(newthread_double_64.o) \
+         $(LCD64)(problem_double_64.o) $(LCD64)(fortran_ops_double_64.o) \
+         $(LCD64)(interface_double_64.o) $(LCD64)(ccutest_double_64.o) \
+         $(LCD64)(timings_double_64.o)
 
 UCUTESTS = $(LCS)(usetup_single.o) $(LCS)(udimen_single.o) \
            $(LCS)(udimse_single.o) $(LCS)(udimsh_single.o) \
@@ -44,6 +62,39 @@ UCUTESTS = $(LCS)(usetup_single.o) $(LCS)(udimen_single.o) \
            $(LCS)(uhprod_single.o) $(LCS)(ushprod_single.o) \
            $(LCS)(ubandh_single.o) $(LCS)(ureport_single.o) \
            $(LCS)(uterminate_single.o)
+UCUTESTD = $(LCD)(usetup_double.o) $(LCD)(udimen_double.o) \
+           $(LCD)(udimse_double.o) $(LCD)(udimsh_double.o) \
+           $(LCD)(unames_double.o) $(LCD)(uvartype_double.o) \
+           $(LCD)(ufn_double.o) $(LCD)(ugr_double.o) \
+           $(LCD)(uofg_double.o) $(LCD)(udh_double.o) \
+           $(LCD)(ugrdh_double.o) $(LCD)(ush_double.o) \
+           $(LCD)(ushp_double.o) $(LCD)(ueh_double.o) \
+           $(LCD)(ugreh_double.o) $(LCD)(ugrsh_double.o) \
+           $(LCD)(uhprod_double.o) $(LCD)(ushprod_double.o) \
+           $(LCD)(ubandh_double.o) $(LCD)(ureport_double.o) \
+           $(LCD)(uterminate_double.o)
+UCUTESTS64 = $(LCS64)(usetup_single_64.o) $(LCS64)(udimen_single_64.o) \
+           $(LCS64)(udimse_single_64.o) $(LCS64)(udimsh_single_64.o) \
+           $(LCS64)(unames_single_64.o) $(LCS64)(uvartype_single_64.o) \
+           $(LCS64)(ufn_single_64.o) $(LCS64)(ugr_single_64.o) \
+           $(LCS64)(uofg_single_64.o) $(LCS64)(udh_single_64.o) \
+           $(LCS64)(ugrdh_single_64.o) $(LCS64)(ush_single_64.o) \
+           $(LCS64)(ushp_single_64.o) $(LCS64)(ueh_single_64.o) \
+           $(LCS64)(ugreh_single_64.o) $(LCS64)(ugrsh_single_64.o) \
+           $(LCS64)(uhprod_single_64.o) $(LCS64)(ushprod_single_64.o) \
+           $(LCS64)(ubandh_single_64.o) $(LCS64)(ureport_single_64.o) \
+           $(LCS64)(uterminate_single_64.o)
+UCUTESTD64 = $(LCD64)(usetup_double_64.o) $(LCD64)(udimen_double_64.o) \
+           $(LCD64)(udimse_double_64.o) $(LCD64)(udimsh_double_64.o) \
+           $(LCD64)(unames_double_64.o) $(LCD64)(uvartype_double_64.o) \
+           $(LCD64)(ufn_double_64.o) $(LCD64)(ugr_double_64.o) \
+           $(LCD64)(uofg_double_64.o) $(LCD64)(udh_double_64.o) \
+           $(LCD64)(ugrdh_double_64.o) $(LCD64)(ush_double_64.o) \
+           $(LCD64)(ushp_double_64.o) $(LCD64)(ueh_double_64.o) \
+           $(LCD64)(ugreh_double_64.o) $(LCD64)(ugrsh_double_64.o) \
+           $(LCD64)(uhprod_double_64.o) $(LCD64)(ushprod_double_64.o) \
+           $(LCD64)(ubandh_double_64.o) $(LCD64)(ureport_double_64.o) \
+           $(LCD64)(uterminate_double_64.o)
 
 CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cdimse_single.o) $(LCS)(cdimsh_single.o) \
@@ -54,7 +105,8 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(ccfg_single.o) $(LCS)(clfg_single.o) \
            $(LCS)(ccfsg_single.o) $(LCS)(ccifg_single.o) \
            $(LCS)(ccifsg_single.o) $(LCS)(cdh_single.o) \
-           $(LCS)(cdhc_single.o) $(LCS)(cdhj_single.o) $(LCS)(ceh_single.o) \
+           $(LCS)(cdhc_single.o) $(LCS)(cdhj_single.o) \
+           $(LCS)(ceh_single.o) \
            $(LCS)(cgrdh_single.o) $(LCS)(cifn_single.o) \
            $(LCS)(cigr_single.o) $(LCS)(cdimsg_single.o) \
            $(LCS)(cisgr_single.o) $(LCS)(cisgrp_single.o) \
@@ -74,26 +126,6 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cterminate_single.o) $(LCS)(lqp_single.o) \
            $(LCS)(cconst_single.o) $(LCS)(cnames_single.o) \
            $(LCS)(cnoobj_single.o)
-
-BASICD = $(LCD)(kinds_double.o) $(LCD)(cutest_double.o) \
-         $(LCD)(pname_double.o) $(LCD)(probname_double.o) \
-         $(LCD)(varnames_double.o) $(LCD)(newthread_double.o) \
-         $(LCD)(problem_double.o) $(LCD)(fortran_ops_double.o) \
-         $(LCD)(interface_double.o) $(LCD)(ccutest_double.o) \
-         $(LCD)(timings_double.o)
-
-UCUTESTD = $(LCD)(usetup_double.o) $(LCD)(udimen_double.o) \
-           $(LCD)(udimse_double.o) $(LCD)(udimsh_double.o) \
-           $(LCD)(unames_double.o) $(LCD)(uvartype_double.o) \
-           $(LCD)(ufn_double.o) $(LCD)(ugr_double.o) \
-           $(LCD)(uofg_double.o) $(LCD)(udh_double.o) \
-           $(LCD)(ugrdh_double.o) $(LCD)(ush_double.o) \
-           $(LCD)(ushp_double.o) $(LCD)(ueh_double.o) \
-           $(LCD)(ugreh_double.o) $(LCD)(ugrsh_double.o) \
-           $(LCD)(uhprod_double.o) $(LCD)(ushprod_double.o) \
-           $(LCD)(ubandh_double.o) $(LCD)(ureport_double.o) \
-           $(LCD)(uterminate_double.o)
-
 CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cdimse_double.o) $(LCD)(cdimsh_double.o) \
            $(LCD)(cdimsj_double.o) $(LCD)(cdimchp_double.o) \
@@ -103,7 +135,8 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(ccfg_double.o) $(LCD)(clfg_double.o) \
            $(LCD)(ccfsg_double.o) $(LCD)(ccifg_double.o) \
            $(LCD)(ccifsg_double.o) $(LCD)(cdh_double.o) \
-           $(LCD)(cdhc_double.o) $(LCD)(cdhj_double.o) $(LCD)(ceh_double.o) \
+           $(LCD)(cdhc_double.o) $(LCD)(cdhj_double.o) \
+           $(LCD)(ceh_double.o) \
            $(LCD)(cgrdh_double.o) $(LCD)(cifn_double.o) \
            $(LCD)(cigr_double.o) $(LCD)(cdimsg_double.o) \
            $(LCD)(cisgr_double.o) $(LCD)(cisgrp_double.o) \
@@ -123,9 +156,71 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cterminate_double.o) $(LCD)(lqp_double.o) \
            $(LCD)(cconst_double.o) $(LCD)(cnames_double.o) \
            $(LCD)(cnoobj_double.o)
+CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
+           $(LCS64)(cdimse_single_64.o) $(LCS64)(cdimsh_single_64.o) \
+           $(LCS64)(cdimsj_single_64.o) $(LCS64)(cdimchp_single_64.o) \
+           $(LCS64)(cdimohp_single_64.o) $(LCS64)(cvartype_single_64.o) \
+           $(LCS64)(cfn_single_64.o) $(LCS64)(cgr_single_64.o) \
+           $(LCS64)(cofg_single_64.o) $(LCS64)(cofsg_single_64.o) \
+           $(LCS64)(ccfg_single_64.o) $(LCS64)(clfg_single_64.o) \
+           $(LCS64)(ccfsg_single_64.o) $(LCS64)(ccifg_single_64.o) \
+           $(LCS64)(ccifsg_single_64.o) $(LCS64)(cdh_single_64.o) \
+           $(LCS64)(cdhc_single_64.o) $(LCS64)(cdhj_single_64.o) \
+           $(LCS64)(ceh_single_64.o) \
+           $(LCS64)(cgrdh_single_64.o) $(LCS64)(cifn_single_64.o) \
+           $(LCS64)(cigr_single_64.o) $(LCS64)(cdimsg_single_64.o) \
+           $(LCS64)(cisgr_single_64.o) $(LCS64)(cisgrp_single_64.o) \
+           $(LCS64)(cidh_single_64.o) $(LCS64)(csh_single_64.o) \
+           $(LCS64)(cshc_single_64.o) $(LCS64)(cshj_single_64.o) \
+           $(LCS64)(cshp_single_64.o) $(LCS64)(cish_single_64.o) \
+           $(LCS64)(cjprod_single_64.o) $(LCS64)(cstats_single_64.o) \
+           $(LCS64)(csgr_single_64.o) $(LCS64)(csgreh_single_64.o) \
+           $(LCS64)(csgrsh_single_64.o) $(LCS64)(csjprod_single_64.o) \
+           $(LCS64)(chprod_single_64.o) $(LCS64)(chjprod_single_64.o) \
+           $(LCS64)(chcprod_single_64.o) $(LCS64)(cshprod_single_64.o) \
+           $(LCS64)(cshcprod_single_64.o) $(LCS64)(cohprodsp_single_64.o) \
+           $(LCS64)(cohprods_single_64.o) $(LCS64)(cchprodsp_single_64.o) \
+           $(LCS64)(cchprods_single_64.o) $(LCS64)(csjp_single_64.o) \
+           $(LCS64)(csgrp_single_64.o) $(LCS64)(csgrshp_single_64.o) \
+           $(LCS64)(creport_single_64.o) $(LCS64)(connames_single_64.o) \
+           $(LCS64)(cterminate_single_64.o) $(LCS64)(lqp_single_64.o) \
+           $(LCS64)(cconst_single_64.o) $(LCS64)(cnames_single_64.o) \
+           $(LCS64)(cnoobj_single_64.o)
+CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
+           $(LCD64)(cdimse_double_64.o) $(LCD64)(cdimsh_double_64.o) \
+           $(LCD64)(cdimsj_double_64.o) $(LCD64)(cdimchp_double_64.o) \
+           $(LCD64)(cdimohp_double_64.o) $(LCD64)(cvartype_double_64.o) \
+           $(LCD64)(cfn_double_64.o) $(LCD64)(cgr_double_64.o) \
+           $(LCD64)(cofg_double_64.o) $(LCD64)(cofsg_double_64.o) \
+           $(LCD64)(ccfg_double_64.o) $(LCD64)(clfg_double_64.o) \
+           $(LCD64)(ccfsg_double_64.o) $(LCD64)(ccifg_double_64.o) \
+           $(LCD64)(ccifsg_double_64.o) $(LCD64)(cdh_double_64.o) \
+           $(LCD64)(cdhc_double_64.o) $(LCD64)(cdhj_double_64.o) \
+           $(LCD64)(ceh_double_64.o) \
+           $(LCD64)(cgrdh_double_64.o) $(LCD64)(cifn_double_64.o) \
+           $(LCD64)(cigr_double_64.o) $(LCD64)(cdimsg_double_64.o) \
+           $(LCD64)(cisgr_double_64.o) $(LCD64)(cisgrp_double_64.o) \
+           $(LCD64)(cidh_double_64.o) $(LCD64)(csh_double_64.o) \
+           $(LCD64)(cshc_double_64.o) $(LCD64)(cshj_double_64.o) \
+           $(LCD64)(cshp_double_64.o) $(LCD64)(cish_double_64.o) \
+           $(LCD64)(cjprod_double_64.o) $(LCD64)(cstats_double_64.o) \
+           $(LCD64)(csgr_double_64.o) $(LCD64)(csgreh_double_64.o) \
+           $(LCD64)(csgrsh_double_64.o) $(LCD64)(csjprod_double_64.o) \
+           $(LCD64)(chprod_double_64.o) $(LCD64)(chjprod_double_64.o) \
+           $(LCD64)(chcprod_double_64.o) $(LCD64)(cshprod_double_64.o) \
+           $(LCD64)(cshcprod_double_64.o) $(LCD64)(cohprodsp_double_64.o) \
+           $(LCD64)(cohprods_double_64.o) $(LCD64)(cchprodsp_double_64.o) \
+           $(LCD64)(cchprods_double_64.o) $(LCD64)(csjp_double_64.o) \
+           $(LCD64)(csgrp_double_64.o) $(LCD64)(csgrshp_double_64.o) \
+           $(LCD64)(creport_double_64.o) $(LCD64)(connames_double_64.o) \
+           $(LCD64)(cterminate_double_64.o) $(LCD64)(lqp_double_64.o) \
+           $(LCD64)(cconst_double_64.o) $(LCD64)(cnames_double_64.o) \
+           $(LCD64)(cnoobj_double_64.o)
 
 CUTESTS = $(BASICS) $(UCUTESTS) $(CCUTESTS)
 CUTESTD = $(BASICD) $(UCUTESTD) $(CCUTESTD)
+CUTESTS64 = $(BASICS64) $(UCUTESTS64) $(CCUTESTS64)
+CUTESTD64 = $(BASICD64) $(UCUTESTD64) $(CCUTESTD64)
 
 #  main compilations and runs
 
@@ -136,6 +231,8 @@ all: cutest
 cutest_silent: cutest_silent_$(PRECIS)
 cutest_silent_single: $(CUTESTS)
 cutest_silent_double: $(CUTESTD)
+cutest_silent_single_64: $(CUTESTS64)
+cutest_silent_double_64: $(CUTESTD64)
 
 cutest: cutest_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: tools ($(PRECIS) $(SUCC)"
@@ -143,10 +240,16 @@ cutest_single: $(CUTESTS)
 	$(RANLIB) $(LCS)
 cutest_double: $(CUTESTD)
 	$(RANLIB) $(LCD)
+cutest_single_64: $(CUTESTS64)
+	$(RANLIB) $(LCS64)
+cutest_double_64: $(CUTESTD64)
+	$(RANLIB) $(LCD64)
 
 cutest_unconstrained_silent: cutest_silent_$(PRECIS)
 cutest_unconstrained_silent_single: $(BASICS) $(UCUTESTS)
 cutest_unconstrained_silent_double: $(BASICD) $(UCUTESTD)
+cutest_unconstrained_silent_single_64: $(BASICS64) $(UCUTESTS64)
+cutest_unconstrained_silent_double_64: $(BASICD64) $(UCUTESTD64)
 
 cutest_unconstrained: cutest_unconstrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: unconstrained tools ($(PRECIS) $(SUCC)"
@@ -154,10 +257,16 @@ cutest_unconstrained_single: $(BASICS) $(UCUTESTS)
 	$(RANLIB) $(LCS)
 cutest_unconstrained_double: $(BASICD) $(UCUTESTD)
 	$(RANLIB) $(LCD)
+cutest_unconstrained_single_64: $(BASICS64) $(UCUTESTS64)
+	$(RANLIB) $(LCS64)
+cutest_unconstrained_double_64: $(BASICD64) $(UCUTESTD64)
+	$(RANLIB) $(LCD64)
 
 cutest_constrained_silent: cutest_silent_$(PRECIS)
 cutest_constrained_silent_single: $(BASICS) $(CCUTESTS)
 cutest_constrained_silent_double: $(BASICD) $(CCUTESTD)
+cutest_constrained_silent_single_64: $(BASICS64) $(CCUTESTS64)
+cutest_constrained_silent_double_64: $(BASICD64) $(CCUTESTD64)
 
 cutest_constrained: cutest_constrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: constrained tools ($(PRECIS) $(SUCC)"
@@ -165,6 +274,10 @@ cutest_constrained_single: $(BASICS) $(CCUTESTS)
 	$(RANLIB) $(LCS)
 cutest_constrained_double: $(BASICD) $(CCUTESTD)
 	$(RANLIB) $(LCD)
+cutest_constrained_single_64: $(BASICS64) $(CCUTESTS64)
+	$(RANLIB) $(LCS64)
+cutest_constrained_double_64: $(BASICD64) $(CCUTESTD64)
+	$(RANLIB) $(LCD64)
 
 # run example tests
 
@@ -181,15 +294,28 @@ test_cutest_constrained: cutest
 
 #  individual compilations
 
-kinds.o: $(LC)(kinds_$(PRECIS).o)
+kinds_single.o: $(LC)(kinds_single.o)
 
-$(LC)(kinds_$(PRECIS).o): ../tools/kinds.F90
+$(LC)(kinds_single.o): ../tools/kinds.F90
 	@printf ' %-9s %-15s\t\t' "Compiling" "kinds"
 	$(CP) ../tools/kinds.F90 $(OBJ)/kinds.F90
-	cd $(OBJ); $(FORTRAN) -o kinds_$(PRECIS).o $(F90FLAGS) kinds.F90 \
+	cd $(OBJ); $(FORTRAN) -o kinds_single.o $(F90FLAGS) kinds.F90 \
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
-                   $(FORTRAN) -o kinds_$(PRECIS).o $(F90FLAGSN) kinds.F90 )
-	cd $(OBJ); $(ARR) kinds_$(PRECIS).o; $(RM) kinds.F90 kinds_$(PRECIS).o
+                   $(FORTRAN) -o kinds_single.o $(F90FLAGSN) kinds.F90 )
+	cd $(OBJ); $(ARR) kinds_single.o; $(RM) kinds.F90 kinds_single.o
+	$(RMARFILE) cutest_$(PRECIS).o
+	$(MVMODS)
+	@printf '[ OK ]\n'
+
+kinds_double.o: $(LC)(kinds_double.o)
+
+$(LC)(kinds_double.o): ../tools/kinds.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "kinds"
+	$(CP) ../tools/kinds.F90 $(OBJ)/kinds.F90
+	cd $(OBJ); $(FORTRAN) -o kinds_double.o $(F90FLAGS) kinds.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o kinds_double.o $(F90FLAGSN) kinds.F90 )
+	cd $(OBJ); $(ARR) kinds_double.o; $(RM) kinds.F90 kinds_double.o
 	$(RMARFILE) cutest_$(PRECIS).o
 	$(MVMODS)
 	@printf '[ OK ]\n'
