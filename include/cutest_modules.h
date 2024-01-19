@@ -20,7 +20,7 @@
 #define CUTEST_KINDS_precision CUTEST_KINDS_half_64
 #define CUTEST_precision CUTEST_half_64
 #define CUTEST_PROBLEM_precision CUTEST_PROBLEM_half_64
-#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_half_64
+#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_half_64
 #define CUTEST_LQP_precision CUTEST_LQP_half_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_half
@@ -62,7 +62,7 @@
 #define CUTEST_KINDS_precision CUTEST_KINDS_double_64
 #define CUTEST_precision CUTEST_double_64
 #define CUTEST_PROBLEM_precision CUTEST_PROBLEM_double_64
-#define CUTEST_iNTERFACE_precision CUTEST_INTERFACE_double_64
+#define CUTEST_INTERFACE_precision CUTEST_INTERFACE_double_64
 #define CUTEST_LQP_precision CUTEST_LQP_double_64
 #else
 #define CUTEST_KINDS_precision CUTEST_KINDS_double

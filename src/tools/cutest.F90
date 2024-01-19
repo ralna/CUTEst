@@ -70,7 +70,7 @@
 
       TYPE, PUBLIC :: CUTEST_data_type
         INTEGER ( KIND = ip_ ) :: n, ng, ng1, nel, nel1, ntotel, nvrels
-        INTEGER ( KIND = ip_ ) :: nnza, ngpvlu, nepvlu, ngng, out
+        INTEGER ( KIND = ip_ ) :: nnza, ngpvlu, nepvlu, ngng, nnzohp, out
         INTEGER ( KIND = ip_ ) :: nvargp, nvar2, nnonnz, nbprod, ntotin
         INTEGER ( KIND = ip_ ) :: lo, ch, lwork, la, lb, nobjgr, lu, ltypee
         INTEGER ( KIND = ip_ ) :: ltypeg, lintre, lft, lepvlu, lstep, lstgp

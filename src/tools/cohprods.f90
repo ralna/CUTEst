@@ -261,7 +261,9 @@
 !  set the indices for the nonzeros for the objective Hessian product
 
        CALL CUTEST_cohprodsp( status, nnzohp, lohp, IND )
-
+       data%nnzohp = nnzohp
+     ELSE
+       nnzohp = data%nnzohp
      END IF
 
 !  reset IUSED and W_ws to zero

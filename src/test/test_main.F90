@@ -77,7 +77,7 @@
       ELSE
 !       only_print_small = .TRUE.
         only_print_small = n <= 5 .AND. m <= 5
-!       only_print_small = n <= 100 .AND. m <= 100
+        only_print_small = n <= 100 .AND. m <= 100
       END IF
 
       IF ( m == 0 ) THEN
