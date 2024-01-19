@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-01-17 AT 15:10 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -56,7 +56,7 @@
 !   moden fortran version released in CUTEst, 29th October 2023
 
       SUBROUTINE CUTEST_cohprods_r( status, n, goth, X, VECTOR,                &
-                                  nnzohp, lohp, RESULT, IND )
+                                    nnzohp, lohp, RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -80,9 +80,9 @@
 !  ---------------------------------------------------------------------------
 
       CALL CUTEST_cohprods_threadsafe_r( CUTEST_data_global,                   &
-                                       CUTEST_work_global( 1 ),                &
-                                       status, n, goth, X, VECTOR,             &
-                                       nnzohp, lohp, RESULT, IND )
+                                         CUTEST_work_global( 1 ),              &
+                                         status, n, goth, X, VECTOR,           &
+                                         nnzohp, lohp, RESULT, IND )
       RETURN
 
 !  end of subroutine CUTEST_cohprods_r
@@ -98,7 +98,7 @@
 !   moden fortran version released in CUTEst, 29th October 2023
 
       SUBROUTINE CUTEST_cohprods_threaded_r( status, n, goth, X, VECTOR,      &
-                                           nnzohp, lohp, RESULT, IND, thread )
+                                             nnzohp, lohp, RESULT, IND, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -133,9 +133,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cohprods_threadsafe_r( CUTEST_data_global,                   &
-                                       CUTEST_work_global( thread ),           &
-                                       status, n, goth, X, VECTOR,             &
-                                       nnzohp, lohp, RESULT, IND )
+                                         CUTEST_work_global( thread ),         &
+                                         status, n, goth, X, VECTOR,           &
+                                         nnzohp, lohp, RESULT, IND )
       RETURN
 
 !  end of subroutine CUTEST_cohprods_threaded_r
@@ -150,8 +150,9 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprods_threadsafe_r( data, work, status, n, goth, X, &
-                                             VECTOR, nnzohp, lohp, RESULT, IND )
+      SUBROUTINE CUTEST_cohprods_threadsafe_r( data, work, status, n, goth,    &
+                                               X, VECTOR, nnzohp, lohp,        &
+                                               RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -264,9 +265,11 @@
 
 !  set the indices for the nonzeros for the objective Hessian product
 
-       CALL CUTEST_cohprodsp_r( status, nnzohp, lohp, IND )
-
-     END IF
+        CALL CUTEST_cohprodsp_r( status, nnzohp, lohp, IND )
+        work%nnzohp = nnzohp
+      ELSE
+        nnzohp = work%nnzohp
+      END IF
 
 !  reset IUSED and W_ws to zero
 
