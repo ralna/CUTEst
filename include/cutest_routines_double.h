@@ -101,6 +101,7 @@
 #define CUTEST_Cint_cofg_r CUTEST_Cint_cofg
 #define CUTEST_Cint_cofsg_r CUTEST_Cint_cofsg
 #define CUTEST_Cint_cohprods_r CUTEST_Cint_cohprods
+#define CUTEST_Cint_cohprodsp_r CUTEST_Cint_cohprodsp
 #define CUTEST_Cint_csetup_r CUTEST_Cint_csetup
 #define CUTEST_Cint_csgreh_r CUTEST_Cint_csgreh
 #define CUTEST_Cint_csgr_r CUTEST_Cint_csgr
