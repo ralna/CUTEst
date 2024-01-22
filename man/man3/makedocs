@@ -136,7 +136,9 @@
 
 #foreach pack ( cutest_cdhj cutest_cdhj_threaded )
 
-foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+#foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+
+foreach pack ( cutest_cohprods cutest_cohprods_threaded )
 
 #foreach pack ( cutest_cdimohp cutest_cdimsg \
 #               cutest_chjprod cutest_chjprod_threaded \
