@@ -5,7 +5,7 @@ CUTEST_cohprods_threaded \- CUTEst tool to form the matrix-vector product
 of a vector with the Hessian matrix of the objective function.
 .SH SYNOPSIS
 .HP 1i
-CALL CUTEST_cohprods_threaded( status, goth, X, VECTOR, 
+CALL CUTEST_cohprods_threaded( status, goth, X, VECTOR,
 nnzohp, lohp, RESULT, IND, thread )
 
 .HP 1i
@@ -96,7 +96,9 @@ required,
 .TP
 .B nnzohp \fP[out] - integer
 the total number of nonzero entries required to store the product of the
-objective Hessian with a vector.
+objective Hessian with a vector. This should be the value obtained
+from the last call to the subroutine if goth = .TRUE., but need not be
+set otherwise.
 .TP
 .B lohp \fP[in] - integer
 a variable that specifies the declared lengths of IND and RESULT.
@@ -112,6 +114,8 @@ stored in RESULT(1:nnzohp).
 an array that gives the indices of the nonzeros in the result obtained by
 multiplying the objective Hessian by VECTOR. The indices
 are stored in IND(1:nnzohp), and will match the values stored in RESULT.
+This array should be passed unchanged from the last call to the subroutine
+if goth = .TRUE., but need not be set otherwise.
 .TP
 .B thread \fP[out] - integer
 thread chosen for the evaluation; threads are numbered

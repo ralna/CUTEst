@@ -13,7 +13,7 @@ For real rather than double precision arguments, instead
 .HP 1i
 CALL CUTEST_cohprods_s( ... )
 .SH DESCRIPTION
-The CUTEST_cohprods subroutine forms the product of a vector with 
+The CUTEST_cohprods subroutine forms the product of a vector with
 the Hessian matrix of the objective function
 .EQ
 f(x)
@@ -83,7 +83,7 @@ the number of variables for the problem,
 a logical variable which specifies whether the second derivatives of
 the groups and elements, and the indexing information held in IND
 (see below) have already been set (goth = .TRUE.) or if
-this information should be computed (goth = .FALSE.),
+this information should be computed (goth = .FALSE.).
 .TP
 .B X \fP[in] - real/double precision
 when goth = .FALSE., the Hessians will be evaluated at X. Otherwise
@@ -95,7 +95,9 @@ required,
 .TP
 .B nnzohp \fP[out] - integer
 the total number of nonzero entries required to store the product of the
-objective Hessian with a vector.
+objective Hessian with a vector. This should be the value obtained
+from the last call to the subroutine if goth = .TRUE., but need not be
+set otherwise.
 .TP
 .B lohp \fP[in] - integer
 a variable that specifies the declared lengths of IND and RESULT.
@@ -111,6 +113,8 @@ stored in RESULT(1:nnzohp).
 an array that gives the indices of the nonzeros in the result obtained by
 multiplying the objective Hessian by VECTOR. The indices
 are stored in IND(1:nnzohp), and will match the values stored in RESULT.
+This array should be passed unchanged from the last call to the subroutine
+if goth = .TRUE., but need not be set otherwise.
 .LP
 .SH NOTE
 goth should be set to .TRUE. only when

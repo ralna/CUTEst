@@ -20,18 +20,20 @@
 !  dummy arguments
 
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lohp
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
       LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: goth
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
-      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lohp ) :: IND
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ), DIMENSION( lohp ) :: IND
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lohp ) :: RESULT
 
 !  ---------------------------------------------------------------------------
-!  compute the matrix-vector product H(x) between the Hessian matrices H(x) 
-!  of the objective function for the problem and a given vector v stored in 
+!  compute the matrix-vector product H(x) between the Hessian matrices H(x)
+!  of the objective function for the problem and a given vector v stored in
 !  VECTOR. The nonzero entries of the resulting products H(x) v and their
-!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE. 
-!  the second derivatives are assumed to have already been computed.
+!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE.
+!  the second derivatives are assumed to have already been computed, and
+!  that nnzohp and IND have been set by a previous call at X.
 !  If the user is unsure, set goth = .FALSE. the first time a product is
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
@@ -63,18 +65,20 @@
 !  dummy arguments
 
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lohp
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
       LOGICAL, INTENT( IN ) :: goth
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lohp ) :: IND
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lohp ) :: RESULT
 
 !  ---------------------------------------------------------------------------
-!  compute the matrix-vector product H(x) between the Hessian matrices H(x) 
-!  of the objective function for the problem and a given vector v stored in 
+!  compute the matrix-vector product H(x) between the Hessian matrices H(x)
+!  of the objective function for the problem and a given vector v stored in
 !  VECTOR. The nonzero entries of the resulting products H(x) v and their
-!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE. 
-!  the second derivatives are assumed to have already been computed.
+!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE.
+!  the second derivatives are assumed to have already been computed, and
+!  that nnzohp and IND have been set by a previous call at X.
 !  If the user is unsure, set goth = .FALSE. the first time a product is
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
@@ -97,7 +101,7 @@
 !  History -
 !   moden fortran version released in CUTEst, 29th October 2023
 
-      SUBROUTINE CUTEST_cohprods_threaded_r( status, n, goth, X, VECTOR,      &
+      SUBROUTINE CUTEST_cohprods_threaded_r( status, n, goth, X, VECTOR,       &
                                              nnzohp, lohp, RESULT, IND, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
@@ -105,18 +109,20 @@
 !  dummy arguments
 
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lohp, thread
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
       LOGICAL, INTENT( IN ) :: goth
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lohp ) :: IND
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lohp ) :: RESULT
 
 !  ---------------------------------------------------------------------------
-!  compute the matrix-vector product H(x) between the Hessian matrices H(x) 
-!  of the objective function for the problem and a given vector v stored in 
+!  compute the matrix-vector product H(x) between the Hessian matrices H(x)
+!  of the objective function for the problem and a given vector v stored in
 !  VECTOR. The nonzero entries of the resulting products H(x) v and their
-!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE. 
-!  the second derivatives are assumed to have already been computed.
+!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE.
+!  the second derivatives are assumed to have already been computed, and
+!  that nnzohp and IND have been set by a previous call at X.
 !  If the user is unsure, set goth = .FALSE. the first time a product is
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
@@ -161,18 +167,20 @@
       TYPE ( CUTEST_data_type ), INTENT( IN ) :: data
       TYPE ( CUTEST_work_type ), INTENT( INOUT ) :: work
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lohp
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
       LOGICAL, INTENT( IN ) :: goth
       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lohp ) :: IND
       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lohp ) :: RESULT
 
 !  ---------------------------------------------------------------------------
-!  compute the matrix-vector product H(x) between the Hessian matrices H(x) 
-!  of the objective function for the problem and a given vector v stored in 
+!  compute the matrix-vector product H(x) between the Hessian matrices H(x)
+!  of the objective function for the problem and a given vector v stored in
 !  VECTOR. The nonzero entries of the resulting products H(x) v and their
-!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE. 
-!  the second derivatives are assumed to have already been computed.
+!  indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is .TRUE.
+!  the second derivatives are assumed to have already been computed, and
+!  that nnzohp and IND have been set by a previous call at X.
 !  If the user is unsure, set goth = .FALSE. the first time a product is
 !  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
 !  ---------------------------------------------------------------------------
@@ -462,7 +470,7 @@
 
 !  copy the nonzeros back to the sparse array, and reset W_ws to zero
 
-      RESULT( 1 : nnzohp ) = work%W_ws( IND( 1 : nnzohp ) ) 
+      RESULT( 1 : nnzohp ) = work%W_ws( IND( 1 : nnzohp ) )
       work%W_ws( IND( 1 : nnzohp ) ) = 0.0_rp_
 
 !  update the counters for the report tool
@@ -494,5 +502,3 @@
 !  end of subroutine CUTEST_cohprods_threadsafe_r
 
       END SUBROUTINE CUTEST_cohprods_threadsafe_r
-
-

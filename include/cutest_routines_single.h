@@ -1,5 +1,5 @@
 /*
- * assign names for each single precision CUTEst routine using 
+ * assign names for each single precision CUTEst routine using
  * the C pre-processor
  *
  * Nick Gould for CUTEst
@@ -101,6 +101,7 @@
 #define CUTEST_Cint_cofg_r CUTEST_Cint_cofg_s
 #define CUTEST_Cint_cofsg_r CUTEST_Cint_cofsg_s
 #define CUTEST_Cint_cohprods_r CUTEST_Cint_cohprods_s
+#define CUTEST_Cint_cohprodsp_r CUTEST_cohprodsp_s
 #define CUTEST_Cint_csetup_r CUTEST_Cint_csetup_s
 #define CUTEST_Cint_csgreh_r CUTEST_Cint_csgreh_s
 #define CUTEST_Cint_csgr_r CUTEST_Cint_csgr_s

@@ -188,7 +188,7 @@ typedef struct VarTypes {
 #define CUTEST_cchprods   FUNDERSCORE(cutest_cint_cchprods)
 #define CUTEST_cchprodsp  FUNDERSCORE(cutest_cint_cchprodsp)
 #define CUTEST_cohprods   FUNDERSCORE(cutest_cint_cohprods)
-#define CUTEST_cohprodsp  FUNDERSCORE(cutest_cint_cohprodsp)
+#define CUTEST_cohprodsp  FUNDERSCORE(cutest_cohprodsp)
 
 #define CUTEST_uterminate FUNDERSCORE(cutest_uterminate)
 #define CUTEST_cterminate FUNDERSCORE(cutest_cterminate)
@@ -276,7 +276,7 @@ typedef struct VarTypes {
 #define CUTEST_cchprods_s   FUNDERSCORE(cutest_cint_cchprods_s)
 #define CUTEST_cchprodsp_s  FUNDERSCORE(cutest_cint_cchprodsp_s)
 #define CUTEST_cohprods_s   FUNDERSCORE(cutest_cint_cohprods_s)
-#define CUTEST_cohprodsp_s  FUNDERSCORE(cutest_cint_cohprodsp_s)
+#define CUTEST_cohprodsp_s  FUNDERSCORE(cutest_cohprodsp_s)
 
 #define CUTEST_uterminate_s FUNDERSCORE(cutest_uterminate_s)
 #define CUTEST_cterminate_s FUNDERSCORE(cutest_cterminate_s)
