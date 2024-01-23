@@ -136,7 +136,7 @@
 
 #foreach pack ( cutest_cdhj cutest_cdhj_threaded )
 
-foreach pack ( cutest_chjprod cutest_chjprod_threaded )
+#foreach pack ( cutest_chjprod cutest_chjprod_threaded )
 
 #foreach pack ( cutest_cdimohp cutest_cdimsg \
 #               cutest_chjprod cutest_chjprod_threaded \
@@ -259,9 +259,10 @@ foreach pack ( cutest_chjprod cutest_chjprod_threaded )
 #foreach pack ( cutest_cshprod_threaded )
 #foreach pack ( cutest_cshcprod_threaded )
 #foreach pack ( cutest_csjprod_threaded )
-#foreach pack ( cutest_cifn cutest_cigr cutest_cisgr \
-#               cutest_cifn_threaded cutest_cigr_threaded \
-#               cutest_cisgr_threaded )
+
+foreach pack ( cutest_cifn cutest_cigr cutest_cisgr \
+               cutest_cifn_threaded cutest_cigr_threaded \
+               cutest_cisgr_threaded )
 
 
   echo "    " $pack
