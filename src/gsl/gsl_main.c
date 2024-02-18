@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 13:20 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 09:10 GMT */
 
 /* =================================================
  * CUTEst interface for GNU Scientific Library (GSL)
@@ -49,7 +49,7 @@ struct param_data {
    int n;
 };
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 int eval_fn( const gsl_vector_float *x, void *params, gsl_vector_float *f ) {
 #else
 int eval_fn( const gsl_vector *x, void *params, gsl_vector *f ) {
@@ -57,7 +57,7 @@ int eval_fn( const gsl_vector *x, void *params, gsl_vector *f ) {
    struct param_data *data = (struct param_data*) params;
    int status;
    rp_ obj, i;
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
    const rp_ *xptr = gsl_vector_float_const_ptr(x, 0);
    rp_ *fptr = gsl_vector_float_ptr(f, 0);
 #else
@@ -68,7 +68,7 @@ int eval_fn( const gsl_vector *x, void *params, gsl_vector *f ) {
    return GSL_SUCCESS;
 }
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 int eval_jacobian( const gsl_vector_float *x, void *params, 
                    gsl_matrix_float *J ) {
 #else
@@ -85,7 +85,7 @@ int eval_jacobian( const gsl_vector *x, void *params,
    int status, ldJ;
    grlagf = false;
    jtrans = true; /* GSL uses row major */
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
    xptr = gsl_vector_float_const_ptr(x, 0);
    Jptr = gsl_matrix_float_ptr(J, 0, 0);
 #else
@@ -99,7 +99,7 @@ int eval_jacobian( const gsl_vector *x, void *params,
    return GSL_SUCCESS;
 }
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 int eval_fn_jacobian( const gsl_vector_float *x, void *params, 
                       gsl_vector_float *f, gsl_matrix_float *J ) {
 #else
@@ -117,7 +117,7 @@ int eval_fn_jacobian( const gsl_vector *x, void *params,
    rp_ obj;
    grlagf = false;
    jtrans = true; /* GSL uses row major */
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
    xptr = gsl_vector_float_const_ptr(x, 0);
    Jptr = gsl_matrix_float_ptr(J, 0, 0);
    fptr = gsl_vector_float_ptr(f, 0);
@@ -168,7 +168,7 @@ int MAINENTRY( void ){
     rp_ epsabs, epsrel;
     struct param_data params;
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
     gsl_vector_float_view xview;
 #else
     gsl_vector_view xview;
@@ -337,7 +337,7 @@ int MAINENTRY( void ){
     fdf.p = CUTEst_nvar;
     fdf.params = &params;
     /* Set up optimizer with function and initial guess */
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
     xview = gsl_vector_float_view_array(x, CUTEst_nvar);
 #else
     xview = gsl_vector_view_array(x, CUTEst_nvar);
@@ -358,7 +358,7 @@ int MAINENTRY( void ){
     }
     rewind( indr );
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
     char pf[ ]="%f%*[^\n]\n";
 #else
     char pf[ ]="%lf%*[^\n]\n";

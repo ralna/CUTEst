@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-01-18
+ * this version 2024-02-18
  *
  * ======================================================================
  */
@@ -60,7 +60,7 @@ typedef double   doublereal;
 /* typedef _Bool    logical; */
 typedef bool    logical;
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 typedef float    rp_;
 typedef float    rpc_;
 #else
@@ -68,7 +68,7 @@ typedef double   rp_;
 typedef double   rpc_;
 #endif
 
-#ifdef CUTEST_64BIT_INTEGER
+#ifdef INTEGER_64
 typedef long long  ip_;
 typedef long long  ipc_;
 #else

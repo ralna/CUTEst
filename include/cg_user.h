@@ -22,7 +22,7 @@
 
 /* added by nick gould to allow single (float) precision */
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 typedef float    rp_;
 #else
 typedef double   rp_;

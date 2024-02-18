@@ -171,16 +171,13 @@ run_debug_cutest_constrained: ctools test_cutest_constrained
 
 tools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
-                     PWD=$(PWD)/../tools )
+                     cutest PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
 utools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_unconstrained PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
-                     PWD=$(PWD)/../tools )
+                     cutest_unconstrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
 ctools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                     cutest_constrained PRECIS=$(PRECIS) INTEGER=$(INTEGER) \
-                     PWD=$(PWD)/../tools )
+                     cutest_constrained PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
 
 #  individual compilations
 

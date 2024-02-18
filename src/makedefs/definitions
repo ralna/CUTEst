@@ -1,28 +1,24 @@
 #  Standard CUTEst makefile definitions
 
 #  Nick Gould, for GALAHAD production
-#  This version: 2024-01-18
+#  This version: 2024-02-03
 
 #  makefile shell
 
 SHELL = /bin/$(BINSHELL)
 
-ifeq "$(PRECIS)" "single"
- ifeq "$(INTEGER)" "64bit"
-   DPREC = -DCUTEST_SINGLE -DCUTEST_64BIT_INTEGER
-   HSL_PRECIS = s
- else
-   DPREC = -DCUTEST_SINGLE
-   HSL_PRECIS = s
- endif
+ifeq "$(PRECIS)" "single_64"
+  DPREC = -DSINGLE -DINTEGER_64
+  HSL_PRECIS = s64
+else ifeq "$(PRECIS)" "double_64"
+  DPREC = -DDOUBLE -DINTEGER_64
+  HSL_PRECIS = d64
+else ifeq "$(PRECIS)" "single"
+  DPREC = -DSINGLE
+  HSL_PRECIS = s
 else
- ifeq "$(INTEGER)" "64bit"
-   DPREC = -DCUTEST_DOUBLE -DCUTEST_64BIT_INTEGER
-   HSL_PRECIS = d
- else
-   DPREC = -DCUTEST_DOUBLE
-   HSL_PRECIS = d
-  endif
+  DPREC = -DDOUBLE
+  HSL_PRECIS = d
 endif
 
 #  compiler flags

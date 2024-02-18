@@ -6,10 +6,10 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-11
- * this version 2023-11-11
+ * this version 2024-02-18
  */
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
 #include "cutest_routines_single.h"
 #else
 #include "cutest_routines_double.h"

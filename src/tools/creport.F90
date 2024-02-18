@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-02018 AT 09:15 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -176,18 +176,18 @@
       TIME( 3 ) = data%su_time
       TIME( 4 ) = time_now - data%st_time
 
-      CALLS( 1 ) = work%nc2of
-      CALLS( 2 ) = work%nc2og
-      CALLS( 3 ) = work%nc2oh
-      CALLS( 4 ) = work%nhvpr
+      CALLS( 1 ) = REAL( work%nc2of, rp_)
+      CALLS( 2 ) = REAL( work%nc2og, rp_)
+      CALLS( 3 ) = REAL( work%nc2oh, rp_)
+      CALLS( 4 ) = REAL( work%nhvpr, rp_)
       IF( work%pnc > 0 ) THEN
-        CALLS( 5 ) = work%nc2cf / work%pnc
-        CALLS( 6 ) = work%nc2cg / work%pnc
-        CALLS( 7 ) = work%nc2ch / work%pnc
+        CALLS( 5 ) = REAL( work%nc2cf, rp_) / REAL( work%pnc, rp_)
+        CALLS( 6 ) = REAL( work%nc2cg, rp_) / REAL( work%pnc, rp_)
+        CALLS( 7 ) = REAL( work%nc2ch, rp_) / REAL( work%pnc, rp_)
       ELSE
-        CALLS( 5 ) = work%nc2cf
-        CALLS( 6 ) = work%nc2cg
-        CALLS( 7 ) = work%nc2ch
+        CALLS( 5 ) = REAL( work%nc2cf, rp_)
+        CALLS( 6 ) = REAL( work%nc2cg, rp_)
+        CALLS( 7 ) = REAL( work%nc2ch, rp_)
       ENDIF
 
       status = 0

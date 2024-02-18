@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 08:20 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 08:50 GMT */
 
 /* ===========================================
  * CUTEst interface to OSQP
@@ -485,7 +485,7 @@ int MAINENTRY(void) {
    $OSQP/include/types.h for the parameter names and descriptions and
    $OSQP/include/constants.h for default values  */
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
     char pg[ ]="%g";
 #else
     char pg[ ]="%lg";

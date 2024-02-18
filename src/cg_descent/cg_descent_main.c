@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 09:00 GMT */
 
 /* ====================================================
  * CUTEst interface for cg_descent     April. 5, 2014
@@ -203,7 +203,7 @@ rp_ cg_valgrad
 
         spec = fopen ("CG_DESCENT.SPC", "r") ;
 
-#ifdef CUTEST_SINGLE
+#ifdef SINGLE
         char pg[ ]="%g";
 #else
         char pg[ ]="%lg";
