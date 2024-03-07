@@ -57,8 +57,8 @@ the working directory of octave):
 
     >> [f,g] = cutest_obj(prob.x);
 
-Since for all problems the name of the mex file is mcutest you have to clear 
-the variable mcutest before you setup a new problem. This is necessary in Octave.
+Since for all problems the name of the mex file is ocutest you have to clear 
+the variable ocutest before you setup a new problem. This is necessary in Octave.
 
 If the above does not work as expected for you, please e-mail
 romana.jezek@univie.ac.at with a description of the commands you run, the
