@@ -1,7 +1,7 @@
 #  Standard CUTEst makefile definitions
 
 #  Nick Gould, for GALAHAD production
-#  This version: 2024-02-03
+#  This version: 2024-04-05
 
 #  makefile shell
 
@@ -10,14 +10,20 @@ SHELL = /bin/$(BINSHELL)
 ifeq "$(PRECIS)" "single_64"
   DPREC = -DSINGLE -DINTEGER_64
   HSL_PRECIS = s64
+else ifeq "$(PRECIS)" "quadruple_64"
+  DPREC = -DINTEGER_64 -DQUAD $(QUADREAL)
+  HSL_PRECIS = q64
 else ifeq "$(PRECIS)" "double_64"
-  DPREC = -DDOUBLE -DINTEGER_64
+  DPREC = -DINTEGER_64
   HSL_PRECIS = d64
 else ifeq "$(PRECIS)" "single"
   DPREC = -DSINGLE
   HSL_PRECIS = s
+else ifeq "$(PRECIS)" "quadruple"
+  DPREC = -DQUAD $(QUADREAL)
+  HSL_PRECIS = q
 else
-  DPREC = -DDOUBLE
+  DPREC =
   HSL_PRECIS = d
 endif
 
@@ -49,26 +55,34 @@ CRUNFFLAGS = $(OPTIMIZATION) $(CCDEBUG) \
 LC  = $(OBJ)/libcutest.a
 LCS = $(OBJS)/libcutest.a
 LCD = $(OBJD)/libcutest.a
+LCQ = $(OBJQ)/libcutest.a
 LCS64 = $(OBJS64)/libcutest.a
 LCD64 = $(OBJD64)/libcutest.a
+LCQ64 = $(OBJQ64)/libcutest.a
 
 BLC  = $(OBJ)/libcutest_blas.a
 BLCS = $(OBJS)/libcutest_blas.a
 BLCD = $(OBJD)/libcutest_blas.a
+BLCQ = $(OBJQ)/libcutest_blas.a
 BLCS64 = $(OBJS64)/libcutest_blas.a
 BLCD64 = $(OBJD64)/libcutest_blas.a
+BLCQ64 = $(OBJQ64)/libcutest_blas.a
 
 DLC  = $(OBJ)/libcutest_dummy.a
 DLCS = $(OBJS)/libcutest_dummy.a
 DLCD = $(OBJD)/libcutest_dummy.a
+DLCQ = $(OBJQ)/libcutest_dummy.a
 DLCS64 = $(OBJS64)/libcutest_dummy.a
 DLCD64 = $(OBJD64)/libcutest_dummy.a
+DLCQ64 = $(OBJQ64)/libcutest_dummy.a
 
 LLC  = $(OBJ)/libcutest_lapack.a
 LLCS = $(OBJS)/libcutest_lapack.a
 LLCD = $(OBJD)/libcutest_lapack.a
+LLCQ = $(OBJQ)/libcutest_lapack.a
 LLCS64 = $(OBJS64)/libcutest_lapack.a
 LLCD64 = $(OBJD64)/libcutest_lapack.a
+LLCQ64 = $(OBJQ64)/libcutest_lapack.a
 
 MLC  = $(OBJ)/libcutest_matlab.a
 MLCS = $(OBJS)/libcutest_matlab.a

@@ -1,6 +1,5 @@
-/* \file cutest_modules.h */
-
 /*
+ * \file cutest_modules.h
  * assign names for each CUTEst package using the C pre-processor.
  * possibilities are 64 bit (i8) and normal (32 bit) (i4, default) integers and
  * half (r2), single (r4), double (r8, default) and quadruple (r16) reals
@@ -9,6 +8,7 @@
  * initial version, 2023-11-02
  * this version 2024-02-18
  */
+
 #ifdef INTEGER_64
 #define CUTEST_KINDS_integer CUTEST_KINDS_64
 #else

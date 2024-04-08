@@ -57,12 +57,16 @@
 typedef int      integer;
 typedef float    real;
 typedef double   doublereal;
+typedef __float128   quadreal;
 /* typedef _Bool    logical; */
 typedef bool    logical;
 
 #ifdef SINGLE
 typedef float    rp_;
 typedef float    rpc_;
+#elseif QUAD
+typedef __float128    rp_;
+typedef __float128    rpc_;
 #else
 typedef double   rp_;
 typedef double   rpc_;
@@ -781,6 +785,253 @@ void CUTEST_cohprodsp_s( integer *status, integer *nnzohp,
 /* Termination routines */
 void CUTEST_uterminate_s( integer *status );
 void CUTEST_cterminate_s( integer *status );
+
+/* Same for quadruple precision versions */
+
+/* Setup routines */
+void CUTEST_usetup_q  ( integer *status, const integer *funit,
+                      const integer *iout, const integer *io_buffer,
+                      integer *n, quadreal *x, quadreal *bl,
+                      quadreal *bu );
+void CUTEST_csetup_q  ( integer *status, const integer *funit,
+                      const integer *iout,
+                      const integer *io_buffer, integer *n, integer *m,
+        	      quadreal *x, quadreal *bl, quadreal *bu,
+                      quadreal *v, quadreal *cl, quadreal *cu,
+      	              logical *equatn, logical *linear, const integer *e_order,
+                      const integer *l_order, const integer *v_order );
+
+/* Unconstrained dimensioning and report routines */
+void CUTEST_udimen_q  ( integer *status, const integer *funit, integer *n );
+void CUTEST_udimsh_q  ( integer *status, integer *nnzh );
+void CUTEST_udimse_q  ( integer *status, integer *ne, integer *nzh,
+                        integer *nzirnh );
+void CUTEST_uvartype_q( integer *status, const integer *n, integer *ivarty );
+void CUTEST_unames_q  ( integer *status, const integer *n, char *pname,
+                        char *vnames );
+void CUTEST_ureport_q ( integer *status, quadreal *calls, quadreal *time );
+
+/* Constrained dimensioning and report routines */
+void CUTEST_cdimen_q  ( integer *status, const integer *funit, integer *n,
+                        integer *m );
+void CUTEST_cnoobj_q  ( integer *status, const integer *funit, logical *noobj );
+void CUTEST_cdimsg_q  ( integer *status, integer *nnzg );
+void CUTEST_cdimsj_q  ( integer *status, integer *nnzj );
+void CUTEST_cdimsh_q  ( integer *status, integer *nnzh );
+void CUTEST_cdimcop_q ( integer *status, integer *nnzohp );
+void CUTEST_cdimohp_q ( integer *status, integer *nnzohp );
+void CUTEST_cdimchp_q ( integer *status, integer *nnzchp );
+void CUTEST_cdimse_q  ( integer *status, integer *ne, integer *nzh,
+                      integer *nzirnh );
+void CUTEST_cstats_q  ( integer *status, integer *nonlinear_variables_objective,
+                      integer *nonlinear_variables_constraints,
+                      integer *equality_constraints,
+                      integer *linear_constraints );
+void CUTEST_cvartype_q( integer *status, const integer *n, integer *ivarty );
+void CUTEST_cnames_q  ( integer *status, const integer *n, const integer *m,
+                      char *pname, char *vnames, char *gnames );
+void CUTEST_creport_q ( integer *status, quadreal *calls, quadreal *time );
+
+void CUTEST_connames_q( integer *status, const integer *m, char *gname );
+void CUTEST_pname_q   ( integer *status, const integer *funit, char *pname );
+void CUTEST_probname_q( integer *status, char *pname );
+void CUTEST_varnames_q( integer *status, const integer *n, char *vname );
+
+/* Unconstrained optimization routines */
+void CUTEST_ufn_q     ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *f );
+void CUTEST_ugr_q     ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *g );
+void CUTEST_uofg_q    ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *f, quadreal *g, const logical *grad );
+void CUTEST_udh_q     ( integer *status, const integer *n, const quadreal *x,
+                      const integer *lh1, quadreal *h );
+void CUTEST_ushp_q    ( integer *status, const integer *n, integer *nnzh,
+                      const integer *lh, integer *irnh, integer *icnh );
+void CUTEST_ush_q     ( integer *status, const integer *n, const quadreal *x,
+                      integer *nnzh, const integer *lh, quadreal *h,
+                      integer *irnh, integer *icnh );
+void CUTEST_ueh_q     ( integer *status, const integer *n, const quadreal *x,
+                      integer *ne, const integer *le, integer *iprnhi,
+                      integer *iprhi, const integer *lirnhi, integer *irnhi,
+                      const integer *lhi, quadreal *hi,
+                      const logical *byrows );
+void CUTEST_ugrdh_q   ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *g, const integer *lh1, quadreal *h);
+void CUTEST_ugrsh_q   ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *g, integer *nnzh, integer *lh, quadreal *h,
+                      integer *irnh, integer *icnh );
+void CUTEST_ugreh_q   ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *g, integer *ne, const integer *le,
+                      integer *iprnhi, integer *iprhi, const integer *lirnhi,
+                      integer *irnhi, const integer *lhi, quadreal *hi,
+                      const logical *byrows );
+void CUTEST_uhprod_q  ( integer *status, const integer *n, const logical *goth,
+                      const quadreal *x, const quadreal *p, quadreal *r );
+void CUTEST_ushprod_q ( integer *status, const integer *n, const logical *goth,
+                      const quadreal *x, const integer *nnzp,
+                      const integer *indp, const quadreal *p,
+                      integer *nnzr, integer *indr, quadreal *r );
+void CUTEST_ubandh_q  ( integer *status, const integer *n, const quadreal *x,
+                      const integer *nsemib, quadreal *bandh,
+                      const integer *lbandh, integer *maxsbw );
+
+/* Constrained optimization routines */
+void CUTEST_cfn_q     ( integer *status,  const integer *n, const integer *m,
+                      const quadreal *x, quadreal *f, quadreal *c );
+void CUTEST_cconst_q  ( integer *status,  const integer *m, quadreal *c );
+void CUTEST_cofg_q    ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *f, quadreal *g, const logical *grad );
+void CUTEST_cofsg_q   ( integer *status, const integer *n, const quadreal *x,
+                      quadreal *f, integer *nnzg, const integer *lg,
+                      quadreal *sg, integer *ivsg, const logical *grad );
+void CUTEST_ccfg_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, quadreal *c, const logical *jtrans,
+                      const integer *lcjac1, const integer *lcjac2,
+                      quadreal *cjac, const logical *grad );
+void CUTEST_clfg_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y, quadreal *f,
+                      quadreal *g, const logical *grad );
+void CUTEST_cgr_q     ( integer *status,  const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const logical *grlagf, quadreal *g,
+                      const logical *jtrans, const integer *lcjac1,
+                      const integer *lcjac2, quadreal *cjac );
+void CUTEST_csgr_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const logical *grlagf, integer *nnzj,
+                      const integer *lcjac, quadreal *cjac,
+                      integer *indvar, integer *indfun );
+void CUTEST_csgrp_q   ( integer *status, const integer *n, integer *nnzj,
+                      const integer *lj, integer *jvar, integer *jcon );
+void CUTEST_csjp_q    ( integer *status, integer *nnzj, const integer *lj,
+                      integer *jvar, integer *jcon );
+void CUTEST_ccfsg_q   ( integer *status,  const integer *n, const integer *m,
+                      const quadreal *x, quadreal *c, integer *nnzj,
+                      const integer *lcjac, quadreal *cjac, integer *indvar,
+                      integer *indfun, const logical *grad );
+void CUTEST_ccifg_q   ( integer *status,  const integer *n, const integer *icon,
+                      const quadreal *x, quadreal *ci, quadreal *gci,
+                      const logical *grad );
+void CUTEST_ccifsg_q  ( integer *status, const integer *n, const integer *con,
+                      const quadreal *x, quadreal *ci, integer *nnzsgc,
+                      const integer *lsgci, quadreal *sgci, integer *ivsgci,
+                      const logical *grad );
+void CUTEST_cgrdh_q   ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const logical *grlagf, quadreal *g,
+                      const logical *jtrans, const integer *lcjac1,
+                      const integer *lcjac2, quadreal *cjac,
+                      const integer *lh1, quadreal *h );
+void CUTEST_cdh_q     ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const integer *lh1, quadreal *h );
+void CUTEST_cdhc_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const integer *lh1, quadreal *h );
+void CUTEST_cdhj_q   ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y0, const quadreal *y,
+                      const integer *lh1, quadreal *h );
+void CUTEST_cshp_q    ( integer *status, const integer *n, integer *nnzh,
+                      const integer *lh, integer *irnh, integer *icnh );
+void CUTEST_csh_q     ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y, integer *nnzh,
+                      const integer *lh, quadreal *h, integer *irnh,
+                      integer *icnh );
+void CUTEST_cshc_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y, integer *nnzh,
+                      const integer *lh, quadreal *h,
+                      integer *irnh, integer *icnh );
+void CUTEST_cshj_q    ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y0,
+                      const quadreal *y, integer *nnzh,
+                      const integer *lh, quadreal *h,
+                      integer *irnh, integer *icnh );
+void CUTEST_ceh_q     ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      integer *ne, const integer *le, integer *iprnhi,
+                      integer *iprhi, const integer *lirnhi, integer *irnhi,
+                      const integer *lhi, quadreal *hi,
+                      const logical *byrows );
+void CUTEST_cifn_q    ( integer *status, const integer *n, const integer *iprob,
+                      const quadreal *x, quadreal *f );
+void CUTEST_cigr_q    ( integer *status, const integer *n, const integer *iprob,
+                      const quadreal *x, quadreal *g );
+void CUTEST_cisgr_q   ( integer *status, const integer *n, const integer *iprob,
+                      const quadreal *x, integer *nnzg, const integer *lg,
+                      quadreal *sg, integer *ivsg );
+void CUTEST_cisgrp_q  ( integer *status, const integer *n, const integer *iprob,
+                      integer *nnzg, const integer *lg, integer *ivsg );
+void CUTEST_cidh_q    ( integer *status, const integer *n, const quadreal *x,
+                      const integer *iprob, const integer *lh1, quadreal *h );
+void CUTEST_cish_q    ( integer *status, const integer *n, const quadreal *x,
+                      const integer *iprob, integer *nnzh, const integer *lh,
+                      quadreal *h, integer *irnh, integer *icnh );
+void CUTEST_csgrsh_q  ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const logical *grlagf, integer *nnzj,
+                      const integer *lcjac, quadreal *cjac, integer *indvar,
+                      integer *indfun, integer *nnzh, const integer *lh,
+                      quadreal *h, integer *irnh, integer *icnh );
+void CUTEST_csgrshp_q ( integer *status, const integer *n, integer *nnzj,
+                      const integer *lcjac, integer *indvar,
+                      integer *indfun, integer *nnzh, const integer *lh,
+                      integer *irnh, integer *icnh );
+void CUTEST_csgreh_q  ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, const quadreal *y,
+                      const logical *grlagf, integer *nnzj,
+                      const integer *lcjac, quadreal *cjac,
+                      integer *indvar, integer *indfun,
+	              integer *ne, const integer *le, integer *iprnhi,
+                      integer *iprhi, const integer *lirnhi,
+                      integer *irnhi, const integer *lhi, quadreal *hi,
+                      const logical *byrows );
+void CUTEST_chprod_q  ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *y, quadreal *p, quadreal *q );
+void CUTEST_cshprod_q ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *y, const integer *nnzp,
+                      const integer *indp, const quadreal *p,
+                      integer *nnzr, integer *indr, quadreal *r );
+void CUTEST_chcprod_q ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *y, quadreal *p, quadreal *q );
+void CUTEST_cshcprod_q( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *y, integer *nnzp, integer *indp,
+                      quadreal *p, integer *nnzr, integer *indr,
+                      quadreal *r );
+void CUTEST_chjprod_q ( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *y0,
+                      const quadreal *y, quadreal *p, quadreal *q );
+void CUTEST_cjprod_q  ( integer *status, const integer *n, const integer *m,
+                      const logical *gotj, const logical *jtrans,
+                      const quadreal *x, const quadreal *p,
+                      const integer *lp, quadreal *r, const integer *lr );
+void CUTEST_csjprod_q ( integer *status, const integer *n, const integer *m,
+                      const logical *gotj, const logical *jtrans,
+                      const quadreal *x, const integer *nnzp,
+                      const integer *indp, const quadreal *p,
+                      const integer *lp, integer *nnzr,
+                      integer *indr, quadreal *r, const integer *lr );
+void CUTEST_cchprods_q( integer *status, const integer *n, const integer *m,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *p, const integer *lchp,
+                      quadreal *chpval, integer *chpind, integer *chpptr );
+void CUTEST_cchprodsp_q( integer *status, const integer *m,
+                       const integer *lchp, integer *chpind, integer *chpptr );
+void CUTEST_cohprods_q( integer *status, const integer *n,
+                      const logical *goth, const quadreal *x,
+                      const quadreal *p, integer *nnzohp, const integer *lohp,
+                      quadreal *ohpval, integer *ohpind );
+void CUTEST_cohprodsp_q( integer *status, integer *nnzohp,
+                       const integer *lohp, integer *chpind );
+
+/* Termination routines */
+void CUTEST_uterminate_q( integer *status );
+void CUTEST_cterminate_q( integer *status );
 
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
 void FORTRAN_open(  const integer *funit, const char *fname, integer *ierr );

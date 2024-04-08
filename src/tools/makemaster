@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for basic CUTEST tools packages
 
 #  Nick Gould, for GALAHAD productions
-#  This version: 2024-01-18
+#  This version: 2024-04-05
 
 #  include standard CUTEst makefile defaults before package-specifics
 
@@ -38,6 +38,12 @@ BASICD = $(LCD)(kinds_double.o) $(LCD)(cutest_double.o) \
          $(LCD)(problem_double.o) $(LCD)(fortran_ops_double.o) \
          $(LCD)(interface_double.o) $(LCD)(ccutest_double.o) \
          $(LCD)(timings_double.o)
+BASICQ = $(LCQ)(kinds_quadruple.o) $(LCQ)(cutest_quadruple.o) \
+         $(LCQ)(pname_quadruple.o) $(LCQ)(probname_quadruple.o) \
+         $(LCQ)(varnames_quadruple.o) $(LCQ)(newthread_quadruple.o) \
+         $(LCQ)(problem_quadruple.o) $(LCQ)(fortran_ops_quadruple.o) \
+         $(LCQ)(interface_quadruple.o) $(LCQ)(ccutest_quadruple.o) \
+         $(LCQ)(timings_quadruple.o)
 BASICS64 = $(LCS64)(kinds_single.o) $(LCS64)(cutest_single_64.o) \
          $(LCS64)(pname_single_64.o) $(LCS64)(probname_single_64.o) \
          $(LCS64)(varnames_single_64.o) $(LCS64)(newthread_single_64.o) \
@@ -50,6 +56,12 @@ BASICD64 = $(LCD64)(kinds_double.o) $(LCD64)(cutest_double_64.o) \
          $(LCD64)(problem_double_64.o) $(LCD64)(fortran_ops_double_64.o) \
          $(LCD64)(interface_double_64.o) $(LCD64)(ccutest_double_64.o) \
          $(LCD64)(timings_double_64.o)
+BASICQ64 = $(LCQ64)(kinds_quadruple.o) $(LCQ64)(cutest_quadruple_64.o) \
+         $(LCQ64)(pname_quadruple_64.o) $(LCQ64)(probname_quadruple_64.o) \
+         $(LCQ64)(varnames_quadruple_64.o) $(LCQ64)(newthread_quadruple_64.o) \
+         $(LCQ64)(problem_quadruple_64.o) $(LCQ64)(fortran_ops_quadruple_64.o) \
+         $(LCQ64)(interface_quadruple_64.o) $(LCQ64)(ccutest_quadruple_64.o) \
+         $(LCQ64)(timings_quadruple_64.o)
 
 UCUTESTS = $(LCS)(usetup_single.o) $(LCS)(udimen_single.o) \
            $(LCS)(udimse_single.o) $(LCS)(udimsh_single.o) \
@@ -73,6 +85,17 @@ UCUTESTD = $(LCD)(usetup_double.o) $(LCD)(udimen_double.o) \
            $(LCD)(uhprod_double.o) $(LCD)(ushprod_double.o) \
            $(LCD)(ubandh_double.o) $(LCD)(ureport_double.o) \
            $(LCD)(uterminate_double.o)
+UCUTESTQ = $(LCQ)(usetup_quadruple.o) $(LCQ)(udimen_quadruple.o) \
+           $(LCQ)(udimse_quadruple.o) $(LCQ)(udimsh_quadruple.o) \
+           $(LCQ)(unames_quadruple.o) $(LCQ)(uvartype_quadruple.o) \
+           $(LCQ)(ufn_quadruple.o) $(LCQ)(ugr_quadruple.o) \
+           $(LCQ)(uofg_quadruple.o) $(LCQ)(udh_quadruple.o) \
+           $(LCQ)(ugrdh_quadruple.o) $(LCQ)(ush_quadruple.o) \
+           $(LCQ)(ushp_quadruple.o) $(LCQ)(ueh_quadruple.o) \
+           $(LCQ)(ugreh_quadruple.o) $(LCQ)(ugrsh_quadruple.o) \
+           $(LCQ)(uhprod_quadruple.o) $(LCQ)(ushprod_quadruple.o) \
+           $(LCQ)(ubandh_quadruple.o) $(LCQ)(ureport_quadruple.o) \
+           $(LCQ)(uterminate_quadruple.o)
 UCUTESTS64 = $(LCS64)(usetup_single_64.o) $(LCS64)(udimen_single_64.o) \
            $(LCS64)(udimse_single_64.o) $(LCS64)(udimsh_single_64.o) \
            $(LCS64)(unames_single_64.o) $(LCS64)(uvartype_single_64.o) \
@@ -95,6 +118,17 @@ UCUTESTD64 = $(LCD64)(usetup_double_64.o) $(LCD64)(udimen_double_64.o) \
            $(LCD64)(uhprod_double_64.o) $(LCD64)(ushprod_double_64.o) \
            $(LCD64)(ubandh_double_64.o) $(LCD64)(ureport_double_64.o) \
            $(LCD64)(uterminate_double_64.o)
+UCUTESTQ64 = $(LCQ64)(usetup_quadruple_64.o) $(LCQ64)(udimen_quadruple_64.o) \
+           $(LCQ64)(udimse_quadruple_64.o) $(LCQ64)(udimsh_quadruple_64.o) \
+           $(LCQ64)(unames_quadruple_64.o) $(LCQ64)(uvartype_quadruple_64.o) \
+           $(LCQ64)(ufn_quadruple_64.o) $(LCQ64)(ugr_quadruple_64.o) \
+           $(LCQ64)(uofg_quadruple_64.o) $(LCQ64)(udh_quadruple_64.o) \
+           $(LCQ64)(ugrdh_quadruple_64.o) $(LCQ64)(ush_quadruple_64.o) \
+           $(LCQ64)(ushp_quadruple_64.o) $(LCQ64)(ueh_quadruple_64.o) \
+           $(LCQ64)(ugreh_quadruple_64.o) $(LCQ64)(ugrsh_quadruple_64.o) \
+           $(LCQ64)(uhprod_quadruple_64.o) $(LCQ64)(ushprod_quadruple_64.o) \
+           $(LCQ64)(ubandh_quadruple_64.o) $(LCQ64)(ureport_quadruple_64.o) \
+           $(LCQ64)(uterminate_quadruple_64.o)
 
 CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cdimse_single.o) $(LCS)(cdimsh_single.o) \
@@ -156,6 +190,36 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cterminate_double.o) $(LCD)(lqp_double.o) \
            $(LCD)(cconst_double.o) $(LCD)(cnames_double.o) \
            $(LCD)(cnoobj_double.o)
+CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
+           $(LCQ)(cdimse_quadruple.o) $(LCQ)(cdimsh_quadruple.o) \
+           $(LCQ)(cdimsj_quadruple.o) $(LCQ)(cdimchp_quadruple.o) \
+           $(LCQ)(cdimohp_quadruple.o) $(LCQ)(cvartype_quadruple.o) \
+           $(LCQ)(cfn_quadruple.o) $(LCQ)(cgr_quadruple.o) \
+           $(LCQ)(cofg_quadruple.o) $(LCQ)(cofsg_quadruple.o) \
+           $(LCQ)(ccfg_quadruple.o) $(LCQ)(clfg_quadruple.o) \
+           $(LCQ)(ccfsg_quadruple.o) $(LCQ)(ccifg_quadruple.o) \
+           $(LCQ)(ccifsg_quadruple.o) $(LCQ)(cdh_quadruple.o) \
+           $(LCQ)(cdhc_quadruple.o) $(LCQ)(cdhj_quadruple.o) \
+           $(LCQ)(ceh_quadruple.o) \
+           $(LCQ)(cgrdh_quadruple.o) $(LCQ)(cifn_quadruple.o) \
+           $(LCQ)(cigr_quadruple.o) $(LCQ)(cdimsg_quadruple.o) \
+           $(LCQ)(cisgr_quadruple.o) $(LCQ)(cisgrp_quadruple.o) \
+           $(LCQ)(cidh_quadruple.o) $(LCQ)(csh_quadruple.o) \
+           $(LCQ)(cshc_quadruple.o) $(LCQ)(cshj_quadruple.o) \
+           $(LCQ)(cshp_quadruple.o) $(LCQ)(cish_quadruple.o) \
+           $(LCQ)(cjprod_quadruple.o) $(LCQ)(cstats_quadruple.o) \
+           $(LCQ)(csgr_quadruple.o) $(LCQ)(csgreh_quadruple.o) \
+           $(LCQ)(csgrsh_quadruple.o) $(LCQ)(csjprod_quadruple.o) \
+           $(LCQ)(chprod_quadruple.o) $(LCQ)(chjprod_quadruple.o) \
+           $(LCQ)(chcprod_quadruple.o) $(LCQ)(cshprod_quadruple.o) \
+           $(LCQ)(cshcprod_quadruple.o) $(LCQ)(cohprodsp_quadruple.o) \
+           $(LCQ)(cohprods_quadruple.o) $(LCQ)(cchprodsp_quadruple.o) \
+           $(LCQ)(cchprods_quadruple.o) $(LCQ)(csjp_quadruple.o) \
+           $(LCQ)(csgrp_quadruple.o) $(LCQ)(csgrshp_quadruple.o) \
+           $(LCQ)(creport_quadruple.o) $(LCQ)(connames_quadruple.o) \
+           $(LCQ)(cterminate_quadruple.o) $(LCQ)(lqp_quadruple.o) \
+           $(LCQ)(cconst_quadruple.o) $(LCQ)(cnames_quadruple.o) \
+           $(LCQ)(cnoobj_quadruple.o)
 CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cdimse_single_64.o) $(LCS64)(cdimsh_single_64.o) \
            $(LCS64)(cdimsj_single_64.o) $(LCS64)(cdimchp_single_64.o) \
@@ -216,11 +280,45 @@ CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cterminate_double_64.o) $(LCD64)(lqp_double_64.o) \
            $(LCD64)(cconst_double_64.o) $(LCD64)(cnames_double_64.o) \
            $(LCD64)(cnoobj_double_64.o)
+CCUTESTQ64 = $(LCQ64)(csetup_quadruple_64.o) $(LCQ64)(cdimen_quadruple_64.o) \
+           $(LCQ64)(cdimse_quadruple_64.o) $(LCQ64)(cdimsh_quadruple_64.o) \
+           $(LCQ64)(cdimsj_quadruple_64.o) $(LCQ64)(cdimchp_quadruple_64.o) \
+           $(LCQ64)(cdimohp_quadruple_64.o) $(LCQ64)(cvartype_quadruple_64.o) \
+           $(LCQ64)(cfn_quadruple_64.o) $(LCQ64)(cgr_quadruple_64.o) \
+           $(LCQ64)(cofg_quadruple_64.o) $(LCQ64)(cofsg_quadruple_64.o) \
+           $(LCQ64)(ccfg_quadruple_64.o) $(LCQ64)(clfg_quadruple_64.o) \
+           $(LCQ64)(ccfsg_quadruple_64.o) $(LCQ64)(ccifg_quadruple_64.o) \
+           $(LCQ64)(ccifsg_quadruple_64.o) $(LCQ64)(cdh_quadruple_64.o) \
+           $(LCQ64)(cdhc_quadruple_64.o) $(LCQ64)(cdhj_quadruple_64.o) \
+           $(LCQ64)(ceh_quadruple_64.o) \
+           $(LCQ64)(cgrdh_quadruple_64.o) $(LCQ64)(cifn_quadruple_64.o) \
+           $(LCQ64)(cigr_quadruple_64.o) $(LCQ64)(cdimsg_quadruple_64.o) \
+           $(LCQ64)(cisgr_quadruple_64.o) $(LCQ64)(cisgrp_quadruple_64.o) \
+           $(LCQ64)(cidh_quadruple_64.o) $(LCQ64)(csh_quadruple_64.o) \
+           $(LCQ64)(cshc_quadruple_64.o) $(LCQ64)(cshj_quadruple_64.o) \
+           $(LCQ64)(cshp_quadruple_64.o) $(LCQ64)(cish_quadruple_64.o) \
+           $(LCQ64)(cjprod_quadruple_64.o) $(LCQ64)(cstats_quadruple_64.o) \
+           $(LCQ64)(csgr_quadruple_64.o) $(LCQ64)(csgreh_quadruple_64.o) \
+           $(LCQ64)(csgrsh_quadruple_64.o) $(LCQ64)(csjprod_quadruple_64.o) \
+           $(LCQ64)(chprod_quadruple_64.o) $(LCQ64)(chjprod_quadruple_64.o) \
+           $(LCQ64)(chcprod_quadruple_64.o) $(LCQ64)(cshprod_quadruple_64.o) \
+           $(LCQ64)(cshcprod_quadruple_64.o) \
+           $(LCQ64)(cohprodsp_quadruple_64.o) \
+           $(LCQ64)(cohprods_quadruple_64.o) \
+           $(LCQ64)(cchprodsp_quadruple_64.o) \
+           $(LCQ64)(cchprods_quadruple_64.o) $(LCQ64)(csjp_quadruple_64.o) \
+           $(LCQ64)(csgrp_quadruple_64.o) $(LCQ64)(csgrshp_quadruple_64.o) \
+           $(LCQ64)(creport_quadruple_64.o) $(LCQ64)(connames_quadruple_64.o) \
+           $(LCQ64)(cterminate_quadruple_64.o) $(LCQ64)(lqp_quadruple_64.o) \
+           $(LCQ64)(cconst_quadruple_64.o) $(LCQ64)(cnames_quadruple_64.o) \
+           $(LCQ64)(cnoobj_quadruple_64.o)
 
 CUTESTS = $(BASICS) $(UCUTESTS) $(CCUTESTS)
 CUTESTD = $(BASICD) $(UCUTESTD) $(CCUTESTD)
+CUTESTQ = $(BASICQ) $(UCUTESTQ) $(CCUTESTQ)
 CUTESTS64 = $(BASICS64) $(UCUTESTS64) $(CCUTESTS64)
 CUTESTD64 = $(BASICD64) $(UCUTESTD64) $(CCUTESTD64)
+CUTESTQ64 = $(BASICQ64) $(UCUTESTQ64) $(CCUTESTQ64)
 
 #  main compilations and runs
 
@@ -231,8 +329,10 @@ all: cutest
 cutest_silent: cutest_silent_$(PRECIS)
 cutest_silent_single: $(CUTESTS)
 cutest_silent_double: $(CUTESTD)
+cutest_silent_quadruple: $(CUTESTQ)
 cutest_silent_single_64: $(CUTESTS64)
 cutest_silent_double_64: $(CUTESTD64)
+cutest_silent_quadruple_64: $(CUTESTQ64)
 
 cutest: cutest_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: tools ($(PRECIS) $(SUCC)"
@@ -240,16 +340,22 @@ cutest_single: $(CUTESTS)
 	$(RANLIB) $(LCS)
 cutest_double: $(CUTESTD)
 	$(RANLIB) $(LCD)
+cutest_quadruple: $(CUTESTQ)
+	$(RANLIB) $(LCQ)
 cutest_single_64: $(CUTESTS64)
 	$(RANLIB) $(LCS64)
 cutest_double_64: $(CUTESTD64)
 	$(RANLIB) $(LCD64)
+cutest_quadruple_64: $(CUTESTQ64)
+	$(RANLIB) $(LCQ64)
 
 cutest_unconstrained_silent: cutest_silent_$(PRECIS)
 cutest_unconstrained_silent_single: $(BASICS) $(UCUTESTS)
 cutest_unconstrained_silent_double: $(BASICD) $(UCUTESTD)
+cutest_unconstrained_silent_quadruple: $(BASICQ) $(UCUTESTQ)
 cutest_unconstrained_silent_single_64: $(BASICS64) $(UCUTESTS64)
 cutest_unconstrained_silent_double_64: $(BASICD64) $(UCUTESTD64)
+cutest_unconstrained_silent_quadruple_64: $(BASICQ64) $(UCUTESTQ64)
 
 cutest_unconstrained: cutest_unconstrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: unconstrained tools ($(PRECIS) $(SUCC)"
@@ -257,16 +363,22 @@ cutest_unconstrained_single: $(BASICS) $(UCUTESTS)
 	$(RANLIB) $(LCS)
 cutest_unconstrained_double: $(BASICD) $(UCUTESTD)
 	$(RANLIB) $(LCD)
+cutest_unconstrained_quadruple: $(BASICQ) $(UCUTESTQ)
+	$(RANLIB) $(LCQ)
 cutest_unconstrained_single_64: $(BASICS64) $(UCUTESTS64)
 	$(RANLIB) $(LCS64)
 cutest_unconstrained_double_64: $(BASICD64) $(UCUTESTD64)
 	$(RANLIB) $(LCD64)
+cutest_unconstrained_quadruple_64: $(BASICQ64) $(UCUTESTQ64)
+	$(RANLIB) $(LCQ64)
 
 cutest_constrained_silent: cutest_silent_$(PRECIS)
 cutest_constrained_silent_single: $(BASICS) $(CCUTESTS)
 cutest_constrained_silent_double: $(BASICD) $(CCUTESTD)
+cutest_constrained_silent_quadruple: $(BASICQ) $(CCUTESTQ)
 cutest_constrained_silent_single_64: $(BASICS64) $(CCUTESTS64)
 cutest_constrained_silent_double_64: $(BASICD64) $(CCUTESTD64)
+cutest_constrained_silent_quadruple_64: $(BASICQ64) $(CCUTESTQ64)
 
 cutest_constrained: cutest_constrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: constrained tools ($(PRECIS) $(SUCC)"
@@ -274,10 +386,14 @@ cutest_constrained_single: $(BASICS) $(CCUTESTS)
 	$(RANLIB) $(LCS)
 cutest_constrained_double: $(BASICD) $(CCUTESTD)
 	$(RANLIB) $(LCD)
+cutest_constrained_quadruple: $(BASICQ) $(CCUTESTQ)
+	$(RANLIB) $(LCQ)
 cutest_constrained_single_64: $(BASICS64) $(CCUTESTS64)
 	$(RANLIB) $(LCS64)
 cutest_constrained_double_64: $(BASICD64) $(CCUTESTD64)
 	$(RANLIB) $(LCD64)
+cutest_constrained_quadruple_64: $(BASICQ64) $(CCUTESTQ64)
+	$(RANLIB) $(LCQ64)
 
 # run example tests
 
@@ -316,6 +432,19 @@ $(LC)(kinds_double.o): ../tools/kinds.F90
                 || ( printf ' %-26s' "=> Disabling optimization " ; \
                    $(FORTRAN) -o kinds_double.o $(F90FLAGSN) kinds.F90 )
 	cd $(OBJ); $(ARR) kinds_double.o; $(RM) kinds.F90 kinds_double.o
+	$(RMARFILE) cutest_$(PRECIS).o
+	$(MVMODS)
+	@printf '[ OK ]\n'
+
+kinds_quadruple.o: $(LC)(kinds_quadruple.o)
+
+$(LC)(kinds_quadruple.o): ../tools/kinds.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "kinds"
+	$(CP) ../tools/kinds.F90 $(OBJ)/kinds.F90
+	cd $(OBJ); $(FORTRAN) -o kinds_quadruple.o $(F90FLAGS) kinds.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o kinds_quadruple.o $(F90FLAGSN) kinds.F90 )
+	cd $(OBJ); $(ARR) kinds_quadruple.o; $(RM) kinds.F90 kinds_quadruple.o
 	$(RMARFILE) cutest_$(PRECIS).o
 	$(MVMODS)
 	@printf '[ OK ]\n'
