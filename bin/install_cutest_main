@@ -55,7 +55,8 @@ echo "$MACHINE ($OPSYS) $COMPUSED" > $CUTEST/versions/$VERSION
 
 if [[ ! -e $OBJDIR ]]; then
     $MKDIR $OBJDIR
-    $MKDIR $OBJDIR/double $OBJDIR/single $OBJDIR/double_64 $OBJDIR/single_64
+    $MKDIR $OBJDIR/double $OBJDIR/single $OBJDIR/quadruple
+    $MKDIR $OBJDIR/double_64 $OBJDIR/single_64 $OBJDIR/quadruple_64
 else
     if [[ ! -e $OBJDIR/double ]]; then
     $MKDIR $OBJDIR/double
@@ -63,11 +64,17 @@ else
     if [[ ! -e $OBJDIR/single ]]; then
     $MKDIR $OBJDIR/single
     fi
+    if [[ ! -e $OBJDIR/quadruple ]]; then
+    $MKDIR $OBJDIR/quadruple
+    fi
     if [[ ! -e $OBJDIR/double_64 ]]; then
     $MKDIR $OBJDIR/double_64
     fi
     if [[ ! -e $OBJDIR/single_64 ]]; then
     $MKDIR $OBJDIR/single_64
+    fi
+    if [[ ! -e $OBJDIR/quadruple_64 ]]; then
+    $MKDIR $OBJDIR/quadruple_64
     fi
 fi
 
@@ -81,17 +88,30 @@ else
     if [[ ! -e $MODDIR/single ]]; then
     $MKDIR $MODDIR/single
     fi
+    if [[ ! -e $MODDIR/quadruple ]]; then
+    $MKDIR $MODDIR/quadruple
+    fi
     if [[ ! -e $OBJDIR/double_64 ]]; then
     $MKDIR $OBJDIR/double_64
     fi
     if [[ ! -e $OBJDIR/single_64 ]]; then
     $MKDIR $OBJDIR/single_64
     fi
+    if [[ ! -e $OBJDIR/quadruple_64 ]]; then
+    $MKDIR $OBJDIR/quadruple_64
+    fi
 fi
 
 [[ ! -e $PKGDIR ]] && $MKDIR $PKGDIR
 [[ ! -e $PKGDIR/double ]] && $MKDIR $PKGDIR/double
 [[ ! -e $PKGDIR/single ]] && $MKDIR $PKGDIR/single
+[[ ! -e $PKGDIR/quadruple ]] && $MKDIR $PKGDIR/quadruple
+
+if [[ $QUADREAL == 'yes' ]] ; then
+  QUADFLAG="-DCUTEST_16btye_reals_exist"
+else
+  QUADFLAG=""
+if
 
 #  write out the cutest/bin/sys file for this architecture
 
@@ -168,6 +188,7 @@ echo 'TIMER = '$TIMER                                              >> $MAKEFILE
 echo 'NOT95 = '$NOT95                                              >> $MAKEFILE
 echo 'NOT64 = '$NOT64                                              >> $MAKEFILE
 echo 'INTEGER = '$INTEGER                                          >> $MAKEFILE
+echo 'QUADREAL = '$QUADFLAG                                        >> $MAKEFILE
 echo ' '                                                           >> $MAKEFILE
 echo 'AMPLDIR   = '$AMPLLIBDIR                                     >> $MAKEFILE
 echo 'CC        = '$CC                                             >> $MAKEFILE
@@ -227,6 +248,18 @@ if [[ $? != 0 ]]; then
     PREC='single'
     cutest_compile
   fi
+
+#  optionally compile the selected packages in quadruple precision if supported
+
+  if [[ $QUADREAL == 'yes' ]] ; then
+    yesno_default_no ' Would you like to compile CUTEst in quadruple precision ...'
+    if [[ $? != 0 ]]; then
+      PREC='quadruple'
+      cutest_compile
+    fi
+  fi
+
+
   success 'CUTEst successfully installed'
 fi
 

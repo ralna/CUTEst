@@ -12,7 +12,7 @@
 !   moden fortran version released in CUTEst, 29th October 2023
 
       SUBROUTINE CUTEST_Cint_cohprods_r( status, n, goth, X, VECTOR,           &
-                                       nnzohp, lohp, RESULT, IND )
+                                         nnzohp, lohp, RESULT, IND )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
