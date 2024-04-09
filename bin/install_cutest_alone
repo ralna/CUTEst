@@ -331,6 +331,7 @@ echo ' '                                                           >> $MAKEFILE
 echo 'CP = '$CP                                                    >> $MAKEFILE
 echo 'MV = '$MV                                                    >> $MAKEFILE
 echo 'RM = '$RM                                                    >> $MAKEFILE
+echo 'LN = '$LN                                                    >> $MAKEFILE
 echo 'SED = '$SED                                                  >> $MAKEFILE
 echo 'GREP = '$GREP                                                >> $MAKEFILE
 echo 'AR = '$AR                                                    >> $MAKEFILE

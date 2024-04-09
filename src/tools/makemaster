@@ -335,6 +335,8 @@ cutest_silent_double_64: $(CUTESTD64)
 cutest_silent_quadruple_64: $(CUTESTQ64)
 
 cutest: cutest_$(PRECIS)
+	cd $(CUTEST)/objects/$(VERSION); \
+          $(LN) -fs ./$(PRECIS)/libcutest.a ./libcutest_$(PRECIS).a
 	@printf ' %-21s\n' "CUTEST: tools ($(PRECIS) $(SUCC)"
 cutest_single: $(CUTESTS)
 	$(RANLIB) $(LCS)
