@@ -1,7 +1,7 @@
 #  standard CUTEst compilation and run instructions
 
 #  Nick Gould, for GALAHAD production
-#  This version: 2023-11-22
+#  This version: 2024-04-08
 
 #  compilation agenda
 
@@ -13,6 +13,7 @@ $(package): $(package)_$(PRECIS)
 	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
 $(package)_single: $($(PACKAGE))
 $(package)_double: $($(PACKAGE))
+$(package)_quadruple: $($(PACKAGE))
 
 #  compile tools
 

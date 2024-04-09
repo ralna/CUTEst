@@ -64,7 +64,7 @@ typedef bool    logical;
 #ifdef SINGLE
 typedef float    rp_;
 typedef float    rpc_;
-#elseif QUAD
+#elif QUAD
 typedef __float128    rp_;
 typedef __float128    rpc_;
 #else

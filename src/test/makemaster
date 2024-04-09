@@ -34,8 +34,12 @@ $(package): $(package)_$(PRECIS)
 	@printf ' %-21s\n' "CUTEst: $(package) ($(PRECIS) $(SUCC)"
 $(package)_single: $(OBJS)/$(package)_main.o
 $(package)_double: $(OBJD)/$(package)_main.o
+$(package)_quadruple: 
+	@echo " currently no test programs for $(PRECIS)"
 $(package)_single_64: $(OBJS64)/$(package)_main.o
 $(package)_double_64: $(OBJD64)/$(package)_main.o
+$(package)_quadruple_64: 
+	@echo " currently no test programs for $(PRECIS)"
 
 test_cutest: test_cutest_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: tests ($(PRECIS) $(SUCC)"

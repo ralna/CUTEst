@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for the CUTEST packages
 
 #  N. Gould, D. Orban and Ph. L. Toint.
-#  This version: 18 January 2024
+#  This version: 8 April 2024
 
 SHELL = /bin/$(BINSHELL)
 
@@ -9,8 +9,10 @@ SHELL = /bin/$(BINSHELL)
 
 S32 = PRECIS=single
 D32 = PRECIS=double
+Q32 = PRECIS=quadruple
 S64 = PRECIS=single_64 INTEGER=64bit
 D64 = PRECIS=double_64 INTEGER=64bit
+Q64 = PRECIS=quadruple_64 INTEGER=64bit
 
 #  main compilations and runs
 
@@ -192,12 +194,9 @@ all_double: tools_double
                    vf13  $(D32) PWD=$(PWD)/vf13 )
 	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    worhp  $(D32) PWD=$(PWD)/worhp )
-all_single_64: tools_single_64
+all_quadruple: tools_quadruple
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                   test  $(S64) PWD=$(PWD)/test )
-all_double_64: tools_double_64
-	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
-                   test $(D64) PWD=$(PWD)/test )
+                   test  $(Q32) PWD=$(PWD)/test )
 
 #  all tools (including fortran 2008) and interfaces
 
@@ -212,8 +211,14 @@ all_2008_double: all_double
                    ral_nlls  $(D32) PWD=$(PWD)/ral_nlls )
 	( cd sqic  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    sqic  $(D32) PWD=$(PWD)/sqic )
+all_2008_quadruple: all_quadruple
+	( cd ral_nlls  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   ral_nlls  $(Q32) PWD=$(PWD)/ral_nlls )
+	( cd sqic  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   sqic  $(Q32) PWD=$(PWD)/sqic )
 all_2008_single_64: all_single_64
 all_2008_double_64: all_double_64
+all_2008_quadruple_64: all_quadruple_64
 
 #  all tools (including gsl) and interfaces
 
@@ -224,8 +229,12 @@ all_with_gsl_single: all_single
 all_with_gsl_double: all_double
 	( cd gsl  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    gsl  $(D32) PWD=$(PWD)/gsl )
+all_with_gsl_quadruple: all_quadruple
+	( cd gsl  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   gsl  $(Q32) PWD=$(PWD)/gsl )
 all_with_gsl_single_64: all_single_64
 all_with_gsl_double_64: all_double_64
+all_with_gsl_quadruple_64: all_quadruple_64
 
 #  all tools (including tao) and interfaces
 
@@ -236,8 +245,12 @@ all_with_tao_single: all_single
 all_with_tao_double: all_double
 	( cd tao  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    tao  $(D32) PWD=$(PWD)/tao )
+all_with_tao_quadruple: all_quadruple
+	( cd tao  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   tao  $(Q32) PWD=$(PWD)/tao )
 all_with_tao_single_64: all_single_64
 all_with_tao_double_64: all_double_64
+all_with_tao_quadruple_64: all_quadruple_64
 
 # all tools
 
@@ -248,12 +261,18 @@ tools_single:
 tools_double:
 	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest $(D32) PWD=$(PWD)/tools )
+tools_quadruple:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest $(Q32) PWD=$(PWD)/tools )
 tools_single_64:
 	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest $(S64) PWD=$(PWD)/tools )
 tools_double_64:
 	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest $(D64) PWD=$(PWD)/tools )
+tools_quadruple_64:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest $(Q64) PWD=$(PWD)/tools )
 
 #  all tools and their matlab interface
 
@@ -288,12 +307,18 @@ test_single:
 test_double:
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest $(D32) PWD=$(PWD)/test )
+test_quadruple:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest $(Q32) PWD=$(PWD)/test )
 test_single_64:
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest $(S64) PWD=$(PWD)/test )
 test_double_64:
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest $(D64) PWD=$(PWD)/test )
+test_quadruple_64:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest $(Q64) PWD=$(PWD)/test )
 
 # all unconstrained tools and interface tests
 
@@ -308,6 +333,11 @@ all_unconstrained_double:
                      cutest_unconstrained $(D32) PWD=$(PWD)/tools )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest_unconstrained $(D32) PWD=$(PWD)/test )
+all_unconstrained_quadruple:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_unconstrained $(Q32) PWD=$(PWD)/tools )
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest_unconstrained $(Q32) PWD=$(PWD)/test )
 all_unconstrained_single_64:
 	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest_unconstrained $(S64) PWD=$(PWD)/tools )
@@ -318,6 +348,11 @@ all_unconstrained_double_64:
                      cutest_unconstrained $(D64) PWD=$(PWD)/tools )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest_unconstrained $(D64) PWD=$(PWD)/test )
+all_unconstrained_quadruple_64:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_unconstrained $(Q64) PWD=$(PWD)/tools )
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest_unconstrained $(Q64) PWD=$(PWD)/test )
 
 # all constrained tools and interface tests
 
@@ -332,6 +367,11 @@ all_constrained_double:
                      cutest_constrained $(D32) PWD=$(PWD)/tools )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest_constrained $(D32) PWD=$(PWD)/test )
+all_constrained_quadruple:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_constrained $(Q32) PWD=$(PWD)/tools )
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest_constrained $(Q32) PWD=$(PWD)/test )
 all_constrained_single_64:
 	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest_constrained $(S64) PWD=$(PWD)/tools )
@@ -342,6 +382,11 @@ all_constrained_double_64:
                      cutest_constrained $(D64) PWD=$(PWD)/tools )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest_constrained $(D64) PWD=$(PWD)/test )
+all_constrained_quadruple_64:
+	( cd tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     cutest_constrained $(Q64) PWD=$(PWD)/tools )
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     test_cutest_constrained $(Q64) PWD=$(PWD)/test )
 
 # all tests
 

@@ -97,5 +97,5 @@ while [[ $finished != 'true' ]]; do
     fi
 
     yesno_default_no " Do you wish to uninstall another version"
-    [[ $? != 0 ]] && finished='true'
+    [[ $? == 0 ]] && finished='true'
 done
