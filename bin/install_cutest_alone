@@ -487,11 +487,10 @@ if [[ $? == 1 ]]; then
       yesno_default_no ' Would you like to compile CUTEst in quadruple precision ...'
       if [[ $? != 0 ]]; then
         PREC='quadruple'
-        MACROS="PRECIS=$PREC PWD=$CUTEST/src CUTEST=$CUTEST
+        MACROS="PRECIS=$PREC PWD=$CUTEST/src CUTEST=$CUTEST"
         $MAKE $OPTIONS all $MACROS
       fi
     fi
-  fi
 
 fi
 
