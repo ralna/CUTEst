@@ -76,6 +76,7 @@ jobs:
           version: ${{ matrix.version }}
       - name: Install SIFDecode
         run: |
+          export TERM=xterm
           cd $SIFDECODE
           printf "${{ matrix.sifdecode_input }}" > install_sifdecode_config
           ./install_sifdecode < install_sifdecode_config
@@ -86,6 +87,7 @@ jobs:
           ./install_cutest < install_config
       - name: Test double precision
         run: |
+          export TERM=xterm
           $CUTEST/bin/runcutest --help
           $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p genc
@@ -94,6 +96,7 @@ jobs:
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p stats
       - name: Test single precision
         run: |
+          export TERM=xterm
           $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen90
