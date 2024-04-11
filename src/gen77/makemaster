@@ -11,7 +11,7 @@ include $(CUTEST)/src/makedefs/defaults
 #  ====================  package-dependent parts  ============================
 #  ===========================================================================
 
-#  package name 
+#  package name
 
 PACKAGE = GEN77
 package = gen77
@@ -23,6 +23,9 @@ package = gen77
 #  include standard CUTEst makefile definitions
 
 include $(CUTEST)/src/makedefs/definitions
+
+$(PACKAGE) = $(OBJ)/$(package).o $(OBJ)/$(package)_main.o
+gen90 = $(OBJ)/$(package).o $(OBJ)/$(package)_main.o
 
 #  include compilation and run instructions
 
@@ -51,4 +54,3 @@ run_test: tools test_cutest $(OBJ)/$(package)_main.o $(OBJ)/$(package).o
 #  include standard package compilation instructions
 
 include $(CUTEST)/src/makedefs/compile
-

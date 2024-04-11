@@ -11,7 +11,7 @@ include $(CUTEST)/src/makedefs/defaults
 #  ====================  package-dependent parts  ============================
 #  ===========================================================================
 
-#  package name 
+#  package name
 
 PACKAGE = GEN90
 package = gen90
@@ -25,7 +25,7 @@ package = gen90
 include $(CUTEST)/src/makedefs/definitions
 
 $(PACKAGE) = $(OBJ)/$(package).o $(OBJ)/$(package)_main.o
-gen90 = $(OBJ)/gen90.o $(OBJ)/gen90_main.o
+gen90 = $(OBJ)/$(package).o $(OBJ)/$(package)_main.o
 
 #  include compilation and run instructions
 
