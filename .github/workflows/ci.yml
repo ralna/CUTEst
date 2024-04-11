@@ -97,6 +97,6 @@ jobs:
       - name: Test single precision
         run: |
           export TERM=xterm
-          $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
+          $SIFDECODE/bin/sifdecoder -sp -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen90
