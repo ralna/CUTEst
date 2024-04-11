@@ -1,42 +1,40 @@
-name: CI
+name: ARCHDefs
 on:
   push:
     branches:
       - master
-      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: CUTEst ${{ matrix.os }} ${{ matrix.compiler }}
+    name: CUTEst/${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            compiler: gnu
-            sifdecode_input: '1\n1\nn\n1'
+            compiler: gcc
+            version: '12'
+            sifdecode_input: '1\n1\nN1\nNyy'
             cutest_input: '1\n1\nn\n1\n2\n2\nn\nn\ny\nd\ny\n'
             arch: 'pc64.lnx.gfo'
           - os: macos-latest
-            compiler: gnu
-            sifdecode_input: '2\nn\n4'
+            compiler: gcc
+            version: '12'
+            sifdecode_input: '2\nN1\nNyy'
             cutest_input: '2\nn\n4\n2\n2\nn\nn\ny\nd\ny\n'
             arch: 'mac64.osx.gfo'
           - os: ubuntu-latest
-            compiler: intel
-            sifdecode_input: '1\n1\nn\n2\nn\ny'
+            compiler: intel-classic
+            version: '2021.10'
+            sifdecode_input: '1\n1\nN2\nNyy'
             cutest_input: '1\n1\nn\n2\nn\ny\n2\n8\nn\nn\ny\nd\ny\n'
-            hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18975/l_HPCKit_p_2022.3.1.16997_offline.sh'
-            script: 'install_linux.sh'
             arch: 'pc64.lnx.ifr'
           - os: macos-latest
-            compiler: intel
-            sifdecode_input: '2\nn\n2\nn\ny'
+            compiler: intel-classic
+            version: '2021.10'
+            sifdecode_input: '2\nN2\nNyy'
             cutest_input: '2\nn\n5\n2\n4\nn\nn\ny\nd\ny\n'
-            # hpckit: 'https://registrationcenter-download.intel.com/akdlm/irc_nas/18977/m_HPCKit_p_2022.3.1.15344_offline.dmg'
-            hpckit: 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18681/m_HPCKit_p_2022.2.0.158_offline.dmg'
-            script: 'install_macos.sh'
             arch: 'mac64.osx.ifr'
     runs-on: ${{ matrix.os }}
     env:
@@ -45,11 +43,8 @@ jobs:
       CUTEST: ${{ github.workspace }}
       MASTSIF: ${{ github.workspace }}/sif
     steps:
-      - name: Set up Homebrew
-        if: matrix.compiler == 'gnu'
-        uses: Homebrew/actions/setup-homebrew@master
-      - name: Check out
-        uses: actions/checkout@v3
+      - name: Checkout CUTEst
+        uses: actions/checkout@v4
       - name: Download ARCHDefs
         id: download-archdefs
         uses: robinraju/release-downloader@v1.5
@@ -74,31 +69,23 @@ jobs:
         run: |
           tar zxf SIFDecode-${{ steps.download-sifdecode.outputs.tag_name }}.tar.gz
           mv ralna-SIFDecode-* SIFDecode
-      - name: Install GNU C and Fortran compilers
-        if: matrix.compiler == 'gnu'
-        run: |
-          brew update
-          eval $(brew shellenv)
-          brew install gcc
-      - name: Install Intel OneAPI C and Fortran compilers
-        if: matrix.compiler == 'intel'
-        run: |
-          .github/scripts/${{ matrix.script }} "${{ matrix.hpckit }}" all
+      - name: Install compilers
+        uses: fortran-lang/setup-fortran@main
+        with:
+          compiler: ${{ matrix.compiler }}
+          version: ${{ matrix.version }}
       - name: Install SIFDecode
         run: |
-          [[ "${{ matrix.compiler }}" == "intel" ]] && source /opt/intel/oneapi/setvars.sh
           cd $SIFDECODE
           printf "${{ matrix.sifdecode_input }}" > install_sifdecode_config
           ./install_sifdecode < install_sifdecode_config
       - name: Build
         run: |
-          [[ "${{ matrix.compiler }}" == "intel" ]] && source /opt/intel/oneapi/setvars.sh
           cd $CUTEST
           printf "${{ matrix.cutest_input }}" > install_config
           ./install_cutest < install_config
       - name: Test double precision
         run: |
-          [[ "${{ matrix.compiler }}" == "intel" ]] && source /opt/intel/oneapi/setvars.sh
           $CUTEST/bin/runcutest --help
           $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p genc
@@ -107,7 +94,6 @@ jobs:
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p stats
       - name: Test single precision
         run: |
-          [[ "${{ matrix.compiler }}" == "intel" ]] && source /opt/intel/oneapi/setvars.sh
           $SIFDECODE/bin/sifdecoder -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen90
