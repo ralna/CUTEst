@@ -118,6 +118,7 @@ Display_Usage() {
     printf '  -A  or --architecture \tspecify architecture to use\n'
     printf '  -p  or --package      \tspecify package name\n'
     printf '  -sp or --single       \trun single precision version of package\n'
+    printf '  -qp or --quadruple    \trun quadruple precision version of package\n'
     printf '  -h  or --help         \tdisplay this help message\n'
     printf '  -k  or --keep         \tkeep executable after run is over\n'
     printf '  -r  or --rebuild      \tforce recompilation of problem subroutines\n'
@@ -157,6 +158,10 @@ Parse_Arguments() {
             -sp|--single)  PRECISION="single"
                            PSUFFIX="_s"
                            sd_opts=( ${sd_opts[@]} "-sp" )
+                           ;;
+            -qp|--quadruple)  PRECISION="quadruple"
+                           PSUFFIX="_q"
+                           sd_opts=( ${sd_opts[@]} "-qp" )
                            ;;
             -h|--help)     Display_Usage
                            exit 0

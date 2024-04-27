@@ -4,7 +4,7 @@
 .SH NAME
 runcutest \- CUTEst interface to solvers.
 .SH SYNOPSIS
-\fBruncutest\fP --package \fIpack\fP [\-\-architecture \fIarch\fP]  [\-\-single] [\-\-help] [\-\-keep] [\-\-rebuild] [\-\-stash] [\-\-output \fI0|1\fP] [\-\-limit \fIsecs\fP] [\-\-cfortran] [\-\-debug] [\-\-uncons] [\-L\fIpath/to/lib\fP] [\-\-blas \fIkeyword\fP] [\-\-lapack \fIkeyword\fP] [\-\-command] [\-\-config] [\-\-decode \fIproblem[.SIF]\fP]
+\fBruncutest\fP --package \fIpack\fP [\-\-architecture \fIarch\fP]  [\-\-single] [\-\-quadruple] [\-\-help] [\-\-keep] [\-\-rebuild] [\-\-stash] [\-\-output \fI0|1\fP] [\-\-limit \fIsecs\fP] [\-\-cfortran] [\-\-debug] [\-\-uncons] [\-L\fIpath/to/lib\fP] [\-\-blas \fIkeyword\fP] [\-\-lapack \fIkeyword\fP] [\-\-command] [\-\-config] [\-\-decode \fIproblem[.SIF]\fP]
 .SH DESCRIPTION
 \fBruncutest\fP is the CUTEst interface to solvers. It replaces its
 predecessor CUTEr's combination of \fBrunpackage\fP, \fIpkg\fP and
@@ -40,6 +40,10 @@ used, but if $MYARCH is invalid or empty the decoder will terminate.
 .TP
 .B \-sp, \-\-single
 Run \fIpackage\fP in single-precision mode if available. Double
+precision is the default.
+.TP
+.B \-qp, \-\-quadruple
+Run \fIpackage\fP in quadruple-precision mode if available. Double
 precision is the default.
 .TP
 .B \-h, \-\-help
