@@ -94,9 +94,13 @@ jobs:
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p gen90
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p stats
+          $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p test --decode ALLINITU
+          $CUTEST/bin/runcutest -A ${{ matrix.arch }} -p test --decode ALLINITC
       - name: Test single precision
         run: |
           export TERM=xterm
           $SIFDECODE/bin/sifdecoder -sp -A ${{ matrix.arch }} ROSENBR
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen77
           $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p gen90
+          $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p test --decode ALLINITU
+          $CUTEST/bin/runcutest -A ${{ matrix.arch }} --single -p test --decode ALLINITC
