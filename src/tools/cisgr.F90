@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-05-01 AT 10:15 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -270,17 +270,17 @@
         ELSE
           ICALCG( 1 ) = ig
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
-                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
+                        data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
+                        .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative
 
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
-                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
+                        data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -448,17 +448,17 @@
 
         ELSE
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                       .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative values.
 
-          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                       .TRUE., igstat )
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
