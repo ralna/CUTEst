@@ -6,41 +6,46 @@ project(
   default_options: [
     'buildtype=release',
     'libdir=lib',
-    'default_library=shared',
+    'default_library=static',
     'warning_level=0',
   ],
 )
 
 libcutest_src = []
+libcutest_c_src = []
+
 cutest_binaries = []
+cutest_tests = []
+
+cutest_c_binaries = []
+cutest_c_tests = []
 
 libcutest_include = []
 libcutest_include += include_directories('include')
 
 # Sources
-# subdir('src/algencan')
-# subdir('src/bobyqa')
-# subdir('src/cg_descent')
-# subdir('src/cgplus')
-# subdir('src/cobyla')
-# subdir('src/curvi')
-# subdir('src/derchk')
-# subdir('src/dfo')
-# subdir('src/directsearch')
-# subdir('src/e04nqf')
-# subdir('src/filtersd')
-# subdir('src/filtersqp')
-# subdir('src/gen')
-# subdir('src/gen77')
-# subdir('src/gen90')
-# subdir('src/genc')
-# subdir('src/gsl')
-# subdir('src/highs')
-# subdir('src/hrb')
-# subdir('src/ipopt')
-# subdir('src/knitro')
-# subdir('src/la04')
-# subdir('src/lbfgs')
+subdir('src/algencan')
+subdir('src/bobyqa')
+subdir('src/cg_descent')
+subdir('src/cgplus')
+subdir('src/cobyla')
+subdir('src/curvi')
+subdir('src/derchk')
+subdir('src/dfo')
+subdir('src/directsearch')
+subdir('src/e04nqf')
+subdir('src/filtersd')
+subdir('src/filtersqp')
+subdir('src/gen77')
+subdir('src/gen90')
+subdir('src/genc')
+subdir('src/gsl')
+subdir('src/highs')
+subdir('src/hrb')
+subdir('src/ipopt')
+subdir('src/knitro')
+subdir('src/la04')
+subdir('src/lbfgs')
 # subdir('src/lbfgsb')
 # subdir('src/lincoa')
 # subdir('src/loqo')
@@ -64,18 +69,18 @@ libcutest_include += include_directories('include')
 # subdir('src/sqic')
 # subdir('src/stats')
 # subdir('src/stenmin')
-# subdir('src/tao')
-# subdir('src/tenmin')
+subdir('src/tao')
+subdir('src/tenmin')
 # subdir('src/test')
 subdir('src/tools')
-# subdir('src/tron')
-# subdir('src/uncmin')
-# subdir('src/vf13')
-# subdir('src/worhp')
+subdir('src/tron')
+subdir('src/uncmin')
+subdir('src/vf13')
+subdir('src/worhp')
 
 # Library
 libcutest = library('cutest',
-                    sources : libcutest_src,
+                    sources : libcutest_src + libcutest_c_src,
                     include_directories : libcutest_include,
                     install : true)
 

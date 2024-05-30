@@ -7,31 +7,34 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: SIFDecode/${{ matrix.os }}/${{ matrix.fc_cmd }}/${{ matrix.compiler_version }}
+    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-        compiler_version: [12]
+        os: [windows-latest, ubuntu-latest, macos-13]
+        arch: ['x64']
+        version: ['11']
         include:
-          - compiler: gnu
-            fc_cmd: gfortran
+          - compiler: gcc
+          - os: windows-latest
+            compiler: intel-classic
+            version: '2021.10'
+          - os: ubuntu-latest
+            compiler: intel-classic
+            version: '2021.10'
+          - os: windows-latest
+            compiler: intel
+            version: '2023.2'
           - os: ubuntu-latest
             compiler: intel
-            compiler_version: 2021.9.0
-            fc_cmd: ifort
-          - os: macos-latest
-            compiler: intel
-            compiler_version: 2021.9.0
-            fc_cmd: ifort
-          - os: ubuntu-latest
-            compiler: intel-llvm
-            compiler_version: 2023.2.0
-            fc_cmd: ifx
+            version: '2023.2'
+          # - os: ubuntu-latest
+          #   compiler: nvidia-hpc
+          #   version: '23.11'
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check out SIFDecode
-        uses: actions/checkout@v3
+      - name: Check out CUTEST
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -41,55 +44,53 @@ jobs:
       - name: Install Meson and Ninja
         run: pip install meson ninja
 
-      - name: Install GNU compilers
-        if: matrix.compiler == 'gnu'
-        uses: awvwgk/setup-fortran@main
-        with:
-          compiler: gcc
-          version: ${{ matrix.compiler_version }}
+      - name: Set the environment variables CUTEST
+        shell: bash
+        run: echo "CUTEST=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
-      - name: Install classic Intel compilers
-        if: matrix.compiler == 'intel'
-        uses: awvwgk/setup-fortran@main
+      - name: Install compilers
+        uses: fortran-lang/setup-fortran@main
         with:
-          compiler: intel-classic
-          version: ${{ matrix.compiler_version }}
-
-      - name: Install nextgen Intel compilers
-        if: matrix.compiler == 'intel-llvm'
-        uses: awvwgk/setup-fortran@main
-        with:
-          compiler: intel
-          version: ${{ matrix.compiler_version }}
+          compiler: ${{ matrix.compiler }}
+          version: ${{ matrix.version }}
 
       # Uncomment this section to obtain ssh access to VM
       # - name: Setup tmate session
-      # if: matrix.os == 'windows-latest'
-      # uses: mxschmitt/action-tmate@v3
+      #   if: matrix.os == 'macos-13'
+      #   uses: mxschmitt/action-tmate@v3
 
-      - name: Setup SIFDecode
+      - name: Setup CUTEST
         shell: bash
         run: |
-          meson setup builddir --prefix=$GITHUB_WORKSPACE/../meson
-        env:
-          FC: ${{ matrix.fc_cmd }}
+          meson setup builddir --buildtype=debug \
+                               --prefix=$GITHUB_WORKSPACE/cutest
 
-      - name: Build SIFDecode
+      - name: Build CUTEST
         shell: bash
         run: |
           meson compile -C builddir
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: ${{ matrix.os }}_${{ matrix.fc_cmd }}_${{ matrix.compiler_version }}_meson-log.txt
+          name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_meson-log.txt
           path: builddir/meson-logs/meson-log.txt
 
-      - name: Install SIFDecode
+      - name: Install CUTEST
         shell: bash
         run: |
           meson install -C builddir
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: ${{ matrix.os }}_${{ matrix.fc_cmd }}_${{ matrix.compiler_version }}_install-log.txt
+          name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_install-log.txt
           path: builddir/meson-logs/install-log.txt
+
+      - name: Test CUTEST
+        shell: bash
+        run: |
+          meson test -C builddir
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_testlog.txt
+          path: builddir/meson-logs/testlog.txt
