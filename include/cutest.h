@@ -65,8 +65,13 @@ typedef bool    logical;
 typedef float    rp_;
 typedef float    rpc_;
 #elif QUAD
+#if defined(__INTEL_COMPILER) && defined(_WIN32)
+typedef _Quad    rp_;
+typedef _Quad    rpc_;
+#else
 typedef __float128    rp_;
 typedef __float128    rpc_;
+#endif
 #else
 typedef double   rp_;
 typedef double   rpc_;

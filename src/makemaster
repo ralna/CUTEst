@@ -197,6 +197,9 @@ all_double: tools_double
 all_quadruple: tools_quadruple
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    test  $(Q32) PWD=$(PWD)/test )
+all_single_64: tools_single_64
+all_double_64: tools_double_64
+all_quadruple_64: tools_quadruple_64
 
 #  all tools (including fortran 2008) and interfaces
 
