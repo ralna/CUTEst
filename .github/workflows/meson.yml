@@ -16,10 +16,6 @@ jobs:
         version: ['11']
         include:
           - compiler: gcc
-          - os: windows-latest
-            compiler: intel-classic
-            version: '2021.10'
-          - os: ubuntu-latest
             compiler: intel-classic
             version: '2021.10'
           - os: windows-latest
