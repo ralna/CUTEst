@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-02-18
+ * this version 2024-06-11
  *
  * ======================================================================
  */
@@ -61,10 +61,10 @@ typedef __float128   quadreal;
 /* typedef _Bool    logical; */
 typedef bool    logical;
 
-#ifdef SINGLE
+#ifdef REAL_32
 typedef float    rp_;
 typedef float    rpc_;
-#elif QUAD
+#elif REAL_128
 #if defined(__INTEL_COMPILER) && defined(_WIN32)
 typedef _Quad    rp_;
 typedef _Quad    rpc_;

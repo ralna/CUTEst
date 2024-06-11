@@ -1,7 +1,7 @@
-! THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 09:00 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-06-11 AT 11:40 GMT.
 
 #include "cutest_modules.h"
-#ifdef SINGLE
+#ifdef REAL_32
 #define RAL_NLLS_precision RAL_NLLS_single
 #else
 #define RAL_NLLS_precision RAL_NLLS_double

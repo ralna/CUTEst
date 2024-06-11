@@ -1,26 +1,26 @@
 #  Standard CUTEst makefile definitions
 
 #  Nick Gould, for GALAHAD production
-#  This version: 2024-04-05
+#  This version: 2024-06-11
 
 #  makefile shell
 
 SHELL = /bin/$(BINSHELL)
 
 ifeq "$(PRECIS)" "single_64"
-  DPREC = -DSINGLE -DINTEGER_64
+  DPREC = -DREAL_32 -DINTEGER_64
   HSL_PRECIS = s64
 else ifeq "$(PRECIS)" "quadruple_64"
-  DPREC = -DINTEGER_64 -DQUAD $(QUADREAL)
+  DPREC = -DINTEGER_64 -DREAL_128 $(QUADREAL)
   HSL_PRECIS = q64
 else ifeq "$(PRECIS)" "double_64"
   DPREC = -DINTEGER_64
   HSL_PRECIS = d64
 else ifeq "$(PRECIS)" "single"
-  DPREC = -DSINGLE
+  DPREC = -DREAL_32
   HSL_PRECIS = s
 else ifeq "$(PRECIS)" "quadruple"
-  DPREC = -DQUAD $(QUADREAL)
+  DPREC = -DREAL_128 $(QUADREAL)
   HSL_PRECIS = q
 else
   DPREC =

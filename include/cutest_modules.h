@@ -6,7 +6,7 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-02
- * this version 2024-02-18
+ * this version 2024-06-11
  */
 
 #ifdef INTEGER_64
@@ -15,7 +15,7 @@
 #define CUTEST_KINDS_integer CUTEST_KINDS_int
 #endif
 
-#if defined HALF
+#if defined REAL_16
 #ifdef INTEGER_64
 #define CUTEST_KINDS_precision CUTEST_KINDS_half_64
 #define CUTEST_precision CUTEST_half_64
@@ -29,7 +29,7 @@
 #define CUTEST_INTERFACE_precision CUTEST_INTERFACE_half
 #define CUTEST_LQP_precision CUTEST_LQP_half
 #endif
-#elif defined SINGLE
+#elif defined REAL_32
 #ifdef INTEGER_64
 #define CUTEST_KINDS_precision CUTEST_KINDS_single_64
 #define CUTEST_precision CUTEST_single_64
@@ -43,7 +43,7 @@
 #define CUTEST_INTERFACE_precision CUTEST_INTERFACE_single
 #define CUTEST_LQP_precision CUTEST_LQP_single
 #endif
-#elif defined QUAD
+#elif defined REAL_128
 #ifdef INTEGER_64
 #define CUTEST_KINDS_precision CUTEST_KINDS_quadruple_64
 #define CUTEST_precision CUTEST_quadruple_64

@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 09:10 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-06-11 AT 11:40 GMT */
 
 /* ====================================================
  * CUTEst interface simulating a black box for NOMAD.
@@ -117,7 +117,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
         return 0;
       }
 
-#ifdef SINGLE
+#ifdef REAL_32
       char pf[ ]="%f";
 #else
       char pf[ ]="%lf";

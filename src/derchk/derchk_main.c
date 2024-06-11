@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-02-18 AT 09:10 GMT */
+/* THIS VERSION: CUTEST 2.4 - 2024-06-11 AT 11:40 GMT */
 
 /* ===========================================
  * CUTEst interface to derivative checker
@@ -72,7 +72,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
         rp_ *cxp, *cxm, *g;
         int nerr = 0;
 
-#ifdef SINGLE
+#ifdef REAL_32
     h = 1.0e-4;
     der_max = 1.0e-2;
 #else
