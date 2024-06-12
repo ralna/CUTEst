@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-06-11
+ * this version 2024-06-12
  *
  * ======================================================================
  */
@@ -57,7 +57,9 @@
 typedef int      integer;
 typedef float    real;
 typedef double   doublereal;
+#ifdef REAL_128
 typedef __float128   quadreal;
+#endif
 /* typedef _Bool    logical; */
 typedef bool    logical;
 
@@ -65,13 +67,8 @@ typedef bool    logical;
 typedef float    rp_;
 typedef float    rpc_;
 #elif REAL_128
-#if defined(__INTEL_COMPILER) && defined(_WIN32)
-typedef _Quad    rp_;
-typedef _Quad    rpc_;
-#else
 typedef __float128    rp_;
 typedef __float128    rpc_;
-#endif
 #else
 typedef double   rp_;
 typedef double   rpc_;
@@ -793,6 +790,7 @@ void CUTEST_cterminate_s( integer *status );
 
 /* Same for quadruple precision versions */
 
+#ifdef REAL_128
 /* Setup routines */
 void CUTEST_usetup_q  ( integer *status, const integer *funit,
                       const integer *iout, const integer *io_buffer,
@@ -1037,6 +1035,7 @@ void CUTEST_cohprodsp_q( integer *status, integer *nnzohp,
 /* Termination routines */
 void CUTEST_uterminate_q( integer *status );
 void CUTEST_cterminate_q( integer *status );
+#endif
 
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
 void FORTRAN_open(  const integer *funit, const char *fname, integer *ierr );
