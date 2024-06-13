@@ -1,0 +1,48 @@
+task:
+  matrix:
+    - name: Meson / freebsd/gcc-12/Int32
+      freebsd_instance:
+        image: freebsd-13-3-release-amd64
+      env:
+        - INT64: "false"
+    - name: Meson / freebsd/gcc-12/Int64
+      freebsd_instance:
+        image: freebsd-13-3-release-amd64
+      env:
+        - INT64: "true"
+    - name: Meson / macos-silicon/gcc-14/Int32
+      macos_instance:
+        image: ghcr.io/cirruslabs/macos-ventura-base:latest
+      env:
+        - INT64: "false"
+    - name: Meson / macos-silicon/gcc-14/Int64
+      macos_instance:
+        image: ghcr.io/cirruslabs/macos-ventura-base:latest
+      env:
+        - INT64: "true"
+  dependencies_script: |
+    echo $(uname)
+    if [ "$(uname)" = "FreeBSD" ]; then
+      pkg install -y py39-pip meson bash gcc12
+    else
+      brew install python meson gcc@14
+    fi
+  configure_script: |
+    if [ "$(uname -s)" = "FreeBSD" ]; then
+      FC=gfortran12 CC=gcc12 CXX=g++12 meson setup builddir -Dcutest_int64=${INT64} \
+                                                            -Dquadruple=true \
+                                                            --prefix=${CIRRUS_WORKING_DIR}/../meson
+    else
+      FC=gfortran-14 CC=gcc-14 CXX=g++-14 meson setup builddir -Dcutest_int64=${INT64} \
+                                                               -Dquadruple=true \
+                                                               --prefix=${CIRRUS_WORKING_DIR}/../meson
+    fi
+  build_script: |
+    meson compile -C builddir
+  install_script: |
+    meson install -C builddir
+  test_script: |
+    meson test -C builddir
+  on_failure:
+    log_artifacts:
+      path: builddir/meson-logs/*log.txt
