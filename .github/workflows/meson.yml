@@ -116,9 +116,14 @@ jobs:
           if [[ "${{matrix.int}}" == "64" ]]; then
             INT64="true"
           fi
+          if [[ "${{matrix.mode}}" == "static" ]]; then
+            MODE="static"
+          else
+            MODE="shared"
+          fi
           meson setup builddir --buildtype=debug \
                                --prefix=$GITHUB_WORKSPACE/cutest \
-                               -Ddefault_library=${mode} \
+                               -Ddefault_library=${MODE} \
                                -Dquadruple=true \
                                -Dcutest_int64=$INT64
 
