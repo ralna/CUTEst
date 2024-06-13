@@ -89,3 +89,6 @@ libcutest_src += files('ushprod.F90')
 libcutest_src += files('uterminate.F90')
 libcutest_src += files('uvartype.F90')
 libcutest_src += files('varnames.F90')
+
+# libcutest_delegate_src += files('cutest_delegate.f90')
+# libcutest_src += files('cutest_delegate.f90')

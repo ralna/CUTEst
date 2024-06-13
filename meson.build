@@ -1,7 +1,7 @@
 project(
   'CUTEst',
   'fortran', 'c',
-  version: '2023.10.22',
+  version: '2024.6.12',
   meson_version: '>= 0.61.0',
   default_options: [
     'buildtype=release',
@@ -15,8 +15,14 @@ cc = meson.get_compiler('c')
 fc = meson.get_compiler('fortran')
 fc_compiler = find_program(fc.cmd_array())
 
+# Options
+install_modules = get_option('modules')
+build_quadruple = get_option('quadruple')
+cutest_int64 = get_option('cutest_int64')
+
 libcutest_src = []
 libcutest_c_src = []
+libcutest_delegate_src = []
 
 cutest_binaries = []
 cutest_tests = []
@@ -41,8 +47,8 @@ subdir('src/e04nqf')
 subdir('src/filtersd')
 subdir('src/filtersqp')
 # subdir('src/gen77')
-subdir('src/gen90')
-subdir('src/genc')
+# subdir('src/gen90')
+# subdir('src/genc')
 subdir('src/gsl')
 subdir('src/highs')
 subdir('src/hrb')
@@ -107,32 +113,68 @@ elif fc.get_id() == 'nvidia_hpc'
   pp_flag += '-Mcpp'
   pp_options += ['-Mcpp', '-F']
 endif
+if cutest_int64
+  pp_options += '-DINTEGER_64'
+endif
+
+# Library libcutest_single or libcutest_single_64
+libcutest_single_name = 'cutest_single'
+if cutest_int64
+  libcutest_single_name += '_64'
+endif
 
 gen_single = generator(fc_compiler,
-                       output : 'double_@BASENAME@.f90',
-                       arguments : pp_options + '-DSINGLE' +
-                                   ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
-                                   output_generator)
-
-gen_double = generator(fc_compiler,
-                         output : 'double_@BASENAME@.f90',
-                         arguments : pp_options + '-DDOUBLE' +
+                       output : 'single_@BASENAME@.f90',
+                       arguments : pp_options + '-DREAL_32' +
                                    ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
                                    output_generator)
 
 pp_sources_single = [gen_single.process(libcutest_src)]
-pp_sources_double = [gen_double.process(libcutest_src)]
 
-# Library
-libcutest_single = library('cutest_single',
+libcutest_single = library(libcutest_single_name,
                            sources : pp_sources_single + libcutest_c_src,
                            include_directories : libcutest_include,
                            install : true)
 
-libcutest_double = library('cutest_double',
+# Library libcutest_double or libcutest_double_64
+libcutest_double_name = 'cutest_double'
+if cutest_int64
+  libcutest_double_name += '_64'
+endif
+
+gen_double = generator(fc_compiler,
+                         output : 'double_@BASENAME@.f90',
+                         arguments : pp_options +
+                                     ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
+                                     output_generator)
+
+pp_sources_double = [gen_double.process(libcutest_src)]
+
+libcutest_double = library(libcutest_double_name,
                            sources : pp_sources_double + libcutest_c_src,
                            include_directories : libcutest_include,
                            install : true)
+
+# Library libcutest_quadruple or libcutest_quadruple_64
+if build_quadruple
+  libcutest_quadruple_name = 'cutest_quadruple'
+  if cutest_int64
+    libcutest_quadruple_name += '_64'
+  endif
+
+  gen_quadruple = generator(fc_compiler,
+                            output : 'quadruple_@BASENAME@.f90',
+                            arguments : pp_options + '-DREAL_128' +
+                                        ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
+                                        output_generator)
+
+  pp_sources_quadruple = [gen_quadruple.process(libcutest_src)]
+
+  libcutest_quadruple = library(libcutest_quadruple_name,
+                                sources : pp_sources_quadruple + libcutest_c_src,
+                                include_directories : libcutest_include,
+                                install : true)
+endif
 
 # Binaries
 # foreach binary: cutest_binaries
@@ -146,5 +188,7 @@ libcutest_double = library('cutest_double',
 # endforeach
 
 # Fortran modules
-script_modules = files('install_modules.py')
-meson.add_install_script(script_modules)
+if install_modules
+  script_modules = files('install_modules.py')
+  meson.add_install_script(script_modules)
+endif
