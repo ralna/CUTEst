@@ -46,18 +46,8 @@ jobs:
           - os: windows-latest
             compiler: intel
             version: '2023.2'
-            int: '32'
-            mode: 'shared'
-          - os: windows-latest
-            compiler: intel
-            version: '2023.2'
             int: '64'
             mode: 'static'
-          - os: windows-latest
-            compiler: intel
-            version: '2023.2'
-            int: '64'
-            mode: 'shared'
           - os: ubuntu-latest
             compiler: intel
             version: '2023.2'
