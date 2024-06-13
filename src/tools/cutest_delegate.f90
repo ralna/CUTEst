@@ -18,10 +18,21 @@
 #define RANGE_BIND_NAME "range_"
 #endif
 
+#ifdef _WIN32
 #define cutest_dlopen LoadLibrary
-#define DLOPEN_BIND_NAME "LoadLibrary"
+#define DLOPEN_BIND_NAME "LoadLibraryA"
 #define cutest_dlsym GetProcAddress
 #define DLSYM_BIND_NAME "GetProcAddress"
+#define cutest_dlclose FreeLibrary
+#define DLCLOSE_BIND_NAME "FreeLibrary"
+#else
+#define cutest_dlopen dlopen
+#define DLOPEN_BIND_NAME "dlopen"
+#define cutest_dlsym dlsym
+#define DLSYM_BIND_NAME "dlsym"
+#define cutest_dlclose dlclose
+#define DLCLOSE_BIND_NAME "dlclose"
+#endif
 
 module cutest_delegate_r
   use, intrinsic :: iso_c_binding
@@ -45,6 +56,14 @@ module cutest_delegate_r
       type(c_ptr), value :: handle
       character(kind=c_char), dimension(*) :: symbol
     end function cutest_dlsym
+  end interface
+
+  ! Interface for dlclose / FreeLibrary
+  interface
+    subroutine cutest_dlclose(handle) bind(C, name=DLCLOSE_BIND_NAME)
+      use iso_c_binding, only: c_ptr
+      type(c_ptr), value :: handle
+    end subroutine cutest_dlclose
   end interface
 
   ! Constantes pour les modes d'ouverture de bibliothèques
