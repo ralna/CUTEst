@@ -20,12 +20,27 @@ jobs:
           - os: ubuntu-latest
             compiler: intel-classic
             version: '2021.10'
+            int: '32'
+          - os: ubuntu-latest
+            compiler: intel-classic
+            version: '2021.10'
+            int: '64'
           - os: windows-latest
             compiler: intel
             version: '2023.2'
+            int: '32'
+          - os: windows-latest
+            compiler: intel
+            version: '2023.2'
+            int: '64'
           - os: ubuntu-latest
             compiler: intel
             version: '2023.2'
+            int: '32'
+          - os: ubuntu-latest
+            compiler: intel
+            version: '2023.2'
+            int: '64'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
           #   version: '24.05'
@@ -60,9 +75,14 @@ jobs:
       - name: Setup CUTEST
         shell: bash
         run: |
+          INT64="false"
+          if [[ "${{matrix.int}}" == "64" ]]; then
+            INT64="true"
+          fi
           meson setup builddir --buildtype=debug \
                                --prefix=$GITHUB_WORKSPACE/cutest \
-                               -Dquadruple=true
+                               -Dquadruple=true \
+                               -Dcutest_int64=$INT64
 
       - name: Build CUTEST
         shell: bash
