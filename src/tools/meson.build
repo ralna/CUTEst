@@ -92,8 +92,8 @@ libcutest_src += files('ccfg.F90',
                        'varnames.F90')
 
 if get_option('default_library') == 'shared'
-	libcutest_src += files('cutest_delegate.f90')
+    libcutest_src += files('cutest_delegate.f90')
     if host_machine.system() == 'windows' and fc.get_id() == 'intel-llvm-cl'
-        add_global_link_arguments('/assume:underscore', anguage : 'fortran')
+        add_global_link_arguments('/assume:underscore', language : 'fortran')
     endif
 endif

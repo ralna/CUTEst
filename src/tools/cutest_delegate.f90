@@ -34,6 +34,15 @@
 #define DLCLOSE_BIND_NAME "dlclose"
 #endif
 
+#ifndef __MINGW32__
+#define cutest_dlopen LoadLibrary
+#define DLOPEN_BIND_NAME "LoadLibraryA"
+#define cutest_dlsym GetProcAddress
+#define DLSYM_BIND_NAME "GetProcAddress"
+#define cutest_dlclose FreeLibrary
+#define DLCLOSE_BIND_NAME "FreeLibrary"
+#endif
+
 module cutest_delegate_r
   use, intrinsic :: iso_c_binding
   implicit none
