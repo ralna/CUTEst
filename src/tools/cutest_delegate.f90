@@ -18,17 +18,10 @@
 #define RANGE_BIND_NAME "range_"
 #endif
 
-#ifdef _WIN32
 #define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibrary"
 #define cutest_dlsym GetProcAddress
 #define DLSYM_BIND_NAME "GetProcAddress"
-#else
-#define cutest_dlopen dlopen
-#define DLOPEN_BIND_NAME "dlopen"
-#define cutest_dlsym dlsym
-#define DLSYM_BIND_NAME "dlsym"
-#endif
 
 module cutest_delegate_r
   use, intrinsic :: iso_c_binding
