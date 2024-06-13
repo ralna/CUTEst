@@ -93,4 +93,7 @@ libcutest_src += files('ccfg.F90',
 
 if get_option('default_library') == 'shared'
 	libcutest_src += files('cutest_delegate.f90')
+    if host_machine.system() == 'windows'
+        add_global_link_arguments('-lkernel32', language : 'fortran')
+    endif
 endif

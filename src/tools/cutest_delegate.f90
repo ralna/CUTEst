@@ -1,21 +1,21 @@
 #ifdef REAL_32
 #define cutest_delegate_r cutest_delegate_s
 #define LOAD_ROUTINE_NAME "load_routines_s_"
-#define ELFUN_BIND_NAME "ELFUN_S_"
-#define GROUP_BIND_NAME "GROUP_S_"
-#define RANGE_BIND_NAME "RANGE_S_"
+#define ELFUN_BIND_NAME "elfun_s_"
+#define GROUP_BIND_NAME "group_s_"
+#define RANGE_BIND_NAME "range_s_"
 #elif REAL_128
 #define cutest_delegate_r cutest_delegate_q
 #define LOAD_ROUTINE_NAME "load_routines_q"
-#define ELFUN_BIND_NAME "ELFUN_Q_"
-#define GROUP_BIND_NAME "GROUP_Q_"
-#define RANGE_BIND_NAME "RANGE_Q_"
+#define ELFUN_BIND_NAME "elfun_q_"
+#define GROUP_BIND_NAME "group_q_"
+#define RANGE_BIND_NAME "range_q_"
 #else
 #define cutest_delegate_r cutest_delegate_d
 #define LOAD_ROUTINE_NAME "load_routines_"
-#define ELFUN_BIND_NAME "ELFUN_"
-#define GROUP_BIND_NAME "GROUP_"
-#define RANGE_BIND_NAME "RANGE_"
+#define ELFUN_BIND_NAME "elfun_"
+#define GROUP_BIND_NAME "group_"
+#define RANGE_BIND_NAME "range_"
 #endif
 
 #ifdef _WIN32
