@@ -18,28 +18,52 @@
 #define RANGE_BIND_NAME "range_"
 #endif
 
+#ifdef WINDOWS
+#define cutest_dlopen LoadLibrary
+#define DLOPEN_BIND_NAME "LoadLibraryA"
+#define cutest_dlsym GetProcAddress
+#define DLSYM_BIND_NAME "GetProcAddress"
+#define cutest_dlclose FreeLibrary
+#define DLCLOSE_BIND_NAME "FreeLibrary"
+#else
+#define cutest_dlopen dlopen
+#define DLOPEN_BIND_NAME "dlopen"
+#define cutest_dlsym dlsym
+#define DLSYM_BIND_NAME "dlsym"
+#define cutest_dlclose dlclose
+#define DLCLOSE_BIND_NAME "dlclose"
+#endif
+
 module cutest_delegate_r
   use, intrinsic :: iso_c_binding
   implicit none
 
-  ! Interface pour dlopen
+  ! Interface for dlopen / LoadLibrary
   interface
-    function dlopen(name, mode) bind(C, name="dlopen")
+    function cutest_dlopen(name, mode) bind(C, name=DLOPEN_BIND_NAME)
       use iso_c_binding, only: c_ptr, c_int, c_char
-      type(c_ptr) :: dlopen
+      type(c_ptr) :: cutest_dlopen
       character(kind=c_char), dimension(*) :: name
       integer(kind=c_int) :: mode
-    end function dlopen
+    end function cutest_dlopen
   end interface
 
-  ! Interface pour dlsym
+  ! Interface for dlsym / GetProcAddress
   interface
-    function dlsym(handle, symbol) bind(C, name="dlsym")
+    function cutest_dlsym(handle, symbol) bind(C, name=DLSYM_BIND_NAME)
       use iso_c_binding, only: c_funptr, c_ptr, c_char
-      type(c_funptr) :: dlsym
+      type(c_funptr) :: cutest_dlsym
       type(c_ptr), value :: handle
       character(kind=c_char), dimension(*) :: symbol
-    end function dlsym
+    end function cutest_dlsym
+  end interface
+
+  ! Interface for dlclose / FreeLibrary
+  interface
+    subroutine cutest_dlclose(handle) bind(C, name=DLCLOSE_BIND_NAME)
+      use iso_c_binding, only: c_ptr
+      type(c_ptr), value :: handle
+    end subroutine cutest_dlclose
   end interface
 
   ! Constantes pour les modes d'ouverture de bibliothèques
@@ -65,15 +89,15 @@ contains
     character(kind=c_char), dimension(*), intent(in) :: libname
 
     ! Charge la bibliothèque dynamique
-    lib_handle = dlopen(libname, RTLD_LAZY)
+    lib_handle = cutest_dlopen(libname, RTLD_LAZY)
     if (.not. c_associated(lib_handle)) then
       stop "Unable to load library"
     end if
 
     ! Récupère les adresses des fonctions
-    ptr_elfun = dlsym(lib_handle, "elfun"//c_null_char)
-    ptr_group = dlsym(lib_handle, "group"//c_null_char)
-    ptr_range = dlsym(lib_handle, "range"//c_null_char)
+    ptr_elfun = cutest_dlsym(lib_handle, ELFUN_BIND_NAME//c_null_char)
+    ptr_group = cutest_dlsym(lib_handle, GROUP_BIND_NAME//c_null_char)
+    ptr_range = cutest_dlsym(lib_handle, RANGE_BIND_NAME//c_null_char)
 
     ! Associe les pointeurs de procédure Fortran avec les adresses obtenues
     call c_f_procpointer(ptr_elfun, fun_elfun)
@@ -81,7 +105,6 @@ contains
     call c_f_procpointer(ptr_range, fun_range)
   end subroutine load_routines
 
-  ! Routine pour appeler la fonction elfun
   subroutine elfun() bind(C, name=ELFUN_BIND_NAME)
     if (associated(fun_elfun)) then
       call fun_elfun()
@@ -90,7 +113,6 @@ contains
     end if
   end subroutine elfun
 
-  ! Routine pour appeler la fonction group
   subroutine group() bind(C, name=GROUP_BIND_NAME)
     if (associated(fun_group)) then
       call fun_group()
@@ -99,7 +121,6 @@ contains
     end if
   end subroutine group
 
-  ! Routine pour appeler la fonction range
   subroutine range() bind(C, name=RANGE_BIND_NAME)
     if (associated(fun_range)) then
       call fun_range()

@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}/Int${{ matrix.int }}
+    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}/Mode-${{ matrix.mode }}/Int${{ matrix.int }}
     strategy:
       fail-fast: false
       matrix:
@@ -15,32 +15,59 @@ jobs:
         arch: ['x64']
         version: ['11']
         int: ['32', '64']
+        mode: ['static', 'shared']
         include:
           - compiler: gcc
           - os: ubuntu-latest
             compiler: intel-classic
             version: '2021.10'
             int: '32'
+            mode: 'static'
+          - os: ubuntu-latest
+            compiler: intel-classic
+            version: '2021.10'
+            int: '32'
+            mode: 'shared'
           - os: ubuntu-latest
             compiler: intel-classic
             version: '2021.10'
             int: '64'
+            mode: 'static'
+          - os: ubuntu-latest
+            compiler: intel-classic
+            version: '2021.10'
+            int: '64'
+            mode: 'shared'
           - os: windows-latest
             compiler: intel
             version: '2023.2'
             int: '32'
+            mode: 'static'
           - os: windows-latest
             compiler: intel
             version: '2023.2'
             int: '64'
+            mode: 'static'
           - os: ubuntu-latest
             compiler: intel
             version: '2023.2'
             int: '32'
+            mode: 'static'
+          - os: ubuntu-latest
+            compiler: intel
+            version: '2023.2'
+            int: '32'
+            mode: 'shared'
           - os: ubuntu-latest
             compiler: intel
             version: '2023.2'
             int: '64'
+            mode: 'static'
+          - os: ubuntu-latest
+            compiler: intel
+            version: '2023.2'
+            int: '64'
+            mode: 'shared'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
           #   version: '24.05'
@@ -79,8 +106,14 @@ jobs:
           if [[ "${{matrix.int}}" == "64" ]]; then
             INT64="true"
           fi
+          if [[ "${{matrix.mode}}" == "static" ]]; then
+            MODE="static"
+          else
+            MODE="shared"
+          fi
           meson setup builddir --buildtype=debug \
                                --prefix=$GITHUB_WORKSPACE/cutest \
+                               -Ddefault_library=${MODE} \
                                -Dquadruple=true \
                                -Dcutest_int64=$INT64
 
