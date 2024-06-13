@@ -6,7 +6,7 @@ project(
   default_options: [
     'buildtype=release',
     'libdir=lib',
-    'default_library=shared',
+    'default_library=static',
     'warning_level=0',
   ],
 )

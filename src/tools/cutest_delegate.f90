@@ -19,10 +19,14 @@
 #endif
 
 #ifdef _WIN32
+#define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibrary"
+#define cutest_dlsym GetProcAddress
 #define DLSYM_BIND_NAME "GetProcAddress"
 #else
+#define cutest_dlopen dlopen
 #define DLOPEN_BIND_NAME "dlopen"
+#define cutest_dlsym dlsym
 #define DLSYM_BIND_NAME "dlsym"
 #endif
 
@@ -32,22 +36,22 @@ module cutest_delegate_r
 
   ! Interface for dlopen / LoadLibrary
   interface
-    function dlopen(name, mode) bind(C, name=DLOPEN_BIND_NAME)
+    function cutest_dlopen(name, mode) bind(C, name=DLOPEN_BIND_NAME)
       use iso_c_binding, only: c_ptr, c_int, c_char
-      type(c_ptr) :: dlopen
+      type(c_ptr) :: cutest_dlopen
       character(kind=c_char), dimension(*) :: name
       integer(kind=c_int) :: mode
-    end function dlopen
+    end function cutest_dlopen
   end interface
 
   ! Interface for dlsym / GetProcAddress
   interface
-    function dlsym(handle, symbol) bind(C, name=DLSYM_BIND_NAME)
+    function cutest_dlsym(handle, symbol) bind(C, name=DLSYM_BIND_NAME)
       use iso_c_binding, only: c_funptr, c_ptr, c_char
-      type(c_funptr) :: dlsym
+      type(c_funptr) :: cutest_dlsym
       type(c_ptr), value :: handle
       character(kind=c_char), dimension(*) :: symbol
-    end function dlsym
+    end function cutest_dlsym
   end interface
 
   ! Constantes pour les modes d'ouverture de bibliothèques
@@ -73,15 +77,15 @@ contains
     character(kind=c_char), dimension(*), intent(in) :: libname
 
     ! Charge la bibliothèque dynamique
-    lib_handle = dlopen(libname, RTLD_LAZY)
+    lib_handle = cutest_dlopen(libname, RTLD_LAZY)
     if (.not. c_associated(lib_handle)) then
       stop "Unable to load library"
     end if
 
     ! Récupère les adresses des fonctions
-    ptr_elfun = dlsym(lib_handle, ELFUN_BIND_NAME//c_null_char)
-    ptr_group = dlsym(lib_handle, GROUP_BIND_NAME//c_null_char)
-    ptr_range = dlsym(lib_handle, RANGE_BIND_NAME//c_null_char)
+    ptr_elfun = cutest_dlsym(lib_handle, ELFUN_BIND_NAME//c_null_char)
+    ptr_group = cutest_dlsym(lib_handle, GROUP_BIND_NAME//c_null_char)
+    ptr_range = cutest_dlsym(lib_handle, RANGE_BIND_NAME//c_null_char)
 
     ! Associe les pointeurs de procédure Fortran avec les adresses obtenues
     call c_f_procpointer(ptr_elfun, fun_elfun)
