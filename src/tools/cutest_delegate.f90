@@ -34,7 +34,7 @@
 #define DLCLOSE_BIND_NAME "dlclose"
 #endif
 
-#ifndef __MINGW32__
+#ifdef __MINGW32__
 #define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibraryA"
 #define cutest_dlsym GetProcAddress
