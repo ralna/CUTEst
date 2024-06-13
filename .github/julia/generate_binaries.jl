@@ -50,15 +50,15 @@ for (platform, libdir, ext) in platforms
 
     # Create a folder with the version number of the package
     mkdir("$(package)_binaries.$version2")
-    for folder in ("share", "modules", "lib")
+    for folder in ("share", "include", "modules", "lib")
       cp(folder, "$(package)_binaries.$version2/$folder")
     end
 
     cd("$(package)_binaries.$version2")
     if ext == "dll"
-      run(`zip -r --symlinks ../../../$(package)_binaries.$version2.$platform.zip share modules lib`)
+      run(`zip -r --symlinks ../../../$(package)_binaries.$version2.$platform.zip share include modules lib`)
     else
-      run(`tar -czf ../../../$(package)_binaries.$version2.$platform.tar.gz share modules lib`)
+      run(`tar -czf ../../../$(package)_binaries.$version2.$platform.tar.gz share include modules lib`)
     end
     cd("../../..")
 

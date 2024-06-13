@@ -1,7 +1,7 @@
 project(
   'CUTEst',
   'fortran', 'c',
-  version: '2.0.60',
+  version: '2.1.0',
   meson_version: '>= 0.61.0',
   default_options: [
     'buildtype=release',
@@ -31,10 +31,13 @@ cutest_tests = []
 cutest_c_binaries = []
 cutest_c_tests = []
 
+# Headers
+cutest_headers = []
 libcutest_include = []
 libcutest_include += include_directories('include')
 
 # Sources
+subdir('include')
 # subdir('src/algencan')     # needs algencan_
 # subdir('src/bobyqa')       # needs bobyqa_
 # subdir('src/cg_descent')   # needs cg_descent_
@@ -189,6 +192,9 @@ endif
 #                install : true)
 #   endforeach
 # endif
+
+# Headers
+install_headers(cutest_headers)
 
 # Fortran modules
 if install_modules
