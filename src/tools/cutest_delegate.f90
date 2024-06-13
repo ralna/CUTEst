@@ -18,7 +18,7 @@
 #define RANGE_BIND_NAME "range_"
 #endif
 
-#ifdef _WIN32
+#ifdef WINDOWS
 #define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibraryA"
 #define cutest_dlsym GetProcAddress
@@ -32,15 +32,6 @@
 #define DLSYM_BIND_NAME "dlsym"
 #define cutest_dlclose dlclose
 #define DLCLOSE_BIND_NAME "dlclose"
-#endif
-
-#ifdef __MINGW32__
-#define cutest_dlopen LoadLibrary
-#define DLOPEN_BIND_NAME "LoadLibraryA"
-#define cutest_dlsym GetProcAddress
-#define DLSYM_BIND_NAME "GetProcAddress"
-#define cutest_dlclose FreeLibrary
-#define DLCLOSE_BIND_NAME "FreeLibrary"
 #endif
 
 module cutest_delegate_r

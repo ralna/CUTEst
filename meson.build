@@ -120,6 +120,9 @@ endif
 if cutest_int64
   pp_options += '-DINTEGER_64'
 endif
+if host_machine.system() == 'windows'
+  pp_options += '-DWINDOWS'
+endif
 
 # Library libcutest_single or libcutest_single_64
 libcutest_single_name = 'cutest_single'
