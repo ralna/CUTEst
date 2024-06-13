@@ -21,6 +21,7 @@ build_quadruple = get_option('quadruple')
 cutest_int64 = get_option('cutest_int64')
 
 libcutest_src = []
+libcutest_f_src = []
 libcutest_c_src = []
 libcutest_delegate_src = []
 
