@@ -1,94 +1,96 @@
-libcutest_src += files('ccfg.F90')
-libcutest_src += files('ccfsg.F90')
-libcutest_src += files('cchprods.F90')
-libcutest_src += files('cchprodsp.F90')
-libcutest_src += files('ccifg.F90')
-libcutest_src += files('ccifsg.F90')
-libcutest_src += files('cconst.F90')
 libcutest_c_src += files('ccutest.c')
-libcutest_src += files('cdh.F90')
-libcutest_src += files('cdhc.F90')
-libcutest_src += files('cdhj.F90')
-libcutest_src += files('cdimchp.F90')
-libcutest_src += files('cdimen.F90')
-libcutest_src += files('cdimohp.F90')
-libcutest_src += files('cdimse.F90')
-libcutest_src += files('cdimsg.F90')
-libcutest_src += files('cdimsh.F90')
-libcutest_src += files('cdimsj.F90')
-libcutest_src += files('ceh.F90')
-libcutest_src += files('cfn.F90')
-libcutest_src += files('cgr.F90')
-libcutest_src += files('cgrdh.F90')
-libcutest_src += files('chcprod.F90')
-libcutest_src += files('chjprod.F90')
-libcutest_src += files('chprod.F90')
-libcutest_src += files('cidh.F90')
-libcutest_src += files('cifn.F90')
-libcutest_src += files('cigr.F90')
-libcutest_src += files('cisgr.F90')
-libcutest_src += files('cisgrp.F90')
-libcutest_src += files('cish.F90')
-libcutest_src += files('cjprod.F90')
-libcutest_src += files('clfg.F90')
-libcutest_src += files('cnames.F90')
-libcutest_src += files('cnoobj.F90')
-libcutest_src += files('cofg.F90')
-libcutest_src += files('cofsg.F90')
-libcutest_src += files('cohprods.F90')
-libcutest_src += files('cohprodsp.F90')
-libcutest_src += files('connames.F90')
-libcutest_src += files('creport.F90')
-libcutest_src += files('csetup.F90')
-libcutest_src += files('csgr.F90')
-libcutest_src += files('csgreh.F90')
-libcutest_src += files('csgrp.F90')
-libcutest_src += files('csgrsh.F90')
-libcutest_src += files('csgrshp.F90')
-libcutest_src += files('csh.F90')
-libcutest_src += files('cshc.F90')
-libcutest_src += files('cshcprod.F90')
-libcutest_src += files('cshj.F90')
-libcutest_src += files('cshp.F90')
-libcutest_src += files('cshprod.F90')
-libcutest_src += files('csjp.F90')
-libcutest_src += files('csjprod.F90')
-libcutest_src += files('cstats.F90')
-libcutest_src += files('cterminate.F90')
-libcutest_src += files('cutest.F90')
-libcutest_src += files('cvartype.F90')
-libcutest_src += files('fortran_ops.F90')
-libcutest_src += files('interface.F90')
-libcutest_src += files('kinds.F90')
-libcutest_src += files('lqp.F90')
-libcutest_src += files('newthread.F90')
-libcutest_src += files('pname.F90')
-libcutest_src += files('problem.F90')
-libcutest_src += files('probname.F90')
-libcutest_src += files('readin.F90')
-libcutest_src += files('timings.F90')
-libcutest_src += files('ubandh.F90')
-libcutest_src += files('udh.F90')
-libcutest_src += files('udimen.F90')
-libcutest_src += files('udimse.F90')
-libcutest_src += files('udimsh.F90')
-libcutest_src += files('ueh.F90')
-libcutest_src += files('ufn.F90')
-libcutest_src += files('ugr.F90')
-libcutest_src += files('ugrdh.F90')
-libcutest_src += files('ugreh.F90')
-libcutest_src += files('ugrsh.F90')
-libcutest_src += files('uhprod.F90')
-libcutest_src += files('unames.F90')
-libcutest_src += files('uofg.F90')
-libcutest_src += files('ureport.F90')
-libcutest_src += files('usetup.F90')
-libcutest_src += files('ush.F90')
-libcutest_src += files('ushp.F90')
-libcutest_src += files('ushprod.F90')
-libcutest_src += files('uterminate.F90')
-libcutest_src += files('uvartype.F90')
-libcutest_src += files('varnames.F90')
 
-# libcutest_delegate_src += files('cutest_delegate.f90')
-# libcutest_src += files('cutest_delegate.f90')
+libcutest_src += files('ccfg.F90',
+                       'ccfsg.F90',
+                       'cchprods.F90',
+                       'cchprodsp.F90',
+                       'ccifg.F90',
+                       'ccifsg.F90',
+                       'cconst.F90',
+                       'cdh.F90',
+                       'cdhc.F90',
+                       'cdhj.F90',
+                       'cdimchp.F90',
+                       'cdimen.F90',
+                       'cdimohp.F90',
+                       'cdimse.F90',
+                       'cdimsg.F90',
+                       'cdimsh.F90',
+                       'cdimsj.F90',
+                       'ceh.F90',
+                       'cfn.F90',
+                       'cgr.F90',
+                       'cgrdh.F90',
+                       'chcprod.F90',
+                       'chjprod.F90',
+                       'chprod.F90',
+                       'cidh.F90',
+                       'cifn.F90',
+                       'cigr.F90',
+                       'cisgr.F90',
+                       'cisgrp.F90',
+                       'cish.F90',
+                       'cjprod.F90',
+                       'clfg.F90',
+                       'cnames.F90',
+                       'cnoobj.F90',
+                       'cofg.F90',
+                       'cofsg.F90',
+                       'cohprods.F90',
+                       'cohprodsp.F90',
+                       'connames.F90',
+                       'creport.F90',
+                       'csetup.F90',
+                       'csgr.F90',
+                       'csgreh.F90',
+                       'csgrp.F90',
+                       'csgrsh.F90',
+                       'csgrshp.F90',
+                       'csh.F90',
+                       'cshc.F90',
+                       'cshcprod.F90',
+                       'cshj.F90',
+                       'cshp.F90',
+                       'cshprod.F90',
+                       'csjp.F90',
+                       'csjprod.F90',
+                       'cstats.F90',
+                       'cterminate.F90',
+                       'cutest.F90',
+                       'cvartype.F90',
+                       'fortran_ops.F90',
+                       'interface.F90',
+                       'kinds.F90',
+                       'lqp.F90',
+                       'newthread.F90',
+                       'pname.F90',
+                       'problem.F90',
+                       'probname.F90',
+                       'readin.F90',
+                       'timings.F90',
+                       'ubandh.F90',
+                       'udh.F90',
+                       'udimen.F90',
+                       'udimse.F90',
+                       'udimsh.F90',
+                       'ueh.F90',
+                       'ufn.F90',
+                       'ugr.F90',
+                       'ugrdh.F90',
+                       'ugreh.F90',
+                       'ugrsh.F90',
+                       'uhprod.F90',
+                       'unames.F90',
+                       'uofg.F90',
+                       'ureport.F90',
+                       'usetup.F90',
+                       'ush.F90',
+                       'ushp.F90',
+                       'ushprod.F90',
+                       'uterminate.F90',
+                       'uvartype.F90',
+                       'varnames.F90')
+
+if get_option('default_library') == 'shared'
+	libcutest_src += files('cutest_delegate.f90')
+endif

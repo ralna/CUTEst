@@ -7,13 +7,14 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}
+    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}/Int${{ matrix.int }}
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-13]
         arch: ['x64']
         version: ['11']
+        int: ['32', '64']
         include:
           - compiler: gcc
           - os: ubuntu-latest
@@ -27,14 +28,14 @@ jobs:
             version: '2023.2'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
-          #   version: '23.11'
+          #   version: '24.05'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out CUTEST
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -60,7 +61,8 @@ jobs:
         shell: bash
         run: |
           meson setup builddir --buildtype=debug \
-                               --prefix=$GITHUB_WORKSPACE/cutest
+                               --prefix=$GITHUB_WORKSPACE/cutest \
+                               -Dquadruple=true
 
       - name: Build CUTEST
         shell: bash

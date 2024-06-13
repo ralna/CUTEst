@@ -34,59 +34,59 @@ libcutest_include = []
 libcutest_include += include_directories('include')
 
 # Sources
-subdir('src/algencan')
-subdir('src/bobyqa')
-subdir('src/cg_descent')
-subdir('src/cgplus')
-subdir('src/cobyla')
-subdir('src/curvi')
+# subdir('src/algencan')     # needs algencan_
+# subdir('src/bobyqa')       # needs bobyqa_
+# subdir('src/cg_descent')   # needs cg_descent_
+# subdir('src/cgplus')       # needs cgfam_
+# subdir('src/cobyla')       # needs cobyla_
+# subdir('src/curvi')        # needs curvih_, curvif_, curvig_
 subdir('src/derchk')
-subdir('src/dfo')
-subdir('src/directsearch')
-subdir('src/e04nqf')
-subdir('src/filtersd')
-subdir('src/filtersqp')
-# subdir('src/gen77')
-# subdir('src/gen90')
-# subdir('src/genc')
-subdir('src/gsl')
-subdir('src/highs')
+# subdir('src/dfo')          # needs dfo_
+# subdir('src/directsearch') # needs nm_, pattrn_, smd_, shh_
+# subdir('src/e04nqf')       # needs e04npf_, e04nrf_, e04nqf_
+# subdir('src/filtersd')     # needs filtersd_
+# subdir('src/filtersqp')    # needs readpar_, readscale_, filtersqp_
+# subdir('src/gen77')        # ?
+# subdir('src/gen90')        # ?
+# subdir('src/genc')         # ?
+# subdir('src/gsl')          # needs <gsl/gsl_vector_complex_long_double.h>
+# subdir('src/highs')        # needs Fortran module highs_fortran_api
 subdir('src/hrb')
-subdir('src/ipopt')
-subdir('src/knitro')
-subdir('src/la04')
-subdir('src/lbfgs')
-# subdir('src/lbfgsb')
-# subdir('src/lincoa')
-# subdir('src/loqo')
-# subdir('src/matlab')
-# subdir('src/minos')
-# subdir('src/newuoa')
-# subdir('src/nitsol')
-# subdir('src/nlpqlp')
-# subdir('src/nomad')
-# subdir('src/npsol')
-# subdir('src/octave')
-# subdir('src/osqp')
-# subdir('src/pds')
-# subdir('src/pennlp')
-# subdir('src/praxis')
-# subdir('src/ql')
-# subdir('src/qplib')
-# subdir('src/ral_nlls')
-# subdir('src/snopt')
-# subdir('src/spg')
-# subdir('src/sqic')
-# subdir('src/stats')
-# subdir('src/stenmin')
-subdir('src/tao')
-subdir('src/tenmin')
+# subdir('src/ipopt')        # needs ipcreate_, ipsolve_, ipfree_
+# subdir('src/knitro')       # needs KN_get_release, KN_new, ...
+# subdir('src/la04')         # needs mc49ad_, la04id_, la04ad_
+# subdir('src/lbfgs')        # needs lbfgs_
+# subdir('src/lbfgsb')       # needs setulb_
+# subdir('src/lincoa')       # needs lincoa_
+# subdir('src/loqo')         # needs openlp, nlsetup, solvelp
+# subdir('src/matlab')       # --- not supported by build system ---
+# subdir('src/minos')        # needs m1open_, mispec_, minoss_
+# subdir('src/newuoa')       # needs newuoa_
+# subdir('src/nitsol')       # needs nitsol_, ...
+# subdir('src/nlpqlp')       # needs nlpqlp_
+subdir('src/nomad')
+# subdir('src/npsol')        # needs npfile_, npoptn_, npsol_
+# subdir('src/octave')       # --- not supported by build system ---
+# subdir('src/osqp')         # needs osqp.h
+# subdir('src/pds')          # needs search_, getss_, pds_, result_
+# subdir('src/pennlp')       # needs pennlpf_
+# subdir('src/praxis')       # needs praxis_
+# subdir('src/ql')           # needs ql_
+subdir('src/qplib')
+# subdir('src/ral_nlls')     # needs the Fortran module RAL_NLLS_precision
+# subdir('src/snopt')        # needs sninit_, snspec_, snoptb_
+# subdir('src/spg')          # needs spg_
+# subdir('src/sqic')         # needs crd2spr_, crd2spr_, crd2spr_, ctsqic_
+subdir('src/stats')
+# subdir('src/stenmin')      # needs stumcd_
+# subdir('src/tao')          # needs petsc/finclude/petsctao.h and Fortran module petsctao
+# subdir('src/tenmin')       # needs tensor_
 # subdir('src/test')
 subdir('src/tools')
-subdir('src/tron')
-subdir('src/uncmin')
-subdir('src/vf13')
-subdir('src/worhp')
+# subdir('src/tron')         # needs dnrm2_, dgpnrm2_
+# subdir('src/uncmin')       # needs optif9_
+# subdir('src/vf13')         # needs vf13ad_
+# subdir('src/worhp')        # needs worhp.h
 
 # Preprocessing
 if fc.get_id() == 'intel-cl' or fc.get_id() == 'intel-llvm-cl'
@@ -177,15 +177,17 @@ if build_quadruple
 endif
 
 # Binaries
-# foreach binary: cutest_binaries
-#   binname = binary[0]
-#   binfile = binary[1]
-#   executable(binname,
-#              sources : binfile,
-#              include_directories : libcutest_include,
-#              link_with : libcutest_double,
-#              install : true)
-# endforeach
+# if get_option('default_library') == 'shared'
+#   foreach binary: cutest_binaries + cutest_c_binaries
+#     binname = binary[0]
+#     binfile = binary[1]
+#     executable(binname,
+#                sources : binfile,
+#                include_directories : libcutest_include,
+#                link_with : libcutest_double,
+#                install : true)
+#   endforeach
+# endif
 
 # Fortran modules
 if install_modules
