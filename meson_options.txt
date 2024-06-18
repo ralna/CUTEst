@@ -8,7 +8,7 @@ option('quadruple',
        value : false,
        description : 'option to compile CUTEst with quadruple precision')
 
-option('cutest_int64',
+option('int64',
        type : 'boolean',
        value : false,
        description : 'option to compile CUTEst with 64-bit integer')

@@ -59,12 +59,12 @@ task:
     if [ "$(uname -s)" = "FreeBSD" ]; then
       FC=gfortran12 CC=gcc12 CXX=g++12 meson setup builddir --prefix=${CIRRUS_WORKING_DIR}/../meson \
                                                             -Ddefault_library=${MODE} \
-                                                            -Dcutest_int64=${INT64} \
+                                                            -Dint64=${INT64} \
                                                             -Dquadruple=true
     else
       FC=gfortran-14 CC=gcc-14 CXX=g++-14 meson setup builddir --prefix=${CIRRUS_WORKING_DIR}/../meson \
                                                                -Ddefault_library=${MODE} \
-                                                               -Dcutest_int64=${INT64} \
+                                                               -Dint64=${INT64} \
                                                                -Dquadruple=true
     fi
   build_script: |
