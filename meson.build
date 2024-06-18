@@ -18,7 +18,7 @@ fc_compiler = find_program(fc.cmd_array())
 # Options
 install_modules = get_option('modules')
 build_quadruple = get_option('quadruple')
-cutest_int64 = get_option('cutest_int64')
+int64 = get_option('int64')
 
 libcutest_src = []
 libcutest_f_src = []
@@ -117,7 +117,7 @@ elif fc.get_id() == 'nvidia_hpc'
   pp_flag += '-Mcpp'
   pp_options += ['-Mcpp', '-F']
 endif
-if cutest_int64
+if int64
   pp_options += '-DINTEGER_64'
 endif
 if host_machine.system() == 'windows'
@@ -126,7 +126,7 @@ endif
 
 # Library libcutest_single or libcutest_single_64
 libcutest_single_name = 'cutest_single'
-if cutest_int64
+if int64
   libcutest_single_name += '_64'
 endif
 
@@ -145,7 +145,7 @@ libcutest_single = library(libcutest_single_name,
 
 # Library libcutest_double or libcutest_double_64
 libcutest_double_name = 'cutest_double'
-if cutest_int64
+if int64
   libcutest_double_name += '_64'
 endif
 
@@ -165,7 +165,7 @@ libcutest_double = library(libcutest_double_name,
 # Library libcutest_quadruple or libcutest_quadruple_64
 if build_quadruple
   libcutest_quadruple_name = 'cutest_quadruple'
-  if cutest_int64
+  if int64
     libcutest_quadruple_name += '_64'
   endif
 
