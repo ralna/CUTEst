@@ -92,14 +92,14 @@ else
     if [[ ! -e $MODDIR/quadruple ]]; then
     $MKDIR $MODDIR/quadruple
     fi
-    if [[ ! -e $OBJDIR/double_64 ]]; then
-    $MKDIR $OBJDIR/double_64
+    if [[ ! -e $MODDIR/double_64 ]]; then
+    $MKDIR $MODDIR/double_64
     fi
-    if [[ ! -e $OBJDIR/single_64 ]]; then
-    $MKDIR $OBJDIR/single_64
+    if [[ ! -e $MODDIR/single_64 ]]; then
+    $MKDIR $MODDIR/single_64
     fi
-    if [[ ! -e $OBJDIR/quadruple_64 ]]; then
-    $MKDIR $OBJDIR/quadruple_64
+    if [[ ! -e $MODDIR/quadruple_64 ]]; then
+    $MKDIR $MODDIR/quadruple_64
     fi
 fi
 
@@ -251,28 +251,60 @@ if [[ $? != 0 ]]; then
     fi
   fi
 
+  if [[ $GALAHAD_REQINT == "" ]] ; then
+    echo -e '\n It may also be compiled for 32-bit (I)ntegers or 64-bit (L)ong ones.'
+    read -p ' Which integer type do you require for the installed subset (I/l) ? ' -r -n 1 GALAHAD_REQINT;
+    if [[ $GALAHAD_REQINT == "" ]] ; then
+      GALAHAD_REQINT="I"
+    fi
+  fi
+
   if [[ $GALAHAD_REQPREC == [Ss] ]] ; then
-    PREC='single'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='single_64'
+    else
+      PREC='single'
+    fi
   elif [[ $GALAHAD_REQPREC == [Qq] ]] ; then
-    PREC='quadruple'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='quadruple_64'
+    else
+      PREC='quadruple'
+    fi
   else
-    PREC='double'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='double_64'
+    else
+      PREC='double'
+    fi
   fi
   cutest_compile
 
 #  optionally compile the selected packages in the other (single) precision
 
   if [[ $GALAHAD_REQPREC == [Bb] ]] ; then
-    PREC='single'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='single_64'
+    else
+      PREC='single'
+    fi
     cutest_compile
   fi
 
 #  optionally compile the selected packages in all the other precisions
 
   if [[ $GALAHAD_REQPREC == [Aa] ]] ; then
-    PREC='single'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='single_64'
+    else
+      PREC='single'
+    fi
     cutest_compile
-    PREC='quadruple'
+    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
+      PREC='quadruple_64'
+    else
+      PREC='quadruple'
+    fi
     cutest_compile
   fi
 
