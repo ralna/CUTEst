@@ -68,6 +68,30 @@ jobs:
             version: '2023.2'
             int: '64'
             mode: 'shared'
+          - os: macos-latest
+            compiler: gcc
+            version: '13'
+            arch: 'arm64'
+            int: '32'
+            mode: 'static'
+          - os: macos-latest
+            compiler: gcc
+            version: '13'
+            arch: 'arm64'
+            int: '64'
+            mode: 'static'
+          - os: macos-latest
+            compiler: gcc
+            version: '13'
+            arch: 'arm64'
+            int: '32'
+            mode: 'shared'
+          - os: macos-latest
+            compiler: gcc
+            version: '13'
+            arch: 'arm64'
+            int: '64'
+            mode: 'shared'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
           #   version: '24.05'
@@ -121,7 +145,7 @@ jobs:
         shell: bash
         run: |
           meson compile -C builddir
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_meson-log.txt
@@ -131,7 +155,7 @@ jobs:
         shell: bash
         run: |
           meson install -C builddir
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_install-log.txt
@@ -141,7 +165,7 @@ jobs:
         shell: bash
         run: |
           meson test -C builddir
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: ${{ matrix.os }}_${{ matrix.compiler }}-v${{ matrix.version }}_Int${{ matrix.int }}_testlog.txt
