@@ -37,7 +37,7 @@ libcutest_include = []
 libcutest_include += include_directories('include')
 
 # Dependency
-libdl = fc.find_library('dl')
+libdl = fc.find_library('dl', required : false)
 
 # Sources
 subdir('include')
