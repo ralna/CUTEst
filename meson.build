@@ -2,7 +2,7 @@ project(
   'CUTEst',
   'fortran', 'c',
   version: '2.2.0',
-  meson_version: '>= 0.61.0',
+  meson_version: '>= 0.62.0',
   default_options: [
     'buildtype=release',
     'libdir=lib',
@@ -37,7 +37,7 @@ libcutest_include = []
 libcutest_include += include_directories('include')
 
 # Dependency
-libdl = dependency('dl', required: false)
+libdl = fc.find_library('dl')
 
 # Sources
 subdir('include')
