@@ -36,6 +36,9 @@ cutest_headers = []
 libcutest_include = []
 libcutest_include += include_directories('include')
 
+# Dependency
+libdl = dependency('dl', required: false)
+
 # Sources
 subdir('include')
 # subdir('src/algencan')     # needs algencan_
@@ -139,6 +142,7 @@ gen_single = generator(fc_compiler,
 pp_sources_single = [gen_single.process(libcutest_src)]
 
 libcutest_single = library(libcutest_single_name,
+                           dependencies : libdl,
                            sources : pp_sources_single + libcutest_c_src,
                            include_directories : libcutest_include,
                            install : true)
@@ -158,6 +162,7 @@ gen_double = generator(fc_compiler,
 pp_sources_double = [gen_double.process(libcutest_src)]
 
 libcutest_double = library(libcutest_double_name,
+                           dependencies : libdl,
                            sources : pp_sources_double + libcutest_c_src,
                            include_directories : libcutest_include,
                            install : true)
@@ -178,6 +183,7 @@ if build_quadruple
   pp_sources_quadruple = [gen_quadruple.process(libcutest_src)]
 
   libcutest_quadruple = library(libcutest_quadruple_name,
+                                dependencies : libdl,
                                 sources : pp_sources_quadruple + libcutest_c_src,
                                 include_directories : libcutest_include,
                                 install : true)
