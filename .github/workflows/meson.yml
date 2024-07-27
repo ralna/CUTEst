@@ -106,7 +106,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install Meson and Ninja
-        run: pip install meson ninja
+        shell: bash
+        run: |
+          pip install meson==1.4.1
+          pip install ninja
 
       - name: Set the environment variables CUTEST
         shell: bash
