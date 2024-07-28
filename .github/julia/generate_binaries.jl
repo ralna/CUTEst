@@ -56,7 +56,7 @@ for (platform, libdir, ext) in platforms
 
     cd("$(package)_binaries.$version2")
     if ext == "dll"
-      run(`zip -r --symlinks ../../../$(package)_binaries.$version2.$platform.zip share include modules lib`)
+      run(`zip -r --symlinks ../../../$(package)_binaries.$version2.$platform.zip share include modules lib bin`)
     else
       run(`tar -czf ../../../$(package)_binaries.$version2.$platform.tar.gz share include modules lib`)
     end
