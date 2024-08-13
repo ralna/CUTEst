@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Download ARCHDefs
         id: download-archdefs
-        uses: robinraju/release-downloader@v1.5
+        uses: robinraju/release-downloader@main
         with:
           repository: "ralna/ARCHDefs"
           latest: true
@@ -59,7 +59,7 @@ jobs:
           mv ralna-ARCHDefs-* ARCHDefs
       - name: Download SIFDecode
         id: download-sifdecode
-        uses: robinraju/release-downloader@v1.5
+        uses: robinraju/release-downloader@main
         with:
           repository: "ralna/SIFDecode"
           latest: true
