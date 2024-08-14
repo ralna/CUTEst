@@ -222,12 +222,12 @@ fi
 
 #  ensure that objects and modules directories exist
 
-if [[ ! -e $SIFDECODE/objects ]]; then
-  $MKDIR $SIFDECODE/objects
+if [[ ! -e $CUTEST/objects ]]; then
+  $MKDIR $CUTEST/objects
 fi
 
-if [[ ! -e $SIFDECODE/modules ]]; then
-  $MKDIR $SIFDECODE/modules
+if [[ ! -e $CUTEST/modules ]]; then
+  $MKDIR $CUTEST/modules
 fi
 
 #  create architecture-dependent object and module directories
