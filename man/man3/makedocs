@@ -260,9 +260,12 @@
 #foreach pack ( cutest_cshcprod_threaded )
 #foreach pack ( cutest_csjprod_threaded )
 
-foreach pack ( cutest_cifn cutest_cigr cutest_cisgr \
-               cutest_cifn_threaded cutest_cigr_threaded \
-               cutest_cisgr_threaded )
+#foreach pack ( cutest_cifn cutest_cigr cutest_cisgr \
+#               cutest_cifn_threaded cutest_cigr_threaded \
+#               cutest_cisgr_threaded )
+
+foreach pack ( cutest_ureport cutest_ureport_threaded \
+               cutest_creport cutest_creport_threaded )
 
 
   echo "    " $pack
