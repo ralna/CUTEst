@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-06-12
+ * this version 2024-08-18
  *
  * ======================================================================
  */
@@ -161,8 +161,8 @@ typedef struct VarTypes {
 #define CUTEST_clfg       FUNDERSCORE(cutest_cint_clfg)
 #define CUTEST_cgr        FUNDERSCORE(cutest_cint_cgr)
 #define CUTEST_csgr       FUNDERSCORE(cutest_cint_csgr)
-#define CUTEST_csgrp      FUNDERSCORE(cutest_cint_csgrp)
-#define CUTEST_csjp       FUNDERSCORE(cutest_cint_csjp)
+#define CUTEST_csgrp      FUNDERSCORE(cutest_csgrp)
+#define CUTEST_csjp       FUNDERSCORE(cutest_csjp)
 #define CUTEST_ccfsg      FUNDERSCORE(cutest_cint_ccfsg)
 #define CUTEST_ccifg      FUNDERSCORE(cutest_cint_ccifg)
 #define CUTEST_ccifsg     FUNDERSCORE(cutest_cint_ccifsg)
@@ -182,7 +182,7 @@ typedef struct VarTypes {
 #define CUTEST_cidh       FUNDERSCORE(cutest_cidh)
 #define CUTEST_cish       FUNDERSCORE(cutest_cish)
 #define CUTEST_csgrsh     FUNDERSCORE(cutest_cint_csgrsh)
-#define CUTEST_csgrshp    FUNDERSCORE(cutest_cint_csgrshp)
+#define CUTEST_csgrshp    FUNDERSCORE(cutest_csgrshp)
 #define CUTEST_csgreh     FUNDERSCORE(cutest_cint_csgreh)
 #define CUTEST_chprod     FUNDERSCORE(cutest_cint_chprod)
 #define CUTEST_cshprod    FUNDERSCORE(cutest_cint_chsprod)
@@ -192,7 +192,7 @@ typedef struct VarTypes {
 #define CUTEST_cjprod     FUNDERSCORE(cutest_cint_cjprod)
 #define CUTEST_csjprod    FUNDERSCORE(cutest_cint_csjprod)
 #define CUTEST_cchprods   FUNDERSCORE(cutest_cint_cchprods)
-#define CUTEST_cchprodsp  FUNDERSCORE(cutest_cint_cchprodsp)
+#define CUTEST_cchprodsp  FUNDERSCORE(cutest_cchprodsp)
 #define CUTEST_cohprods   FUNDERSCORE(cutest_cint_cohprods)
 #define CUTEST_cohprodsp  FUNDERSCORE(cutest_cohprodsp)
 
@@ -249,8 +249,8 @@ typedef struct VarTypes {
 #define CUTEST_clfg_s       FUNDERSCORE(cutest_cint_clfg_s)
 #define CUTEST_cgr_s        FUNDERSCORE(cutest_cint_cgr_s)
 #define CUTEST_csgr_s       FUNDERSCORE(cutest_cint_csgr_s)
-#define CUTEST_csgrp_s      FUNDERSCORE(cutest_cint_csgrp_s)
-#define CUTEST_csjp_s       FUNDERSCORE(cutest_cint_csjp_s)
+#define CUTEST_csgrp_s      FUNDERSCORE(cutest_csgrp_s)
+#define CUTEST_csjp_s       FUNDERSCORE(cutest_csjp_s)
 #define CUTEST_ccfsg_s      FUNDERSCORE(cutest_cint_ccfsg_s)
 #define CUTEST_ccifg_s      FUNDERSCORE(cutest_cint_ccifg_s)
 #define CUTEST_ccifsg_s     FUNDERSCORE(cutest_cint_ccifsg_s)
@@ -270,7 +270,7 @@ typedef struct VarTypes {
 #define CUTEST_cidh_s       FUNDERSCORE(cutest_cidh_s)
 #define CUTEST_cish_s       FUNDERSCORE(cutest_cish_s)
 #define CUTEST_csgrsh_s     FUNDERSCORE(cutest_cint_csgrsh_s)
-#define CUTEST_csgrshp_s    FUNDERSCORE(cutest_cint_csgrshp_s)
+#define CUTEST_csgrshp_s    FUNDERSCORE(cutest_csgrshp_s)
 #define CUTEST_csgreh_s     FUNDERSCORE(cutest_cint_csgreh_s)
 #define CUTEST_chprod_s     FUNDERSCORE(cutest_cint_chprod_s)
 #define CUTEST_cshprod_s    FUNDERSCORE(cutest_cint_chsprod_s)
@@ -280,7 +280,7 @@ typedef struct VarTypes {
 #define CUTEST_cjprod_s     FUNDERSCORE(cutest_cint_cjprod_s)
 #define CUTEST_csjprod_s    FUNDERSCORE(cutest_cint_csjprod_s)
 #define CUTEST_cchprods_s   FUNDERSCORE(cutest_cint_cchprods_s)
-#define CUTEST_cchprodsp_s  FUNDERSCORE(cutest_cint_cchprodsp_s)
+#define CUTEST_cchprodsp_s  FUNDERSCORE(cutest_cchprodsp_s)
 #define CUTEST_cohprods_s   FUNDERSCORE(cutest_cint_cohprods_s)
 #define CUTEST_cohprodsp_s  FUNDERSCORE(cutest_cohprodsp_s)
 
