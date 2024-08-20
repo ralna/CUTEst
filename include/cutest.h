@@ -154,7 +154,7 @@ typedef struct VarTypes {
 #define CUTEST_ushprod    FUNDERSCORE(cutest_cint_ushprod)
 
 #define CUTEST_cfn        FUNDERSCORE(cutest_cfn)
-#define CUTEST_const      FUNDERSCORE(cutest_const)
+#define CUTEST_cconst     FUNDERSCORE(cutest_cconst)
 #define CUTEST_cofg       FUNDERSCORE(cutest_cint_cofg)
 #define CUTEST_cofsg      FUNDERSCORE(cutest_cint_cofsg)
 #define CUTEST_ccfg       FUNDERSCORE(cutest_cint_ccfg)
@@ -245,7 +245,7 @@ typedef struct VarTypes {
 #define CUTEST_ushprod_s    FUNDERSCORE(cutest_cint_ushprod_s)
 
 #define CUTEST_cfn_s        FUNDERSCORE(cutest_cfn_s)
-#define CUTEST_const_s      FUNDERSCORE(cutest_const_s)
+#define CUTEST_cconst_s     FUNDERSCORE(cutest_cconst_s)
 #define CUTEST_cofg_s       FUNDERSCORE(cutest_cint_cofg_s)
 #define CUTEST_cofsg_s      FUNDERSCORE(cutest_cint_cofsg_s)
 #define CUTEST_ccfg_s       FUNDERSCORE(cutest_cint_ccfg_s)
@@ -328,7 +328,6 @@ void CUTEST_cnoobj  ( integer *status, const integer *funit, logical *noobj );
 void CUTEST_cdimsg  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh  ( integer *status, integer *nnzh );
-void CUTEST_cdimcop ( integer *status, integer *nnzohp );
 void CUTEST_cdimohp ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp ( integer *status, integer *nnzchp );
 void CUTEST_cdimse  ( integer *status, integer *ne, integer *nzh,
@@ -580,7 +579,6 @@ void CUTEST_cnoobj_s  ( integer *status, const integer *funit, logical *noobj );
 void CUTEST_cdimsg_s  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj_s  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh_s  ( integer *status, integer *nnzh );
-void CUTEST_cdimcop_s ( integer *status, integer *nnzohp );
 void CUTEST_cdimohp_s ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp_s ( integer *status, integer *nnzchp );
 void CUTEST_cdimse_s  ( integer *status, integer *ne, integer *nzh,
@@ -846,7 +844,7 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_ushprod_q    FUNDERSCORE(cutest_cint_ushprod_q)
 
 #define CUTEST_cfn_q        FUNDERSCORE(cutest_cfn_q)
-#define CUTEST_const_q      FUNDERSCORE(cutest_const_q)
+#define CUTEST_cconst_q     FUNDERSCORE(cutest_cconst_q)
 #define CUTEST_cofg_q       FUNDERSCORE(cutest_cint_cofg_q)
 #define CUTEST_cofsg_q      FUNDERSCORE(cutest_cint_cofsg_q)
 #define CUTEST_ccfg_q       FUNDERSCORE(cutest_cint_ccfg_q)
@@ -924,7 +922,6 @@ void CUTEST_cnoobj_q  ( integer *status, const integer *funit, logical *noobj );
 void CUTEST_cdimsg_q  ( integer *status, integer *nnzg );
 void CUTEST_cdimsj_q  ( integer *status, integer *nnzj );
 void CUTEST_cdimsh_q  ( integer *status, integer *nnzh );
-void CUTEST_cdimcop_q ( integer *status, integer *nnzohp );
 void CUTEST_cdimohp_q ( integer *status, integer *nnzohp );
 void CUTEST_cdimchp_q ( integer *status, integer *nnzchp );
 void CUTEST_cdimse_q  ( integer *status, integer *ne, integer *nzh,
