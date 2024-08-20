@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-08-18
+ * this version 2024-08-20
  *
  * ======================================================================
  */
@@ -29,7 +29,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.2.1
+#define CUTEST_VERSION 2.2.2
 
 /*
  * Define name of main() function on a
@@ -199,6 +199,9 @@ typedef struct VarTypes {
 #define CUTEST_uterminate FUNDERSCORE(cutest_uterminate)
 #define CUTEST_cterminate FUNDERSCORE(cutest_cterminate)
 
+#define FORTRAN_open      FUNDERSCORE(fortran_open)
+#define FORTRAN_close     FUNDERSCORE(fortran_close)
+
 #define CUTEST_usetup_s     FUNDERSCORE(cutest_usetup_s)
 #define CUTEST_csetup_s     FUNDERSCORE(cutest_cint_csetup_s)
 
@@ -287,8 +290,8 @@ typedef struct VarTypes {
 #define CUTEST_uterminate_s FUNDERSCORE(cutest_uterminate_s)
 #define CUTEST_cterminate_s FUNDERSCORE(cutest_cterminate_s)
 
-#define FORTRAN_open      FUNDERSCORE(fortran_open)
-#define FORTRAN_close     FUNDERSCORE(fortran_close)
+#define FORTRAN_open_s      FUNDERSCORE(fortran_open_s)
+#define FORTRAN_close_s     FUNDERSCORE(fortran_close_s)
 
 /*
  * Prototypes for CUTEst FORTRAN routines found in libcutest.a
@@ -541,6 +544,10 @@ void CUTEST_cohprodsp( integer *status, integer *nnzohp,
 void CUTEST_uterminate( integer *status );
 void CUTEST_cterminate( integer *status );
 
+/* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
+void FORTRAN_open(  const integer *funit, const char *fname, integer *ierr );
+void FORTRAN_close( const integer *funit, integer *ierr );
+
 /* Same for single precision versions */
 
 /* Setup routines */
@@ -788,9 +795,105 @@ void CUTEST_cohprodsp_s( integer *status, integer *nnzohp,
 void CUTEST_uterminate_s( integer *status );
 void CUTEST_cterminate_s( integer *status );
 
+/* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
+void FORTRAN_open_s(  const integer *funit, const char *fname, integer *ierr );
+void FORTRAN_close_s( const integer *funit, integer *ierr );
+
 /* Same for quadruple precision versions */
 
 #ifdef REAL_128
+
+#define CUTEST_usetup_q     FUNDERSCORE(cutest_usetup_q)
+#define CUTEST_csetup_q     FUNDERSCORE(cutest_cint_csetup_q)
+
+#define CUTEST_udimen_q     FUNDERSCORE(cutest_udimen_q)
+#define CUTEST_udimsh_q     FUNDERSCORE(cutest_udimsh_q)
+#define CUTEST_udimse_q     FUNDERSCORE(cutest_udimse_q)
+#define CUTEST_uvartype_q   FUNDERSCORE(cutest_uvartype_q)
+#define CUTEST_unames_q     FUNDERSCORE(cutest_unames_q)
+#define CUTEST_ureport_q    FUNDERSCORE(cutest_ureport_q)
+
+#define CUTEST_cdimen_q     FUNDERSCORE(cutest_cdimen_q)
+#define CUTEST_cnoobj_q     FUNDERSCORE(cutest_cint_cnoobj_q)
+#define CUTEST_cdimsg_q     FUNDERSCORE(cutest_cdimsg_q)
+#define CUTEST_cdimsj_q     FUNDERSCORE(cutest_cdimsj_q)
+#define CUTEST_cdimsh_q     FUNDERSCORE(cutest_cdimsh_q)
+#define CUTEST_cdimohp_q    FUNDERSCORE(cutest_cdimohp_q)
+#define CUTEST_cdimchp_q    FUNDERSCORE(cutest_cdimchp_q)
+#define CUTEST_cdimse_q     FUNDERSCORE(cutest_cdimse_q)
+#define CUTEST_cstats_q     FUNDERSCORE(cutest_cstats_q)
+#define CUTEST_cvartype_q   FUNDERSCORE(cutest_cvartype_q)
+#define CUTEST_cnames_q     FUNDERSCORE(cutest_cnames_q)
+#define CUTEST_creport_q    FUNDERSCORE(cutest_creport_q)
+
+#define CUTEST_connames_q   FUNDERSCORE(cutest_connames_q)
+#define CUTEST_pname_q      FUNDERSCORE(cutest_pname_q)
+#define CUTEST_probname_q   FUNDERSCORE(cutest_probname_q)
+#define CUTEST_varnames_q   FUNDERSCORE(cutest_varnames_q)
+
+#define CUTEST_ufn_q        FUNDERSCORE(cutest_ufn_q)
+#define CUTEST_ugr_q        FUNDERSCORE(cutest_ugr_q)
+#define CUTEST_uofg_q       FUNDERSCORE(cutest_cint_uofg_q)
+#define CUTEST_ubandh_q     FUNDERSCORE(cutest_ubandh_q)
+#define CUTEST_udh_q        FUNDERSCORE(cutest_udh_q)
+#define CUTEST_ushp_q       FUNDERSCORE(cutest_ushp_q)
+#define CUTEST_ush_q        FUNDERSCORE(cutest_ush_q)
+#define CUTEST_ueh_q        FUNDERSCORE(cutest_cint_ueh_q)
+#define CUTEST_ugrdh_q      FUNDERSCORE(cutest_ugrdh_q)
+#define CUTEST_ugrsh_q      FUNDERSCORE(cutest_ugrsh_q)
+#define CUTEST_ugreh_q      FUNDERSCORE(cutest_cint_ugreh_q)
+#define CUTEST_uhprod_q     FUNDERSCORE(cutest_cint_uhprod_q)
+#define CUTEST_ushprod_q    FUNDERSCORE(cutest_cint_ushprod_q)
+
+#define CUTEST_cfn_q        FUNDERSCORE(cutest_cfn_q)
+#define CUTEST_const_q      FUNDERSCORE(cutest_const_q)
+#define CUTEST_cofg_q       FUNDERSCORE(cutest_cint_cofg_q)
+#define CUTEST_cofsg_q      FUNDERSCORE(cutest_cint_cofsg_q)
+#define CUTEST_ccfg_q       FUNDERSCORE(cutest_cint_ccfg_q)
+#define CUTEST_clfg_q       FUNDERSCORE(cutest_cint_clfg_q)
+#define CUTEST_cgr_q        FUNDERSCORE(cutest_cint_cgr_q)
+#define CUTEST_csgr_q       FUNDERSCORE(cutest_cint_csgr_q)
+#define CUTEST_csgrp_q      FUNDERSCORE(cutest_csgrp_q)
+#define CUTEST_csjp_q       FUNDERSCORE(cutest_csjp_q)
+#define CUTEST_ccfsg_q      FUNDERSCORE(cutest_cint_ccfsg_q)
+#define CUTEST_ccifg_q      FUNDERSCORE(cutest_cint_ccifg_q)
+#define CUTEST_ccifsg_q     FUNDERSCORE(cutest_cint_ccifsg_q)
+#define CUTEST_cgrdh_q      FUNDERSCORE(cutest_cint_cgrdh_q)
+#define CUTEST_cdh_q        FUNDERSCORE(cutest_cdh_q)
+#define CUTEST_cdhc_q       FUNDERSCORE(cutest_cdhc_q)
+#define CUTEST_cdhj_q       FUNDERSCORE(cutest_cdhj_q)
+#define CUTEST_cshp_q       FUNDERSCORE(cutest_cshp_q)
+#define CUTEST_csh_q        FUNDERSCORE(cutest_csh_q)
+#define CUTEST_cshc_q       FUNDERSCORE(cutest_cshc_q)
+#define CUTEST_cshj_q       FUNDERSCORE(cutest_cshj_q)
+#define CUTEST_ceh_q        FUNDERSCORE(cutest_cint_ceh_q)
+#define CUTEST_cifn_q       FUNDERSCORE(cutest_cifn_q)
+#define CUTEST_cigr_q       FUNDERSCORE(cutest_cigr_q)
+#define CUTEST_cisgr_q      FUNDERSCORE(cutest_cisgr_q)
+#define CUTEST_cisgrp_q     FUNDERSCORE(cutest_cisgrp_q)
+#define CUTEST_cidh_q       FUNDERSCORE(cutest_cidh_q)
+#define CUTEST_cish_q       FUNDERSCORE(cutest_cish_q)
+#define CUTEST_csgrsh_q     FUNDERSCORE(cutest_cint_csgrsh_q)
+#define CUTEST_csgrshp_q    FUNDERSCORE(cutest_csgrshp_q)
+#define CUTEST_csgreh_q     FUNDERSCORE(cutest_cint_csgreh_q)
+#define CUTEST_chprod_q     FUNDERSCORE(cutest_cint_chprod_q)
+#define CUTEST_cshprod_q    FUNDERSCORE(cutest_cint_chsprod_q)
+#define CUTEST_chcprod_q    FUNDERSCORE(cutest_cint_chcprod_q)
+#define CUTEST_cshcprod_q   FUNDERSCORE(cutest_cint_cshcprod_q)
+#define CUTEST_chjprod_q    FUNDERSCORE(cutest_cint_chjprod_q)
+#define CUTEST_cjprod_q     FUNDERSCORE(cutest_cint_cjprod_q)
+#define CUTEST_csjprod_q    FUNDERSCORE(cutest_cint_csjprod_q)
+#define CUTEST_cchprods_q   FUNDERSCORE(cutest_cint_cchprods_q)
+#define CUTEST_cchprodsp_q  FUNDERSCORE(cutest_cchprodsp_q)
+#define CUTEST_cohprods_q   FUNDERSCORE(cutest_cint_cohprods_q)
+#define CUTEST_cohprodsp_q  FUNDERSCORE(cutest_cohprodsp_q)
+
+#define CUTEST_uterminate_q FUNDERSCORE(cutest_uterminate_q)
+#define CUTEST_cterminate_q FUNDERSCORE(cutest_cterminate_q)
+
+#define FORTRAN_open_q      FUNDERSCORE(fortran_open_q)
+#define FORTRAN_close_q     FUNDERSCORE(fortran_close_q)
+
 /* Setup routines */
 void CUTEST_usetup_q  ( integer *status, const integer *funit,
                       const integer *iout, const integer *io_buffer,
@@ -1035,11 +1138,12 @@ void CUTEST_cohprodsp_q( integer *status, integer *nnzohp,
 /* Termination routines */
 void CUTEST_uterminate_q( integer *status );
 void CUTEST_cterminate_q( integer *status );
-#endif
 
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
-void FORTRAN_open(  const integer *funit, const char *fname, integer *ierr );
-void FORTRAN_close( const integer *funit, integer *ierr );
+void FORTRAN_open_q(  const integer *funit, const char *fname, integer *ierr );
+void FORTRAN_close_q( const integer *funit, integer *ierr );
+
+#endif
 
 /*
  * Memory allocation shortcuts

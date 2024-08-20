@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-05 AT 08:15 GMT */
+/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:45 GMT */
 
 /* ====================================================
  * CUTEst interface for LOQO          October 22nd, 2003
@@ -151,7 +151,7 @@ static int spec = 0;
         int i;
 
         /* Open problem description file OUTSDIF.d */
-        FORTRAN_open( &funit, fname, &ierr );
+        FORTRAN_open_r( &funit, fname, &ierr );
         if( ierr ) {
             printf("Error opening file OUTSDIF.d.\nAborting.\n");
             exit(1);
@@ -499,7 +499,7 @@ static int spec = 0;
         printf(" count_h (LOQO)          = %-8d\n", count_h);
         printf(" ******************************************************************\n\n");
 
-        FORTRAN_close( &funit, &ierr );
+        FORTRAN_close_r( &funit, &ierr );
         if( ierr ) {
             printf( "Error closing file %s", fname );
             return 1;

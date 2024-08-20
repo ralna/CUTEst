@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-04 AT 16:00 GMT */
+/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 08:00 GMT */
 
 #ifndef THIS_PROBLEM_NAME
 #define THIS_PROBLEM_NAME "WORHP/CUTEst"
@@ -128,7 +128,7 @@ int MAINENTRY() {
      * Open CUTEst problem
      * cutest_input: unit number for the decoded data
      */
-    FORTRAN_open(&cutest_input, outsdifd_filename, &cutest_status);
+    FORTRAN_open_r(&cutest_input, outsdifd_filename, &cutest_status);
     if (cutest_status != 0) {
         snprintf(buffer, sizeof(buffer), "Coult not open %s",
                  outsdifd_filename);
@@ -191,7 +191,7 @@ int MAINENTRY() {
         CUTEST_usetup_r(&cutest_status, &cutest_input, &out, &io_buffer,
                         &opt.n, opt.X, opt.XL, opt.XU);
     }
-    FORTRAN_close(&cutest_input, &cutest_status);
+    FORTRAN_close_r(&cutest_input, &cutest_status);
 
     if (opt.m > 0) {
         /*

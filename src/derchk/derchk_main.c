@@ -82,7 +82,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
         /* Open problem description file OUTSDIF.d */
         ierr = 0;
-        FORTRAN_open(&funit, fname, &ierr);
+        FORTRAN_open_r(&funit, fname, &ierr);
         if (ierr) {
             printf("Error opening file OUTSDIF.d.\nAborting.\n");
             exit(1);
@@ -304,7 +304,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     printf("*********************\n\n");
 
     ierr = 0;
-    FORTRAN_close(&funit, &ierr);
+    FORTRAN_close_r(&funit, &ierr);
     if (ierr)
         printf("Error closing %s on unit %d.\n", fname, (int)funit);
 

@@ -4,13 +4,15 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-11
- * this version 2024-04-05
+ * this version 2024-08-20
  */
 
 #define ELFUN_r ELFUN_q
 #define ELFUN_flexible_r ELFUN_flexible_q
 #define GROUP_r GROUP_q
 #define RANGE_r RANGE_q
+#define FORTRAN_open_r FORTRAN_open_q
+#define FORTRAN_close_r FORTRAN_close_q
 #define CUTEST_allocate_array_integer_r CUTEST_allocate_array_integer_q
 #define CUTEST_allocate_array_real_r CUTEST_allocate_array_real_q
 #define CUTEST_ccfg_r CUTEST_ccfg_q

@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-06-11 AT 11:40 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-08-20 AT 07:40 GMT */
 
 /* ====================================================
  * CUTEst interface simulating a black box for NOMAD.
@@ -55,7 +55,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open( &funit, fname, &ierr );
+    FORTRAN_open_r( &funit, fname, &ierr );
     if ( ierr ) {
       return_infinity();
       return -1;
@@ -105,7 +105,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       }
     }
 
-    FORTRAN_close( &funit, &ierr );
+    FORTRAN_close_r( &funit, &ierr );
 
     /* If an input vector is supplied, use it.
      * Otherwise, use the problem's initial guess. */

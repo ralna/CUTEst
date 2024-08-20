@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-04 AT 16:15 GMT */
+/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:45 GMT */
 
 /* ================================================
  * CUTEst interface to KNITRO 7           
@@ -267,7 +267,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open(&funit, fname, &ierr);
+    FORTRAN_open_r(&funit, fname, &ierr);
     if (ierr) {
       printf("Error opening file OUTSDIF.d.\nAborting.\n");
       exit(1);
@@ -622,7 +622,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
   terminate:
 
     ierr = 0;
-    FORTRAN_close(&funit, &ierr);
+    FORTRAN_close_r(&funit, &ierr);
     if (ierr) {
       fprintf(stderr, "Error closing %s on unit %d.\n", fname, funit);
       fprintf(stderr, "Trying not to abort.\n");

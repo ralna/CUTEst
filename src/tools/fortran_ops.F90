@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -17,7 +17,7 @@
 
 !-*-*-*-*-*-*- F O R T R A N  O P E N   S U B R O U T I N E  -*-*-*-*-*-*-*-*-
 
-      SUBROUTINE FORTRAN_open( funit, fname, status )
+      SUBROUTINE FORTRAN_open_r( funit, fname, status )
       USE CUTEST_KINDS_precision
 
 !  Open file fname using Fortran unit number funit. 
@@ -37,11 +37,11 @@
  900  CONTINUE
       status = 1
       RETURN
-      END SUBROUTINE FORTRAN_open
+      END SUBROUTINE FORTRAN_open_r
 
 !-*-*-*-*-*-*- F O R T R A N  C L O S E  S U B R O U T I N E  -*-*-*-*-*-*-*-*-
 
-      SUBROUTINE FORTRAN_close( funit, status )
+      SUBROUTINE FORTRAN_close_r( funit, status )
       USE CUTEST_KINDS_precision
 
 ! Close a stream unit previously opened by FORTRAN_OPEN.
@@ -58,5 +58,5 @@
   900 CONTINUE
       status = 1
       RETURN
-      END SUBROUTINE FORTRAN_close
+      END SUBROUTINE FORTRAN_close_r
 

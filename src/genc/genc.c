@@ -11,6 +11,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 #endif
 
 #include "cutest.h"
+#include "cutest_routines.h"
 
 rp_ genc( rp_ dummy )
 {
@@ -31,7 +32,7 @@ void genspc( integer funit, char *fname )
        Possibly, this routine contains precision-dependent directives */
 
     /* Open relevant file */
-    FORTRAN_open( &funit, fname, &ierr );
+    FORTRAN_open_r( &funit, fname, &ierr );
     if ( ierr )
     {
         printf( "Error opening spec file %s.\nAborting.\n", fname );
@@ -40,7 +41,7 @@ void genspc( integer funit, char *fname )
 
     /* ... Do something ... */
 
-    FORTRAN_close( &funit, &ierr );
+    FORTRAN_close_r( &funit, &ierr );
     return;
 
 }

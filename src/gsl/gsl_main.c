@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-06-11 AT 11:40 GMT */
+/* THIS VERSION: CUTEST 2.4 - 2024-08-20 AT 07:40 GMT */
 
 /* =================================================
  * CUTEst interface for GNU Scientific Library (GSL)
@@ -188,7 +188,7 @@ int MAINENTRY( void ){
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open( &funit, fname, &ierr );
+    FORTRAN_open_r( &funit, fname, &ierr );
     if ( ierr )
     {
         printf("Error opening file OUTSDIF.d.\nAborting.\n");
@@ -630,7 +630,7 @@ int MAINENTRY( void ){
     printf(" ******************************************************************\n\n");
 
     ierr = 0;
-    FORTRAN_close( &funit, &ierr );
+    FORTRAN_close_r( &funit, &ierr );
     if ( ierr )
     {
         printf( "Error closing %s on unit %d.\n", fname, (int)funit );

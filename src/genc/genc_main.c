@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
+/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 08:00 GMT */
 
 /* ============================================
  * CUTEst interface for generic package
@@ -71,7 +71,7 @@ int MAINENTRY( void ){
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open( &funit, fname, &ierr );
+    FORTRAN_open_r( &funit, fname, &ierr );
     if ( ierr )
     {
         printf("Error opening file OUTSDIF.d.\nAborting.\n");
@@ -270,7 +270,7 @@ int MAINENTRY( void ){
     printf(" ******************************************************************\n\n");
 
     ierr = 0;
-    FORTRAN_close( &funit, &ierr );
+    FORTRAN_close_r( &funit, &ierr );
     if ( ierr )
     {
         printf( "Error closing %s on unit %d.\n", fname, (int)funit );
