@@ -138,11 +138,15 @@ jobs:
           else
             MODE="shared"
           fi
+          QUADRUPLE="true"
+          if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
+            QUADRUPLE="false"
+          fi
           meson setup builddir --buildtype=debug \
                                --prefix=$GITHUB_WORKSPACE/cutest \
                                -Ddefault_library=${MODE} \
-                               -Dquadruple=true \
-                               -Dint64=$INT64
+                               -Dquadruple=${QUADRUPLE} \
+                               -Dint64=${INT64}
 
       - name: Build CUTEST
         shell: bash
