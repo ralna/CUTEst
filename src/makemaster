@@ -560,6 +560,10 @@ run_test_double: tools_double test_double
 run_test_single_64: tools_single_64 test_single_64
 run_test_double_64: tools_double_64 test_double_64
 
+run_test_quadruple: tools_quadruple test_quadruple
+
+
+
 #  all tools (including fortran 2008) and interfaces
 
 run_test_2008: run_test_2008_$(PRECIS)

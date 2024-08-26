@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-26 AT 15:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -259,9 +259,9 @@
 
       ELSE
         ICALCG( 1 ) = ig
-        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,            &
+        CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,        &
                     data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,              &
-                    data%lstgp, 1, data%lcalcg, data%lgpvlu,                   &
+                    data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,               &
                     .FALSE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
@@ -296,9 +296,9 @@
 !  evaluate the group derivative
 
         IF ( .NOT. data%GXEQX( ig ) ) THEN
-          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1,          &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
                       data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1, data%lcalcg, data%lgpvlu,                 &
+                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
                       .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF

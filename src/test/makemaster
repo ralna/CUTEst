@@ -49,13 +49,13 @@ test_cutest_single: test_cutest_unconstrained_single \
 test_cutest_double: test_cutest_unconstrained_double \
                     test_cutest_constrained_double
 test_cutest_quadruple: test_cutest_unconstrained_quadruple \
-                    test_cutest_constrained_quadruple
+                       test_cutest_constrained_quadruple
 test_cutest_single_64: test_cutest_unconstrained_single_64 \
                        test_cutest_constrained_single_64
 test_cutest_double_64: test_cutest_unconstrained_double_64 \
                        test_cutest_constrained_double_64
 test_cutest_quadruple_64: test_cutest_unconstrained_quadruple_64 \
-                       test_cutest_constrained_quadruple_64
+                          test_cutest_constrained_quadruple_64
 
 test_cutest_unconstrained: test_cutest_unconstrained_$(PRECIS)
 	@printf ' %-21s\n' "CUTEST: unconstrained tests ($(PRECIS) $(SUCC)"

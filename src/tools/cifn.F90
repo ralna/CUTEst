@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-26 AT 15:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"

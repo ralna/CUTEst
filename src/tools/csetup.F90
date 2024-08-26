@@ -714,6 +714,7 @@
           data%KNDOFC( i ) = m
         END IF
       END DO
+
       IF ( m == 0 .AND. out > 0 ) WRITE( out,                                  &
         "( /, ' ** SUBROUTINE CUTEST_csetup: Warning. The problem has no',     &
        &      ' general constraints. ', /,  ' ** Other tools may be',          &
