@@ -420,7 +420,7 @@
 
 !  evaluate the group derivative values.
 
-          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
+          CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
                       data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
                       data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                        .TRUE., igstat )
