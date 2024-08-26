@@ -1,7 +1,7 @@
 project(
   'CUTEst',
   'fortran', 'c',
-  version: '2.2.2',
+  version: '2.2.3',
   meson_version: '>= 0.62.0',
   default_options: [
     'buildtype=release',
@@ -176,7 +176,7 @@ if build_quadruple
 
   gen_quadruple = generator(fc_compiler,
                             output : 'quadruple_@BASENAME@.f90',
-                            arguments : pp_options + '-DREAL_128' +
+                            arguments : pp_options + '-DREAL_128' + '-DCUTEST_16btye_reals_exist' +
                                         ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
                                         output_generator)
 
