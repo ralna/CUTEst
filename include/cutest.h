@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-08-20
+ * this version 2024-08-27
  *
  * ======================================================================
  */
@@ -29,7 +29,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.2.4
+#define CUTEST_VERSION 2.2.5
 
 /*
  * Define name of main() function on a
