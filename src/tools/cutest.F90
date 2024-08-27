@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-02 AT 12:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 08:05 GMT.
 
 #include "cutest_modules.h"
 
@@ -136,6 +136,7 @@
         INTEGER ( KIND = ip_ ) :: lh_col = lmin
         INTEGER ( KIND = ip_ ) :: lh_val = lmin
         INTEGER ( KIND = ip_ ) :: io_buffer = io_buffer
+        REAL :: time_ccf = 0.0
         REAL :: time_ccfg = 0.0
         REAL :: time_ccfsg = 0.0
         REAL :: time_cch = 0.0

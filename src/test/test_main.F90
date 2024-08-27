@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 15:50 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 09:25 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -488,6 +488,14 @@
         CALL CUTEST_cifn_r( status, n, icon, X, ci )
         IF ( status /= 0 ) GO TO 900
         CALL WRITE_CI( out, icon, ci )
+
+!  compute the constraint function values alone
+
+        WRITE( out, "( ' CALL CUTEST_ccf' )" )
+
+        CALL CUTEST_ccf_r( status, n, m, X, C )
+        IF ( status /= 0 ) GO TO 900
+        CALL WRITE_C( out, m, C )
 
 !  compute the gradient and dense Jacobian values
 

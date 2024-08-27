@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-01-18 AT 12:15 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 08:15 GMT.
 
 !-**-*-*-*-*-*-  S P A R S E _ H S L _ K I N D S   M O D U L E S -*-*-*-*-*-*-*-
 
@@ -42,7 +42,7 @@
     USE ISO_C_BINDING
     USE ISO_FORTRAN_ENV
     PRIVATE
-    PUBLIC :: ip_, ipc_, iplong_
+    PUBLIC :: ip_, ipc_, long_
 
 !  Integer kinds (long 64 bit integer)
 

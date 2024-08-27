@@ -1,8 +1,8 @@
 '\" e  @(#)cutest_timings v1.0 03/2016;
 .TH cutest_timings_threaded 3 "3 Mar 2016" "CUTEst user documentation" "CUTEst user documentation"
 .SH NAME
-CUTEST_timings_threaded \- CUTEst tool to find the CPU time used by a CUTEst evaluation
-subrotine.
+CUTEST_timings_threaded \- CUTEst tool to find the CPU time used by a 
+CUTEst evaluation subrotine.
 .SH SYNOPSIS
 .HP 1i
 CALL CUTEST_timings_threaded( status, name, time, thread )
@@ -12,9 +12,16 @@ For real rather than double precision arguments, instead
 
 .HP 1i
 CALL CUTEST_timings_threaded_s( ... )
+
+.HP 1i
+and for quadruple precision arguments, when available,
+
+.HP 1i
+CALL CUTEST_timings_threaded_q( ... )
+
 .SH DESCRIPTION
-The CUTEST_timings_threaded subroutine obtains the CPU time used by an individual
-CUTEst evaluation subroutine.
+The CUTEST_timings_threaded subroutine obtains the CPU time used by an 
+individual CUTEst evaluation subroutine.
 
 .LP
 .SH ARGUMENTS

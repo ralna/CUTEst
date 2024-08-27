@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for basic CUTEST tools packages
 
 #  Nick Gould, for GALAHAD productions
-#  This version: 2024-04-05
+#  This version: 2024-08-27
 
 #  include standard CUTEst makefile defaults before package-specifics
 
@@ -136,11 +136,11 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cdimohp_single.o) $(LCS)(cvartype_single.o) \
            $(LCS)(cfn_single.o) $(LCS)(cgr_single.o) \
            $(LCS)(cofg_single.o) $(LCS)(cofsg_single.o) \
-           $(LCS)(ccfg_single.o) $(LCS)(clfg_single.o) \
-           $(LCS)(ccfsg_single.o) $(LCS)(ccifg_single.o) \
-           $(LCS)(ccifsg_single.o) $(LCS)(cdh_single.o) \
-           $(LCS)(cdhc_single.o) $(LCS)(cdhj_single.o) \
-           $(LCS)(ceh_single.o) \
+           $(LCS)(ccf_single.o) $(LCS)(ccfg_single.o) \
+           $(LCS)(clfg_single.o) $(LCS)(ccfsg_single.o) \
+           $(LCS)(ccifg_single.o) $(LCS)(ccifsg_single.o) \
+           $(LCS)(cdh_single.o) $(LCS)(cdhc_single.o) \
+           $(LCS)(cdhj_single.o) $(LCS)(ceh_single.o) \
            $(LCS)(cgrdh_single.o) $(LCS)(cifn_single.o) \
            $(LCS)(cigr_single.o) $(LCS)(cdimsg_single.o) \
            $(LCS)(cisgr_single.o) $(LCS)(cisgrp_single.o) \
@@ -166,11 +166,11 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cdimohp_double.o) $(LCD)(cvartype_double.o) \
            $(LCD)(cfn_double.o) $(LCD)(cgr_double.o) \
            $(LCD)(cofg_double.o) $(LCD)(cofsg_double.o) \
-           $(LCD)(ccfg_double.o) $(LCD)(clfg_double.o) \
-           $(LCD)(ccfsg_double.o) $(LCD)(ccifg_double.o) \
-           $(LCD)(ccifsg_double.o) $(LCD)(cdh_double.o) \
-           $(LCD)(cdhc_double.o) $(LCD)(cdhj_double.o) \
-           $(LCD)(ceh_double.o) \
+           $(LCD)(ccf_double.o) $(LCD)(ccfg_double.o) \
+           $(LCD)(clfg_double.o) $(LCD)(ccfsg_double.o) \
+           $(LCD)(ccifg_double.o) $(LCD)(ccifsg_double.o) \
+           $(LCD)(cdh_double.o) $(LCD)(cdhc_double.o) \
+           $(LCD)(cdhj_double.o) $(LCD)(ceh_double.o) \
            $(LCD)(cgrdh_double.o) $(LCD)(cifn_double.o) \
            $(LCD)(cigr_double.o) $(LCD)(cdimsg_double.o) \
            $(LCD)(cisgr_double.o) $(LCD)(cisgrp_double.o) \
@@ -196,11 +196,11 @@ CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
            $(LCQ)(cdimohp_quadruple.o) $(LCQ)(cvartype_quadruple.o) \
            $(LCQ)(cfn_quadruple.o) $(LCQ)(cgr_quadruple.o) \
            $(LCQ)(cofg_quadruple.o) $(LCQ)(cofsg_quadruple.o) \
-           $(LCQ)(ccfg_quadruple.o) $(LCQ)(clfg_quadruple.o) \
-           $(LCQ)(ccfsg_quadruple.o) $(LCQ)(ccifg_quadruple.o) \
-           $(LCQ)(ccifsg_quadruple.o) $(LCQ)(cdh_quadruple.o) \
-           $(LCQ)(cdhc_quadruple.o) $(LCQ)(cdhj_quadruple.o) \
-           $(LCQ)(ceh_quadruple.o) \
+           $(LCQ)(ccf_quadruple.o) $(LCQ)(ccfg_quadruple.o) \
+           $(LCQ)(clfg_quadruple.o) $(LCQ)(ccfsg_quadruple.o) \
+           $(LCQ)(ccifg_quadruple.o) $(LCQ)(ccifsg_quadruple.o) \
+           $(LCQ)(cdh_quadruple.o) $(LCQ)(cdhc_quadruple.o) \
+           $(LCQ)(cdhj_quadruple.o) $(LCQ)(ceh_quadruple.o) \
            $(LCQ)(cgrdh_quadruple.o) $(LCQ)(cifn_quadruple.o) \
            $(LCQ)(cigr_quadruple.o) $(LCQ)(cdimsg_quadruple.o) \
            $(LCQ)(cisgr_quadruple.o) $(LCQ)(cisgrp_quadruple.o) \
@@ -226,11 +226,11 @@ CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cdimohp_single_64.o) $(LCS64)(cvartype_single_64.o) \
            $(LCS64)(cfn_single_64.o) $(LCS64)(cgr_single_64.o) \
            $(LCS64)(cofg_single_64.o) $(LCS64)(cofsg_single_64.o) \
-           $(LCS64)(ccfg_single_64.o) $(LCS64)(clfg_single_64.o) \
-           $(LCS64)(ccfsg_single_64.o) $(LCS64)(ccifg_single_64.o) \
-           $(LCS64)(ccifsg_single_64.o) $(LCS64)(cdh_single_64.o) \
-           $(LCS64)(cdhc_single_64.o) $(LCS64)(cdhj_single_64.o) \
-           $(LCS64)(ceh_single_64.o) \
+           $(LCS64)(ccf_single_64.o) $(LCS64)(ccfg_single_64.o) \
+           $(LCS64)(clfg_single_64.o) $(LCS64)(ccfsg_single_64.o) \
+           $(LCS64)(ccifg_single_64.o) $(LCS64)(ccifsg_single_64.o) \
+           $(LCS64)(cdh_single_64.o) $(LCS64)(cdhc_single_64.o) \
+           $(LCS64)(cdhj_single_64.o) $(LCS64)(ceh_single_64.o) \
            $(LCS64)(cgrdh_single_64.o) $(LCS64)(cifn_single_64.o) \
            $(LCS64)(cigr_single_64.o) $(LCS64)(cdimsg_single_64.o) \
            $(LCS64)(cisgr_single_64.o) $(LCS64)(cisgrp_single_64.o) \
@@ -256,11 +256,11 @@ CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cdimohp_double_64.o) $(LCD64)(cvartype_double_64.o) \
            $(LCD64)(cfn_double_64.o) $(LCD64)(cgr_double_64.o) \
            $(LCD64)(cofg_double_64.o) $(LCD64)(cofsg_double_64.o) \
-           $(LCD64)(ccfg_double_64.o) $(LCD64)(clfg_double_64.o) \
-           $(LCD64)(ccfsg_double_64.o) $(LCD64)(ccifg_double_64.o) \
-           $(LCD64)(ccifsg_double_64.o) $(LCD64)(cdh_double_64.o) \
-           $(LCD64)(cdhc_double_64.o) $(LCD64)(cdhj_double_64.o) \
-           $(LCD64)(ceh_double_64.o) \
+           $(LCD64)(ccf_double_64.o) $(LCD64)(ccfg_double_64.o) \
+           $(LCD64)(clfg_double_64.o) $(LCD64)(ccfsg_double_64.o) \
+           $(LCD64)(ccifg_double_64.o) $(LCD64)(ccifsg_double_64.o) \
+           $(LCD64)(cdh_double_64.o) $(LCD64)(cdhc_double_64.o) \
+           $(LCD64)(cdhj_double_64.o) $(LCD64)(ceh_double_64.o) \
            $(LCD64)(cgrdh_double_64.o) $(LCD64)(cifn_double_64.o) \
            $(LCD64)(cigr_double_64.o) $(LCD64)(cdimsg_double_64.o) \
            $(LCD64)(cisgr_double_64.o) $(LCD64)(cisgrp_double_64.o) \
@@ -286,11 +286,11 @@ CCUTESTQ64 = $(LCQ64)(csetup_quadruple_64.o) $(LCQ64)(cdimen_quadruple_64.o) \
            $(LCQ64)(cdimohp_quadruple_64.o) $(LCQ64)(cvartype_quadruple_64.o) \
            $(LCQ64)(cfn_quadruple_64.o) $(LCQ64)(cgr_quadruple_64.o) \
            $(LCQ64)(cofg_quadruple_64.o) $(LCQ64)(cofsg_quadruple_64.o) \
-           $(LCQ64)(ccfg_quadruple_64.o) $(LCQ64)(clfg_quadruple_64.o) \
-           $(LCQ64)(ccfsg_quadruple_64.o) $(LCQ64)(ccifg_quadruple_64.o) \
-           $(LCQ64)(ccifsg_quadruple_64.o) $(LCQ64)(cdh_quadruple_64.o) \
-           $(LCQ64)(cdhc_quadruple_64.o) $(LCQ64)(cdhj_quadruple_64.o) \
-           $(LCQ64)(ceh_quadruple_64.o) \
+           $(LCQ64)(ccf_quadruple_64.o) $(LCQ64)(ccfg_quadruple_64.o) \
+           $(LCQ64)(clfg_quadruple_64.o) $(LCQ64)(ccfsg_quadruple_64.o) \
+           $(LCQ64)(ccifg_quadruple_64.o) $(LCQ64)(ccifsg_quadruple_64.o) \
+           $(LCQ64)(cdh_quadruple_64.o) $(LCQ64)(cdhc_quadruple_64.o) \
+           $(LCQ64)(cdhj_quadruple_64.o) $(LCQ64)(ceh_quadruple_64.o) \
            $(LCQ64)(cgrdh_quadruple_64.o) $(LCQ64)(cifn_quadruple_64.o) \
            $(LCQ64)(cigr_quadruple_64.o) $(LCQ64)(cdimsg_quadruple_64.o) \
            $(LCQ64)(cisgr_quadruple_64.o) $(LCQ64)(cisgrp_quadruple_64.o) \
@@ -477,6 +477,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) cgr_$(PRECIS).o
 	$(RMARFILE) cofg_$(PRECIS).o
 	$(RMARFILE) cofsg_$(PRECIS).o
+	$(RMARFILE) ccf_$(PRECIS).o
 	$(RMARFILE) ccfg_$(PRECIS).o
 	$(RMARFILE) ccfsg_$(PRECIS).o
 	$(RMARFILE) clfg_$(PRECIS).o
@@ -756,6 +757,19 @@ $(LC)(cofsg_$(PRECIS).o): ../tools/cofsg.F90
                    $(FORTRAN) -o cofsg_$(PRECIS).o $(F90FLAGSN) cofsg.F90 )
 	cd $(OBJ); $(ARR) cofsg_$(PRECIS).o; \
           $(RM) cofsg.F90 cofsg_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+ccf.o: $(LC)(ccf_$(PRECIS).o)
+
+$(LC)(ccf_$(PRECIS).o): ../tools/ccf.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "ccf"
+	$(CP) ../tools/ccf.F90 $(OBJ)/ccf.F90
+	cd $(OBJ); $(FORTRAN) -o ccf_$(PRECIS).o $(F90FLAGS) ccf.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o ccf_$(PRECIS).o $(F90FLAGSN) ccf.F90 )
+	cd $(OBJ); $(ARR) ccf_$(PRECIS).o; \
+          $(RM) ccf.F90 ccf_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

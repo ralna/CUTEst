@@ -1,30 +1,27 @@
-'\" e  @(#)cutest_cdimsh v1.0 12/2012;
-.TH cutest_cdimsh 3M "4 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+'\" e  @(#)cutest_ccf v1.0 08/2024;
+.TH cutest_ccf 3M "27 Aug 2024" "CUTEst user documentation" "CUTEst user documentation"
 .SH NAME
-CUTEST_cdimsh \- CUTEst tool to determine the number of nonzeros needed 
-to store the Hessian of the Lagrangian function for the problem decoded from a
-SIF file by the script \fIsifdecoder\fP.
+CUTEST_ccf \- CUTEst tool to evaluate constraint functions values.
 .SH SYNOPSIS
 .HP 1i
-CALL CUTEST_cdimsh( status, nnzh )
+CALL CUTEST_ccf( status, n, m, X, C )
 
 .HP 1i
 For real rather than double precision arguments, instead
 
 .HP 1i
-CALL CUTEST_cdimsh_s( ... )
+CALL CUTEST_ccf_s( ... )
 
 .HP 1i
 and for quadruple precision arguments, when available,
 
 .HP 1i
-CALL CUTEST_cdimsh_q( ... )
+CALL CUTEST_ccf_q( ... )
 
 .SH DESCRIPTION
-The CUTEST_cdimsh subroutine determines the number of nonzero elements
-required to store the Hessian matrix of the Lagrangian function for
-the problem decoded into OUTSDIF.d in the constrained minimization
-case. The matrix is stored in sparse "coordinate" format.
+The CUTEST_ccf subroutine evaluates the values of the constraint functions of
+the problem decoded from a SIF file by the script \fIsifdecoder\fP 
+at the point X.
 
 The problem under consideration
 is to minimize or maximize an objective function
@@ -66,22 +63,37 @@ and simple bounds
 .EQ
 x sup l ~<=~ x ~<=~ x sup u.
 .EN
-The objective function is group-partially separable 
-and all constraint functions are partially separable.
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+
 .LP 
 .SH ARGUMENTS
-The arguments of CUTEST_cdimsh are as follows
+The arguments of CUTEST_ccf are as follows
 .TP 5
 .B status \fP[out] - integer
 the outputr status: 0 for a succesful call, 1 for an array 
 allocation/deallocation error, 2 for an array bound error,
 3 for an evaluation error,
 .TP
-.B nnzh \fP[out] - integer
-the number of nonzero elements required to store the matrix.
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP 5
+.B m \fP[in] - integer
+the total number of general constraints,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B C \fP[out] - real/double precision
+an array which gives the values of the general constraint functions
+evaluated at X. The i-th component of C will contain the value of 
+.EQ
+c sub i (x).
+.EN
 .LP
 .SH AUTHORS
-I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+J.M. Fowkes, N.I.M. Gould, A. Montoison and D. Orban
 .SH "SEE ALSO"
 \fICUTEst: a Constrained and Unconstrained Testing 
 Environment with safe threads\fP,
@@ -97,4 +109,5 @@ Environment, revisited\fP,
    I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
    ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
 
-sifdecoder(1).
+
+sifdecoder(1)

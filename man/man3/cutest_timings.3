@@ -12,6 +12,13 @@ For real rather than double precision arguments, instead
 
 .HP 1i
 CALL CUTEST_timings_s( ... )
+
+.HP 1i
+and for quadruple precision arguments, when available,
+
+.HP 1i
+CALL CUTEST_timings_q( ... )
+
 .SH DESCRIPTION
 The CUTEST_timings subroutine obtains the CPU time used by an individual
 CUTEst evaluation subroutine.
@@ -37,7 +44,7 @@ Supported values are:
 .TP
  name is the name of a CUTEst evaluation tool,
  where name is one of strings
- 'cutest_ccfg', 'cutest_ccfsg', 'cutest_cch',
+ 'cutest_ccf', 'cutest_ccfg', 'cutest_ccfsg', 'cutest_cch',
  'cutest_cchprods', 'cutest_ccifg', 'cutest_ccifsg',
  'cutest_cdh', 'cutest_cdhc', 'cutest_cdimchp',
  'cutest_ceh', 'cutest_cfn', 'cutest_cgr',

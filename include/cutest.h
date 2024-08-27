@@ -157,6 +157,7 @@ typedef struct VarTypes {
 #define CUTEST_cconst     FUNDERSCORE(cutest_cconst)
 #define CUTEST_cofg       FUNDERSCORE(cutest_cint_cofg)
 #define CUTEST_cofsg      FUNDERSCORE(cutest_cint_cofsg)
+#define CUTEST_ccf        FUNDERSCORE(cutest_ccf)
 #define CUTEST_ccfg       FUNDERSCORE(cutest_cint_ccfg)
 #define CUTEST_clfg       FUNDERSCORE(cutest_cint_clfg)
 #define CUTEST_cgr        FUNDERSCORE(cutest_cint_cgr)
@@ -249,6 +250,7 @@ typedef struct VarTypes {
 #define CUTEST_cofg_s       FUNDERSCORE(cutest_cint_cofg_s)
 #define CUTEST_cofsg_s      FUNDERSCORE(cutest_cint_cofsg_s)
 #define CUTEST_ccfg_s       FUNDERSCORE(cutest_cint_ccfg_s)
+#define CUTEST_ccf_s        FUNDERSCORE(cutest_ccf_s)
 #define CUTEST_clfg_s       FUNDERSCORE(cutest_cint_clfg_s)
 #define CUTEST_cgr_s        FUNDERSCORE(cutest_cint_cgr_s)
 #define CUTEST_csgr_s       FUNDERSCORE(cutest_cint_csgr_s)
@@ -394,6 +396,8 @@ void CUTEST_cofg    ( integer *status, const integer *n, const doublereal *x,
 void CUTEST_cofsg   ( integer *status, const integer *n, const doublereal *x,
                       doublereal *f, integer *nnzg, const integer *lg,
                       doublereal *sg, integer *ivsg, const logical *grad );
+void CUTEST_ccf     ( integer *status, const integer *n, const integer *m,
+                      const doublereal *x, doublereal *c );
 void CUTEST_ccfg    ( integer *status, const integer *n, const integer *m,
                       const doublereal *x, doublereal *c, const logical *jtrans,
                       const integer *lcjac1, const integer *lcjac2,
@@ -645,6 +649,8 @@ void CUTEST_cofg_s    ( integer *status, const integer *n, const real *x,
 void CUTEST_cofsg_s   ( integer *status, const integer *n, const real *x,
                       real *f, integer *nnzg, const integer *lg,
                       real *sg, integer *ivsg, const logical *grad );
+void CUTEST_ccf_s     ( integer *status, const integer *n, const integer *m,
+                      const real *x, real *c );
 void CUTEST_ccfg_s    ( integer *status, const integer *n, const integer *m,
                       const real *x, real *c, const logical *jtrans,
                       const integer *lcjac1, const integer *lcjac2,
@@ -847,6 +853,7 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_cconst_q     FUNDERSCORE(cutest_cconst_q)
 #define CUTEST_cofg_q       FUNDERSCORE(cutest_cint_cofg_q)
 #define CUTEST_cofsg_q      FUNDERSCORE(cutest_cint_cofsg_q)
+#define CUTEST_ccf_q        FUNDERSCORE(cutest_ccf_q)
 #define CUTEST_ccfg_q       FUNDERSCORE(cutest_cint_ccfg_q)
 #define CUTEST_clfg_q       FUNDERSCORE(cutest_cint_clfg_q)
 #define CUTEST_cgr_q        FUNDERSCORE(cutest_cint_cgr_q)
@@ -988,6 +995,8 @@ void CUTEST_cofg_q    ( integer *status, const integer *n, const quadreal *x,
 void CUTEST_cofsg_q   ( integer *status, const integer *n, const quadreal *x,
                       quadreal *f, integer *nnzg, const integer *lg,
                       quadreal *sg, integer *ivsg, const logical *grad );
+void CUTEST_ccf_q     ( integer *status, const integer *n, const integer *m,
+                      const quadreal *x, quadreal *c );
 void CUTEST_ccfg_q    ( integer *status, const integer *n, const integer *m,
                       const quadreal *x, quadreal *c, const logical *jtrans,
                       const integer *lcjac1, const integer *lcjac2,

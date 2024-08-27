@@ -376,6 +376,14 @@
        REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lcjac ) :: CJAC
        END SUBROUTINE CUTEST_csgr_r
 
+       SUBROUTINE CUTEST_ccf_r( cutest_status, n, m, X, C )
+       USE CUTEST_KINDS_precision
+       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m
+       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: cutest_status
+       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( m ) :: C
+       END SUBROUTINE CUTEST_ccf_r
+
        SUBROUTINE CUTEST_ccfg_r( cutest_status, n, m, X, C, jtrans,            &
                                  lcjac1, lcjac2, CJAC, grad )
        USE CUTEST_KINDS_precision
@@ -990,6 +998,14 @@
        REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
        REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lgr ) :: GR_val
        END SUBROUTINE CUTEST_cisgr_threaded_r
+
+       SUBROUTINE CUTEST_ccf_threaded_r( cutest_status, n, m, X, C, thread )
+       USE CUTEST_KINDS_precision
+       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, thread
+       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: cutest_status
+       REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+       REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( m ) :: C
+       END SUBROUTINE CUTEST_ccf_threaded_r
 
        SUBROUTINE CUTEST_ccfg_threaded_r( cutest_status, n, m, X, C, jtrans,   &
                                           lcjac1, lcjac2, CJAC, grad, thread )

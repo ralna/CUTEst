@@ -11,10 +11,17 @@ For real rather than double precision arguments, instead
 
 .HP 1i
 CALL CUTEST_uofg_threaded_s( ... )
+
+.HP 1i
+and for quadruple precision arguments, when available,
+
+.HP 1i
+CALL CUTEST_uofg_threaded_q( ... )
+
 .SH DESCRIPTION
-The CUTEST_uofg_threaded subroutine evaluates the value of the objective function of
-the problem decoded from a SIF file by the script \fIsifdecoder\fP at
-the point X, and possibly its gradient.
+The CUTEST_uofg_threaded subroutine evaluates the value of the objective 
+function of the problem decoded from a SIF file by the script \fIsifdecoder\fP
+at the point X, and possibly its gradient.
 
 The problem under consideration
 is to minimize or maximize an objective function

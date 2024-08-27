@@ -1,9 +1,9 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 08:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
 
-!-*-*-*-*-*-*-  C U T E S T    T R E P O R T    S U B R O U T I N E  -*-*-*-*-*-
+!-*-*-*-*-*-*-  C U T E S T    T I M I N G S    S U B R O U T I N E  -*-*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
 !  Principal authors: Nick Gould and Philippe Toint
@@ -37,7 +37,7 @@
 
       END SUBROUTINE CUTEST_timings_r
 
-!-*-  C U T E S T    T R E P O R T _ t h r e a d e d   S U B R O U T I N E  -*-
+!-*-  C U T E S T    T I M I N G S _ t h r e a d e d   S U B R O U T I N E  -*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
 !  Principal authors: Nick Gould and Philippe Toint
@@ -83,7 +83,7 @@
 
       END SUBROUTINE CUTEST_timings_threaded_r
 
-!-  C U T E S T    T R E P O R T _ t h r e a d s a f e   S U B R O U T I N E  -
+!-  C U T E S T    T I M I N G S _ t h r e a d s a f e   S U B R O U T I N E  -
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
 !  Principal authors: Nick Gould and Philippe Toint
@@ -118,6 +118,8 @@
       CASE ( 'stop' )
         work%record_times = .FALSE.
         time = 0.0
+      CASE ( 'cutest_ccf' )
+        time = work%time_ccf
       CASE ( 'cutest_ccfg' )
         time = work%time_ccfg
       CASE ( 'cutest_ccfsg' )

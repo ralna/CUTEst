@@ -4,7 +4,7 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-11
- * this version 2024-08-20
+ * this version 2024-08-27
  */
 
 #define ELFUN_r ELFUN_s
@@ -15,6 +15,9 @@
 #define FORTRAN_close_r FORTRAN_close_s
 #define CUTEST_allocate_array_integer_r CUTEST_allocate_array_integer_s
 #define CUTEST_allocate_array_real_r CUTEST_allocate_array_real_s
+#define CUTEST_ccf_r CUTEST_ccf_s
+#define CUTEST_ccf_threaded_r CUTEST_ccf_threaded_s
+#define CUTEST_ccf_threadsafe_r CUTEST_ccf_threadsafe_s
 #define CUTEST_ccfg_r CUTEST_ccfg_s
 #define CUTEST_ccfg_threaded_r CUTEST_ccfg_threaded_s
 #define CUTEST_ccfg_threadsafe_r CUTEST_ccfg_threadsafe_s

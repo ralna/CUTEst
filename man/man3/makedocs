@@ -1,136 +1,138 @@
 #!/bin/csh
 
-#foreach pack ( cutest_ccfg \
-#               cutest_ccfsg \
-#               cutest_cchprods \
-#               cutest_cchprodsp \
-#               cutest_ccifg \
-#               cutest_ccifsg \
-#               cutest_cdh \
-#               cutest_cdhc \
-#               cutest_cdhj \
-#               cutest_cdimchp \
-#               cutest_cdimen \
-#               cutest_cdimohp \
-#               cutest_cdimse \
-#               cutest_cdimsg \
-#               cutest_cdimsh \
-#               cutest_cdimsj \
-#               cutest_ceh \
-#               cutest_cfn \
-#               cutest_cgr \
-#               cutest_cgrdh \
-#               cutest_chcprod \
-#               cutest_chjprod \
-#               cutest_chprod \
-#               cutest_cidh \
-#               cutest_cifn \
-#               cutest_cigr \
-#               cutest_cisgr \
-#               cutest_cisgrp \
-#               cutest_cish \
-#               cutest_cjprod \
-#               cutest_clfg \
-#               cutest_cnames \
-#               cutest_cofg \
-#               cutest_cofsg \
-#               cutest_cohprods \
-#               cutest_cohprodsp \
-#               cutest_connames \
-#               cutest_creport \
-#               cutest_csetup \
-#               cutest_csgr \
-#               cutest_csgreh \
-#               cutest_csgrp \
-#               cutest_csgrsh \
-#               cutest_csgrshp \
-#               cutest_csh \
-#               cutest_cshc \
-#               cutest_cshcprod \
-#               cutest_cshj \
-#               cutest_cshp \
-#               cutest_cshprod \
-#               cutest_csjp \
-#               cutest_csjprod \
-#               cutest_cterminate \
-#               cutest_cvartype \
-#               cutest_pname \
-#               cutest_probname \
-#               cutest_timings \
-#               cutest_ubandh \
-#               cutest_udh \
-#               cutest_udimen \
-#               cutest_udimse \
-#               cutest_udimsh \
-#               cutest_ueh \
-#               cutest_ufn \
-#               cutest_ugr \
-#               cutest_ugrdh \
-#               cutest_ugreh \
-#               cutest_ugrsh \
-#               cutest_uhprod \
-#               cutest_unames \
-#               cutest_uofg \
-#               cutest_ureport \
-#               cutest_usetup \
-#               cutest_ush \
-#               cutest_ushp \
-#               cutest_ushprod \
-#               cutest_uterminate \
-#               cutest_uvartype \
-#               cutest_varnames \
-#               cutest_ccfg_threaded \
-#               cutest_ccfsg_threaded \
-#               cutest_cchprods_threaded \
-#               cutest_ccifg_threaded \
-#               cutest_ccifsg_threaded \
-#               cutest_cdh_threaded \
-#               cutest_cdhc_threaded \
-#               cutest_cdhj_threaded \
-#               cutest_ceh_threaded \
-#               cutest_cfn_threaded \
-#               cutest_cgrdh_threaded \
-#               cutest_cgr_threaded \
-#               cutest_chcprod_threaded \
-#               cutest_chjprod_threaded \
-#               cutest_chprod_threaded \
-#               cutest_cidh_threaded \
-#               cutest_cifn_threaded \
-#               cutest_cigr_threaded \
-#               cutest_cisgr_threaded \
-#               cutest_cish_threaded \
-#               cutest_cjprod_threaded \
-#               cutest_clfg_threaded \
-#               cutest_cofg_threaded \
-#               cutest_cofsg_threaded \
-#               cutest_cohprods_threaded \
-#               cutest_creport_threaded \
-#               cutest_csetup_threaded \
-#               cutest_csgreh_threaded \
-#               cutest_csgrsh_threaded \
-#               cutest_csgr_threaded \
-#               cutest_cshcprod_threaded \
-#               cutest_cshc_threaded \
-#               cutest_cshj_threaded \
-#               cutest_cshprod_threaded \
-#               cutest_csh_threaded \
-#               cutest_csjprod_threaded \
-#               cutest_timings_threaded \
-#               cutest_ubandh_threaded \
-#               cutest_udh_threaded \
-#               cutest_ueh_threaded \
-#               cutest_ufn_threaded \
-#               cutest_ugrdh_threaded \
-#               cutest_ugreh_threaded \
-#               cutest_ugrsh_threaded \
-#               cutest_ugr_threaded \
-#               cutest_uhprod_threaded \
-#               cutest_uofg_threaded \
-#               cutest_ureport_threaded \
-#               cutest_usetup_threaded \
-#               cutest_ushprod_threaded \
-#               cutest_ush_threaded \
-#               cutest )
+foreach pack ( cutest_ccf \
+               cutest_ccfg \
+               cutest_ccfsg \
+               cutest_cchprods \
+               cutest_cchprodsp \
+               cutest_ccifg \
+               cutest_ccifsg \
+               cutest_cdh \
+               cutest_cdhc \
+               cutest_cdhj \
+               cutest_cdimchp \
+               cutest_cdimen \
+               cutest_cdimohp \
+               cutest_cdimse \
+               cutest_cdimsg \
+               cutest_cdimsh \
+               cutest_cdimsj \
+               cutest_ceh \
+               cutest_cfn \
+               cutest_cgr \
+               cutest_cgrdh \
+               cutest_chcprod \
+               cutest_chjprod \
+               cutest_chprod \
+               cutest_cidh \
+               cutest_cifn \
+               cutest_cigr \
+               cutest_cisgr \
+               cutest_cisgrp \
+               cutest_cish \
+               cutest_cjprod \
+               cutest_clfg \
+               cutest_cnames \
+               cutest_cofg \
+               cutest_cofsg \
+               cutest_cohprods \
+               cutest_cohprodsp \
+               cutest_connames \
+               cutest_creport \
+               cutest_csetup \
+               cutest_csgr \
+               cutest_csgreh \
+               cutest_csgrp \
+               cutest_csgrsh \
+               cutest_csgrshp \
+               cutest_csh \
+               cutest_cshc \
+               cutest_cshcprod \
+               cutest_cshj \
+               cutest_cshp \
+               cutest_cshprod \
+               cutest_csjp \
+               cutest_csjprod \
+               cutest_cterminate \
+               cutest_cvartype \
+               cutest_pname \
+               cutest_probname \
+               cutest_timings \
+               cutest_ubandh \
+               cutest_udh \
+               cutest_udimen \
+               cutest_udimse \
+               cutest_udimsh \
+               cutest_ueh \
+               cutest_ufn \
+               cutest_ugr \
+               cutest_ugrdh \
+               cutest_ugreh \
+               cutest_ugrsh \
+               cutest_uhprod \
+               cutest_unames \
+               cutest_uofg \
+               cutest_ureport \
+               cutest_usetup \
+               cutest_ush \
+               cutest_ushp \
+               cutest_ushprod \
+               cutest_uterminate \
+               cutest_uvartype \
+               cutest_varnames \
+               cutest_ccf_threaded \
+               cutest_ccfg_threaded \
+               cutest_ccfsg_threaded \
+               cutest_cchprods_threaded \
+               cutest_ccifg_threaded \
+               cutest_ccifsg_threaded \
+               cutest_cdh_threaded \
+               cutest_cdhc_threaded \
+               cutest_cdhj_threaded \
+               cutest_ceh_threaded \
+               cutest_cfn_threaded \
+               cutest_cgrdh_threaded \
+               cutest_cgr_threaded \
+               cutest_chcprod_threaded \
+               cutest_chjprod_threaded \
+               cutest_chprod_threaded \
+               cutest_cidh_threaded \
+               cutest_cifn_threaded \
+               cutest_cigr_threaded \
+               cutest_cisgr_threaded \
+               cutest_cish_threaded \
+               cutest_cjprod_threaded \
+               cutest_clfg_threaded \
+               cutest_cofg_threaded \
+               cutest_cofsg_threaded \
+               cutest_cohprods_threaded \
+               cutest_creport_threaded \
+               cutest_csetup_threaded \
+               cutest_csgreh_threaded \
+               cutest_csgrsh_threaded \
+               cutest_csgr_threaded \
+               cutest_cshcprod_threaded \
+               cutest_cshc_threaded \
+               cutest_cshj_threaded \
+               cutest_cshprod_threaded \
+               cutest_csh_threaded \
+               cutest_csjprod_threaded \
+               cutest_timings_threaded \
+               cutest_ubandh_threaded \
+               cutest_udh_threaded \
+               cutest_ueh_threaded \
+               cutest_ufn_threaded \
+               cutest_ugrdh_threaded \
+               cutest_ugreh_threaded \
+               cutest_ugrsh_threaded \
+               cutest_ugr_threaded \
+               cutest_uhprod_threaded \
+               cutest_uofg_threaded \
+               cutest_ureport_threaded \
+               cutest_usetup_threaded \
+               cutest_ushprod_threaded \
+               cutest_ush_threaded \
+               cutest )
 
 #foreach pack ( cutest_chjprod cutest_chjprod_threaded )
 
@@ -163,6 +165,7 @@
 #foreach pack ( cutest )
 #foreach pack ( cutest_pname )
 #foreach pack ( cutest_clfg cutest_clfg_threaded )
+#foreach pack ( cutest_ccf )
 #foreach pack ( cutest_ccfg )
 #foreach pack ( cutest_ccfsg )
 #foreach pack ( cutest_ccifg )
@@ -219,6 +222,7 @@
 #foreach pack ( cutest_cshprod )
 #foreach pack ( cutest_cshcprod )
 #foreach pack ( cutest_csjprod )
+#foreach pack ( cutest_ccf_threaded )
 #foreach pack ( cutest_ccfg_threaded )
 #foreach pack ( cutest_ccfsg_threaded )
 #foreach pack ( cutest_ccifg_threaded )
@@ -264,9 +268,10 @@
 #               cutest_cifn_threaded cutest_cigr_threaded \
 #               cutest_cisgr_threaded )
 
-foreach pack ( cutest_ureport cutest_ureport_threaded \
-               cutest_creport cutest_creport_threaded )
+#foreach pack ( cutest_ureport cutest_ureport_threaded \
+#               cutest_creport cutest_creport_threaded )
 
+#foreach pack ( cutest_ccf cutest_ccf_threaded )
 
   echo "    " $pack
   echo "      .. making pdf"

@@ -1,29 +1,28 @@
-'\" e  @(#)cutest_cofg_threaded v1.0 12/2012;
-.TH cutest_cofg_threaded 3M "31 Dec 2012" "CUTEst user documentation" "CUTEst user documentation"
+'\" e  @(#)cutest_ccf_threaded v1.0 08/2024;
+.TH cutest_ccf_threaded 3M "27 Aug 2024" "CUTEst user documentation" "CUTEst user documentation"
 .SH NAME
-CUTEST_cofg_threaded \- CUTEst tool to evaluate function value and possibly 
-gradient.
+CUTEST_ccf_threaded \- CUTEst tool to evaluate constraint functions values.
 .SH SYNOPSIS
 .HP 1i
-CALL CUTEST_cofg_threaded( status, n, X, f, G, grad, thread )
+CALL CUTEST_ccf_threaded( status, n, m, X, C, thread )
 
 .HP 1i
 For real rather than double precision arguments, instead
 
 .HP 1i
-CALL CUTEST_cofg_threaded_s( ... )
+CALL CUTEST_ccf_threaded_s( ... )
 
 .HP 1i
 and for quadruple precision arguments, when available,
 
 .HP 1i
-CALL CUTEST_cofg_threaded_q( ... )
+CALL CUTEST_ccf_threaded_q( ... )
 
 .SH DESCRIPTION
-The CUTEST_cofg_threaded subroutine evaluates the value of the objective 
-function of
-the problem decoded from a SIF file by the script \fIsifdecoder\fP
-at the point X, and possibly its gradient.
+The CUTEST_ccf_threaded subroutine evaluates the values of the
+constraint functions of
+the problem decoded from a SIF file by the script \fIsifdecoder\fP 
+at the point X.
 
 The problem under consideration
 is to minimize or maximize an objective function
@@ -70,7 +69,7 @@ all constraint functions are partially separable.
 
 .LP 
 .SH ARGUMENTS
-The arguments of CUTEST_cofg_threaded are as follows
+The arguments of CUTEST_ccf_threaded are as follows
 .TP 5
 .B status \fP[out] - integer
 the outputr status: 0 for a succesful call, 1 for an array 
@@ -79,32 +78,27 @@ allocation/deallocation error, 2 for an array bound error,
 .TP
 .B n \fP[in] - integer
 the number of variables for the problem,
+.TP 5
+.B m \fP[in] - integer
+the total number of general constraints,
 .TP
 .B X \fP[in] - real/double precision
 an array which gives the current estimate of the solution of the
 problem,
 .TP
-.B f \fP[out] - real/double precision
-the value of the objective function evaluated at X,
-.TP
-.B G \fP[out] - real/double precision
-an array which gives the value of the gradient of the objective
-function evaluated at X,
-.TP
-.B grad \fP[in] - logical
-a logical variable which should be set to .TRUE. if the gradient of
-the objective function is required and .FALSE. otherwise,
+.B C \fP[out] - real/double precision
+an array which gives the values of the general constraint functions
+evaluated at X. The i-th component of C will contain the value of 
+.EQ
+c sub i (x).
+.EN
 .TP
 .B thread \fP[in] - integer
 thread chosen for the evaluation; threads are numbered
 from 1 to the value threads set when calling CUTEST_csetup_threaded.
-.LP 
-.SH NOTE
-A call to CUTEST_cofg_threaded is more efficient than two separate calls 
-to CUTEST_cfn_threaded and CUTEST_cgr_threaded.
 .LP
 .SH AUTHORS
-I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+J.M. Fowkes, N.I.M. Gould, A. Montoison and D. Orban
 .SH "SEE ALSO"
 \fICUTEst: a Constrained and Unconstrained Testing 
 Environment with safe threads\fP,
@@ -120,4 +114,5 @@ Environment, revisited\fP,
    I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
    ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
 
-cutest_uofg_threaded(3M), sifdecoder(1).
+
+sifdecoder(1)

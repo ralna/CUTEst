@@ -1,6 +1,7 @@
 libcutest_c_src += files('ccutest.c')
 
-libcutest_src += files('ccfg.F90',
+libcutest_src += files('ccf.F90',
+                       'ccfg.F90',
                        'ccfsg.F90',
                        'cchprods.F90',
                        'cchprodsp.F90',
