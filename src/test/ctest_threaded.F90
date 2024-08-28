@@ -101,7 +101,7 @@
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
       CALL CUTEST_csetup_threaded_r( status, input, out, threads, BUFFER,      &
                                      n, m, X, X_l, X_u,                        &
-                                     Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+                                     Y, C_l, C_u, EQUATION, LINEAR, 1_ip_, 1_ip_, 1_ip_ )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_X( out, n, X, X_l, X_u )
       CALL WRITE_Y( out, m, Y, C_l, C_u, EQUATION, LINEAR )
@@ -827,7 +827,7 @@
 !  calls and time report
 
 !     WRITE( out, "( ' CALL CUTEST_creport for thread 1' )" )
-!     CALL CUTEST_creport_threaded_r( status, CALLS, CPU, 1 )
+!     CALL CUTEST_creport_threaded_r( status, CALLS, CPU, 1_ip_ )
 !     WRITE( out, "( ' CALLS(1-7) =', 7( 1X, I0 ) )" ) INT( CALLS( 1 : 7 ) )
 !     WRITE( out, "( ' CPU(1-4) =', 4F7.2 )" ) CPU( 1 : 4 )
 
