@@ -135,8 +135,10 @@ jobs:
           fi
           if [[ "${{matrix.mode}}" == "static" ]]; then
             MODE="static"
+            TESTS="true"
           else
             MODE="shared"
+            TESTS="false"
           fi
           QUADRUPLE="true"
           if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
@@ -146,7 +148,8 @@ jobs:
                                --prefix=$GITHUB_WORKSPACE/cutest \
                                -Ddefault_library=${MODE} \
                                -Dquadruple=${QUADRUPLE} \
-                               -Dint64=${INT64}
+                               -Dint64=${INT64} \
+                               -Dtests=${TESTS}
 
       - name: Build CUTEST
         shell: bash
