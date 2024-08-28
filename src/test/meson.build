@@ -8,9 +8,9 @@ cutest_tests += [['cutest', 'single', 'ctest_single'         , files('ctest.F90'
                  ['cutest', 'double', 'utest_threaded_double', files('utest_threaded.F90', 'u_elfun_double.f', 'u_group_double.f', 'u_range_double.f')]]
 
 # u_elfun_quadruple.f is missing in src/test
-# if build_quadruple
-#     cutest_tests += [['cutest', 'quadruple', 'ctest_quadruple'         , files('ctest.F90'         , 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')],
-#                      ['cutest', 'quadruple', 'ctest_threaded_quadruple', files('ctest_threaded.F90', 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')],
-#                      ['cutest', 'quadruple', 'utest_quadruple'         , files('utest.F90'         , 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')],
-#                      ['cutest', 'quadruple', 'utest_threaded_quadruple', files('utest_threaded.F90', 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')]]
-# endif
+if build_quadruple
+    cutest_tests += [['cutest', 'quadruple', 'ctest_quadruple'         , files('ctest.F90'         , 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')],
+                     ['cutest', 'quadruple', 'ctest_threaded_quadruple', files('ctest_threaded.F90', 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')]]
+                     # ['cutest', 'quadruple', 'utest_quadruple'         , files('utest.F90'         , 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')],
+                     # ['cutest', 'quadruple', 'utest_threaded_quadruple', files('utest_threaded.F90', 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')]]
+endif

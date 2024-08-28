@@ -36,6 +36,7 @@
       INTEGER ( KIND = ip_ ) :: i, n, HE_nel, HE_val_ne, HE_row_ne, status
       INTEGER ( KIND = ip_ ) :: l_h2_1, l_h, lhe_ptr, H_ne, lhe_val, lhe_row
       INTEGER ( KIND = ip_ ) :: nnz_vector, nnz_result, maxsbw, alloc_stat
+      INTEGER ( KIND = ip_ ) :: nsemib, lbandh
       REAL ( KIND = rp_ ) :: f
       LOGICAL :: grad, byrows, goth
       CHARACTER ( len = 10 ) ::  p_name
@@ -517,7 +518,7 @@
 
 !     SUBROUTINE WRITE_H_BAND( out, n, lbandh, H_band, nsemib, maxsbw )
       SUBROUTINE WRITE_H_BAND( out, n, lbandh, H_band, nsemib )
-      INTEGER ( KIND = ip_ ) :: n, lbandh, out
+      INTEGER ( KIND = ip_ ) :: n, lbandh, nsemib, out
 !     INTEGER ( KIND = ip_ ) :: maxsbw
       REAL ( KIND = rp_ ), DIMENSION( 0 : lbandh, n ):: H_band
       INTEGER ( KIND = ip_ ) :: i, j
