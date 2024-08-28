@@ -19,6 +19,7 @@ fc_compiler = find_program(fc.cmd_array())
 install_modules = get_option('modules')
 build_quadruple = get_option('quadruple')
 int64 = get_option('int64')
+build_tests = get_option('tests')
 
 libcutest_src = []
 libcutest_f_src = []
@@ -88,7 +89,7 @@ subdir('src/stats')
 # subdir('src/stenmin')      # needs stumcd_
 # subdir('src/tao')          # needs petsc/finclude/petsctao.h and Fortran module petsctao
 # subdir('src/tenmin')       # needs tensor_
-# subdir('src/test')
+subdir('src/test')
 subdir('src/tools')
 # subdir('src/tron')         # needs dnrm2_, dgpnrm2_
 # subdir('src/uncmin')       # needs optif9_
@@ -121,9 +122,11 @@ elif fc.get_id() == 'nvidia_hpc'
   pp_options += ['-Mcpp', '-F']
 endif
 if int64
+  pp_flag += '-DINTEGER_64'
   pp_options += '-DINTEGER_64'
 endif
 if host_machine.system() == 'windows'
+  pp_flag += '-DWINDOWS'
   pp_options += '-DWINDOWS'
 endif
 
@@ -209,4 +212,42 @@ install_headers(cutest_headers)
 if install_modules
   script_modules = files('install_modules.py')
   meson.add_install_script(script_modules)
+endif
+
+# Fortran tests
+if build_tests
+
+  fortran_tests_folder = 'tests/Fortran'
+
+  foreach test: cutest_tests
+    package = test[0]
+    precision = test[1]
+    name = test[2]
+    file = test[3]
+
+    if precision == 'single'
+      libgalahad_precision = libcutest_single
+      args_precision = pp_flag + '-DREAL_32'
+    endif
+    if precision == 'double'
+      libgalahad_precision = libcutest_double
+      args_precision = pp_flag
+    endif
+    if precision == 'quadruple'
+      libgalahad_precision = libcutest_quadruple
+      args_precision = pp_flag + '-DREAL_128' + '-DCUTEST_16btye_reals_exist'
+    endif
+
+    test(name,
+         executable(name, file,
+                    fortran_args : args_precision,
+                    link_with : libgalahad_precision,
+                    link_language : 'fortran',
+                    include_directories: libcutest_include,
+                    install : true,
+                    install_dir : fortran_tests_folder),
+         suite : [package, precision, 'fortran'],
+         workdir : join_paths(meson.project_source_root(), 'src', 'test'),
+         is_parallel : false)
+    endforeach
 endif
