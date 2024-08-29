@@ -130,12 +130,13 @@ jobs:
         shell: bash
         run: |
           INT64="false"
+          TESTS="true"
           if [[ "${{matrix.int}}" == "64" ]]; then
             INT64="true"
+            TESTS="false"
           fi
           if [[ "${{matrix.mode}}" == "static" ]]; then
             MODE="static"
-            TESTS="true"
           else
             MODE="shared"
             TESTS="false"
