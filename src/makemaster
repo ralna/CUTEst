@@ -323,6 +323,28 @@ test_quadruple_64:
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      test_cutest $(Q64) PWD=$(PWD)/test )
 
+# comprehensive tools tests
+
+run_tools_test: run_tools_test_$(PRECIS)
+run_tools_test_single:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(S32) PWD=$(PWD)/test )
+run_tools_test_double:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(D32) PWD=$(PWD)/test )
+run_tools_test_quadruple:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(Q32) PWD=$(PWD)/test )
+run_tools_test_single_64:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(S64) PWD=$(PWD)/test )
+run_tools_test_double_64:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(D64) PWD=$(PWD)/test )
+run_tools_test_quadruple_64:
+	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                     run_test_cutest $(Q64) PWD=$(PWD)/test )
+
 # all unconstrained tools and interface tests
 
 all_unconstrained: all_unconstrained_$(PRECIS)

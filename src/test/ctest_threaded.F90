@@ -437,7 +437,8 @@
 
       y0 = 2.0_rp_
       WRITE( out, "( ' CALL CUTEST_cdhj' )" )
-      CALL CUTEST_cdhj_threaded_r( status, n, m, X, y0, Y, l_h2_1, H2_val )
+      CALL CUTEST_cdhj_threaded_r( status, n, m, X, y0, Y, l_h2_1,             &
+                                   H2_val, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_dense( out, n, l_h2_1, H2_val )
 
