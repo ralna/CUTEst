@@ -12,3 +12,8 @@ option('int64',
        type : 'boolean',
        value : false,
        description : 'option to compile CUTEst with 64-bit integer')
+
+option('tests',
+       type : 'boolean',
+       value : false,
+       description : 'whether to generate the tests')

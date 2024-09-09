@@ -98,7 +98,7 @@
 
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
       CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,     &
-                      Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+                      Y, C_l, C_u, EQUATION, LINEAR, 1_ip_, 1_ip_, 1_ip_ )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_X( out, n, X, X_l, X_u )
       CALL WRITE_Y( out, m, Y, C_l, C_u, EQUATION, LINEAR )
@@ -876,7 +876,7 @@
 
       WRITE( out, "( ' CALL CUTEST_csetup ' )" )
       CALL CUTEST_csetup_r( status, input, out, buffer, n, m, X, X_l, X_u,     &
-                             Y, C_l, C_u, EQUATION, LINEAR, 1, 1, 1 )
+                             Y, C_l, C_u, EQUATION, LINEAR, 1_ip_, 1_ip_, 1_ip_ )
       IF ( status /= 0 ) GO TO 900
 
 !  ... and terminal exit
