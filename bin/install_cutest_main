@@ -44,6 +44,16 @@ if [[ -e $CUTEST/versions/$VERSION ]]; then
     [[ $? != 1 ]] && exit 4
 fi
 
+#  ensure that objects and modules directories exist
+
+if [[ ! -e $CUTEST/objects ]]; then
+  $MKDIR $CUTEST/objects
+fi
+
+if [[ ! -e $CUTEST/modules ]]; then
+  $MKDIR $CUTEST/modules
+fi
+
 #  create architecture-dependent object and module directories
 
 OBJDIR=$CUTEST/objects/$VERSION
