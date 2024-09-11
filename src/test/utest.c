@@ -5,8 +5,6 @@
 #include "cutest_routines.h"
 #include "cutest.h"
 
-#define INPUT_FILE "u_OUTSDIF.d"
-
 // Function prototypes
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u);
 void write_x_type(ipc_ n, ipc_ *X_type);
@@ -23,6 +21,9 @@ void write_sresult(ipc_ n, ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
 void write_h_band(ipc_ n, ipc_ lbandh, rpc_ **H_band, ipc_ nsemib);
 
 int main() {
+    // CUTEst data file
+    char *fname = "u_OUTSDIF.d";
+
     // Parameters
     ipc_ input = 55;
     ipc_ out = 6;
@@ -38,7 +39,6 @@ int main() {
     rpc_ f;
     ipc_ grad, byrows;
     bool goth;
-    char p_name[10];
     ipc_ *X_type;
     ipc_ *H_row, *H_col;
     ipc_ *HE_row, *HE_row_ptr;
@@ -49,16 +49,13 @@ int main() {
     rpc_ *H_val, *HE_val;
     rpc_ *vector, *result;
     rpc_ **H2_val, **H_band;
+    char *p_name;
     char **X_names;
     rpc_ CPU[4], CALLS[4];
-    
+
     // Open the problem data file
-    FILE *input_file = fopen(INPUT_FILE, "r");
-    if (input_file == NULL) {
-        perror("Error opening input file");
-        return 1;
-    }
-    
+    FORTRAN_open_r(&input, fname, &status);
+
     // Allocate basic arrays
     printf("Call CUTEST_udimen\n");
     CUTEST_udimen_r(&status, &input, &n);
@@ -343,7 +340,7 @@ int main() {
 
     // One more setup
     printf("Call CUTEST_usetup\n");
-    CUTEST_usetup_r(&status, &stdin, &out, &buffer, &n, X, X_l, X_u);
+    CUTEST_usetup_r(&status, &input, &out, &buffer, &n, X, X_l, X_u);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
@@ -375,7 +372,7 @@ int main() {
     free(HE_row);
     free(HE_val);
     
-    fclose(input_file);
+    FORTRAN_close_r(&input, &status);
     
     return 0;
 }
