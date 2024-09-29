@@ -37,6 +37,7 @@
       REAL ( KIND = rp_ ) :: f
       LOGICAL :: grad, byrows, goth
       CHARACTER ( len = 10 ) ::  p_name
+      CHARACTER ( len = 30 ) :: classification
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: X_type
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_row, H_col
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: HE_row, HE_row_ptr
