@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 15:00 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-09-27 AT 11:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -21,6 +21,14 @@
      INTERFACE
 
 !  Interface block for general tools
+
+       SUBROUTINE CUTEST_classification_r( cutest_status, input,               &
+                                           classification )
+       USE CUTEST_KINDS_precision
+       INTEGER ( KIND = ip_ ), INTENT( IN ) :: input
+       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: cutest_status
+       CHARACTER ( LEN = 30 ), INTENT( OUT ) :: classification 
+       END SUBROUTINE CUTEST_classification_r
 
        SUBROUTINE CUTEST_pname_r( cutest_status, input, pname )
        USE CUTEST_KINDS_precision

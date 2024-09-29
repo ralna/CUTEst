@@ -31,37 +31,38 @@ BASICS = $(LCS)(kinds_single.o) $(LCS)(cutest_single.o) \
          $(LCS)(varnames_single.o) $(LCS)(newthread_single.o) \
          $(LCS)(problem_single.o) $(LCS)(fortran_ops_single.o) \
          $(LCS)(interface_single.o) $(LCS)(ccutest_single.o) \
-         $(LCS)(timings_single.o)
+         $(LCS)(timings_single.o) $(LCS)(classification_single.o)
 BASICD = $(LCD)(kinds_double.o) $(LCD)(cutest_double.o) \
          $(LCD)(pname_double.o) $(LCD)(probname_double.o) \
          $(LCD)(varnames_double.o) $(LCD)(newthread_double.o) \
          $(LCD)(problem_double.o) $(LCD)(fortran_ops_double.o) \
          $(LCD)(interface_double.o) $(LCD)(ccutest_double.o) \
-         $(LCD)(timings_double.o)
+         $(LCD)(timings_double.o) $(LCD)(classification_double.o)
 BASICQ = $(LCQ)(kinds_quadruple.o) $(LCQ)(cutest_quadruple.o) \
          $(LCQ)(pname_quadruple.o) $(LCQ)(probname_quadruple.o) \
          $(LCQ)(varnames_quadruple.o) $(LCQ)(newthread_quadruple.o) \
          $(LCQ)(problem_quadruple.o) $(LCQ)(fortran_ops_quadruple.o) \
          $(LCQ)(interface_quadruple.o) $(LCQ)(ccutest_quadruple.o) \
-         $(LCQ)(timings_quadruple.o)
+         $(LCQ)(timings_quadruple.o) $(LCQ)(classification_quadruple.o)
 BASICS64 = $(LCS64)(kinds_single.o) $(LCS64)(cutest_single_64.o) \
          $(LCS64)(pname_single_64.o) $(LCS64)(probname_single_64.o) \
          $(LCS64)(varnames_single_64.o) $(LCS64)(newthread_single_64.o) \
          $(LCS64)(problem_single_64.o) $(LCS64)(fortran_ops_single_64.o) \
          $(LCS64)(interface_single_64.o) $(LCS64)(ccutest_single_64.o) \
-         $(LCS64)(timings_single_64.o)
+         $(LCS64)(timings_single_64.o) $(LCS64)(classification_single_64.o)
 BASICD64 = $(LCD64)(kinds_double.o) $(LCD64)(cutest_double_64.o) \
          $(LCD64)(pname_double_64.o) $(LCD64)(probname_double_64.o) \
          $(LCD64)(varnames_double_64.o) $(LCD64)(newthread_double_64.o) \
          $(LCD64)(problem_double_64.o) $(LCD64)(fortran_ops_double_64.o) \
          $(LCD64)(interface_double_64.o) $(LCD64)(ccutest_double_64.o) \
-         $(LCD64)(timings_double_64.o)
+         $(LCD64)(timings_double_64.o) $(LCD64)(classification_double_64.o)
 BASICQ64 = $(LCQ64)(kinds_quadruple.o) $(LCQ64)(cutest_quadruple_64.o) \
          $(LCQ64)(pname_quadruple_64.o) $(LCQ64)(probname_quadruple_64.o) \
          $(LCQ64)(varnames_quadruple_64.o) $(LCQ64)(newthread_quadruple_64.o) \
          $(LCQ64)(problem_quadruple_64.o) $(LCQ64)(fortran_ops_quadruple_64.o) \
          $(LCQ64)(interface_quadruple_64.o) $(LCQ64)(ccutest_quadruple_64.o) \
-         $(LCQ64)(timings_quadruple_64.o)
+         $(LCQ64)(timings_quadruple_64.o) \
+         $(LCQ64)(classification_quadruple_64.o)
 
 UCUTESTS = $(LCS)(usetup_single.o) $(LCS)(udimen_single.o) \
            $(LCS)(udimse_single.o) $(LCS)(udimsh_single.o) \
@@ -540,6 +541,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) ubandh_$(PRECIS).o
 	$(RMARFILE) ureport_$(PRECIS).o
 	$(RMARFILE) uterminate_$(PRECIS).o
+	$(RMARFILE) classification_$(PRECIS).o
 	$(RMARFILE) pname_$(PRECIS).o
 	$(RMARFILE) probname_$(PRECIS).o
 	$(RMARFILE) varnames_$(PRECIS).o
@@ -1628,6 +1630,21 @@ $(LC)(uterminate_$(PRECIS).o): ../tools/uterminate.F90
                    uterminate.F90 )
 	cd $(OBJ); $(ARR) uterminate_$(PRECIS).o; \
           $(RM) uterminate.F90 uterminate_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+classification.o: $(LC)(classification_$(PRECIS).o)
+
+$(LC)(classification_$(PRECIS).o): ../tools/classification.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "classification"
+	$(CP) ../tools/classification.F90 $(OBJ)/classification.F90
+	cd $(OBJ); $(FORTRAN) -o classification_$(PRECIS).o \
+                  $(F90FLAGS) classification.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o classification_$(PRECIS).o \
+                  $(F90FLAGSN) classification.F90 )
+	cd $(OBJ); $(ARR) classification_$(PRECIS).o; \
+          $(RM) classification.F90 pname_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

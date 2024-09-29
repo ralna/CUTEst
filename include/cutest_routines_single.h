@@ -119,6 +119,13 @@
 #define CUTEST_Cint_uhprod_r CUTEST_Cint_uhprod_s
 #define CUTEST_Cint_uofg_r CUTEST_Cint_uofg_s
 #define CUTEST_Cint_ushprod_r CUTEST_Cint_ushprod_s
+#define CUTEST_Cint_classification_r CUTEST_Cint_classification_s
+#define CUTEST_Cint_pname_r CUTEST_Cint_pname_s
+#define CUTEST_Cint_unames_r CUTEST_Cint_unames_s
+#define CUTEST_Cint_cnames_r CUTEST_Cint_cnames_s
+#define CUTEST_Cint_probname_r CUTEST_Cint_probname_s
+#define CUTEST_Cint_varnames_r CUTEST_Cint_varnames_s
+#define CUTEST_Cint_connames_r CUTEST_Cint_connames_s
 #define CUTEST_cisgrp_r CUTEST_cisgrp_s
 #define CUTEST_cisgrp_threaded_r CUTEST_cisgrp_threaded_s
 #define CUTEST_cisgrp_threadsafe_r CUTEST_cisgrp_threadsafe_s
@@ -202,6 +209,7 @@
 #define CUTEST_initialize_thread_r CUTEST_initialize_thread_s
 #define CUTEST_LQP_create_r CUTEST_LQP_create_s
 #define CUTEST_newthread_threadsafe_r CUTEST_newthread_threadsafe_s
+#define CUTEST_classification_r CUTEST_classification_s
 #define CUTEST_pname_r CUTEST_pname_s
 #define CUTEST_problem_setup_r CUTEST_problem_setup_s
 #define CUTEST_problem_terminate_r CUTEST_problem_terminate_s

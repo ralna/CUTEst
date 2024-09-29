@@ -16,8 +16,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 rp_ genc( rp_ dummy )
 {
 
-    printf( "\n\tThis is the generic C solver" );
-    printf( "\n\thooked to CUTEst." );
+    printf( "\n\tThis is the generic C solver hooked to CUTEst." );
     printf( "\n\tThe magic number is 41.9999995555555\n" );
     return 41.9999995555555;
 

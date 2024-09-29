@@ -1,28 +1,34 @@
-'\" e  @(#)cutest_pname v1.1 04/2014;
-.TH cutest_pname 3M "3 Apr 2014" "CUTEst user documentation" "CUTEst user documentation"
+'\" e  @(#)cutest_classification v2.2 09/2024;
+.TH cutest_classification 3M "29 Sep 2024" "CUTEst user documentation" "CUTEst user documentation"
 .SH NAME
-CUTEST_pname \- CUTEst tool to obtain the name of the problem directly
+CUTEST_classification \- CUTEst tool to obtain the name of the problem directly
 from OUTSDIF.d.
 .SH SYNOPSIS
 .HP 1i
-CALL CUTEST_pname( status, input, pname )
+CALL CUTEST_classification( status, input, classification )
 
 .HP 1i
 For real rather than double precision arguments, instead
 
 .HP 1i
-CALL CUTEST_pname_s( ... )
+CALL CUTEST_classification_s( ... )
 
 .HP 1i
 and for quadruple precision arguments, when available,
 
 .HP 1i
-CALL CUTEST_pname_q( ... )
+CALL CUTEST_classification_q( ... )
 
 .SH DESCRIPTION
-The CUTEST_pname subroutine obtains the name of the problem directly
-from the datafile OUTSDIF.d that was created by the script \fIsifdecoder\fP 
-when decoding a SIF file.
+The CUTEST_classification subroutine obtains the classification string by
+interogating the datafile OUTSDIF.d that was created by the script 
+\fIsifdecoder\fP when decoding a SIF file. The SIF file must also be
+present in the directory containing the OUTSDIF.d file. Problems are
+classified according to the scheme described in
+
+.Bd
+   https://ralna.github.io/SIFDecode/html/classification/ .
+.Ed
 
 The problem under consideration
 is to minimize or maximize an objective function
@@ -69,18 +75,17 @@ all constraint functions are partially separable.
 
 .LP 
 .SH ARGUMENTS
-The arguments of CUTEST_pname are as follows
+The arguments of CUTEST_classification are as follows
 .TP 5
 .B status \fP[out] - integer
-the outputr status: 0 for a succesful call, 1 for an array 
-allocation/deallocation error, 2 for an array bound error,
-3 for an evaluation error,
+the outputr status: 0 for a succesful call, -1 if the SIF file is
+absent, -2 for a read error.
 .TP
 .B input \fP[in] - integer
 the unit number for the decoded data; the unit from which OUTSDIF.d is read,
 .TP
-.B pname \fP[out] - character
-a 10-character string containing the name of the problem.
+.B classification \fP[out] - character
+a 30-character string containing the SIF classification of the problem.
 .LP
 .SH AUTHORS
 I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint

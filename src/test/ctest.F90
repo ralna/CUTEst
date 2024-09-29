@@ -41,6 +41,7 @@
       REAL ( KIND = rp_ ) :: f, ci, y0
       LOGICAL :: grad, byrows, goth, gotj, grlagf, jtrans, noobj
       CHARACTER ( len = 10 ) ::  p_name
+      CHARACTER ( len = 30 ) :: classification
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: X_type
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_row, H_col
       INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: HE_row, HE_row_ptr
@@ -93,6 +94,16 @@
       l_j2_1 = MAX( m, n ) ; l_j2_2 = l_j2_1
       ALLOCATE( J2_val( l_j2_1, l_j2_2 ), stat = alloc_stat )
       IF ( alloc_stat /= 0 ) GO TO 990
+
+!  obtain the classification
+
+      WRITE( out, "( ' CALL CUTEST_classification ' )" )
+      CALL CUTEST_classification_r( status, input, classification )
+      IF ( status == 0 ) THEN
+        WRITE( out, "( ' classification is ', A )" ) TRIM( classification )
+      ELSE
+        WRITE( out, "( ' no compatible SIF file in current directory' )" ) 
+      END IF
 
 !  set up SIF data
 

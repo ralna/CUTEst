@@ -13,7 +13,7 @@
  *             Boolean logicals provided, August 21 2013
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *
- * this version 2024-08-27
+ * this version 2024-09-29
  *
  * ======================================================================
  */
@@ -91,6 +91,7 @@ typedef int        ipc_;
 #define ONE      1e0
 #define CUTE_INF 1e20    /* 'infinity' in CUTEst interface */
 #define FSTRING_LEN 10   /* Length of Fortran strings     */
+#define FCSTRING_LEN 30  /* Length of Fortran classification string */
 
 /* AIX does not append underscore to Fortran subroutine names */
 #ifdef _AIX
@@ -118,7 +119,7 @@ typedef struct VarTypes {
 #define CUTEST_udimsh     FUNDERSCORE(cutest_udimsh)
 #define CUTEST_udimse     FUNDERSCORE(cutest_udimse)
 #define CUTEST_uvartype   FUNDERSCORE(cutest_uvartype)
-#define CUTEST_unames     FUNDERSCORE(cutest_unames)
+#define CUTEST_unames     FUNDERSCORE(cutest_cint_unames)
 #define CUTEST_ureport    FUNDERSCORE(cutest_ureport)
 
 #define CUTEST_cdimen     FUNDERSCORE(cutest_cdimen)
@@ -131,13 +132,13 @@ typedef struct VarTypes {
 #define CUTEST_cdimse     FUNDERSCORE(cutest_cdimse)
 #define CUTEST_cstats     FUNDERSCORE(cutest_cstats)
 #define CUTEST_cvartype   FUNDERSCORE(cutest_cvartype)
-#define CUTEST_cnames     FUNDERSCORE(cutest_cnames)
+#define CUTEST_cnames     FUNDERSCORE(cutest_cint_cnames)
 #define CUTEST_creport    FUNDERSCORE(cutest_creport)
-
-#define CUTEST_connames   FUNDERSCORE(cutest_connames)
-#define CUTEST_pname      FUNDERSCORE(cutest_pname)
-#define CUTEST_probname   FUNDERSCORE(cutest_probname)
-#define CUTEST_varnames   FUNDERSCORE(cutest_varnames)
+#define CUTEST_classification FUNDERSCORE(cutest_cint_classification)
+#define CUTEST_connames   FUNDERSCORE(cutest_cint_connames)
+#define CUTEST_pname      FUNDERSCORE(cutest_cint_pname)
+#define CUTEST_probname   FUNDERSCORE(cutest_cint_probname)
+#define CUTEST_varnames   FUNDERSCORE(cutest_cint_varnames)
 
 #define CUTEST_ufn        FUNDERSCORE(cutest_ufn)
 #define CUTEST_ugr        FUNDERSCORE(cutest_ugr)
@@ -210,7 +211,7 @@ typedef struct VarTypes {
 #define CUTEST_udimsh_s     FUNDERSCORE(cutest_udimsh_s)
 #define CUTEST_udimse_s     FUNDERSCORE(cutest_udimse_s)
 #define CUTEST_uvartype_s   FUNDERSCORE(cutest_uvartype_s)
-#define CUTEST_unames_s     FUNDERSCORE(cutest_unames_s)
+#define CUTEST_unames_s     FUNDERSCORE(cutest_cint_unames_s)
 #define CUTEST_ureport_s    FUNDERSCORE(cutest_ureport_s)
 
 #define CUTEST_cdimen_s     FUNDERSCORE(cutest_cdimen_s)
@@ -223,13 +224,14 @@ typedef struct VarTypes {
 #define CUTEST_cdimse_s     FUNDERSCORE(cutest_cdimse_s)
 #define CUTEST_cstats_s     FUNDERSCORE(cutest_cstats_s)
 #define CUTEST_cvartype_s   FUNDERSCORE(cutest_cvartype_s)
-#define CUTEST_cnames_s     FUNDERSCORE(cutest_cnames_s)
+#define CUTEST_cnames_s     FUNDERSCORE(cutest_cint_cnames_s)
 #define CUTEST_creport_s    FUNDERSCORE(cutest_creport_s)
 
-#define CUTEST_connames_s   FUNDERSCORE(cutest_connames_s)
-#define CUTEST_pname_s      FUNDERSCORE(cutest_pname_s)
-#define CUTEST_probname_s   FUNDERSCORE(cutest_probname_s)
-#define CUTEST_varnames_s   FUNDERSCORE(cutest_varnames_s)
+#define CUTEST_classification_s FUNDERSCORE(cutest_cint_classification_s)
+#define CUTEST_connames_s   FUNDERSCORE(cutest_cint_connames_s)
+#define CUTEST_pname_s      FUNDERSCORE(cutest_cint_pname_s)
+#define CUTEST_probname_s   FUNDERSCORE(cutest_cint_probname_s)
+#define CUTEST_varnames_s   FUNDERSCORE(cutest_cint_varnames_s)
 
 #define CUTEST_ufn_s        FUNDERSCORE(cutest_ufn_s)
 #define CUTEST_ugr_s        FUNDERSCORE(cutest_ugr_s)
@@ -345,6 +347,8 @@ void CUTEST_creport ( integer *status, doublereal *calls, doublereal *time );
 
 void CUTEST_connames( integer *status, const integer *m, char *gname );
 void CUTEST_pname   ( integer *status, const integer *funit, char *pname );
+void CUTEST_classification   ( integer *status, const integer *funit, 
+                               char *classification );
 void CUTEST_probname( integer *status, char *pname );
 void CUTEST_varnames( integer *status, const integer *n, char *vname );
 
@@ -598,6 +602,8 @@ void CUTEST_creport_s ( integer *status, real *calls, real *time );
 
 void CUTEST_connames_s( integer *status, const integer *m, char *gname );
 void CUTEST_pname_s   ( integer *status, const integer *funit, char *pname );
+void CUTEST_classification_s   ( integer *status, const integer *funit, 
+                                 char *classification );
 void CUTEST_probname_s( integer *status, char *pname );
 void CUTEST_varnames_s( integer *status, const integer *n, char *vname );
 
@@ -814,7 +820,7 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_udimsh_q     FUNDERSCORE(cutest_udimsh_q)
 #define CUTEST_udimse_q     FUNDERSCORE(cutest_udimse_q)
 #define CUTEST_uvartype_q   FUNDERSCORE(cutest_uvartype_q)
-#define CUTEST_unames_q     FUNDERSCORE(cutest_unames_q)
+#define CUTEST_unames_q     FUNDERSCORE(cutest_cint_unames_q)
 #define CUTEST_ureport_q    FUNDERSCORE(cutest_ureport_q)
 
 #define CUTEST_cdimen_q     FUNDERSCORE(cutest_cdimen_q)
@@ -827,13 +833,14 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_cdimse_q     FUNDERSCORE(cutest_cdimse_q)
 #define CUTEST_cstats_q     FUNDERSCORE(cutest_cstats_q)
 #define CUTEST_cvartype_q   FUNDERSCORE(cutest_cvartype_q)
-#define CUTEST_cnames_q     FUNDERSCORE(cutest_cnames_q)
+#define CUTEST_cnames_q     FUNDERSCORE(cutest_cint_cnames_q)
 #define CUTEST_creport_q    FUNDERSCORE(cutest_creport_q)
 
-#define CUTEST_connames_q   FUNDERSCORE(cutest_connames_q)
-#define CUTEST_pname_q      FUNDERSCORE(cutest_pname_q)
-#define CUTEST_probname_q   FUNDERSCORE(cutest_probname_q)
-#define CUTEST_varnames_q   FUNDERSCORE(cutest_varnames_q)
+#define CUTEST_classification_q FUNDERSCORE(cutest_cint_classification_q)
+#define CUTEST_connames_q   FUNDERSCORE(cutest_cint_connames_q)
+#define CUTEST_pname_q      FUNDERSCORE(cutest_cint_pname_q)
+#define CUTEST_probname_q   FUNDERSCORE(cutest_cint_probname_q)
+#define CUTEST_varnames_q   FUNDERSCORE(cutest_cint_varnames_q)
 
 #define CUTEST_ufn_q        FUNDERSCORE(cutest_ufn_q)
 #define CUTEST_ugr_q        FUNDERSCORE(cutest_ugr_q)
@@ -944,6 +951,8 @@ void CUTEST_creport_q ( integer *status, quadreal *calls, quadreal *time );
 
 void CUTEST_connames_q( integer *status, const integer *m, char *gname );
 void CUTEST_pname_q   ( integer *status, const integer *funit, char *pname );
+void CUTEST_classification_q   ( integer *status, const integer *funit, 
+                                 char *classification );
 void CUTEST_probname_q( integer *status, char *pname );
 void CUTEST_varnames_q( integer *status, const integer *n, char *vname );
 

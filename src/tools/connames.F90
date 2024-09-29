@@ -1,7 +1,45 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.2 - 2024-09-29 AT 10:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-  C U T E S T  C I N T _  C O N N A M E S    S U B R O U T I N E  -*-*-
+
+!  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 28th September 2024
+
+      SUBROUTINE CUTEST_Cint_connames_r( status, m, CNAME )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_CHAR, C_NULL_CHAR
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: m
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      CHARACTER ( KIND = C_CHAR ), INTENT( OUT ), DIMENSION( 11, m ) :: CNAME
+
+!  local variables
+
+      INTEGER :: i, j, l
+      CHARACTER ( LEN = 10 ), DIMENSION( m ) :: CNAME_fortran
+
+      CALL CUTEST_connames_r( status, m, CNAME_fortran )
+
+      DO j = 1, m
+        l = LEN( CNAME_fortran( j ) )
+        DO i = 1, l
+          CNAME( i, j ) = CNAME_fortran( j )( i : i )
+        END DO
+        CNAME( l + 1, j ) = C_NULL_CHAR
+      END DO
+
+!  end of subroutine CUTEST_Cint_connames_r
+
+      END SUBROUTINE CUTEST_Cint_connames_r
 
 !-*-*-*-*-*-  C U T E S T    C O N N A M E S    S U B R O U T I N E  -*-*-*-*-
 

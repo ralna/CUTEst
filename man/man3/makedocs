@@ -55,6 +55,7 @@
 #               cutest_csjprod \
 #               cutest_cterminate \
 #               cutest_cvartype \
+#               cutest_classification \
 #               cutest_pname \
 #               cutest_probname \
 #               cutest_timings \
@@ -271,7 +272,7 @@
 #foreach pack ( cutest_ureport cutest_ureport_threaded \
 #               cutest_creport cutest_creport_threaded )
 
-foreach pack ( cutest_ccf cutest_ccf_threaded )
+foreach pack ( cutest_classification )
 
   echo "    " $pack
   echo "      .. making pdf"

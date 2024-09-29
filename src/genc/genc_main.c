@@ -58,6 +58,7 @@ int MAINENTRY( void ){
     rp_ *v = NULL, *cl = NULL, *cu = NULL;
     logical *equatn = NULL, *linear = NULL;
     char *pname, *vnames, *gnames, *cptr;
+    char *classification;
     char **Vnames, **Gnames; /* vnames and gnames as arrays of strings */
     logical grad;
     integer e_order = 1, l_order = 0, v_order = 0;
@@ -86,6 +87,9 @@ int MAINENTRY( void ){
         printf("** CUTEst error, status = %d, aborting\n", status);
         exit(status);
     }
+
+    MALLOC(classification, FCSTRING_LEN + 1, char);
+    CUTEST_classification_r( &status, &funit, classification );
 
     /* Determine whether to call constrained or unconstrained tools */
     if ( CUTEst_ncon ) constrained = TRUE_;
@@ -154,18 +158,18 @@ int MAINENTRY( void ){
 
     /* Get problem, variables and constraints names */
     MALLOC(pname, FSTRING_LEN + 1, char);
-    MALLOC(vnames, CUTEst_nvar * FSTRING_LEN, char);        /* For Fortran */
+    MALLOC(vnames, CUTEst_nvar * ( FSTRING_LEN + 1 ), char); /* For Fortran */
     MALLOC(Vnames, CUTEst_nvar, char *);               /* Array of strings */
     for (i = 0; i < CUTEst_nvar; i++)
         MALLOC(Vnames[i], FSTRING_LEN + 1, char);
 
     if ( constrained )
     {
-        MALLOC(gnames, CUTEst_ncon * FSTRING_LEN, char);   /* For Fortran */
-        MALLOC(Gnames, CUTEst_ncon, char *);          /* Array of strings */
-        for (i = 0; i < CUTEst_ncon; i++)
-            MALLOC(Gnames[i], FSTRING_LEN + 1, char);
-        CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+      MALLOC(gnames, CUTEst_ncon * ( FSTRING_LEN + 1 ), char); /* For Fortran */
+      MALLOC(Gnames, CUTEst_ncon, char *);          /* Array of strings */
+      for (i = 0; i < CUTEst_ncon; i++)
+          MALLOC(Gnames[i], FSTRING_LEN + 1, char);
+      CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
                        pname, vnames, gnames );
     }
     else
@@ -182,7 +186,8 @@ int MAINENTRY( void ){
     /* Make sure to null-terminate problem name */
     pname[FSTRING_LEN] = '\0';
 
-    printf(" Problem                 : %-s\n", pname);
+    printf(" Problem: %-s\n", pname);
+    printf(" Classification: %-s\n", classification);
 
     /* Transfer variables and constraint names into arrays of
      * null-terminated strings.
@@ -190,10 +195,10 @@ int MAINENTRY( void ){
      */
     for (i = 0; i < CUTEst_nvar; i++)
     {
-        cptr = vnames + i * FSTRING_LEN;
+        cptr = vnames + i * ( FSTRING_LEN + 1 );
         for (j = 0; j < FSTRING_LEN; j++)
         {
-            Vnames[i][j] = *cptr;
+            Vnames[i][j] = *cptr; 
             cptr++;
         }
         Vnames[i][FSTRING_LEN] = '\0';
@@ -201,7 +206,7 @@ int MAINENTRY( void ){
 
     for (i = 0; i < CUTEst_ncon; i++)
     {
-        cptr = gnames + i * FSTRING_LEN;
+        cptr = gnames + i * ( FSTRING_LEN + 1 );
         for (j = 0; j < FSTRING_LEN; j++)
         {
             Gnames[i][j] = *cptr;
@@ -214,7 +219,7 @@ int MAINENTRY( void ){
     FREE(vnames);
     if (constrained) FREE(gnames);
 
-    printf("Variable names:\n");
+    printf(" Variable names:\n");
     for (i = 0; i < CUTEst_nvar; i++)
         printf("  %s\n", Vnames[i]);
 
@@ -222,7 +227,7 @@ int MAINENTRY( void ){
     for (i = 0; i < CUTEst_nvar; i++) FREE(Vnames[i]);
     FREE(Vnames);
 
-    if ( constrained ) printf("Constraint names:\n");
+    if ( constrained ) printf(" Constraint names:\n");
     for (i = 0; i < CUTEst_ncon; i++)
         printf("  %s\n", Gnames[i]);
 

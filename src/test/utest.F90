@@ -67,6 +67,16 @@
       ALLOCATE( H2_val( l_h2_1, n ), stat = alloc_stat )
       IF ( alloc_stat /= 0 ) GO TO 990
 
+!  obtain the classification
+
+      WRITE( out, "( ' CALL CUTEST_classification ' )" )
+      CALL CUTEST_classification_r( status, input, classification )
+      IF ( status == 0 ) THEN
+        WRITE( out, "( ' classification is ', A )" ) TRIM( classification )
+      ELSE
+        WRITE( out, "( ' no compatible SIF file in current directory' )" ) 
+      END IF
+
 !  set up SIF data
 
       WRITE( out, "( ' Call CUTEST_usetup ' )" )
