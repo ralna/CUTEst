@@ -75,7 +75,6 @@ int main() {
     G = malloc(n * sizeof(rpc_));
     vector = malloc(n * sizeof(rpc_));
     result = malloc(n * sizeof(rpc_));
-    X_names = malloc(n * sizeof(char *));
     X_type = malloc(n * sizeof(ipc_));
     INDEX_nz_vector = malloc(n * sizeof(ipc_));
     INDEX_nz_result = malloc(n * sizeof(ipc_));
