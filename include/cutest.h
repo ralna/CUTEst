@@ -101,9 +101,9 @@ typedef int        ipc_;
 #endif
 
 typedef struct VarTypes {
-	int nbnds, neq, nlin, nrange, nlower, nupper,
-		nineq, nineq_lin, nineq_nlin, neq_lin,
-		neq_nlin;
+    int nbnds, neq, nlin, nrange, nlower, nupper,
+        nineq, nineq_lin, nineq_nlin, neq_lin,
+        neq_nlin;
 } VarTypes;
 
 /*
@@ -310,9 +310,9 @@ void CUTEST_usetup  ( integer *status, const integer *funit,
 void CUTEST_csetup  ( integer *status, const integer *funit,
                       const integer *iout,
                       const integer *io_buffer, integer *n, integer *m,
-        	      doublereal *x, doublereal *bl, doublereal *bu,
+                      doublereal *x, doublereal *bl, doublereal *bu,
                       doublereal *v, doublereal *cl, doublereal *cu,
-      	              logical *equatn, logical *linear, const integer *e_order,
+                      logical *equatn, logical *linear, const integer *e_order,
                       const integer *l_order, const integer *v_order );
 
 /* Unconstrained dimensioning and report routines */
@@ -500,7 +500,7 @@ void CUTEST_csgreh  ( integer *status, const integer *n, const integer *m,
                       const logical *grlagf, integer *nnzj,
                       const integer *lcjac, doublereal *cjac,
                       integer *indvar, integer *indfun,
-	              integer *ne, const integer *le, integer *iprnhi,
+                      integer *ne, const integer *le, integer *iprnhi,
                       integer *iprhi, const integer *lirnhi,
                       integer *irnhi, const integer *lhi, doublereal *hi,
                       const logical *byrows );
@@ -565,9 +565,9 @@ void CUTEST_usetup_s  ( integer *status, const integer *funit,
 void CUTEST_csetup_s  ( integer *status, const integer *funit,
                       const integer *iout,
                       const integer *io_buffer, integer *n, integer *m,
-        	      real *x, real *bl, real *bu,
+                      real *x, real *bl, real *bu,
                       real *v, real *cl, real *cu,
-      	              logical *equatn, logical *linear, const integer *e_order,
+                      logical *equatn, logical *linear, const integer *e_order,
                       const integer *l_order, const integer *v_order );
 
 /* Unconstrained dimensioning and report routines */
@@ -701,7 +701,7 @@ void CUTEST_cdh_s     ( integer *status, const integer *n, const integer *m,
 void CUTEST_cdhc_s    ( integer *status, const integer *n, const integer *m,
                       const real *x, const real *y,
                       const integer *lh1, real *h );
-void CUTEST_cdhj_s   ( integer *status, const integer *n, const integer *m,
+void CUTEST_cdhj_s    ( integer *status, const integer *n, const integer *m,
                       const real *x, const real *y0, const real *y,
                       const integer *lh1, real *h );
 void CUTEST_cshp_s    ( integer *status, const integer *n, integer *nnzh,
@@ -754,7 +754,7 @@ void CUTEST_csgreh_s  ( integer *status, const integer *n, const integer *m,
                       const logical *grlagf, integer *nnzj,
                       const integer *lcjac, real *cjac,
                       integer *indvar, integer *indfun,
-	              integer *ne, const integer *le, integer *iprnhi,
+                      integer *ne, const integer *le, integer *iprnhi,
                       integer *iprhi, const integer *lirnhi,
                       integer *irnhi, const integer *lhi, real *hi,
                       const logical *byrows );
@@ -914,9 +914,9 @@ void CUTEST_usetup_q  ( integer *status, const integer *funit,
 void CUTEST_csetup_q  ( integer *status, const integer *funit,
                       const integer *iout,
                       const integer *io_buffer, integer *n, integer *m,
-        	      quadreal *x, quadreal *bl, quadreal *bu,
+                      quadreal *x, quadreal *bl, quadreal *bu,
                       quadreal *v, quadreal *cl, quadreal *cu,
-      	              logical *equatn, logical *linear, const integer *e_order,
+                      logical *equatn, logical *linear, const integer *e_order,
                       const integer *l_order, const integer *v_order );
 
 /* Unconstrained dimensioning and report routines */
@@ -1103,7 +1103,7 @@ void CUTEST_csgreh_q  ( integer *status, const integer *n, const integer *m,
                       const logical *grlagf, integer *nnzj,
                       const integer *lcjac, quadreal *cjac,
                       integer *indvar, integer *indfun,
-	              integer *ne, const integer *le, integer *iprnhi,
+                      integer *ne, const integer *le, integer *iprnhi,
                       integer *iprhi, const integer *lirnhi,
                       integer *irnhi, const integer *lhi, quadreal *hi,
                       const logical *byrows );

@@ -50,6 +50,7 @@ int main() {
     rpc_ *vector, *result;
     rpc_ **H2_val, **H_band;
     char *p_name;
+    char *classification;
     char **X_names;
     rpc_ CPU[4], CALLS[4];
 
@@ -61,7 +62,13 @@ int main() {
     CUTEST_udimen_r(&status, &input, &n);
     printf("* n = %d\n", n);
     l_h2_1 = n;
-    
+
+    MALLOC(classification, FCSTRING_LEN + 1, char);
+    MALLOC(p_name, FSTRING_LEN + 1, char);
+    MALLOC(X_names, n, char *);
+    for (i = 0; i < n; i++)
+        MALLOC(X_names[i], FSTRING_LEN + 1, char);
+
     X = malloc(n * sizeof(rpc_));
     X_l = malloc(n * sizeof(rpc_));
     X_u = malloc(n * sizeof(rpc_));
@@ -96,7 +103,14 @@ int main() {
         printf("error status = %d\n", status);
     }
     write_x(n, X, X_l, X_u);
-    
+
+    // Obtain classification
+    printf("Call CUTEST_classification\n");
+    CUTEST_classification_r(&status, &input, classification);
+    if (status != 0) {
+        printf("error status = %d\n", status);
+    }
+
     // Obtain variable and problem names
     printf("Call CUTEST_unames\n");
     CUTEST_unames_r(&status, &n, p_name, X_names);
