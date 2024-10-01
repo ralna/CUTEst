@@ -68,80 +68,15 @@
 !  local variables
 
       CHARACTER ( LEN = 10 ) :: pname
-      INTEGER :: i, j, jstart, jstop, read_error, sif_unit
-      LOGICAL :: sif_exists, cstart
-      INTEGER, PARAMETER :: max_record_length = 80
-      CHARACTER ( LEN = max_record_length ) :: nuline
+      INTEGER ( KIND = ip_ ), DIMENSION( 10 ) :: I_temp
 
       classification = REPEAT( ' ', 30 )
-
-!  find the name of the SIF file from which OUTSDIF.d was generated
-
-      CALL CUTEST_pname_r( status, input, pname )
-
-!  check that the SIF file still exists
-
-      INQUIRE( FILE = TRIM( pname ) // '.SIF', EXIST = sif_exists )
-      IF ( .NOT. sif_exists ) THEN
-        status = - 1
-
-!  open the SIF file
-
-      ELSE
-        OPEN( NEWUNIT = sif_unit, FILE = TRIM( pname ) // '.SIF' )
-
-!  read each line, one by one, until the string 'classification' is found
-
-   rec: DO
-          nuline = REPEAT( ' ', max_record_length )
-          READ( sif_unit, "( A80 )", IOSTAT = read_error ) nuline
-
-!  check that the end of file has not been reached
-
-          IF ( read_error == 0 ) THEN
-
-!  skip lines that are not comments
-
-            IF ( nuline( 1 : 1 ) /= '*' ) CYCLE
-            DO i = 1, 67
-              IF ( nuline( i : i + 13 ) == 'classification' .OR.               &
-                   nuline( i : i + 13 ) == 'CLASSIFICATION' ) THEN
-
-!  the string has been found, now search for the classification string itself
-
-                cstart = .FALSE. ; jstop = 80
-                DO j = i + 14, 80
-                  IF ( .NOT. cstart ) THEN
-                    IF ( nuline( j : j ) /= ' ' ) THEN
-                      jstart = j
-                      cstart = .TRUE.
-                    END IF
-                  ELSE
-                    IF ( nuline( j : j ) == ' ' ) THEN
-                      jstop = j - 1
-                      EXIT
-                    END IF
-                  END IF
-                END DO
-
-!  copy the string and exit
-
-                classification( 1 : jstop - jstart + 1 )                       &
-                  = nuline( jstart : jstop )
-                status = 0
-                EXIT rec
-              END IF
-            END DO
-
-!  the end of file has been reached without identifying the string
-
-          ELSE
-            status = - 2
-            EXIT rec
-          END IF
-        END DO rec
-        CLOSE( sif_unit )
-      END IF 
+      REWIND( input )
+      READ( input, "( 10I10 )" ) I_temp
+      READ( input, "( I2, A10, I2, 1X, A30 )" )                                &
+        I_temp( 1 ), pname, I_temp( 2 ), classification
+      REWIND( input )
+      status = 0
       RETURN
 
 !  End of subroutine CUTEST_classification_r
