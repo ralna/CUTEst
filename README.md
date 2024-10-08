@@ -11,7 +11,7 @@ See the [wiki](https://github.com/ralna/CUTEst/wiki) for download and installati
 
 ### Precompiled libraries and executables
 
-We provide precompiled CUTEst libraries and executables in the [releases tab](https://github.com/ralna/SIFDecode/releases/latest/) for Linux, macOS (Intel & Silicon) and Windows.
+We provide precompiled CUTEst libraries and executables in the [releases tab](https://github.com/ralna/CUTEst/releases/latest/) for Linux, macOS (Intel & Silicon) and Windows.
 
 ### Installation from source
 
