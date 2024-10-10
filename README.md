@@ -34,3 +34,7 @@ To use this variant, follow the instructions in the CUTEst [wiki](https://github
 - [PyCUTEst](https://github.com/jfowkes/pycutest) is the Python interface of CUTEst.
 
 - [MatCUTEst](https://github.com/matcutest/matcutest) is the MATLAB interface of CUTEst.
+
+## Note
+
+The latest features added in the release `v2.3.0` of CUTEst require at least the version `v2.6.1` of [SIFDecode](https://github.com/ralna/SIFDecode).
