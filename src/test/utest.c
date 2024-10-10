@@ -8,17 +8,15 @@
 // Function prototypes
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u);
 void write_x_type(ipc_ n, ipc_ *X_type);
-void write_p_name(char *p_name);
-void write_x_names(ipc_ n, char **X_names);
 void write_f(rpc_ f);
 void write_g(ipc_ n, rpc_ *G);
 void write_h_dense(ipc_ n, ipc_ l_h2_1, rpc_ **H2_val);
-void write_h_sparsity_pattern(ipc_ H_ne, ipc_ l_h, ipc_ *H_row, ipc_ *H_col);
-void write_h_sparse(ipc_ H_ne, ipc_ l_h, rpc_ *H_val, ipc_ *H_row, ipc_ *H_col);
-void write_h_element(ipc_ ne, ipc_ lhe_ptr, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr, ipc_ *lhe_row, ipc_ *HE_row, ipc_ *lhe_val, rpc_ *HE_val);
+void write_h_sparsity_pattern(ipc_ H_ne, ipc_ *H_row, ipc_ *H_col);
+void write_h_sparse(ipc_ H_ne, rpc_ *H_val, ipc_ *H_row, ipc_ *H_col);
+void write_h_element(ipc_ ne, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr, ipc_ *HE_row, rpc_ *HE_val);
 void write_result(ipc_ n, rpc_ *vector, rpc_ *result);
-void write_sresult(ipc_ n, ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector, ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result);
-void write_h_band(ipc_ n, ipc_ lbandh, rpc_ **H_band, ipc_ nsemib);
+void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector, ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result);
+void write_h_band(ipc_ n, ipc_ lbandh, rpc_ **H_band);
 
 int main() {
     // CUTEst data file
@@ -32,7 +30,7 @@ int main() {
     rpc_ one = 1.0;
 
     // Local Variables
-    ipc_ i, n, HE_nel, HE_val_ne, HE_row_ne, status;
+    ipc_ i, j, n, HE_nel, HE_val_ne, HE_row_ne, status;
     ipc_ l_h2_1, l_h, lhe_ptr, H_ne, lhe_val, lhe_row;
     ipc_ nnz_vector, nnz_result, maxsbw, alloc_stat;
     ipc_ nsemib, lbandh;
@@ -49,8 +47,10 @@ int main() {
     rpc_ *H_val, *HE_val;
     rpc_ *vector, *result;
     rpc_ **H2_val, **H_band;
-    char *p_name;
     char *classification;
+    char *p_name;
+    char *cptr;
+    char *V_names;
     char **X_names;
     rpc_ CPU[4], CALLS[4];
 
@@ -63,8 +63,6 @@ int main() {
     printf("* n = %d\n", n);
     l_h2_1 = n;
 
-    MALLOC(classification, FCSTRING_LEN + 1, char);
-    MALLOC(p_name, FSTRING_LEN + 1, char);
     MALLOC(X_names, n, char *);
     for (i = 0; i < n; i++)
         MALLOC(X_names[i], FSTRING_LEN + 1, char);
@@ -105,36 +103,80 @@ int main() {
 
     // Obtain classification
     printf("Call CUTEST_classification\n");
+    MALLOC(classification, FCSTRING_LEN + 1, char);
     CUTEST_classification_r(&status, &input, classification);
+    classification[FSTRING_LEN] = '\0';
+    printf(" Classification: %-s\n", classification);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
+    FREE(classification);
 
     // Obtain variable and problem names
     printf("Call CUTEST_unames\n");
-    CUTEST_unames_r(&status, &n, p_name, X_names);
+    MALLOC(p_name, FSTRING_LEN + 1, char);
+    MALLOC(V_names, n * ( FSTRING_LEN + 1 ), char); /* For Fortran */
+    MALLOC(X_names, n, char *); /* For C */
+    CUTEST_unames_r(&status, &n, p_name, V_names);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_p_name(p_name);
-    write_x_names(n, X_names);
-    
+    p_name[FSTRING_LEN] = '\0';
+    printf(" p_names: %-s\n", p_name);
+    FREE(p_name);
+    // // Transfer variables and constraint names into arrays of null-terminated strings.
+    // for (i = 0; i < n; i++)
+    // {
+    //     cptr = V_names + i * ( FSTRING_LEN + 1 );
+    //     for (j = 0; j < FSTRING_LEN; j++)
+    //     {
+    //         X_names[i][j] = *cptr;
+    //         cptr++;
+    //     }
+    //     X_names[i][FSTRING_LEN] = '\0';
+    // }
+    // FREE(V_names);
+    // printf(" Variable names:\n");
+    // for (i = 0; i < n; i++)
+    //     printf("  %s\n", X_names[i]);
+    // FREE(X_names);
+
     // Obtain problem name
     printf("Call CUTEST_probname\n");
+    MALLOC(p_name, FSTRING_LEN + 1, char);
     CUTEST_probname_r(&status, p_name);
+    p_name[FSTRING_LEN] = '\0';
+    printf(" p_names: %-s\n", p_name);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_p_name(p_name);
+    FREE(p_name);
     
     // Obtain variable names
     printf("Call CUTEST_varnames\n");
-    CUTEST_varnames_r(&status, &n, X_names);
+    MALLOC(V_names, n * ( FSTRING_LEN + 1 ), char); /* For Fortran */
+    MALLOC(X_names, n, char *); /* For C */
+    CUTEST_varnames_r(&status, &n, V_names);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_x_names(n, X_names);
-    
+    // // Transfer variables and constraint names into arrays of null-terminated strings.
+    // for (i = 0; i < n; i++)
+    // {
+    //     cptr = V_names + i * ( FSTRING_LEN + 1 );
+    //     for (j = 0; j < FSTRING_LEN; j++)
+    //     {
+    //         X_names[i][j] = *cptr;
+    //         cptr++;
+    //     }
+    //     X_names[i][FSTRING_LEN] = '\0';
+    // }
+    // FREE(V_names);
+    // printf(" Variable names:\n");
+    // for (i = 0; i < n; i++)
+    //     printf("  %s\n", X_names[i]);
+    // FREE(X_names);
+
     // Obtain variable types
     printf("Call CUTEST_uvartype\n");
     CUTEST_uvartype_r(&status, &n, X_type);
@@ -162,7 +204,7 @@ int main() {
     // Compute the objective function and gradient values
     grad = 1;
     printf("Call CUTEST_uofg with grad = TRUE\n");
-    CUTEST_uofg_r(&status, &n, X, &f, G, grad);
+    CUTEST_uofg_r(&status, &n, X, &f, G, &grad);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
@@ -171,7 +213,7 @@ int main() {
     
     grad = 0;
     printf("Call CUTEST_uofg with grad = FALSE\n");
-    CUTEST_uofg_r(&status, &n, X, &f, G, grad);
+    CUTEST_uofg_r(&status, &n, X, &f, G, &grad);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
@@ -183,8 +225,9 @@ int main() {
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_h_dense(n, l_h2_1, H2_val);
-    
+    // FIX ME!
+    // write_h_dense(n, l_h2_1, H2_val);
+
     // Compute the gradient and dense Hessian values
     printf("Call CUTEST_ugrdh\n");
     CUTEST_ugrdh_r(&status, &n, X, G, &l_h2_1, H2_val);
@@ -192,7 +235,8 @@ int main() {
         printf("error status = %d\n", status);
     }
     write_g(n, G);
-    write_h_dense(n, l_h2_1, H2_val);
+    // FIX ME!
+    // write_h_dense(n, l_h2_1, H2_val);
     
     // Compute the number of nonzeros in the sparse Hessian
     printf("Call CUTEST_udimsh\n");
@@ -217,7 +261,7 @@ int main() {
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_h_sparsity_pattern(H_ne, l_h, H_row, H_col);
+    write_h_sparsity_pattern(H_ne, H_row, H_col);
     
     // Compute the sparse Hessian value
     printf("Call CUTEST_ush\n");
@@ -225,7 +269,7 @@ int main() {
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_h_sparse(H_ne, l_h, H_val, H_row, H_col);
+    write_h_sparse(H_ne, H_val, H_row, H_col);
     
     // Compute the gradient and sparse Hessian values
     printf("Call CUTEST_ugrsh\n");
@@ -234,7 +278,7 @@ int main() {
         printf("error status = %d\n", status);
     }
     write_g(n, G);
-    write_h_sparse(H_ne, l_h, H_val, H_row, H_col);
+    write_h_sparse(H_ne, H_val, H_row, H_col);
     
     // Compute the number of nonzeros in the element Hessian
     printf("Call CUTEST_udimse\n");
@@ -255,41 +299,42 @@ int main() {
         perror("Error allocating memory");
         return 1;
     }
-    
-    byrows = false;
-    printf("Call CUTEST_ueh with byrows = .FALSE.\n");
-    CUTEST_ueh_r(&status, &n, X, HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows);
-    if (status != 0) {
-        printf("error status = %d\n", status);
-    }
-    write_h_element(HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val);
 
-    byrows = true;
-    printf("Call CUTEST_ueh with byrows = .TRUE.\n");
-    CUTEST_ueh_r(&status, &n, X, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows);
-    if (status != 0) {
-        printf("error status = %d\n", status);
-    }
-    write_h_element(HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val);
-
-    // Compute gradient and element Hessian values
-    byrows = false;
-    printf("Call CUTEST_ugreh with byrows = .FALSE.\n");
-    CUTEST_ugreh_r(&status, &n, X, G, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows);
-    if (status != 0) {
-        printf("error status = %d\n", status);
-    }
-    write_g(n, G);
-    write_h_element(HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val);
+    // FIX ME!
+    // byrows = false;
+    // printf("Call CUTEST_ueh with byrows = .FALSE.\n");
+    // CUTEST_ueh_r(&status, &n, X, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, &byrows);
+    // if (status != 0) {
+    //     printf("error status = %d\n", status);
+    // }
+    // write_h_element(HE_nel, HE_row_ptr, HE_val_ptr, HE_row, HE_val);
 
     // byrows = true;
-    printf("Call CUTEST_ugreh with byrows = .TRUE.\n");
-    CUTEST_ugreh_r(&status, n, X, G, HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, byrows);
-    if (status != 0) {
-        printf("error status = %d\n", status);
-    }
-    write_g(n, G);
-    write_h_element(HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val);
+    // printf("Call CUTEST_ueh with byrows = .TRUE.\n");
+    // CUTEST_ueh_r(&status, &n, X, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, &byrows);
+    // if (status != 0) {
+    //     printf("error status = %d\n", status);
+    // }
+    // write_h_element(HE_nel, HE_row_ptr, HE_val_ptr, HE_row, HE_val);
+
+    // // Compute gradient and element Hessian values
+    // byrows = false;
+    // printf("Call CUTEST_ugreh with byrows = .FALSE.\n");
+    // CUTEST_ugreh_r(&status, &n, X, G, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, &byrows);
+    // if (status != 0) {
+    //     printf("error status = %d\n", status);
+    // }
+    // write_g(n, G);
+    // write_h_element(HE_nel, HE_row_ptr, HE_val_ptr, HE_row, HE_val);
+
+    // byrows = true;
+    // printf("Call CUTEST_ugreh with byrows = .TRUE.\n");
+    // CUTEST_ugreh_r(&status, &n, X, G, &HE_nel, lhe_ptr, HE_row_ptr, HE_val_ptr, lhe_row, HE_row, lhe_val, HE_val, &byrows);
+    // if (status != 0) {
+    //     printf("error status = %d\n", status);
+    // }
+    // write_g(n, G);
+    // write_h_element(HE_nel, HE_row_ptr, HE_val_ptr, HE_row, HE_val);
 
     // Compute Hessian-vector product
     vector[0] = 1.0;
@@ -317,26 +362,27 @@ int main() {
     goth = false;
 
     printf("Call CUTEST_ushprod with goth = .FALSE.\n");
-    CUTEST_ushprod_r(&status, &n, &goth, X, nnz_vector, INDEX_nz_vector, vector, &nnz_vector, INDEX_nz_vector, result);
+    CUTEST_ushprod_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, vector, &nnz_vector, INDEX_nz_vector, result);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_sresult(n, nnz_vector, INDEX_nz_vector, vector, nnz_vector, INDEX_nz_vector, result);
+    write_sresult(nnz_vector, INDEX_nz_vector, vector, nnz_vector, INDEX_nz_vector, result);
 
     goth = true;
     printf("Call CUTEST_ushprod with goth = .TRUE.\n");
-    CUTEST_ushprod_r(&status, &n, &goth, X, nnz_vector, INDEX_nz_vector, vector, &nnz_vector, INDEX_nz_vector, result);
+    CUTEST_ushprod_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, vector, &nnz_vector, INDEX_nz_vector, result);
     if (status != 0) {
         printf("error status = %d\n", status);
     }
-    write_sresult(n, nnz_vector, INDEX_nz_vector, vector, nnz_vector, INDEX_nz_vector, result);
+    write_sresult(nnz_vector, INDEX_nz_vector, vector, nnz_vector, INDEX_nz_vector, result);
 
-    printf("Call CUTEST_ubandh\n");
-    CUTEST_ubandh_r(&status, &n, X, &nsemib, H_band, &lbandh, &maxsbw);
-    if (status != 0) {
-        printf("error status = %d\n", status);
-    }
-    write_h_band(n, lbandh, H_band, nsemib);
+    // FIX ME!
+    // printf("Call CUTEST_ubandh\n");
+    // CUTEST_ubandh_r(&status, &n, X, &nsemib, H_band, &lbandh, &maxsbw);
+    // if (status != 0) {
+    //     printf("error status = %d\n", status);
+    // }
+    // write_h_band(n, lbandh, H_band);
 
     // Calls and time report
     printf("CALL CUTEST_ureport\n");
@@ -366,24 +412,24 @@ int main() {
     }
 
     // Cleanup and close files
-    free(X);
-    free(X_l);
-    free(X_u);
-    free(G);
-    free(vector);
-    free(result);
-    free(X_names);
-    free(X_type);
-    free(INDEX_nz_vector);
-    free(INDEX_nz_result);
-    free(H2_val);
-    free(H_val);
-    free(H_row);
-    free(H_col);
-    free(HE_row_ptr);
-    free(HE_val_ptr);
-    free(HE_row);
-    free(HE_val);
+    // FIX ME!
+    // free(X);
+    // free(X_l);
+    // free(X_u);
+    // free(G);
+    // free(vector);
+    // free(result);
+    // free(X_type);
+    // free(INDEX_nz_vector);
+    // free(INDEX_nz_result);
+    // free(H2_val);
+    // free(H_val);
+    // free(H_row);
+    // free(H_col);
+    // free(HE_row_ptr);
+    // free(HE_val_ptr);
+    // free(HE_row);
+    // free(HE_val);
     
     FORTRAN_close_r(&input, &status);
     
@@ -404,17 +450,6 @@ void write_x_type(ipc_ n, ipc_ *X_type) {
     }
 }
 
-void write_p_name(char *p_name) {
-    printf(" * p_name = %s\n", p_name);
-}
-
-void write_x_names(ipc_ n, char **X_names) {
-    printf(" *       i  X_name\n");
-    for (ipc_ i = 0; i < n; i++) {
-        printf(" * %7d %10s\n", i + 1, X_names[i]);
-    }
-}
-
 void write_f(rpc_ f) {
     printf(" * f = %12.4f\n", f);
 }
@@ -429,65 +464,43 @@ void write_g(ipc_ n, rpc_ *G) {
 void write_h_dense(ipc_ n, ipc_ l_h2_1, rpc_ **H2_val) {
     printf(" * H(dense)\n");
     for (ipc_ j = 0; j < n; j += 4) {
-        if (j + 3 < n) {
-            printf(" *       i   j%8d%8d%8d%8d\n", j, j + 1, j + 2, j + 3);
-        } else if (j + 2 < n) {
-            printf(" *       i   j%8d%8d%8d\n", j, j + 1, j + 2);
-        } else if (j + 1 < n) {
-            printf(" *       i   j%8d%8d\n", j, j + 1);
-        } else {
-            printf(" *       i   j%8d\n", j);
+        // Print column headers based on how many columns are left
+        printf(" *       i   j");
+        for (ipc_ k = 0; k < 4 && j + k < n; k++) {
+            printf("%8d", j + k);
         }
+        printf("\n");
+
+        // Print matrix values
         for (ipc_ i = 0; i < l_h2_1; i++) {
-            if (j + 3 < n) {
-                printf(" * %7d %8.4f %8.4f %8.4f %8.4f\n", i + 1, H2_val[i][j], H2_val[i][j + 1], H2_val[i][j + 2], H2_val[i][j + 3]);
-            } else if (j + 2 < n) {
-                printf(" * %7d %8.4f %8.4f %8.4f\n", i + 1, H2_val[i][j], H2_val[i][j + 1], H2_val[i][j + 2]);
-            } else if (j + 1 < n) {
-                printf(" * %7d %8.4f %8.4f\n", i + 1, H2_val[i][j], H2_val[i][j + 1]);
-            } else {
-                printf(" * %7d %8.4f\n", i + 1, H2_val[i][j]);
+            printf(" * %7d", i + 1);
+            for (ipc_ k = 0; k < 4 && j + k < n; k++) {
+                printf(" %8.4f", H2_val[i][j + k]);
             }
+            printf("\n");
         }
     }
 }
 
-void write_h_sparsity_pattern(ipc_ H_ne, ipc_ l_h, ipc_ *H_row, ipc_ *H_col) {
-    printf(" * H(sparse)\n");
-    printf(" *    row    col\n");
-    for (ipc_ i = 0; i < H_ne; i += 4) {
-        if (i + 3 < H_ne) {
-            printf(" * %7d %7d %7d %7d\n", H_row[i], H_col[i], H_row[i + 1], H_col[i + 1]);
-            printf(" * %7d %7d %7d %7d\n", H_row[i + 2], H_col[i + 2], H_row[i + 3], H_col[i + 3]);
-        } else if (i + 2 < H_ne) {
-            printf(" * %7d %7d %7d %7d\n", H_row[i], H_col[i], H_row[i + 1], H_col[i + 1]);
-            printf(" * %7d %7d\n", H_row[i + 2], H_col[i + 2]);
-        } else if (i + 1 < H_ne) {
-            printf(" * %7d %7d %7d %7d\n", H_row[i], H_col[i], H_row[i + 1], H_col[i + 1]);
-        } else {
-            printf(" * %7d %7d\n", H_row[i], H_col[i]);
-        }
+void write_h_sparsity_pattern(ipc_ H_ne, ipc_ *H_row, ipc_ *H_col) {
+    printf(" * H(sparse)\n *    row    col\n");
+    for (ipc_ i = 0; i < H_ne; i++) {
+        printf(" * %7d %7d\n", H_row[i], H_col[i]);
     }
 }
 
-void write_h_sparse(ipc_ H_ne, ipc_ l_h, rpc_ *H_val, ipc_ *H_row, ipc_ *H_col) {
-    printf(" * H(sparse)\n");
-    printf(" *    row    col     val\n");
-    for (ipc_ i = 0; i < H_ne; i += 2) {
-        if (i + 1 < H_ne) {
-            printf(" * %7d %7d %12.4f %7d %7d %12.4f\n", H_row[i], H_col[i], H_val[i], H_row[i + 1], H_col[i + 1], H_val[i + 1]);
-        } else {
-            printf(" * %7d %7d %12.4f\n", H_row[i], H_col[i], H_val[i]);
-        }
+void write_h_sparse(ipc_ H_ne, rpc_ *H_val, ipc_ *H_row, ipc_ *H_col) {
+    printf(" * H(sparse)\n *    row    col     val\n");
+    for (ipc_ i = 0; i < H_ne; i++) {
+        printf(" * %7d %7d %12.4f\n", H_row[i], H_col[i], H_val[i]);
     }
 }
 
-void write_h_element(ipc_ ne, ipc_ lhe_ptr, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr, ipc_ *lhe_row, ipc_ *HE_row, ipc_ *lhe_val, rpc_ *HE_val) {
+void write_h_element(ipc_ ne, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr, ipc_ *HE_row, rpc_ *HE_val) {
     printf(" * H(element)\n");
     for (ipc_ i = 0; i < ne; i++) {
         if (HE_row_ptr[i + 1] > HE_row_ptr[i]) {
-            printf(" * element %d\n", i + 1);
-            printf(" * indices\n");
+            printf(" * element %d\n * indices\n", i + 1);
             for (ipc_ j = HE_row_ptr[i]; j < HE_row_ptr[i + 1]; j++) {
                 printf(" * %12d", HE_row[j]);
             }
@@ -497,7 +510,7 @@ void write_h_element(ipc_ ne, ipc_ lhe_ptr, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr, 
             }
             printf("\n");
         } else {
-            printf(" * no indices\n");
+            printf(" * element %d has no indices\n", i + 1);
         }
     }
 }
@@ -509,7 +522,7 @@ void write_result(ipc_ n, rpc_ *vector, rpc_ *result) {
     }
 }
 
-void write_sresult(ipc_ n, ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector, ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result) {
+void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector, ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result) {
     printf(" *       i    vector\n");
     for (ipc_ j = 0; j < nnz_vector; j++) {
         ipc_ i = INDEX_nz_vector[j];
@@ -522,9 +535,8 @@ void write_sresult(ipc_ n, ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
     }
 }
 
-void write_h_band(ipc_ n, ipc_ lbandh, rpc_ **H_band, ipc_ nsemib) {
-    printf(" * H(band)\n");
-    printf(" *       i   band\n");
+void write_h_band(ipc_ n, ipc_ nsemib, rpc_ **H_band) {
+    printf(" * H(band)\n *       i   band\n");
     for (ipc_ j = 0; j <= nsemib; j++) {
         printf(" * %7d", j);
     }
