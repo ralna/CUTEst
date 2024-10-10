@@ -251,3 +251,42 @@ if build_tests
          is_parallel : false)
     endforeach
 endif
+
+# C tests
+if build_tests
+
+  fortran_tests_folder = 'tests/C'
+
+  foreach test: cutest_c_tests
+    package = test[0]
+    precision = test[1]
+    name = test[2]
+    file = test[3]
+
+    if precision == 'single'
+      libgalahad_precision = libcutest_single
+      args_precision = pp_flag + '-DREAL_32'
+    endif
+    if precision == 'double'
+      libgalahad_precision = libcutest_double
+      args_precision = pp_flag
+    endif
+    if precision == 'quadruple'
+      libgalahad_precision = libcutest_quadruple
+      args_precision = pp_flag + '-DREAL_128' + '-DCUTEST_16btye_reals_exist'
+    endif
+
+    test(name,
+         executable(name, file,
+                    fortran_args : args_precision,
+                    c_args : args_precision,
+                    link_with : libgalahad_precision,
+                    link_language : 'fortran',
+                    include_directories: libcutest_include,
+                    install : true,
+                    install_dir : fortran_tests_folder),
+         suite : [package, precision, 'C'],
+         workdir : join_paths(meson.project_source_root(), 'src', 'test'),
+         is_parallel : false)
+    endforeach
+endif

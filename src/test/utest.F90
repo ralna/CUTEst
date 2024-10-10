@@ -286,18 +286,10 @@
       ALLOCATE( H_band( 0 : lbandh, n ), stat = alloc_stat )
       IF ( alloc_stat /= 0 ) GO TO 990
 
-      goth = .FALSE.
-      WRITE( out, "( ' Call CUTEST_ubandh with goth = .FALSE.' )" )
+      WRITE( out, "( ' Call CUTEST_ubandh' )" )
       CALL CUTEST_ubandh_r( status, n, X, nsemib, H_band, lbandh, maxsbw )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib )
-!     CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib, maxsbw )
-      goth = .TRUE.
-      WRITE( out, "( ' Call CUTEST_ubandh with goth = .TRUE.' )" )
-      CALL CUTEST_ubandh_r( status, n, X, nsemib, H_band, lbandh, maxsbw )
-      IF ( status /= 0 ) GO to 900
-      CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib )
-!     CALL WRITE_H_BAND( out, n, lbandh, H_band, nsemib, maxsbw )
 
 !  calls and time report
 
