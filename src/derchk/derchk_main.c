@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.4 - 2024-06-11 AT 11:40 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* ===========================================
  * CUTEst interface to derivative checker
@@ -82,14 +82,14 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
         /* Open problem description file OUTSDIF.d */
         ierr = 0;
-        FORTRAN_open_r(&funit, fname, &ierr);
+        FORTRAN_open(&funit, fname, &ierr);
         if (ierr) {
             printf("Error opening file OUTSDIF.d.\nAborting.\n");
             exit(1);
         }
 
         /* Determine problem size */
-        CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
+        CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
         if (status) {
             printf("CUTEst error.\nAborting.\n");
             exit(2);
@@ -112,7 +112,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
             MALLOC(v,      CUTEst_ncon+1, rp_);
             MALLOC(cl,     CUTEst_ncon+1, rp_);
             MALLOC(cu,     CUTEst_ncon+1, rp_);
-            CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+            CUTEST_csetup( &status, &funit, &iout, &io_buffer,
                 &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
                 v, cl, cu, equatn, linear, 
                 &e_order, &l_order, &v_order );
@@ -125,7 +125,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
             MALLOC(linear, 1, logical);
             MALLOC(cl, 1, rp_);
             MALLOC(cu, 1, rp_);
-            CUTEST_usetup_r( &status, &funit, &iout, &io_buffer, &CUTEst_nvar, 
+            CUTEST_usetup( &status, &funit, &iout, &io_buffer, &CUTEst_nvar, 
                            x, bl, bu);
             if (status) {
                 printf("CUTEst error.\nAborting.\n");
@@ -145,14 +145,14 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
             MALLOC(Gnames, CUTEst_ncon, char*);        /* Array of strings */
             for (i = 0; i < CUTEst_ncon; i++)
                 MALLOC(Gnames[i], FSTRING_LEN+1, char);
-            CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon, 
+            CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon, 
                            pname, vnames, gnames);
             if (status) {
                 printf("CUTEst error.\nAborting.\n");
                 exit(2);
             }
         } else {
-            CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames);
+            CUTEST_unames( &status, &CUTEst_nvar, pname, vnames);
             if (status) {
                 printf("CUTEst error.\nAborting.\n");
                 exit(2);
@@ -205,7 +205,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     /* Evaluate gradient at initial point. */
     MALLOC(g, CUTEst_nvar, rp_);
-    CUTEST_ugr_r( &status, &CUTEst_nvar, x, g);
+    CUTEST_ugr( &status, &CUTEst_nvar, x, g);
     if (status) {
         printf("CUTEst error.\nAborting.\n");
         exit(2);
@@ -222,14 +222,14 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
         xi = x[i];
         x[i] = xi + h;
         if (constrained) {
-            CUTEST_cfn_r( &status, &CUTEst_nvar, &CUTEst_ncon, 
+            CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, 
                         x, &fxp, cxp);
             if (status) {
                 printf("CUTEst error.\nAborting.\n");
                 exit(2);
             }
          } else {
-            CUTEST_ufn_r( &status, &CUTEst_nvar, x, &fxp);
+            CUTEST_ufn( &status, &CUTEst_nvar, x, &fxp);
             if (status) {
                 printf("CUTEst error.\nAborting.\n");
                 exit(2);
@@ -237,14 +237,14 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
         }
         x[i] = xi - h;
         if (constrained) {
-            CUTEST_cfn_r( &status, &CUTEst_nvar, &CUTEst_ncon, 
+            CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, 
                         x, &fxm, cxm);
             if (status) {
               printf("CUTEst error.\nAborting.\n");
               exit(2);
             }
           } else {
-                CUTEST_ufn_r( &status, &CUTEst_nvar, x, &fxm);
+                CUTEST_ufn( &status, &CUTEst_nvar, x, &fxm);
             if (status) {
               printf("CUTEst error.\nAborting.\n");
               exit(2);
@@ -273,7 +273,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     }
 
     /* Get CUTEst statistics */
-    CUTEST_creport_r( &status, calls, cpu);
+    CUTEST_creport( &status, calls, cpu);
     if (status) {
       printf("CUTEst error.\nAborting.\n");
       exit(2);
@@ -304,7 +304,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     printf("*********************\n\n");
 
     ierr = 0;
-    FORTRAN_close_r(&funit, &ierr);
+    FORTRAN_close(&funit, &ierr);
     if (ierr)
         printf("Error closing %s on unit %d.\n", fname, (int)funit);
 
@@ -323,7 +323,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
     for (i = 0; i < CUTEst_ncon; i++) FREE(Gnames[i]);
     if (constrained) FREE(Gnames);
 
-    CUTEST_uterminate_r( &status );
+    CUTEST_uterminate( &status );
 
     return 0;
 

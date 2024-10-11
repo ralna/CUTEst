@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:50 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* ===========================================
  * CUTEst interface to OSQP
@@ -90,7 +90,7 @@ int MAINENTRY(void) {
 
      /* open problem description file OUTSDIF.d */
      ierr = 0;
-     FORTRAN_open_r(&funit, fname, &ierr);
+     FORTRAN_open(&funit, fname, &ierr);
      if (ierr) {
          printf("Error opening file OUTSDIF.d.\nAborting.\n");
          exit(1);
@@ -98,7 +98,7 @@ int MAINENTRY(void) {
 
      /* determine problem size */
 
-     CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
+     CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon);
      if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
@@ -124,7 +124,7 @@ int MAINENTRY(void) {
        MALLOC(y, CUTEst_ncon, rp_);
        MALLOC(cl, CUTEst_ncon, rp_);
        MALLOC(cu, CUTEst_ncon, rp_);
-       CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+       CUTEST_csetup( &status, &funit, &iout, &io_buffer,
                         &CUTEst_nvar, &CUTEst_ncon, x, xl, xu,
                         y, cl, cu, equatn, linear,
                         &e_order, &l_order, &v_order );
@@ -134,7 +134,7 @@ int MAINENTRY(void) {
        }
       FREE(y);
      } else {
-       CUTEST_usetup_r( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
+       CUTEST_usetup( &status, &funit, &iout, &io_buffer, &CUTEst_nvar,
                         x, xl, xu);
        if (status) {
            printf("CUTEst error.\nAborting.\n");
@@ -155,14 +155,14 @@ int MAINENTRY(void) {
          MALLOC(Cnames, CUTEst_ncon, char*);              /* Array of strings */
          for (i = 0; i < CUTEst_ncon; i++)
              MALLOC(Cnames[i], FSTRING_LEN+1, char);
-         CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+         CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
                           pname, xnames, cnames);
          if (status) {
              printf("CUTEst error.\nAborting.\n");
              exit(2);
          }
      } else {
-         CUTEST_unames_r( &status, &CUTEst_nvar, pname, xnames);
+         CUTEST_unames( &status, &CUTEst_nvar, pname, xnames);
          if (status) {
              printf("CUTEst error.\nAborting.\n");
              exit(2);
@@ -234,13 +234,13 @@ int MAINENTRY(void) {
 
      if (constrained) {
        MALLOC(c, CUTEst_ncon, rp_);
-       CUTEST_cfn_r( &status, &CUTEst_nvar, &CUTEst_ncon, x0, &f, c);
+       CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, x0, &f, c);
        if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
        }
      } else {
-       CUTEST_ufn_r( &status, &CUTEst_nvar, x0, &f);
+       CUTEST_ufn( &status, &CUTEst_nvar, x0, &f);
        if (status) {
          printf("CUTEst error.\nAborting.\n");
          exit(2);
@@ -295,7 +295,7 @@ int MAINENTRY(void) {
 
   /* determine the number of nonzeros in the Hessian and, if needed, Jacobian */
 
-     CUTEST_cdimsh_r( &status, &CUTEst_nnzh );
+     CUTEST_cdimsh( &status, &CUTEst_nnzh );
      MALLOC(g, CUTEst_nvar, rp_);
      MALLOC( H_val, CUTEst_nnzh, rp_ );
      MALLOC( H_row, CUTEst_nnzh, integer );
@@ -313,7 +313,7 @@ int MAINENTRY(void) {
      if (constrained) {
 
        /* Determine the number of nonzeros in Jacobian */
-       CUTEST_cdimsj_r( &status, &CUTEst_nnza );
+       CUTEST_cdimsj( &status, &CUTEst_nnza );
 
        if( status ) {
           printf("** CUTEst error, status = %d, aborting\n", status);
@@ -333,7 +333,7 @@ int MAINENTRY(void) {
        MALLOC( A_col, CUTEst_nnza + nb, integer );
        grlagf = FALSE_;
        /* Here, dummys will be set to nnza/nnzh again */
-       CUTEST_csgrsh_r( &status, &CUTEst_nvar, &CUTEst_ncon, x0, y0, &grlagf,
+       CUTEST_csgrsh( &status, &CUTEst_nvar, &CUTEst_ncon, x0, y0, &grlagf,
                         &nnza_dummy, &CUTEst_nnza, A_val, A_col, A_row,
                         &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
        /*
@@ -372,7 +372,7 @@ int MAINENTRY(void) {
          }
        }
      } else {
-       CUTEST_ugrsh_r( &status, &CUTEst_nvar, x0, g,
+       CUTEST_ugrsh( &status, &CUTEst_nvar, x0, g,
                        &nnzh_dummy, &CUTEst_nnzh, H_val, H_row, H_col );
      }
 
@@ -759,7 +759,7 @@ int MAINENTRY(void) {
 
  /* Get CUTEst statistics */
 
-    CUTEST_creport_r( &status, calls, cpu);
+    CUTEST_creport( &status, calls, cpu);
     if (status) {
       printf("CUTEst error.\nAborting.\n");
       exit(2);
@@ -793,7 +793,7 @@ int MAINENTRY(void) {
     printf("*********************\n");
 
      ierr = 0;
-     FORTRAN_close_r(&funit, &ierr);
+     FORTRAN_close(&funit, &ierr);
      if (ierr)
        printf("Error closing %s on unit %d.\n", fname, (int)funit);
 
@@ -814,9 +814,9 @@ int MAINENTRY(void) {
     /* free CUTEst workspace */
 
     if (constrained) {
-      CUTEST_cterminate_r( &status );
+      CUTEST_cterminate( &status );
     } else {
-      CUTEST_uterminate_r( &status );
+      CUTEST_uterminate( &status );
     }
 
 /* Cleanup */

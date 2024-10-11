@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.4 - 2024-08-20 AT 07:40 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* =================================================
  * CUTEst interface for GNU Scientific Library (GSL)
@@ -64,7 +64,7 @@ int eval_fn( const gsl_vector *x, void *params, gsl_vector *f ) {
    const rp_ *xptr = gsl_vector_const_ptr(x, 0);
    rp_ *fptr = gsl_vector_ptr(f, 0);
 #endif
-   CUTEST_cfn_r( &status, &data->n, &data->m, xptr, &obj, fptr);
+   CUTEST_cfn( &status, &data->n, &data->m, xptr, &obj, fptr);
    return GSL_SUCCESS;
 }
 
@@ -93,7 +93,7 @@ int eval_jacobian( const gsl_vector *x, void *params,
    Jptr = gsl_matrix_ptr(J, 0, 0);
 #endif
    ldJ = J->tda;
-   CUTEST_cgr_r( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
+   CUTEST_cgr( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
          &ldJ, &data->m, Jptr );
    free(y); free(g); /* Values ignored */
    return GSL_SUCCESS;
@@ -126,9 +126,9 @@ int eval_fn_jacobian( const gsl_vector *x, void *params,
    Jptr = gsl_matrix_ptr(J, 0, 0);
    fptr = gsl_vector_ptr(f, 0);
 #endif
-   CUTEST_cfn_r( &status, &data->n, &data->m, xptr, &obj, fptr);
+   CUTEST_cfn( &status, &data->n, &data->m, xptr, &obj, fptr);
    ldJ = J->tda;
-   CUTEST_cgr_r( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
+   CUTEST_cgr( &status, &data->n, &data->m, xptr, y, &grlagf, g, &jtrans,
                  &ldJ, &data->m, Jptr );
    free(y); free(g); /* Values ignored */
    return GSL_SUCCESS;
@@ -188,7 +188,7 @@ int MAINENTRY( void ){
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open_r( &funit, fname, &ierr );
+    FORTRAN_open( &funit, fname, &ierr );
     if ( ierr )
     {
         printf("Error opening file OUTSDIF.d.\nAborting.\n");
@@ -196,7 +196,7 @@ int MAINENTRY( void ){
     }
 
     /* Determine problem size */
-    CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
 
     if ( status )
     {
@@ -219,7 +219,7 @@ int MAINENTRY( void ){
         MALLOC( v,      CUTEst_ncon, rp_ );
         MALLOC( cl,     CUTEst_ncon, rp_ );
         MALLOC( cu,     CUTEst_ncon, rp_ );
-        CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+        CUTEST_csetup( &status, &funit, &iout, &io_buffer,
                          &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
                          v, cl, cu, equatn, linear,
                          &e_order, &l_order, &v_order );
@@ -259,7 +259,7 @@ int MAINENTRY( void ){
             printf("\n"); */
     }
     else
-        CUTEST_usetup_r( &status, &funit, &iout, &io_buffer,
+        CUTEST_usetup( &status, &funit, &iout, &io_buffer,
                          &CUTEst_nvar, x, bl, bu );
 
     if ( status )
@@ -278,12 +278,12 @@ int MAINENTRY( void ){
     if ( constrained )
     {
         MALLOC(gnames, CUTEst_ncon * FSTRING_LEN, char);   /* For Fortran */
-        CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+        CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
                          pname, vnames, gnames );
     }
     else
     {
-        CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames );
+        CUTEST_unames( &status, &CUTEst_nvar, pname, vnames );
     }
 
     if ( status )
@@ -559,7 +559,7 @@ int MAINENTRY( void ){
 	  fnval = 0.5*normf*normf;*/
 
     /* Get CUTEst statistics */
-    CUTEST_creport_r( &status, calls, cpu );
+    CUTEST_creport( &status, calls, cpu );
 
     if ( status )
     {
@@ -630,7 +630,7 @@ int MAINENTRY( void ){
     printf(" ******************************************************************\n\n");
 
     ierr = 0;
-    FORTRAN_close_r( &funit, &ierr );
+    FORTRAN_close( &funit, &ierr );
     if ( ierr )
     {
         printf( "Error closing %s on unit %d.\n", fname, (int)funit );
@@ -647,9 +647,9 @@ int MAINENTRY( void ){
     FREE(Vnames);
 
     if ( constrained )
-      CUTEST_cterminate_r( &status );
+      CUTEST_cterminate( &status );
     else
-      CUTEST_uterminate_r( &status );
+      CUTEST_uterminate( &status );
 
     return 0;
 

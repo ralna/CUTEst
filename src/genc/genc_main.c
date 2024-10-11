@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 08:00 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* ============================================
  * CUTEst interface for generic package
@@ -72,7 +72,7 @@ int MAINENTRY( void ){
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open_r( &funit, fname, &ierr );
+    FORTRAN_open( &funit, fname, &ierr );
     if ( ierr )
     {
         printf("Error opening file OUTSDIF.d.\nAborting.\n");
@@ -80,7 +80,7 @@ int MAINENTRY( void ){
     }
 
     /* Determine problem size */
-    CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
 
     if ( status )
     {
@@ -89,7 +89,7 @@ int MAINENTRY( void ){
     }
 
     MALLOC(classification, FCSTRING_LEN + 1, char);
-    CUTEST_classification_r( &status, &funit, classification );
+    CUTEST_classification( &status, &funit, classification );
 
     /* Determine whether to call constrained or unconstrained tools */
     if ( CUTEst_ncon ) constrained = TRUE_;
@@ -106,7 +106,7 @@ int MAINENTRY( void ){
         MALLOC( v,      CUTEst_ncon, rp_ );
         MALLOC( cl,     CUTEst_ncon, rp_ );
         MALLOC( cu,     CUTEst_ncon, rp_ );
-        CUTEST_csetup_r( &status, &funit, &iout, &io_buffer,
+        CUTEST_csetup( &status, &funit, &iout, &io_buffer,
                        &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
                        v, cl, cu, equatn, linear,
                        &e_order, &l_order, &v_order );
@@ -146,7 +146,7 @@ int MAINENTRY( void ){
             printf("\n"); */
     }
     else
-    {    CUTEST_usetup_r( &status, &funit, &iout, &io_buffer,
+    {    CUTEST_usetup( &status, &funit, &iout, &io_buffer,
                          &CUTEst_nvar, x, bl, bu );
     /*    printf("CUTEst_nvar = %d\n", CUTEst_nvar); */
     }
@@ -169,12 +169,12 @@ int MAINENTRY( void ){
       MALLOC(Gnames, CUTEst_ncon, char *);          /* Array of strings */
       for (i = 0; i < CUTEst_ncon; i++)
           MALLOC(Gnames[i], FSTRING_LEN + 1, char);
-      CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon,
+      CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon,
                        pname, vnames, gnames );
     }
     else
     {
-        CUTEST_unames_r( &status, &CUTEst_nvar, pname, vnames );
+        CUTEST_unames( &status, &CUTEst_nvar, pname, vnames );
     }
 
     if ( status )
@@ -244,7 +244,7 @@ int MAINENTRY( void ){
     ExitCode = 0;
 
     /* Get CUTEst statistics */
-    CUTEST_creport_r( &status, calls, cpu );
+    CUTEST_creport( &status, calls, cpu );
 
     if ( status )
     {
@@ -275,7 +275,7 @@ int MAINENTRY( void ){
     printf(" ******************************************************************\n\n");
 
     ierr = 0;
-    FORTRAN_close_r( &funit, &ierr );
+    FORTRAN_close( &funit, &ierr );
     if ( ierr )
     {
         printf( "Error closing %s on unit %d.\n", fname, (int)funit );
@@ -290,9 +290,9 @@ int MAINENTRY( void ){
     FREE( linear );
 
     if ( constrained )
-      CUTEST_cterminate_r( &status );
+      CUTEST_cterminate( &status );
     else
-      CUTEST_uterminate_r( &status );
+      CUTEST_uterminate( &status );
 
     return 0;
 

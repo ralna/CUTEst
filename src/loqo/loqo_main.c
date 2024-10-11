@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:45 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* ====================================================
  * CUTEst interface for LOQO          October 22nd, 2003
@@ -151,14 +151,14 @@ static int spec = 0;
         int i;
 
         /* Open problem description file OUTSDIF.d */
-        FORTRAN_open_r( &funit, fname, &ierr );
+        FORTRAN_open( &funit, fname, &ierr );
         if( ierr ) {
             printf("Error opening file OUTSDIF.d.\nAborting.\n");
             exit(1);
         }
 
         /* Determine problem size */
-        CUTEST_cdimen_r( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
+        CUTEST_cdimen( &status, &funit, &CUTEst_nvar, &CUTEst_ncon );
 
         if( status ) {
           printf("** CUTEst error, status = %d, aborting\n", status);
@@ -179,7 +179,7 @@ static int spec = 0;
         nconp1 = CUTEst_ncon + 1;
 
         /* Call initialization routine for CUTEst */
-        CUTEST_csetup_r( &status, &funit, &iout, &io_buffer, 
+        CUTEST_csetup( &status, &funit, &iout, &io_buffer, 
                          &CUTEst_nvar, &CUTEst_ncon, x, bl, bu,
                          v, cl, cu, equatn, linear, 
                          &e_order, &l_order, &v_order );
@@ -196,7 +196,7 @@ static int spec = 0;
         if( CUTEst_ncon > 0 )
         {
             /* Determine number of nonzeros in Jacobian */
-            CUTEST_cdimsj_r( &status, &CUTEst_nnzj );
+            CUTEST_cdimsj( &status, &CUTEst_nnzj );
 
             if( status ) {
                printf("** CUTEst error, status = %d, aborting\n", status);
@@ -212,7 +212,7 @@ static int spec = 0;
             MALLOC( indfun, CUTEst_nnzj, integer );
             grad = TRUE_;
             /* Here, idummy will be set to nnzj again */
-            CUTEST_ccfsg_r( &status, &CUTEst_nvar, &CUTEst_ncon, x, c, &idummy,
+            CUTEST_ccfsg( &status, &CUTEst_nvar, &CUTEst_ncon, x, c, &idummy,
                             &CUTEst_nnzj, J, indvar, indfun, &grad );
 
             if( status ) {
@@ -267,7 +267,7 @@ static int spec = 0;
         }
 
         /* Determine number of nonzeros in Hessian of Lagrangian */
-        CUTEST_cdimsh_r( &status, &CUTEst_nnzh );
+        CUTEST_cdimsh( &status, &CUTEst_nnzh );
 
         if( status ) {
              printf("** CUTEst error, status = %d, aborting\n", status);
@@ -283,7 +283,7 @@ static int spec = 0;
             MALLOC( icnh, CUTEst_nnzh, integer );
             if( CUTEst_ncon == 0 ) idummy = CUTEst_nnzh; /* for unconstrained problems */
             /* idummy will be set to nnzh again */
-            CUTEST_csh_r( &status, &CUTEst_nvar, &CUTEst_ncon, x, v,
+            CUTEST_csh( &status, &CUTEst_nvar, &CUTEst_ncon, x, v,
                           &idummy, &CUTEst_nnzh, H, irnh, icnh );
 
             if( status ) {
@@ -414,7 +414,7 @@ static int spec = 0;
         MALLOC( pname, FSTRING_LEN+1, char );
         MALLOC( vnames, CUTEst_nvar*FSTRING_LEN, char );
         MALLOC( gnames, CUTEst_ncon*FSTRING_LEN, char );
-        CUTEST_cnames_r( &status, &CUTEst_nvar, &CUTEst_ncon, 
+        CUTEST_cnames( &status, &CUTEst_nvar, &CUTEst_ncon, 
                          pname, vnames, gnames );
 
         if( status ) {
@@ -432,7 +432,7 @@ static int spec = 0;
 
         /* Compute final value of objective function and constraint violation */
         MALLOC( c, CUTEst_ncon, rp_ );
-        CUTEST_cfn_r( &status, &CUTEst_nvar, &CUTEst_ncon, lp->x, &f, c );
+        CUTEST_cfn( &status, &CUTEst_nvar, &CUTEst_ncon, lp->x, &f, c );
 
         if( status ) {
            printf("** CUTEst error, status = %d, aborting\n", status);
@@ -468,7 +468,7 @@ static int spec = 0;
         printf( "# Eval H(x) \t%-6d\n", count_h );
                                                                                 
         /* Get CUTEst statistics */
-        CUTEST_creport_r( &status, calls, cpu );
+        CUTEST_creport( &status, calls, cpu );
 
         if( status ) {
            printf("** CUTEst error, status = %d, aborting\n", status);
@@ -499,12 +499,12 @@ static int spec = 0;
         printf(" count_h (LOQO)          = %-8d\n", count_h);
         printf(" ******************************************************************\n\n");
 
-        FORTRAN_close_r( &funit, &ierr );
+        FORTRAN_close( &funit, &ierr );
         if( ierr ) {
             printf( "Error closing file %s", fname );
             return 1;
         }
-        CUTEST_cterminate_r( &status );
+        CUTEST_cterminate( &status );
         return 0;
     }
 
@@ -523,7 +523,7 @@ static int spec = 0;
 
         count_f++;
 
-        CUTEST_cofg_r( &status, &CUTEst_nvar, x, &f, dummy, &grad );
+        CUTEST_cofg( &status, &CUTEst_nvar, x, &f, dummy, &grad );
 
         if( status ) {
            printf("** CUTEst error, status = %d, aborting\n", status);
@@ -546,7 +546,7 @@ static int spec = 0;
 
         count_g++;
 
-        CUTEST_cofg_r( &status, &CUTEst_nvar, x, &fdummy, c, &grad );
+        CUTEST_cofg( &status, &CUTEst_nvar, x, &fdummy, c, &grad );
 
         if( status ) {
            printf("** CUTEst error, status = %d, aborting\n", status);
@@ -581,7 +581,7 @@ static int spec = 0;
         for( i=0; i<CUTEst_ncon; i++ )
             v[i] = -1.*cscale[i]*y[i];
 
-        CUTEST_csh_r( &status, &CUTEst_nvar, &CUTEst_ncon, x, v,
+        CUTEST_csh( &status, &CUTEst_nvar, &CUTEst_ncon, x, v,
                       &idummy, &CUTEst_nnzh, h, irnh, icnh );
 
         if( status ) {
@@ -615,7 +615,7 @@ static int spec = 0;
 
         count_c++;
 
-        CUTEST_ccfg_r( &status, &CUTEst_nvar, &CUTEst_ncon, x, h,
+        CUTEST_ccfg( &status, &CUTEst_nvar, &CUTEst_ncon, x, h,
                        &jtrans, &izero, &izero, cjac, &grad );
 
         if( status ) {
@@ -648,7 +648,7 @@ static int spec = 0;
         MALLOC( indvar, CUTEst_nnzj, integer );
         MALLOC( indfun, CUTEst_nnzj, integer );
 
-        CUTEST_ccfsg_r( &status, &CUTEst_nvar, &CUTEst_ncon, x, c,
+        CUTEST_ccfsg( &status, &CUTEst_nvar, &CUTEst_ncon, x, c,
                         &idummy, &CUTEst_nnzj, cjac, indvar, indfun, &grad );
 
         if( status ) {

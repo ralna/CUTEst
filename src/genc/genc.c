@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2023-12-02 AT 14:30 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* Generic C solver, to be used with
  * generic C driver, gencma.c
@@ -31,7 +31,7 @@ void genspc( integer funit, char *fname )
        Possibly, this routine contains precision-dependent directives */
 
     /* Open relevant file */
-    FORTRAN_open_r( &funit, fname, &ierr );
+    FORTRAN_open( &funit, fname, &ierr );
     if ( ierr )
     {
         printf( "Error opening spec file %s.\nAborting.\n", fname );
@@ -40,7 +40,7 @@ void genspc( integer funit, char *fname )
 
     /* ... Do something ... */
 
-    FORTRAN_close_r( &funit, &ierr );
+    FORTRAN_close( &funit, &ierr );
     return;
 
 }

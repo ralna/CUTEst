@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-08-20 AT 07:40 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 /* ====================================================
  * CUTEst interface simulating a black box for NOMAD.
@@ -55,14 +55,14 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     /* Open problem description file OUTSDIF.d */
     ierr = 0;
-    FORTRAN_open_r( &funit, fname, &ierr );
+    FORTRAN_open( &funit, fname, &ierr );
     if ( ierr ) {
       return_infinity();
       return -1;
     }
 
     /* Determine problem size */
-    CUTEST_cdimen_r( &ierr, &funit, &CUTEst_nvar, &CUTEst_ncon );
+    CUTEST_cdimen( &ierr, &funit, &CUTEst_nvar, &CUTEst_ncon );
     if ( ierr ) {
       return_infinity();
       return -2;
@@ -83,7 +83,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       MALLOC( v,      CUTEst_ncon+1, rp_ );
       MALLOC( cl,     CUTEst_ncon+1, rp_ );
       MALLOC( cu,     CUTEst_ncon+1, rp_ );
-      CUTEST_csetup_r( &ierr, &funit, &iout, &io_buffer,
+      CUTEST_csetup( &ierr, &funit, &iout, &io_buffer,
                        &CUTEst_nvar, &CUTEst_ncon,
                        x, bl, bu, v, cl, cu,
                      equatn, linear, &efirst, &lfirst, &nvfrst );
@@ -97,7 +97,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       MALLOC( linear, 1, logical    );
       MALLOC( cl, 1, rp_ );
       MALLOC( cu, 1, rp_ );
-      CUTEST_usetup_r( &ierr, &funit, &iout, &io_buffer,
+      CUTEST_usetup( &ierr, &funit, &iout, &io_buffer,
                        &CUTEst_nvar, x, bl, bu );
       if ( ierr ) {
         return_infinity();
@@ -105,7 +105,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       }
     }
 
-    FORTRAN_close_r( &funit, &ierr );
+    FORTRAN_close( &funit, &ierr );
 
     /* If an input vector is supplied, use it.
      * Otherwise, use the problem's initial guess. */
@@ -146,7 +146,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
 
     if( constrained ) {
       /* Recycle the array v to store constraint values */
-      CUTEST_cfn_r( &ierr, &CUTEst_nvar, &CUTEst_ncon, x, &obj, v );
+      CUTEST_cfn( &ierr, &CUTEst_nvar, &CUTEst_ncon, x, &obj, v );
       if ( ierr ) {
         return_infinity();
         return -4;
@@ -157,7 +157,7 @@ extern "C" {   /* To prevent C++ compilers from mangling symbols */
       printf("\n");
     }
     else {
-      CUTEST_ufn_r( &ierr, &CUTEst_nvar , x , &obj);
+      CUTEST_ufn( &ierr, &CUTEst_nvar , x , &obj);
       if ( ierr ) {
         return_infinity();
         return -4;

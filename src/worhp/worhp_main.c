@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 08:00 GMT */
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
 
 #ifndef THIS_PROBLEM_NAME
 #define THIS_PROBLEM_NAME "WORHP/CUTEst"
@@ -128,7 +128,7 @@ int MAINENTRY() {
      * Open CUTEst problem
      * cutest_input: unit number for the decoded data
      */
-    FORTRAN_open_r(&cutest_input, outsdifd_filename, &cutest_status);
+    FORTRAN_open(&cutest_input, outsdifd_filename, &cutest_status);
     if (cutest_status != 0) {
         snprintf(buffer, sizeof(buffer), "Coult not open %s",
                  outsdifd_filename);
@@ -144,7 +144,7 @@ int MAINENTRY() {
      * cutest_status: 0 - success, 1 - alloc/dealloc error,
      *                2 - array bound error, 3 - eval error
      */
-    CUTEST_cdimen_r(&cutest_status, &cutest_input, &opt.n, &cutest_m);
+    CUTEST_cdimen(&cutest_status, &cutest_input, &opt.n, &cutest_m);
     if (cutest_status != 0) {
         return cutest_status;
     }
@@ -176,7 +176,7 @@ int MAINENTRY() {
         MALLOC(linear, cutest_m, logical);
         MALLOC(c_dummy, cutest_m, rp_);
 
-        CUTEST_csetup_r(&cutest_status, &cutest_input, &out, &io_buffer,
+        CUTEST_csetup(&cutest_status, &cutest_input, &out, &io_buffer,
                         &opt.n, &cutest_m, opt.X, opt.XL, opt.XU,
                         opt.Mu, opt.GL, opt.GU, equatn, linear,
                         &order_none, &order_none, &order_none);
@@ -188,10 +188,10 @@ int MAINENTRY() {
         }
 #endif
     } else {
-        CUTEST_usetup_r(&cutest_status, &cutest_input, &out, &io_buffer,
+        CUTEST_usetup(&cutest_status, &cutest_input, &out, &io_buffer,
                         &opt.n, opt.X, opt.XL, opt.XU);
     }
-    FORTRAN_close_r(&cutest_input, &cutest_status);
+    FORTRAN_close(&cutest_input, &cutest_status);
 
     if (opt.m > 0) {
         /*
@@ -200,7 +200,7 @@ int MAINENTRY() {
         MALLOC(g_var, opt.n, integer);
         MALLOC(g_val, opt.n, rp_);
 
-        CUTEST_cofsg_r(&cutest_status, &opt.n, opt.X, &opt.F, &g_nnz, &opt.n,
+        CUTEST_cofsg(&cutest_status, &opt.n, opt.X, &opt.F, &g_nnz, &opt.n,
                        g_val, g_var, &evaluate_derivative);
 
         wsp.DF.nnz = g_nnz;
@@ -219,7 +219,7 @@ int MAINENTRY() {
         SortWorhpMatrix(&wsp.DF);
 
 
-        CUTEST_cdimsj_r(&cutest_status, &jac_nnz_init);
+        CUTEST_cdimsj(&cutest_status, &jac_nnz_init);
         if (cutest_status != 0) {
             WorhpError("Error retrieving number of nonzeroes in DG from CUTEst",
                        cutest_problem, par.NLPprint);
@@ -235,7 +235,7 @@ int MAINENTRY() {
         MALLOC(j_var, jac_nnz_init, integer);
         MALLOC(j_fun, jac_nnz_init, integer);
 
-        CUTEST_ccfsg_r(&cutest_status, &opt.n, &cutest_m, opt.X, opt.G,
+        CUTEST_ccfsg(&cutest_status, &opt.n, &cutest_m, opt.X, opt.G,
                        &jac_nnz, &jac_nnz_init, j_val, j_var, j_fun,
                        &evaluate_derivative);
         assert(jac_nnz + opt.n == jac_nnz_init);
@@ -261,9 +261,9 @@ int MAINENTRY() {
     if (par.UserHM || par.FidifHM || par.BFGSmethod > 1) {
         /* Retrieve number of nonzeros in hessian from SIF */
         if (opt.m > 0) {
-            CUTEST_cdimsh_r(&cutest_status, &hm_nnz_init);
+            CUTEST_cdimsh(&cutest_status, &hm_nnz_init);
         } else {
-            CUTEST_udimsh_r(&cutest_status, &hm_nnz_init);
+            CUTEST_udimsh(&cutest_status, &hm_nnz_init);
         }
         if (cutest_status != 0) {
             WorhpError("Error retrieving number of nonzeroes in HM from CUTEst",
@@ -278,10 +278,10 @@ int MAINENTRY() {
         /* upper triangular part. Transposition is performed */
         /* by changing row and col. */
         if (opt.m > 0) {
-            CUTEST_cshp_r(&cutest_status, &opt.n,
+            CUTEST_cshp(&cutest_status, &opt.n,
                           &hm_nnz, &hm_nnz_init, h_col, h_row);
         } else {
-            CUTEST_ushp_r(&cutest_status, &opt.n,
+            CUTEST_ushp(&cutest_status, &opt.n,
                           &hm_nnz, &hm_nnz_init, h_col, h_row);
         }
         is_diag_entry_present = calloc(opt.n, sizeof(bool));
@@ -436,9 +436,9 @@ int MAINENTRY() {
 
     /* Deallocate SIF / Cutest memory */
     if (opt.m > 0) {
-        CUTEST_cterminate_r(&cutest_status);
+        CUTEST_cterminate(&cutest_status);
     } else {
-        CUTEST_uterminate_r(&cutest_status);
+        CUTEST_uterminate(&cutest_status);
     }
     if (par.UserHM || par.FidifHM || par.BFGSmethod > 1) {
         FREE(h_val);
@@ -473,10 +473,10 @@ void UserF(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
     integer cutest_status;
 
     if (opt->m > 0) {
-        CUTEST_cofg_r(&cutest_status, &opt->n, opt->X, &opt->F, g_val_dummy,
+        CUTEST_cofg(&cutest_status, &opt->n, opt->X, &opt->F, g_val_dummy,
                       &evaluate_gradient);
     } else {
-        CUTEST_ufn_r(&cutest_status, &opt->n, opt->X, &opt->F);
+        CUTEST_ufn(&cutest_status, &opt->n, opt->X, &opt->F);
     }
     if (cutest_status != 0) {
         WorhpError("Error evaluating objective function.", "CUTEst",
@@ -491,7 +491,7 @@ void UserG(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
     const integer cutest_m = opt->m;
     integer cutest_status, nnzj, nnzjN;
 
-    CUTEST_ccfsg_r(&cutest_status, &opt->n, &cutest_m, opt->X, opt->G,
+    CUTEST_ccfsg(&cutest_status, &opt->n, &cutest_m, opt->X, opt->G,
                    &nnzjN, &nnzj, j_val, j_var, j_fun, &evaluate_jacobian);
     if (cutest_status != 0) {
         WorhpError("Error evaluating constraint functions.", "CUTEst",
@@ -504,7 +504,7 @@ void UserF_G(OptVar *opt, Workspace *wsp, Params *par, Control *cnt) {
     integer cutest_status;
 
     assert(opt->m > 0);
-    CUTEST_cfn_r(&cutest_status, &opt->n, &cutest_m, opt->X, &opt->F, opt->G);
+    CUTEST_cfn(&cutest_status, &opt->n, &cutest_m, opt->X, &opt->F, opt->G);
     if (cutest_status != 0) {
         WorhpError("Error evaluating objective and constraint functions "
                    "simultaneously.", "CUTEst", par->NLPprint);
@@ -520,7 +520,7 @@ void UserDF(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
     int i, g_nnz;
 
     if (opt->m > 0) {
-        CUTEST_cofsg_r(&cutest_status, &opt->n, opt->X, &f_dummy,
+        CUTEST_cofsg(&cutest_status, &opt->n, opt->X, &f_dummy,
                        &g_nnz, &wsp->DF.nnz, g_val, g_var, &evaluate_gradient);
         assert(g_nnz == wsp->DF.nnz);
         for (i = 0; i < wsp->DF.nnz; i += 1) {
@@ -528,7 +528,7 @@ void UserDF(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
             wsp->DF.val[i] = g_val[wsp->DF.perm[i] - 1];
         }
     } else {
-        CUTEST_ugr_r(&cutest_status, &opt->n, opt->X, wsp->DF.val);
+        CUTEST_ugr(&cutest_status, &opt->n, opt->X, wsp->DF.val);
     }
     if (cutest_status != 0) {
         WorhpError("Error evaluating gradient of objective function", "CUTEst",
@@ -549,7 +549,7 @@ void UserDG(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
     int i;
 
     allocated_nnz = wsp->DG.nnz + opt->n;
-    CUTEST_ccfsg_r(&cutest_status, &opt->n, &cutest_m, opt->X, c_dummy,
+    CUTEST_ccfsg(&cutest_status, &opt->n, &cutest_m, opt->X, c_dummy,
                    &written_nnz, &allocated_nnz, j_val, j_var, j_fun,
                    &evaluate_jacobian);
     if (cutest_status != 0) {
@@ -575,7 +575,7 @@ void UserDF_DG(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
 
     assert(opt->m > 0);
     allocated_nnz = wsp->DG.nnz + opt->n;
-    CUTEST_csgr_r(&cutest_status, &opt->n, &cutest_m, opt->X, opt->Mu,
+    CUTEST_csgr(&cutest_status, &opt->n, &cutest_m, opt->X, opt->Mu,
                   &gradient_of_lagrangian, &written_nnz, &allocated_nnz,
                   j_val, j_var, j_fun);
     if (cutest_status != 0) {
@@ -621,10 +621,10 @@ void UserHM(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
 
     /* Evaluate F-Part of hessian of the lagrangian */
     if (opt->m > 0) {
-        CUTEST_cish_r(&cutest_status, &opt->n, opt->X, &objective_part,
+        CUTEST_cish(&cutest_status, &opt->n, opt->X, &objective_part,
                     &hm_nnz, &hm_nnz_init, h_val, h_col, h_row);
     } else {
-        CUTEST_ush_r(&cutest_status, &opt->n, opt->X, &hm_nnz, &hm_nnz_init,
+        CUTEST_ush(&cutest_status, &opt->n, opt->X, &hm_nnz, &hm_nnz_init,
                      h_val, h_col, h_row);
     }
 
@@ -636,7 +636,7 @@ void UserHM(OptVar *opt, Workspace *wsp, Params *par, Control *cnt,
 
     if (opt->m > 0) {
         /* Evaluate G-Part of hessian of the lagrangian */
-        CUTEST_cshc_r(&cutest_status, &opt->n, &cutest_m, opt->X, opt->Mu,
+        CUTEST_cshc(&cutest_status, &opt->n, &cutest_m, opt->X, opt->Mu,
                       &hm_nnz, &hm_nnz_init, h_val, h_col, h_row);
         for (i = 0; i < hm_nnz; i += 1) {
             assert(wsp->HM.row[hm_perm_inverse[i]] == h_row[i]);

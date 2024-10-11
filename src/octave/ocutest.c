@@ -1,3 +1,5 @@
+/* THIS VERSION: CUTEST 2.3 - 2024-10-11 AT 09:00 GMT */
+
 /*
  * A grand unified Octave gateway for the CUTEst tools.
  * This interface brings together the unconstrained, constrained,
@@ -286,7 +288,7 @@ extern "C" {
       mexPrintf("Opening data file\n");
 #endif
       ioErr = 0;
-      if (! dataFileOpen) FORTRAN_open_r(&funit, fName, &ioErr);
+      if (! dataFileOpen) FORTRAN_open(&funit, fName, &ioErr);
       if (ioErr) mexErrMsgTxt("Error opening file OUTSDIF.d\n");
       dataFileOpen = 1;
 
@@ -376,7 +378,7 @@ extern "C" {
       mexPrintf("Opening data file\n");
 #endif
       ioErr = 0;
-      if (! dataFileOpen) FORTRAN_open_r(&funit, fName, &ioErr);
+      if (! dataFileOpen) FORTRAN_open(&funit, fName, &ioErr);
       if (ioErr) mexErrMsgTxt("Error opening file OUTSDIF.d\n");
 
 #ifdef MXDEBUG
@@ -482,7 +484,7 @@ extern "C" {
       mexPrintf("  %-s\n", probName);
       mexPrintf("Closing data file\n");
 #endif
-      FORTRAN_close_r(&funit, &ioErr);
+      FORTRAN_close(&funit, &ioErr);
       if (ioErr) mexWarnMsgTxt("Error closing file OUTSDIF.d\n");
       dataFileOpen = 0;
 
