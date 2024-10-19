@@ -1318,13 +1318,14 @@
       END DO
       END SUBROUTINE WRITE_SRESULT
 
-      SUBROUTINE WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector, VECTOR,     &
-                                 len_vector, nnz_result, INDEX_nz_result,      &
+      SUBROUTINE WRITE_SRESULT2( out, nnz_vector, INDEX_nz_vector,             &
+                                 VECTOR, len_vector,                           &
+                                 nnz_result, INDEX_nz_result,                  &
                                  RESULT, len_result )
       INTEGER ( KIND = ip_ ) :: len_vector, len_result, out
       INTEGER ( KIND = ip_ ) :: nnz_vector,  nnz_result
       INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ) :: INDEX_nz_vector
-      INTEGER ( KIND = ip_ ), DIMENSION( n ) :: INDEX_nz_result
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_result ) :: INDEX_nz_result
       REAL ( KIND = rp_ ), DIMENSION( len_vector ) :: VECTOR
       REAL ( KIND = rp_ ), DIMENSION( len_result ) :: RESULT
       INTEGER ( KIND = ip_ ) :: i, j

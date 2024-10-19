@@ -126,6 +126,7 @@
 #define CUTEST_Cint_probname_r CUTEST_Cint_probname_s
 #define CUTEST_Cint_varnames_r CUTEST_Cint_varnames_s
 #define CUTEST_Cint_connames_r CUTEST_Cint_connames_s
+#define CUTEST_Cint_cnoobj_r CUTEST_Cint_cnoobj_s
 #define CUTEST_cisgrp_r CUTEST_cisgrp_s
 #define CUTEST_cisgrp_threaded_r CUTEST_cisgrp_threaded_s
 #define CUTEST_cisgrp_threadsafe_r CUTEST_cisgrp_threadsafe_s

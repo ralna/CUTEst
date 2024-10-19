@@ -1,7 +1,52 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-15 AT 14:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C I S H _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 15th October 2024
+
+      SUBROUTINE CUTEST_cish_c_r( status, n, X, iprob, nnzh, lh,               &
+                                  H_val, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh ) :: H_val
+
+!  ---------------------------------------------------------------
+!  compute the Hessian matrix of a specified problem function
+!  (iprob = 0 is the objective function, while iprob > 0 is the
+!  iprob-th constraint) of a problem initially written in
+!  Standard Input Format (SIF).
+
+!  The upper triangle of the Hessian is stored in coordinate form,
+!  i.e., the entry H_val(i) has row index H_row(i) and column index
+!  H_col(i) for i = 1, ...., nnzh
+!  ---------------------------------------------------------------
+
+      CALL CUTEST_cish_threadsafe_r( CUTEST_data_global,                       &
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, X, iprob,                      &
+                                     nnzh, lh, H_val, H_row, H_col )
+
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+      RETURN
+
+!  end of subroutine CUTEST_cish_c_r
+
+      END SUBROUTINE CUTEST_cish_c_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    C I S H    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -36,9 +81,9 @@
 !  ---------------------------------------------------------------
 
       CALL CUTEST_cish_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, X, iprob,                        &
-                                   nnzh, lh, H_val, H_row, H_col )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, X, iprob,                      &
+                                     nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_cish_r
@@ -54,7 +99,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_cish_threaded_r( status, n, X, iprob, nnzh, lh,        &
-                                       H_val, H_row, H_col, thread )
+                                         H_val, H_row, H_col, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -89,9 +134,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cish_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, X, iprob,                        &
-                                   nnzh, lh, H_val, H_row, H_col )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, X, iprob,                      &
+                                     nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_cish_threaded_r
@@ -108,7 +153,7 @@
 !   fortran 2003 version released in CUTEst, 24th November 2012
 
       SUBROUTINE CUTEST_cish_threadsafe_r( data, work, status, n, X, iprob,    &
-                                         nnzh, lh, H_val, H_row, H_col )
+                                           nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -212,21 +257,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, ncalcf, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, ncalcf, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  Compute the list of groups involved in the required problem function
@@ -276,9 +321,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,       &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 

@@ -3,7 +3,7 @@
 #include "cutest_modules.h"
 #include "cutest_routines.h"
 
-!-*-*-*-*-*-*-  C U T E S T    C D I M C O P    S U B R O U T I N E  -*-*-*-*-*-
+!-*-*-*-*-*-*-  C U T E S T    C D I M O H P    S U B R O U T I N E  -*-*-*-*-*-
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
 !  Principal author: Nick Gould
@@ -26,15 +26,15 @@
 !  -----------------------------------------------------------------
 
       CALL CUTEST_cdimohp_threadsafe_r( CUTEST_data_global,                    &
-                                      CUTEST_work_global( 1 ),                 &
-                                      status, nnzohp )
+                                        CUTEST_work_global( 1 ),               &
+                                        status, nnzohp )
       RETURN
 
 !  end of sunroutine CUTEST_cdimohp_r
 
       END SUBROUTINE CUTEST_cdimohp_r
 
-!-  C U T E S T   C D I M C O P _ t h r e a d s a f e   S U B R O U T I N E  -
+!-  C U T E S T   C D I M O H P _ t h r e a d s a f e   S U B R O U T I N E  -
 
 !  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
 !  Principal author: Nick Gould

@@ -12,8 +12,9 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_csetup_r( status, input, out, io_buffer,          &
-                                     n, m, X, X_l, X_u, Y, C_l, C_u,           &
-                                     EQUATN, LINEAR, e_order, l_order, v_order )
+                                       n, m, X, X_l, X_u, Y, C_l, C_u,         &
+                                       EQUATN, LINEAR,                         &
+                                       e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -37,9 +38,9 @@
       LOGICAL, DIMENSION( m ) :: EQUATN_FORTRAN, LINEAR_FORTRAN
 
       CALL CUTEST_csetup_r( status, input, out,                                &
-                          io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,           &
-                          EQUATN_FORTRAN, LINEAR_FORTRAN,                      &
-                          e_order, l_order, v_order )
+                            io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,         &
+                            EQUATN_FORTRAN, LINEAR_FORTRAN,                    &
+                            e_order, l_order, v_order )
 
 !   copy Fortran logical arrays into C-bound logical arrays
 
@@ -61,8 +62,8 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_csetup_r( status, input, out,                          &
-                                io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,     &
-                                EQUATN, LINEAR, e_order, l_order, v_order )
+                                  io_buffer, n, m, X, X_l, X_u, Y, C_l, C_u,   &
+                                  EQUATN, LINEAR, e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -95,10 +96,11 @@
 !  set the data
 
       CALL CUTEST_csetup_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, input, out, io_buffer,            &
-                                     n, m, X, X_l, X_u, Y, C_l, C_u,           &
-                                     EQUATN, LINEAR, e_order, l_order, v_order )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, input, out, io_buffer,          &
+                                       n, m, X, X_l, X_u, Y, C_l, C_u,         &
+                                       EQUATN, LINEAR,                         &
+                                       e_order, l_order, v_order )
       CUTEST_data_global%threads = 1
       RETURN
 
@@ -125,9 +127,9 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_csetup_threaded_r( status, input, out, threads,        &
-                                         IO_BUFFERS, n, m, X, X_l, X_u,        &
-                                         Y, C_l, C_u, EQUATN, LINEAR,          &
-                                         e_order, l_order, v_order )
+                                           IO_BUFFERS, n, m, X, X_l, X_u,      &
+                                           Y, C_l, C_u, EQUATN, LINEAR,        &
+                                           e_order, l_order, v_order )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -165,10 +167,11 @@
 !  set the data
 
       CALL CUTEST_csetup_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, input, out, IO_BUFFERS( 1 ),      &
-                                     n, m, X, X_l, X_u, Y, C_l, C_u,           &
-                                     EQUATN, LINEAR, e_order, l_order, v_order )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, input, out, IO_BUFFERS( 1 ),    &
+                                       n, m, X, X_l, X_u, Y, C_l, C_u,         &
+                                       EQUATN, LINEAR,                         &
+                                       e_order, l_order, v_order )
       CUTEST_data_global%threads = threads
 
 !  initialize additional thread data

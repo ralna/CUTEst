@@ -30,7 +30,7 @@
 !  -----------------------------------------------------------------------
 
       CALL CUTEST_udimsh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ), status, nnzh )
+                                       CUTEST_work_global( 1 ), status, nnzh )
       RETURN
 
 !  end of subroutine CUTEST_udimsh_r

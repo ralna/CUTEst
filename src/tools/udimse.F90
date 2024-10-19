@@ -43,7 +43,7 @@
 !  ---------------------------------------------------------------------------
 
       CALL CUTEST_udimse_threadsafe_r( CUTEST_data_global,                     &
-                                     status, ne, he_val_ne, he_row_ne )
+                                       status, ne, he_val_ne, he_row_ne )
       RETURN
 
 !  end of subroutine CUTEST_udimse_r
@@ -60,7 +60,7 @@
 !   fortran 2003 version released in CUTEst, 26th November 2012
 
       SUBROUTINE CUTEST_udimse_threadsafe_r( data, status,                     &
-                                           ne, he_val_ne, he_row_ne )
+                                             ne, he_val_ne, he_row_ne )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

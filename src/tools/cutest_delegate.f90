@@ -1,3 +1,13 @@
+! THIS VERSION: CUTEST 2.3 - 2024-10-15 AT 10:30 GMT.
+
+!-*-*-*-*-*-*-  C U T E S T    D E L E G A T E     M O D U L E   -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Alexis Montoison
+
+!  History -
+!   released as part of CUTEst, 17th June 2024
+
 #ifdef REAL_32
 #define cutest_delegate_r cutest_delegate_s
 #define LOAD_ROUTINE_NAME "load_routines_s_"

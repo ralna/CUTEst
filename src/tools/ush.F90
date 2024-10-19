@@ -1,7 +1,46 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-15 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-*-  C U T E S T    U S H _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 15th October 2024
+
+      SUBROUTINE CUTEST_ush_c_r( status, n, X, nnzh, lh, H_val, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh ) :: H_val
+
+!  -----------------------------------------------------------------------
+!  compute the Hessian matrix of a group partially separable function.
+!  The upper triangle of the Hessian is stored in 0-based coordinate form,
+!  i.e., the entry H_val(i) has 0-based row index H_row(i) and column 
+!  index H_col(i) for i = 1, ...., nnzh
+!  ----------------------------------------------------------------------
+
+      CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
+                                    CUTEST_work_global( 1 ), status, n, X,     &
+                                    nnzh, lh, H_val, H_row, H_col )
+
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+      RETURN
+
+!  end of subroutine CUTEST_ush_c_r
+
+      END SUBROUTINE CUTEST_ush_c_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    U S H    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -31,8 +70,8 @@
 !  ------------------------------------------------------------------
 
       CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( 1 ), status, n, X,       &
-                                  nnzh, lh, H_val, H_row, H_col )
+                                    CUTEST_work_global( 1 ), status, n, X,     &
+                                    nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_ush_r
@@ -48,7 +87,7 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_ush_threaded_r( status, n, X,                          &
-                                      nnzh, lh, H_val, H_row, H_col, thread )
+                                        nnzh, lh, H_val, H_row, H_col, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -79,8 +118,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( thread ), status, n, X,  &
-                                  nnzh, lh, H_val, H_row, H_col )
+                                    CUTEST_work_global( thread ), status,      &
+                                    n, X, nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_ush_threaded_r
@@ -97,7 +136,7 @@
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
       SUBROUTINE CUTEST_ush_threadsafe_r( data, work, status, n, X,            &
-                                        nnzh, lh, H_val, H_row, H_col )
+                                          nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

@@ -1,7 +1,43 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-15 AT 11:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    U S H P _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 15th October 2024
+
+      SUBROUTINE CUTEST_ushp_c_r( status, n, nnzh, lh, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+
+!  -----------------------------------------------------------------
+!  compute the spasity pattern of the Hessian matrix of a group
+!  partially separable function. The upper triangle of the Hessian
+!  is stored in 0-based coordinate form, i.e., the entry has 0-based 
+!  row index H_row(i) and column index H_col(i) for i = 1, ...., nnzh
+!  -----------------------------------------------------------------
+
+      CALL CUTEST_ushp_threadsafe_r( CUTEST_data_global,                       &
+                                     CUTEST_work_global( 1 ), status, n,       &
+                                     nnzh, lh, H_row, H_col )
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+      RETURN
+
+!  end of subroutine CUTEST_ushp_c_r
+
+      END SUBROUTINE CUTEST_ushp_c_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    U S H P  S U B R O U T I N E  -*-*-*-*-*-*-*-
 

@@ -12,7 +12,7 @@
 !   fortran 2003 version released in CUTEst, 22nd December 2012
 
       SUBROUTINE CUTEST_usetup_r( status, input, out, io_buffer, n, X,         &
-                                 X_l, X_u )
+                                  X_l, X_u )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -42,9 +42,9 @@
 !  set the data
 
       CALL CUTEST_usetup_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, input, out, io_buffer,            &
-                                     n, X, X_l, X_u )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, input, out, io_buffer,          &
+                                       n, X, X_l, X_u )
       CUTEST_data_global%threads = 1
       RETURN
 
@@ -71,7 +71,7 @@
 !   fortran 2003 version released in CUTEst, 22nd December 2012
 
       SUBROUTINE CUTEST_usetup_threaded_r( status, input, out, threads,       &
-                                         IO_BUFFERS, n, X, X_l, X_u )
+                                           IO_BUFFERS, n, X, X_l, X_u )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

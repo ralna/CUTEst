@@ -30,7 +30,7 @@
 !   L o c a l   V a r i a b l e s
 !--------------------------------
 
-      INTEGER ( KIND = ip_ ) :: i, n, HE_nel, HE_val_ne, HE_row_ne, status
+      INTEGER ( KIND = ip_ ) :: n, HE_nel, HE_val_ne, HE_row_ne, status
       INTEGER ( KIND = ip_ ) :: l_h2_1, l_h, lhe_ptr, H_ne, lhe_val, lhe_row
       INTEGER ( KIND = ip_ ) :: nnz_vector, nnz_result, maxsbw, alloc_stat
       INTEGER ( KIND = ip_ ) :: nsemib, lbandh
@@ -341,6 +341,7 @@
       SUBROUTINE WRITE_X( out, n, X, X_l, X_u )
       INTEGER ( KIND = ip_ ) :: n, out
       REAL ( KIND = rp_ ), DIMENSION( n ) :: X, X_l, X_u
+      INTEGER ( KIND = ip_ ) :: i
       WRITE( out, "( ' *       i      X_l          X          X_u' )" )
       DO i = 1, n
         WRITE( out, "( ' * ', I7, 3ES12.4 )" ) i, X_l( i ), X( i ), X_u( i )
@@ -471,6 +472,7 @@
       INTEGER ( KIND = ip_ ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
       INTEGER ( KIND = ip_ ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), DIMENSION( lhe_val ) :: HE_val
+      INTEGER ( KIND = ip_ ) :: i
       WRITE( out, "( ' * H(element)' )" )
       DO i = 1, ne
         IF (  HE_row_ptr( i + 1 ) > HE_row_ptr( i ) ) THEN
@@ -480,7 +482,7 @@
           WRITE( out, "( ' * values  ', 5ES12.4, /, ( ' *', 9X, 5ES12.4 ) )" ) &
            HE_val( HE_val_ptr( i ) : HE_val_ptr( i + 1 ) - 1 )
         ELSE
-          WRITE( out, "( ' * no indices' )" )
+          WRITE( out, "( ' * element ', I0, ' has no indices' )" ) i
         END IF
       END DO
       END SUBROUTINE WRITE_H_element

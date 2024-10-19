@@ -183,6 +183,27 @@ run_debug_cutest_constrained: ctools test_cutest_constrained
 	- $(OBJ)/run_debug
 	rm $(OBJ)/run_debug
 
+run_c_test_cutest_unconstrained: utools test_cutest_unconstrained
+	echo " Exhaustive test of unconstrained C tools"
+	$(CP) ../test/utest.c $(OBJ)/utest.c
+	cd $(OBJ) ; $(CC) -o utest.o $(CFLAGS) utest.c 
+	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_c_test \
+            $(NOFMAIN) $(U_TEST) utest.o -L$(OBJ) $(LIBS)
+	- $(OBJ)/run_c_test >& ../test/c_test_unc.output
+	cat ../test/c_test_unc.output
+	rm $(OBJ)/run_c_test
+
+run_c_test_cutest_constrained: ctools test_cutest_constrained
+	echo " Exhaustive test of constrained C tools"
+	$(CP) ../test/ctest.c $(OBJ)/ctest.c
+	cd $(OBJ) ; $(CC) -o ctest.o $(CFLAGS) ctest.c 
+	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_c_test \
+            $(NOFMAIN) $(C_TEST) ctest.o -L$(OBJ) $(LIBS)
+	- $(OBJ)/run_c_test
+#	- $(OBJ)/run_c_test >& ../test/c_test_con.output
+#	cat ../test/c_test_con.output
+	rm $(OBJ)/run_c_test
+
 tools:
 	( cd ../tools ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                      cutest PRECIS=$(PRECIS) PWD=$(PWD)/../tools )
