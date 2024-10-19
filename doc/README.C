@@ -39,7 +39,7 @@ careful. The main issues are
 Potential users should examine the provided CUTEst interfaces to 
 C and C++ codes in the files
 
- test/utest.c and test/c_test.c 
+ test/utest.c and test/ctest.c 
  derchk/derchk_main.c
  genc/genc.c and genc/genc_main.c
  gsl/gsl_main.c and gsl/gsl_test.c
