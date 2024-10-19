@@ -265,20 +265,20 @@ if build_tests
 
     if precision == 'single'
       libcutest_precision = libcutest_single
-      args_precision = ['-DREAL_32']
+      args_precision = pp_flag + '-DREAL_32'
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
-      args_precision = []
+      args_precision = pp_flag
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      args_precision = ['-DREAL_128' + '-DCUTEST_16btye_reals_exist']
+      args_precision = pp_flag + '-DREAL_128' + '-DCUTEST_16btye_reals_exist'
     endif
 
     test(name,
          executable(name, file,
-                    fortran_args : pp_flag + args_precision,
+                    fortran_args : args_precision,
                     c_args : args_precision,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
