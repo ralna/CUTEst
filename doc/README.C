@@ -41,8 +41,22 @@ and Julia), so C users need to be careful. The main issues are
      as Jacobians and compressed bands. Since Hessians are symmetric, 
      there is no need to switch the indices in this case.
 
+<<<<<<< HEAD
   Potential users should examine the provided CUTEst interfaces to 
   C and C++ codes in the files
+=======
+ test/utest.c and test/ctest.c 
+ derchk/derchk_main.c
+ genc/genc.c and genc/genc_main.c
+ gsl/gsl_main.c and gsl/gsl_test.c
+ knitro/knitro_main.c
+ loqo/loqo_main.c
+ matlab/mcutest.c
+ nomad/nomad_main.c
+ octave/ocutest.c
+ osqp/osqp_main.c
+ osqp/osqp_test.c
+>>>>>>> 23606d646bdfe69242a9601e66839da6c7186adf
 
    test/utest.c and test/c_test.c 
    derchk/derchk_main.c
