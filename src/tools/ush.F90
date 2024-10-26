@@ -26,8 +26,8 @@
 !  -----------------------------------------------------------------------
 !  compute the Hessian matrix of a group partially separable function.
 !  The upper triangle of the Hessian is stored in 0-based coordinate form,
-!  i.e., the entry H_val(i) has 0-based row index H_row(i) and column 
-!  index H_col(i) for i = 1, ...., nnzh
+!  i.e., the entry H_val(i) has 0-based row index H_row(i) and 0-based 
+!  column index H_col(i) for i = 1, ...., nnzh
 !  ----------------------------------------------------------------------
 
       CALL CUTEST_ush_threadsafe_r( CUTEST_data_global,                        &
@@ -36,6 +36,7 @@
 
       H_row( : nnzh ) = H_row( : nnzh ) - 1
       H_col( : nnzh ) = H_col( : nnzh ) - 1
+
       RETURN
 
 !  end of subroutine CUTEST_ush_c_r

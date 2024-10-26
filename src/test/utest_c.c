@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #include "cutest_routines.h"
-#include "cutest.h"
+#include "cutest_c.h"
 
 // Function prototypes
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u);
@@ -53,11 +53,11 @@ int main() {
     rpc_ CPU[4], CALLS[4];
 
     // Open the problem data file
-    FORTRAN_open_r(&input, fname, &status);
+    FORTRAN_open_c_r(&input, fname, &status);
 
     // Determine problem dimension
     printf("Call CUTEST_udimen\n");
-    CUTEST_udimen_r(&status, &input, &n);
+    CUTEST_udimen_c_r(&status, &input, &n);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -96,7 +96,7 @@ int main() {
     
     // Set up SIF data
     printf("Call CUTEST_usetup\n");
-    CUTEST_usetup_r(&status, &input, &out, &buffer, &n, X, X_l, X_u);
+    CUTEST_usetup_c_r(&status, &input, &out, &buffer, &n, X, X_l, X_u);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -106,7 +106,7 @@ int main() {
     // Obtain variable and problem names
     printf("Call CUTEST_unames\n");
 
-    CUTEST_unames_r(&status, &n, p_name, X_names_fortran);
+    CUTEST_unames_c_r(&status, &n, p_name, X_names_fortran);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -131,7 +131,7 @@ int main() {
     // Obtain classification
     printf("Call CUTEST_classification\n");
     MALLOC(classification, FCSTRING_LEN + 1, char);
-    CUTEST_classification_r(&status, &input, classification);
+    CUTEST_classification_c_r(&status, &input, classification);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -140,7 +140,7 @@ int main() {
 
     // Obtain problem name
     printf("Call CUTEST_probname\n");
-    CUTEST_probname_r(&status, p_name);
+    CUTEST_probname_c_r(&status, p_name);
     p_name[FSTRING_LEN] = '\0';
     printf(" * p_name: %-s\n", p_name);
     if (status != 0) {
@@ -150,7 +150,7 @@ int main() {
     
     // Obtain variable names
     printf("Call CUTEST_varnames\n");
-    CUTEST_varnames_r(&status, &n, X_names_fortran);
+    CUTEST_varnames_c_r(&status, &n, X_names_fortran);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -171,7 +171,7 @@ int main() {
 
     // Obtain variable types
     printf("Call CUTEST_uvartype\n");
-    CUTEST_uvartype_r(&status, &n, X_type);
+    CUTEST_uvartype_c_r(&status, &n, X_type);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -180,7 +180,7 @@ int main() {
     
     // Compute the objective function value
     printf("Call CUTEST_ufn\n");
-    CUTEST_ufn_r(&status, &n, X, &f);
+    CUTEST_ufn_c_r(&status, &n, X, &f);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -189,7 +189,7 @@ int main() {
     
     // Compute the gradient value
     printf("Call CUTEST_ugr\n");
-    CUTEST_ugr_r(&status, &n, X, G);
+    CUTEST_ugr_c_r(&status, &n, X, G);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -199,7 +199,7 @@ int main() {
     // Compute the objective function and gradient values
     grad = 1;
     printf("Call CUTEST_uofg with grad = TRUE\n");
-    CUTEST_uofg_r(&status, &n, X, &f, G, &grad);
+    CUTEST_uofg_c_r(&status, &n, X, &f, G, &grad);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -209,7 +209,7 @@ int main() {
     
     grad = 0;
     printf("Call CUTEST_uofg with grad = FALSE\n");
-    CUTEST_uofg_r(&status, &n, X, &f, G, &grad);
+    CUTEST_uofg_c_r(&status, &n, X, &f, G, &grad);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -218,7 +218,7 @@ int main() {
     
     // Compute the dense Hessian value
     printf("Call CUTEST_udh\n");
-    CUTEST_udh_r(&status, &n, X, &l_h2_1, H2_val);
+    CUTEST_udh_c_r(&status, &n, X, &l_h2_1, H2_val);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -227,7 +227,7 @@ int main() {
 
     // Compute the gradient and dense Hessian values
     printf("Call CUTEST_ugrdh\n");
-    CUTEST_ugrdh_r(&status, &n, X, G, &l_h2_1, H2_val);
+    CUTEST_ugrdh_c_r(&status, &n, X, G, &l_h2_1, H2_val);
     if (status != 0) {
         return 2;
         printf("error status = %d\n", status);
@@ -238,7 +238,7 @@ int main() {
     
     // Compute the number of nonzeros in the sparse Hessian
     printf("Call CUTEST_udimsh\n");
-    CUTEST_udimsh_r(&status, &H_ne);
+    CUTEST_udimsh_c_r(&status, &H_ne);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -256,7 +256,7 @@ int main() {
     
     // Compute the sparsity pattern of the Hessian
     printf("Call CUTEST_ushp\n");
-    CUTEST_ushp_r(&status, &n, &H_ne, &l_h, H_row, H_col);
+    CUTEST_ushp_c_r(&status, &n, &H_ne, &l_h, H_row, H_col);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -265,7 +265,7 @@ int main() {
     
     // Compute the sparse Hessian value
     printf("Call CUTEST_ush\n");
-    CUTEST_ush_r(&status, &n, X, &H_ne, &l_h, H_val, H_row, H_col);
+    CUTEST_ush_c_r(&status, &n, X, &H_ne, &l_h, H_val, H_row, H_col);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -274,7 +274,7 @@ int main() {
     
     // Compute the gradient and sparse Hessian values
     printf("Call CUTEST_ugrsh\n");
-    CUTEST_ugrsh_r(&status, &n, X, G, &H_ne, &l_h, H_val, H_row, H_col);
+    CUTEST_ugrsh_c_r(&status, &n, X, G, &H_ne, &l_h, H_val, H_row, H_col);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -284,7 +284,7 @@ int main() {
     
     // Compute the number of nonzeros in the element Hessian
     printf("Call CUTEST_udimse\n");
-    CUTEST_udimse_r(&status, &HE_nel, &HE_val_ne, &HE_row_ne);
+    CUTEST_udimse_c_r(&status, &HE_nel, &HE_val_ne, &HE_row_ne);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -307,7 +307,7 @@ int main() {
 
     byrows = false;
     printf("Call CUTEST_ueh with byrows = .FALSE.\n");
-    CUTEST_ueh_r(&status, &n, X, &HE_nel, &lhe_ptr, HE_row_ptr, HE_val_ptr, 
+    CUTEST_ueh_c_r(&status, &n, X, &HE_nel, &lhe_ptr, HE_row_ptr, HE_val_ptr, 
                  &lhe_row, HE_row, &lhe_val, HE_val, &byrows);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -317,7 +317,7 @@ int main() {
 
     byrows = true;
     printf("Call CUTEST_ueh with byrows = .TRUE.\n");
-    CUTEST_ueh_r(&status, &n, X, &HE_nel, &lhe_ptr, HE_row_ptr, HE_val_ptr, 
+    CUTEST_ueh_c_r(&status, &n, X, &HE_nel, &lhe_ptr, HE_row_ptr, HE_val_ptr, 
                  &lhe_row, HE_row, &lhe_val, HE_val, &byrows);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -328,7 +328,7 @@ int main() {
     // Compute gradient and element Hessian values
     byrows = false;
     printf("Call CUTEST_ugreh with byrows = .FALSE.\n");
-    CUTEST_ugreh_r(&status, &n, X, G, &HE_nel, &lhe_ptr, HE_row_ptr, 
+    CUTEST_ugreh_c_r(&status, &n, X, G, &HE_nel, &lhe_ptr, HE_row_ptr, 
                    HE_val_ptr, &lhe_row, HE_row, &lhe_val, HE_val, &byrows);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -339,7 +339,7 @@ int main() {
 
     byrows = true;
     printf("Call CUTEST_ugreh with byrows = .TRUE.\n");
-    CUTEST_ugreh_r(&status, &n, X, G, &HE_nel, &lhe_ptr, HE_row_ptr, 
+    CUTEST_ugreh_c_r(&status, &n, X, G, &HE_nel, &lhe_ptr, HE_row_ptr, 
                    HE_val_ptr, &lhe_row, HE_row, &lhe_val, HE_val, &byrows);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -354,7 +354,7 @@ int main() {
     goth = false;
 
     printf("Call CUTEST_uhprod with goth = .FALSE.\n");
-    CUTEST_uhprod_r(&status, &n, &goth, X, vector, result);
+    CUTEST_uhprod_c_r(&status, &n, &goth, X, vector, result);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -363,7 +363,7 @@ int main() {
 
     goth = true;
     printf("Call CUTEST_uhprod with goth = .TRUE.\n");
-    CUTEST_uhprod_r(&status, &n, &goth, X, vector, result);
+    CUTEST_uhprod_c_r(&status, &n, &goth, X, vector, result);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -376,7 +376,7 @@ int main() {
     goth = false;
 
     printf("Call CUTEST_ushprod with goth = .FALSE.\n");
-    CUTEST_ushprod_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, 
+    CUTEST_ushprod_c_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, 
                      vector, &nnz_result, INDEX_nz_result, result);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -387,7 +387,7 @@ int main() {
 
     goth = true;
     printf("Call CUTEST_ushprod with goth = .TRUE.\n");
-    CUTEST_ushprod_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, 
+    CUTEST_ushprod_c_r(&status, &n, &goth, X, &nnz_vector, INDEX_nz_vector, 
                      vector, &nnz_result, INDEX_nz_result, result);
     if (status != 0) {
         printf("error status = %d\n", status);
@@ -400,7 +400,7 @@ int main() {
     lbandh = nsemib;
     H_band = malloc( ( lbandh + 1) * n * sizeof(rpc_));
     printf("Call CUTEST_ubandh\n");
-    CUTEST_ubandh_r(&status, &n, X, &nsemib, H_band, &lbandh, &maxsbw);
+    CUTEST_ubandh_c_r(&status, &n, X, &nsemib, H_band, &lbandh, &maxsbw);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -409,14 +409,14 @@ int main() {
 
     // Calls and time report
     printf("CALL CUTEST_ureport\n");
-    CUTEST_ureport_r(&status, CALLS, CPU);
+    CUTEST_ureport_c_r(&status, CALLS, CPU);
     printf("CALLS(1-4) = %.2f %.2f %.2f %.2f\n", CALLS[0], CALLS[1], 
                                                  CALLS[2], CALLS[3]);
     printf("CPU(1-4) = %.2f %.2f %.2f %.2f\n", CPU[0], CPU[1], CPU[2], CPU[3]);
 
     // Terminal exit
     printf("Call CUTEST_uterminate\n");
-    CUTEST_uterminate_r(&status);
+    CUTEST_uterminate_c_r(&status);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -424,7 +424,7 @@ int main() {
 
     // One more setup
     printf("Call CUTEST_usetup\n");
-    CUTEST_usetup_r(&status, &input, &out, &buffer, &n, X, X_l, X_u);
+    CUTEST_usetup_c_r(&status, &input, &out, &buffer, &n, X, X_l, X_u);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -432,7 +432,7 @@ int main() {
 
     // Terminal exit again
     printf("Call CUTEST_uterminate\n");
-    CUTEST_uterminate_r(&status);
+    CUTEST_uterminate_c_r(&status);
     if (status != 0) {
         printf("error status = %d\n", status);
         return 2;
@@ -462,7 +462,7 @@ int main() {
     free(HE_val);
     free(H_band);
     
-    FORTRAN_close_r(&input, &status);
+    FORTRAN_close_c_r(&input, &status);
     return 0;
 }
 
@@ -471,14 +471,14 @@ int main() {
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u) {
     printf(" *       i      X_l           X           X_u\n");
     for (ipc_ i = 0; i < n; i++) {
-        printf(" * %7d %12.4e %12.4e %12.4e\n", i + 1, X_l[i], X[i], X_u[i]);
+        printf(" * %7d %12.4e %12.4e %12.4e\n", i, X_l[i], X[i], X_u[i]);
     }
 }
 
 void write_x_type(ipc_ n, ipc_ *X_type) {
     printf(" *       i  X_type\n");
     for (ipc_ i = 0; i < n; i++) {
-        printf(" * %7d %7d\n", i + 1, X_type[i]);
+        printf(" * %7d %7d\n", i, X_type[i]);
     }
 }
 
@@ -489,7 +489,7 @@ void write_f(rpc_ f) {
 void write_g(ipc_ n, rpc_ *G) {
     printf(" *       i       G\n");
     for (ipc_ i = 0; i < n; i++) {
-        printf(" * %7d %12.4e\n", i + 1, G[i]);
+        printf(" * %7d %12.4e\n", i, G[i]);
     }
 }
 
@@ -507,7 +507,7 @@ void write_h_dense(ipc_ n, ipc_ l_h2_1, rpc_ *H2_val) {
         for (ipc_ i = 0; i < l_h2_1; i++) {
             printf(" * %7d      ", i + 1);
             for (ipc_ k = 0; k < 4 && j + k < n; k++) {
-                printf(" %12.4e", H2_val[i+n*(j+k)]);
+                printf(" %12.4e", H2_val[i*n+(j+k)]);
             }
             printf("\n");
         }
@@ -535,28 +535,28 @@ void write_h_element(ipc_ ne, ipc_ *HE_row_ptr, ipc_ *HE_val_ptr,
     for (ipc_ i = 0; i < ne; i++) {
         if (HE_row_ptr[i + 1] > HE_row_ptr[i]) {
             k = 0;
-            printf(" * element %d\n * indices", i + 1);
-            for (ipc_ j = HE_row_ptr[i]-1; j < HE_row_ptr[i + 1]-1; j++) {
+            printf(" * element %d\n * indices", i);
+            for (ipc_ j = HE_row_ptr[i]; j < HE_row_ptr[i + 1]; j++) {
                 printf(" %12d", HE_row[j]);
                 k++;
-                if (k==5 && j < HE_row_ptr[i + 1]-2){
+                if (k==5 && j < HE_row_ptr[i + 1]-1){
                   printf("\n *        ");
                   k = 0;
                 }
             }
             printf("\n * values ");
             k = 0;
-            for (ipc_ j = HE_val_ptr[i]-1; j < HE_val_ptr[i + 1]-1; j++) {
+            for (ipc_ j = HE_val_ptr[i]; j < HE_val_ptr[i + 1]; j++) {
                 printf(" %12.4e", HE_val[j]);
                 k++;
-                if (k==5  && j < HE_val_ptr[i + 1]-2){
+                if (k==5  && j < HE_val_ptr[i + 1]-1){
                   printf("\n *        ");
                   k = 0;
                 }
             }
             printf("\n");
         } else {
-            printf(" * element %d has no indices\n", i + 1);
+            printf(" * element %d has no indices\n", i);
         }
     }
 }
@@ -573,12 +573,12 @@ void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
     printf(" *       i    vector\n");
     for (ipc_ j = 0; j < nnz_vector; j++) {
         ipc_ i = INDEX_nz_vector[j];
-        printf(" * %7d %12.4e\n", i + 1, vector[i]);
+        printf(" * %7d %12.4e\n", i, vector[i]);
     }
     printf(" *       i    result\n");
     for (ipc_ j = 0; j < nnz_result; j++) {
         ipc_ i = INDEX_nz_result[j];
-        printf(" * %7d %12.4e\n", i + 1, result[i]);
+        printf(" * %7d %12.4e\n", i, result[i]);
     }
 }
 
@@ -596,7 +596,7 @@ void write_h_band(ipc_ n, ipc_ nsemib, rpc_ *H_band) {
         for (ipc_ j = 0; j < n; j++) {
             printf(" * %7d      ", j + 1);
             for (ipc_ k = 0; k < 4 && i + k < nsemib + 1; k++) {
-                printf(" %12.4e", H_band[i+k+(nsemib+1)*j]);
+                printf(" %12.4e", H_band[j+n*(i+k)]);
             }
             printf("\n");
         }

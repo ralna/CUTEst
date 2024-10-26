@@ -345,7 +345,7 @@
         bad_alloc = 'data%ISTEP' ; GO TO 910
       END IF
 
-      ALLOCATE( data%ITYPEG( data%ng), STAT = alloc_status )
+      ALLOCATE( data%ITYPEG( data%ng ), STAT = alloc_status )
       IF ( alloc_status /= 0 ) THEN
         bad_alloc = 'data%ITYPEG' ; GO TO 910
       END IF

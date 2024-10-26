@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 15:50 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-24 AT 07:10 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -525,10 +525,10 @@
       WRITE( out, "( ' * H(band)' )" )
 !     WRITE( out, "( ' * H(band) has max seemibandwidth ', I0 )" ) maxsbw
       WRITE( out, "( ' *       i   band', I7, 4I12 )" ) ( j, j = 0, nsemib )
-      DO i = 1, n
+      DO j = 1, n
         WRITE( out, "( ' * ', I7, 6X, 5ES12.4, :, /,                           &
        &               ( ' * ', 7X, 6X, 5ES12.4, : ) )" )                      &
-          i, ( H_band( j, i ), j = 0, nsemib )
+          j, ( H_band( i, j ), i = 0, nsemib )
       END DO
       END SUBROUTINE WRITE_H_BAND
 

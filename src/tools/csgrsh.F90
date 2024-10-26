@@ -1,7 +1,76 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-19 AT 16:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-  C U T E S T    C S G R S H _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 19th October 2024
+
+      SUBROUTINE CUTEST_csgrsh_c_r( status, n, m, X, Y, grlagf,                &
+                                    nnzj, lj, J_val, J_var, J_fun,             &
+                                    nnzh, lh, H_val, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, nnzj, status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grlagf
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh ) :: H_val
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lj ) :: J_val
+
+!  -------------------------------------------------------------------------
+!  compute the gradients of the objective function and general
+!  constraints of a function initially written in Standard
+!  Input Format (SIF). The gradients are given in a sparse format.
+!  Also compute the Hessian matrix of the Lagrangian function of
+!  the problem
+
+!  J_val is an array which gives the values of the nonzeros of the
+!	 gradients of the objective, or Lagrangian, and general
+!	 constraint functions evaluated  at X and Y. The i-th entry of
+!	 J_val gives the value of the derivative with respect to the 0-based
+!	 variable J_var(i) of the 0-based function J_fun(i). J_fun(i) < 0
+!        indicates the objective function whenever grlagf is .FALSE.
+!        or the Lagrangian function when grlagf is .TRUE., while
+!        J_fun(i) = j >= 0 indicates the j-th general constraint
+!        function
+
+!  H_val is an array which gives the values of entries of the
+!        upper triangular part of the Hessian matrix of the
+!        Lagrangian function, stored in coordinate form, i.e.,
+!        the entry H_val(i) is the derivative with respect to variables
+!        with 0-based indices H_row(i) and H_col(i) for i = 1, ...., nnzh
+!  ---------------------------------------------------------------------------
+
+      LOGICAL :: grlagf_fortran
+
+      grlagf_fortran = grlagf
+      CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf_fortran,                &
+                            nnzj, lj, J_val, J_var, J_fun,                     &
+                            nnzh, lh, H_val, H_row, H_col )
+
+      J_var( : nnzj ) = J_var( : nnzj ) - 1
+      J_fun( : nnzj ) = J_fun( : nnzj ) - 1
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_csgrsh_c_r
+
+      END SUBROUTINE CUTEST_csgrsh_c_r
 
 !-*-*-*-*-  C U T E S T   C I N T _ C S G R S H    S U B R O U T I N E  -*-*-*-
 
@@ -12,8 +81,8 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_csgrsh_r( status, n, m, X, Y, grlagf,             &
-                                     nnzj, lj, J_val, J_var, J_fun,            &
-                                     nnzh, lh, H_val, H_row, H_col )
+                                       nnzj, lj, J_val, J_var, J_fun,          &
+                                       nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -58,8 +127,8 @@
 
       grlagf_fortran = grlagf
       CALL CUTEST_csgrsh_r( status, n, m, X, Y, grlagf_fortran,                &
-                                nnzj, lj, J_val, J_var, J_fun,                 &
-                                nnzh, lh, H_val, H_row, H_col )
+                            nnzj, lj, J_val, J_var, J_fun,                     &
+                            nnzh, lh, H_val, H_row, H_col )
 
       RETURN
 
@@ -76,8 +145,8 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_csgrsh_r( status, n, m, X, Y, grlagf,                  &
-                                nnzj, lj, J_val, J_var, J_fun,                 &
-                                nnzh, lh, H_val, H_row, H_col )
+                                  nnzj, lj, J_val, J_var, J_fun,               &
+                                  nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -118,10 +187,10 @@
 !  ----------------------------------------------------------------
 
       CALL CUTEST_csgrsh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, m, X, Y, grlagf,               &
-                                     nnzj, lj, J_val, J_var, J_fun,            &
-                                     nnzh, lh, H_val, H_row, H_col )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, m, X, Y, grlagf,             &
+                                       nnzj, lj, J_val, J_var, J_fun,          &
+                                       nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_csgrsh_r
@@ -137,8 +206,9 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_csgrsh_threaded_r( status, n, m, X, Y, grlagf,         &
-                                         nnzj, lj, J_val, J_var, J_fun,        &
-                                         nnzh, lh, H_val, H_row, H_col, thread )
+                                           nnzj, lj, J_val, J_var, J_fun,      &
+                                           nnzh, lh, H_val, H_row, H_col,      &
+                                           thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -190,9 +260,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_csgrsh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, m, X, Y, grlagf,               &
-                                     nnzj, lj, J_val, J_var, J_fun,            &
+                                       CUTEST_work_global( thread ),           &
+                                       status, n, m, X, Y, grlagf,             &
+                                       nnzj, lj, J_val, J_var, J_fun,          &
                                      nnzh, lh, H_val, H_row, H_col )
       RETURN
 
@@ -210,9 +280,9 @@
 !   fortran 2003 version released in CUTEst, 24th November 2012
 
       SUBROUTINE CUTEST_csgrsh_threadsafe_r( data, work, status, n, m, X, Y,   &
-                                           grlagf, nnzj, lj, J_val, J_var,     &
-                                           J_fun, nnzh, lh, H_val, H_row,      &
-                                           H_col )
+                                             grlagf, nnzj, lj, J_val, J_var,   &
+                                             J_fun, nnzh, lh, H_val, H_row,    &
+                                             H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -276,21 +346,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function gradient and Hessian values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -323,9 +393,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 

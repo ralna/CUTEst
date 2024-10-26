@@ -1,7 +1,99 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 14:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-*-  C U T E S T    C G R _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 20th October 2024
+
+      SUBROUTINE CUTEST_cgr_c_r( status, n, m, X, Y, grlagf, G, jtrans,        &
+                                 lj1, lj2, J_val )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj1, lj2
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grlagf, jtrans
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lj1 * lj2 ) :: J_val
+
+!  ----------------------------------------------------------------------
+!  compute both the gradients of the objective, or Lagrangian, and
+!  general constraint functions of a problem initially written in
+!  Standard Input Format (SIF).
+
+!  G	 is an array which gives the value of the gradient of the
+!	 objective function evaluated at X (grlagf = .FALSE.) or of
+!        the Lagrangian function evaluated at X and Y (grlagf = .TRUE.)
+
+!  lj1,  If jtrans may be both .TRUE. and .FALSE on different calls,
+!  lj2   lj1 and lj2 should be at least max(m,n). If jtrans can only be
+!        .TRUE., lj1 should be at least n and lj2 at least m. If jtrans
+!        can only be .FALSE., lj1 should be at least m and lj2 at least n.
+
+!  J_val is a one-dimensional array of dimension lj1 * lj2
+!	 which gives the value of the Jacobian matrix of the
+!	 constraint functions, or its transpose, evaluated at X.
+!	 If jtrans is .TRUE., the i,j-th component of the array
+!        will contain the i-th 0-based derivative of the j-th 0-based 
+!        constraint function. Otherwise, if jtrans is .FALSE., the i,j-th
+!        component of the array will contain the 0-based j-th derivative
+!        of the i-th 0-based constraint function.
+!  -----------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: i, j, l
+      LOGICAL :: grlagf_fortran, jtrans_fortran
+
+!  create 2D Jacobiab storage if needed
+
+      IF ( .NOT. CUTEST_work_global( 1 )%jacobian_2d_setup_complete ) THEN
+        ALLOCATE( CUTEST_work_global( 1 )%J_2d( lj1, lj2 ), STAT = status )
+        IF ( status /= 0 ) RETURN
+        CUTEST_work_global( 1 )%jacobian_2d_setup_complete = .TRUE.
+      END IF
+
+      grlagf_fortran = grlagf
+      jtrans_fortran = jtrans
+      CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf_fortran, G,                &
+                         jtrans_fortran, lj1, lj2,                             &
+                         CUTEST_work_global( 1 )%J_2d )
+
+!  transfer the 2D Jacobian array stored by columns to a 1D array stored by rows
+
+      l = 0
+      IF ( jtrans_fortran ) THEN
+        DO i = 1, n
+          DO j = 1, m
+            l = l + 1
+            J_val( l ) = CUTEST_work_global( 1 )%J_2d( i, j )
+          END DO
+        END DO
+      ELSE
+        DO i = 1, m
+          DO j = 1, n
+            l = l + 1
+            J_val( l ) = CUTEST_work_global( 1 )%J_2d( i, j )
+          END DO
+        END DO
+      END IF
+
+      RETURN
+
+!  end of subroutine CUTEST_cgr_c_r
+
+      END SUBROUTINE CUTEST_cgr_c_r
 
 !-*-*-*-*-*-  C U T E S T   C I N T _  C G R    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -12,7 +104,7 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,     &
-                                  lj1, lj2, J_val )
+                                    lj1, lj2, J_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -36,7 +128,7 @@
 !	 objective function evaluated at X (grlagf = .FALSE.) or of
 !        the Lagrangian function evaluated at X and Y (grlagf = .TRUE.)
 
-!  J_val	 is a two-dimensional array of dimension ( lj1, lj2 )
+!  J_val is a two-dimensional array of dimension (lj1, lj2)
 !	 which gives the value of the Jacobian matrix of the
 !	 constraint functions, or its transpose, evaluated at X.
 !	 If jtrans is .TRUE., the i,j-th component of the array
@@ -51,7 +143,7 @@
       grlagf_fortran = grlagf
       jtrans_fortran = jtrans
       CALL CUTEST_cgr_r( status, n, m, X, Y, grlagf_fortran, G,                &
-                       jtrans_fortran, lj1, lj2, J_val )
+                         jtrans_fortran, lj1, lj2, J_val )
 
       RETURN
 
@@ -68,7 +160,7 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_cgr_r( status, n, m, X, Y, grlagf, G, jtrans,          &
-                             lj1, lj2, J_val )
+                               lj1, lj2, J_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -91,7 +183,7 @@
 !	 objective function evaluated at X (grlagf = .FALSE.) or of
 !        the Lagrangian function evaluated at X and Y (grlagf = .TRUE.)
 
-!  J_val	 is a two-dimensional array of dimension ( lj1, lj2 )
+!  J_val is a two-dimensional array of dimension ( lj1, lj2 )
 !	 which gives the value of the Jacobian matrix of the
 !	 constraint functions, or its transpose, evaluated at X.
 !	 If jtrans is .TRUE., the i,j-th component of the array
@@ -102,9 +194,9 @@
 !  ----------------------------------------------------------------
 
       CALL CUTEST_cgr_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( 1 ),                     &
-                                  status, n, m, X, Y, grlagf, G, jtrans,       &
-                                  lj1, lj2, J_val )
+                                    CUTEST_work_global( 1 ),                   &
+                                    status, n, m, X, Y, grlagf, G, jtrans,     &
+                                    lj1, lj2, J_val )
       RETURN
 
 !  end of subroutine CUTEST_cgr_r
@@ -120,7 +212,7 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_cgr_threaded_r( status, n, m, X, Y, grlagf, G, jtrans, &
-                                      lj1, lj2, J_val, thread )
+                                        lj1, lj2, J_val, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -143,7 +235,7 @@
 !	 objective function evaluated at X (grlagf = .FALSE.) or of
 !        the Lagrangian function evaluated at X and Y (grlagf = .TRUE.)
 
-!  J_val	 is a two-dimensional array of dimension ( lj1, lj2 )
+!  J_val is a two-dimensional array of dimension ( lj1, lj2 )
 !	 which gives the value of the Jacobian matrix of the
 !	 constraint functions, or its transpose, evaluated at X.
 !	 If jtrans is .TRUE., the i,j-th component of the array
@@ -165,9 +257,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cgr_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( thread ),                &
-                                  status, n, m, X, Y, grlagf, G, jtrans,       &
-                                  lj1, lj2, J_val )
+                                    CUTEST_work_global( thread ),              &
+                                    status, n, m, X, Y, grlagf, G, jtrans,     &
+                                    lj1, lj2, J_val )
       RETURN
 
 !  end of subroutine CUTEST_cgr_threaded_r
@@ -184,7 +276,7 @@
 !   fortran 2003 version released in CUTEst, 20th November 2012
 
       SUBROUTINE CUTEST_cgr_threadsafe_r( data, work, status, n, m, X, Y,      &
-                                       grlagf, G, jtrans, lj1, lj2, J_val )
+                                          grlagf, G, jtrans, lj1, lj2, J_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -260,21 +352,21 @@
 !  evaluate the element function values.
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 ! evaluate the element function derivatives
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  2, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft.
@@ -304,9 +396,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                     .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 
@@ -368,8 +460,8 @@
 
                 nin = data%INTVAR( iel + 1 ) - k
                 CALL RANGE_r( iel, .TRUE., work%FUVALS( k ),                   &
-                            work%W_el, nvarel, nin, data%ITYPEE( iel ),        &
-                            nin, nvarel )
+                              work%W_el, nvarel, nin, data%ITYPEE( iel ),      &
+                              nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
                   j = data%IELVAR( l )

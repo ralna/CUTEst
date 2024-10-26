@@ -26,8 +26,8 @@
 
 !  ---------------------------------------------------------------
 !  compute the Hessian matrix of a specified problem function
-!  (iprob = 0 is the objective function, while iprob > 0 is the
-!  iprob-th constraint) of a problem initially written in
+!  (iprob < 0 is the objective function, while iprob >= 0 is the
+!  0-based iprob-th constraint) of a problem initially written in
 !  Standard Input Format (SIF).
 
 !  The upper triangle of the Hessian is stored in coordinate form,
@@ -35,9 +35,14 @@
 !  H_col(i) for i = 1, ...., nnzh
 !  ---------------------------------------------------------------
 
+!  local variables
+
+      INTEGER :: iprob_fortran
+
+      iprob_fortran = iprob + 1
       CALL CUTEST_cish_threadsafe_r( CUTEST_data_global,                       &
                                      CUTEST_work_global( 1 ),                  &
-                                     status, n, X, iprob,                      &
+                                     status, n, X, iprob_fortran,              &
                                      nnzh, lh, H_val, H_row, H_col )
 
       H_row( : nnzh ) = H_row( : nnzh ) - 1

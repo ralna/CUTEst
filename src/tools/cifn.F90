@@ -1,7 +1,46 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-26 AT 15:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 11:50 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C I F N _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cifn_c_r( status, n, iprob, X, fn )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      REAL ( KIND = rp_ ), INTENT( OUT ) :: fn
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+
+!  -----------------------------------------------------------------------
+!  compute the value of a specified problem function (iprob < 0 is the
+!  objective function, while iprob >= 0 is the 0-based iprob-th constraint)
+!  of a problem initially written in Standard Input Format (SIF).
+!  ------------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: iprob_fortran
+
+      iprob_fortran = iprob + 1
+      CALL CUTEST_cifn_threadsafe_r( CUTEST_data_global,                       &
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, iprob_fortran, X, fn )
+      RETURN
+
+!  end of subroutine CUTEST_cifn_c_r
+
+      END SUBROUTINE CUTEST_cifn_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    C I F N    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -29,8 +68,8 @@
 !  -------------------------------------------------------------------
 
       CALL CUTEST_cifn_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, iprob, X, fn )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, iprob, X, fn )
       RETURN
 
 !  end of subroutine CUTEST_cifn_r
@@ -74,8 +113,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cifn_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, iprob, X, fn )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, iprob, X, fn )
       RETURN
 
 !  end of subroutine CUTEST_cifn_threaded_r
@@ -185,11 +224,11 @@
 !  evaluate the element functions
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  constraint function required
@@ -227,9 +266,9 @@
         ELSE
           ICALCG( 1 ) = ig
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
-                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
+                        data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
+                        .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -298,9 +337,9 @@
 
         ELSE
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 

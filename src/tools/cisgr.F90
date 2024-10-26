@@ -1,7 +1,58 @@
-! THIS VERSION: CUTEST 2.3 - 2024-05-01 AT 10:15 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-05-01 AT 15:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C I S G R _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cisgr_c_r( status, n, iprob, X, nnzgr, lgr, GR_val,    &
+                                   GR_var )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob, lgr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzgr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lgr ) :: GR_var
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lgr ) :: GR_val
+
+!  ------------------------------------------------------------------------
+!  compute the gradient of a specified problem function (iprob < 0 is the
+!  objective function, while iprob => 0 is the 0-based iprob-th constraint)
+!  of a problem initially written in Standard Input Format (SIF).
+!  The gradient is stored as a sparse vector in array GR_val.
+!  The j-th entry of GR_val gives the value of the partial derivative
+!  of constraint iprob with respect to 0-based variable GR_var(j).
+!  The number of nonzeros in vector GR_val is given by nnzgr.
+!  (Subroutine CIGR performs the same calculations for a dense
+!   gradient vector.)
+!  -----------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: iprob_fortran
+
+      iprob_fortran = iprob + 1
+      CALL CUTEST_cisgr_threadsafe_r( CUTEST_data_global,                      &
+                                      CUTEST_work_global( 1 ),                 &
+                                      status, n, iprob_fortran, X,             &
+                                      nnzgr, lgr, GR_val, GR_var )
+
+      GR_var( : nnzgr ) = GR_var( : nnzgr ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cisgr_c_r
+
+      END SUBROUTINE CUTEST_cisgr_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    C I S G R    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -37,9 +88,9 @@
 !  -------------------------------------------------------------------
 
       CALL CUTEST_cisgr_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( 1 ),                   &
-                                    status, n, iprob, X, nnzgr, lgr,           &
-                                    GR_val, GR_var )
+                                      CUTEST_work_global( 1 ),                 &
+                                      status, n, iprob, X, nnzgr, lgr,         &
+                                      GR_val, GR_var )
       RETURN
 
 !  end of subroutine CUTEST_cisgr_r
@@ -55,7 +106,7 @@
 !   fortran 2003 version released in CUTEst, 17th October 2016
 
       SUBROUTINE CUTEST_cisgr_threaded_r( status, n, iprob, X, nnzgr, lgr,     &
-                                        GR_val, GR_var, thread )
+                                          GR_val, GR_var, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -90,9 +141,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cisgr_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( thread ),              &
-                                    status, n, iprob, X, nnzgr, lgr,           &
-                                    GR_val, GR_var )
+                                      CUTEST_work_global( thread ),            &
+                                      status, n, iprob, X, nnzgr, lgr,         &
+                                      GR_val, GR_var )
       RETURN
 
 !  end of subroutine CUTEST_cisgr_threaded_r
@@ -108,7 +159,7 @@
 !   fortran 2003 version released in CUTEst, 17th October 2016
 
       SUBROUTINE CUTEST_cisgr_threadsafe_r( data, work, status, n, iprob, X,   &
-                                          nnzgr, lgr, GR_val, GR_var )
+                                            nnzgr, lgr, GR_val, GR_var )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -211,21 +262,21 @@
 !  evaluate the element functions
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  2, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  Use ISWKSP to flag which variables have nonzero partial derivatives
@@ -315,7 +366,7 @@
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
               CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
-                          nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
                 j = data%IELVAR( l )

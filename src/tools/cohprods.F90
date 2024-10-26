@@ -1,7 +1,58 @@
-! THIS VERSION: CUTEST 2.2 - 2024-01-17 AT 15:10 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 11:20 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-  C U T E S T    C O H P R O D S _ C   S U B R O U T I N E  -*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cohprods_c_r( status, n, goth, X, VECTOR,              &
+                                      nnzohp, lohp, RESULT, IND )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lohp
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzohp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: goth
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ), DIMENSION( lohp ) :: IND
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lohp ) :: RESULT
+
+!  ---------------------------------------------------------------------------
+!  compute the matrix-vector product H(x) between the Hessian matrices H(x)
+!  of the objective function for the problem and a given vector v stored in
+!  VECTOR. The nonzero entries of the resulting products H(x) v and their
+!  0-based indices occur in RESULT(k),IND(k), k = 1,...,nnzohp. If goth is 
+!  .TRUE., the second derivatives are assumed to have already been computed,
+!  and that nnzohp and IND have been set by a previous call at X.
+!  If the user is unsure, set goth = .FALSE. the first time a product is
+!  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
+!  ---------------------------------------------------------------------------
+
+      LOGICAL :: goth_fortran
+
+      goth_fortran = goth
+      IF ( goth_fortran ) IND( : nnzohp ) = IND( : nnzohp ) + 1
+
+      CALL CUTEST_cohprods_r( status, n, goth_fortran, X, VECTOR,              &
+                               nnzohp, lohp, RESULT, IND )
+
+      IND( : nnzohp ) = IND( : nnzohp ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cohprods_c_r
+
+      END SUBROUTINE CUTEST_cohprods_c_r
 
 !-*-*-  C U T E S T   C I N T _ C O H P R O D S    S U B R O U T I N E  -*-*-
 
@@ -42,7 +93,7 @@
 
       goth_fortran = goth
       CALL CUTEST_cohprods_r( status, n, goth_fortran, X, VECTOR,              &
-                             nnzohp, lohp, RESULT, IND )
+                               nnzohp, lohp, RESULT, IND )
       RETURN
 
 !  end of subroutine CUTEST_Cint_cohprods_r
@@ -207,21 +258,21 @@
 !  evaluate the element function values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    1, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      1, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function gradient and Hessian values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    3, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      3, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -254,9 +305,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 

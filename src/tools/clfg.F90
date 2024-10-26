@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 10:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -81,8 +81,8 @@
 !  ------------------------------------------------------------------------
 
       CALL CUTEST_clfg_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, m, X, Y, f, G, grad )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, m, X, Y, f, G, grad )
       RETURN
 
 !  end of subroutine CUTEST_clfg_r
@@ -135,8 +135,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_clfg_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, m, X, Y, f, G, grad )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, m, X, Y, f, G, grad )
       RETURN
 
 !  end of subroutine CUTEST_clfg_threaded_r
@@ -153,7 +153,7 @@
 !   fortran 2003 version released in CUTEst, 20th November 2012
 
       SUBROUTINE CUTEST_clfg_threadsafe_r( data, work, status, n, m, X, Y,     &
-                                         f, G, grad )
+                                           f, G, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -201,22 +201,22 @@
 !  evaluate the element function values.
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
-      IF ( ifstat /= 0 ) GO TO 930
-
-! evaluate the element function derivatives
-
-      IF ( grad )                                                              &
-        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
                     data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
                     data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
                     data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
                     data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    2, ifstat )
+                    1, ifstat )
+      IF ( ifstat /= 0 ) GO TO 930
+
+! evaluate the element function gradients
+
+      IF ( grad )                                                              &
+        CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft.
@@ -246,9 +246,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                     .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 
@@ -339,8 +339,8 @@
 
                   nin = data%INTVAR( iel + 1 ) - k
                   CALL RANGE_r( iel, .TRUE., work%FUVALS( k ),                 &
-                              work%W_el, nvarel, nin, data%ITYPEE( iel ),      &
-                              nin, nvarel )
+                                work%W_el, nvarel, nin, data%ITYPEE( iel ),    &
+                                nin, nvarel )
 !DIR$ IVDEP
                   DO i = 1, nvarel
                     j = data%IELVAR( l )

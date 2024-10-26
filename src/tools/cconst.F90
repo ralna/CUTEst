@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 10:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -27,8 +27,8 @@
 !  ---------------------------------------------------------------------
 
       CALL CUTEST_cconst_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, m, CONST )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, m, CONST )
       RETURN
 
 !  end of subroutine CUTEST_cconst_r
@@ -70,8 +70,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cconst_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, m, CONST )
+                                       CUTEST_work_global( thread ),           &
+                                       status, m, CONST )
       RETURN
 
 !  end of subroutine CUTEST_cconst_threaded_r

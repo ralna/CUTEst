@@ -1,7 +1,51 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 15:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-  C U T E S T    C I S G R P _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cisgrp_c_r( status, n, iprob, nnzgr, lgr, GR_var )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob, lgr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzgr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lgr ) :: GR_var
+
+!  -----------------------------------------------------------------------
+!  compute the sparsity pattern of the gradient of a specified problem 
+!  function (iprob < 0 is the objective function, while iprob >= 0 is the
+!  0-based iprob-th constraint) initially written in Standard Input Format
+!  (SIF). The nonzero components of the iprob-th gradient occur in 
+!  positions GR_var(j), j = 1,...,nnzgr.
+!  -----------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: iprob_fortran
+
+      iprob_fortran = iprob + 1
+      CALL CUTEST_cisgrp_threadsafe_r( CUTEST_data_global,                     &
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, iprob_fortran,               &
+                                       nnzgr, lgr, GR_var )
+
+      GR_var( : nnzgr ) = GR_var( : nnzgr ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cisgrp_c_r
+
+      END SUBROUTINE CUTEST_cisgrp_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    C I S G R P    S U B R O U T I N E  -*-*-*-*-*-
 
@@ -30,8 +74,8 @@
 !  -------------------------------------------------------------------
 
       CALL CUTEST_cisgrp_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, iprob, nnzgr, lgr, GR_var )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, iprob, nnzgr, lgr, GR_var )
       RETURN
 
 !  end of subroutine CUTEST_cisgrp_r
@@ -47,7 +91,7 @@
 !   modern fortran version released in CUTEst, 17th October 2023
 
       SUBROUTINE CUTEST_cisgrp_threadsafe_r( data, work, status, n, iprob,     &
-                                           nnzgr, lgr, GR_var )
+                                             nnzgr, lgr, GR_var )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

@@ -1,7 +1,104 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C C F G _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 23rd October 2024
+
+      SUBROUTINE CUTEST_ccfg_c_r( status, n, m, X, C, jtrans,                  &
+                                  lcjac1, lcjac2, CJAC, grad )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lcjac1, lcjac2
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( m ) :: C
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lcjac1 * lcjac2 ) :: CJAC
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: jtrans, grad
+
+! ------------------------------------------------------------------------
+!  compute the values of the constraint functions and their gradients
+!  for constraints initially written in Standard Input Format (SIF).
+!  The Jacobian must be stored in a dense format.
+!  (Subroutine CCFSG performs the same calculations for a sparse Jacobian)
+
+!  lcjac1, If jtrans may be both .TRUE. and .FALSE on different calls,
+!  lcjac2  lcjac1 and lcjac2 should be at least max(m,n). If jtrans 
+!          can only be .TRUE., lcjac1 should be at least n and lcjac2 at 
+!          least m. If jtrans can only be .FALSE., lcjac1 should be at 
+!          least m and lcjac2 at least n.
+
+!  CJAC  is a one-dimensional array of dimension lcjac1 * lcjac2
+!        which gives the value of the Jacobian matrix of the
+!        constraint functions, or its transpose, evaluated at X.
+!        If JTRANS is .TRUE., the i,j-th component of the array
+!        will contain the 0-based i-th derivative of the o-based j-th 
+!        constraint function. Otherwise, if JTRANS is .FALSE., the i,j-th
+!        component of the array will contain the 0-based j-th derivative
+!        of the 0-based i-th constraint function.
+! ------------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: i, j, l
+      LOGICAL :: jtrans_fortran, grad_fortran
+
+      grad_fortran = grad
+
+!  create 2D Jacobiab storage if needed
+
+      IF ( grad_fortran ) THEN
+        IF ( .NOT. CUTEST_work_global( 1 )%jacobian_2d_setup_complete ) THEN
+          ALLOCATE( CUTEST_work_global( 1 )%J_2d( lcjac1, lcjac2 ),            &
+                    STAT = status )
+          IF ( status /= 0 ) RETURN
+          CUTEST_work_global( 1 )%jacobian_2d_setup_complete = .TRUE.
+        END IF
+      END IF
+
+!  set the values of the constraint and (if required) 2D Jacobian
+
+      jtrans_fortran = jtrans
+      CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans_fortran, lcjac1, lcjac2,  &
+                          CUTEST_work_global( 1 )%J_2d, grad_fortran )
+
+!  transfer the 2D Jacobian array stored by columns to a 1D array stored by rows
+
+      IF ( grad_fortran ) THEN
+        l = 0
+        IF ( jtrans_fortran ) THEN
+          DO i = 1, n
+            DO j = 1, m
+              l = l + 1
+              CJAC( l ) = CUTEST_work_global( 1 )%J_2d( i, j )
+            END DO
+          END DO
+        ELSE
+          DO i = 1, m
+            DO j = 1, n
+              l = l + 1
+              CJAC( l ) = CUTEST_work_global( 1 )%J_2d( i, j )
+            END DO
+          END DO
+        END IF
+      END IF
+
+
+      RETURN
+
+!  end of subroutine CUTEST_ccfg_c_r
+
+      END SUBROUTINE CUTEST_ccfg_c_r
 
 !-*-*-*-*-*-  C U T E S T   C I N T _  C C F G    S U B R O U T I N E  -*-*-*-*-
 
@@ -12,7 +109,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_Cint_ccfg_r( status, n, m, X, C, jtrans,               &
-                                   lcjac1, lcjac2, CJAC, grad )
+                                     lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -30,7 +127,7 @@
 !  compute the values of the constraint functions and their gradients
 !  for constraints initially written in Standard Input Format (SIF).
 !  The Jacobian must be stored in a dense format.
-!  (Subroutine CSCFG performs the same calculations for a sparse Jacobian)
+!  (Subroutine CCFSG performs the same calculations for a sparse Jacobian)
 
 !  CJAC  is a two-dimensional array of dimension ( lcjac1, lcjac2 )
 !        which gives the value of the Jacobian matrix of the
@@ -47,7 +144,7 @@
       jtrans_fortran = jtrans
       grad_fortran = grad
       CALL CUTEST_ccfg_r( status, n, m, X, C, jtrans_fortran,                  &
-                       lcjac1, lcjac2, CJAC, grad_fortran )
+                          lcjac1, lcjac2, CJAC, grad_fortran )
 
       RETURN
 
@@ -64,7 +161,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_ccfg_r( status, n, m, X, C, jtrans,                    &
-                              lcjac1, lcjac2, CJAC, grad )
+                                lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -81,7 +178,7 @@
 !  compute the values of the constraint functions and their gradients
 !  for constraints initially written in Standard Input Format (SIF).
 !  The Jacobian must be stored in a dense format.
-!  (Subroutine CSCFG performs the same calculations for a sparse Jacobian)
+!  (Subroutine CCFSG performs the same calculations for a sparse Jacobian)
 
 !  CJAC  is a two-dimensional array of dimension ( lcjac1, lcjac2 )
 !        which gives the value of the Jacobian matrix of the
@@ -94,9 +191,9 @@
 ! ------------------------------------------------------------------------
 
       CALL CUTEST_ccfg_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, m, X, C,                         &
-                                   jtrans, lcjac1, lcjac2, CJAC, grad )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, m, X, C,                       &
+                                     jtrans, lcjac1, lcjac2, CJAC, grad )
       RETURN
 
 !  end of subroutine CUTEST_ccfg_r
@@ -112,7 +209,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_ccfg_threaded_r( status, n, m, X, C, jtrans,           &
-                                       lcjac1, lcjac2, CJAC, grad, thread )
+                                         lcjac1, lcjac2, CJAC, grad, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -129,7 +226,7 @@
 !  compute the values of the constraint functions and their gradients
 !  for constraints initially written in Standard Input Format (SIF).
 !  The Jacobian must be stored in a dense format.
-!  (Subroutine CSCFG performs the same calculations for a sparse Jacobian)
+!  (Subroutine CCFSG performs the same calculations for a sparse Jacobian)
 
 !  CJAC  is a two-dimensional array of dimension ( lcjac1, lcjac2 )
 !        which gives the value of the Jacobian matrix of the
@@ -153,9 +250,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ccfg_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, m, X, C,                         &
-                                   jtrans, lcjac1, lcjac2, CJAC, grad )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, m, X, C,                       &
+                                     jtrans, lcjac1, lcjac2, CJAC, grad )
       RETURN
 
 !  end of subroutine CUTEST_ccfg_threaded_r
@@ -172,7 +269,7 @@
 !   fortran 2003 version released in CUTEst, 21st November 2012
 
       SUBROUTINE CUTEST_ccfg_threadsafe_r( data, work, status, n, m, X, C,     &
-                                         jtrans, lcjac1, lcjac2, CJAC, grad )
+                                           jtrans, lcjac1, lcjac2, CJAC, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -191,7 +288,7 @@
 !  compute the values of the constraint functions and their gradients
 !  for constraints initially written in Standard Input Format (SIF).
 !  The Jacobian must be stored in a dense format.
-!  (Subroutine CSCFG performs the same calculations for a sparse Jacobian)
+!  (Subroutine CCFSG performs the same calculations for a sparse Jacobian)
 
 !  CJAC  is a two-dimensional array of dimension ( lcjac1, lcjac2 )
 !        which gives the value of the Jacobian matrix of the
@@ -260,22 +357,22 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives
 
       IF ( grad )                                                              &
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,          &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    2, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -331,9 +428,9 @@
           END IF
         END DO
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .FALSE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .FALSE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 
@@ -363,9 +460,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,       &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -413,7 +510,7 @@
               IF ( data%INTREP( iel ) ) THEN
                 nin = data%INTVAR( iel + 1 ) - k
                 CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
-                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                              nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
                   j = data%IELVAR( l )

@@ -1,7 +1,94 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-19 AT 15:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-  C U T E S T    C S G R E H _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 19th October 2024
+
+      SUBROUTINE CUTEST_csgreh_c_r( status, n, m, X, Y, grlagf,                &
+                                    nnzj, lj, J_val, J_var, J_fun, ne,         &
+                                    lhe_ptr, HE_row_ptr, HE_val_ptr,           &
+                                    lhe_row, HE_row, lhe_val, HE_val,          &
+                                    byrows )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lhe_ptr, lhe_row, lhe_val
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, nnzj, status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grlagf, byrows
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lj ) :: J_val
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lhe_val ) :: HE_val
+
+!  ----------------------------------------------------------------------------
+!  compute the constraint Jacobian in co-ordinate format and Hessian matrix
+!  of the Lagrangian function of a problem initially written in Standard
+!  Input Format (SIF)
+
+!  the Hessian matrix is represented in "finite element format", i.e.,
+
+!           ne
+!      H = sum H_e,
+!          e=1
+
+!  where each element H_i involves a small subset of the rows of H. H is stored
+!  as a list of the row indices involved in each element and the upper triangle
+!  of H_e (stored by rows or columns). Specifically,
+
+!  ne (integer) number of elements
+!  HE_row (integer array) a list of the 0-based row indices involved which
+!          each element. Those for element e directly proceed those for
+!          element e + 1, e = 1, ..., ne-1
+!  HE_row_ptr (integer array) pointers to the 0-based position in HE_row of
+!          the first row index in each element. HE_row_ptr(ne+1) points to 
+!          the 0-based first empty location in IRPNHI
+!  HE_val (real array) a list of the nonzeros in the upper triangle of
+!          H_e, stored by rows, or by columns, for each element. Those
+!          for element i directly proceed those for element, e + 1,
+!          e = 1, ..., ne-1
+!  HE_val_ptr (integer array) pointers to the 0-based position in HE_val of 
+!          the first nonzero in each element. HE_val_ptr(ne+1) points to the
+!          0-based first empty location in HE_val
+!  byrows (bool) must be set .TRUE. if the upper triangle of each H_e is
+!          to be stored by rows, and .FALSE. if it is to be stored by columns
+!  ----------------------------------------------------------------------------
+
+      LOGICAL :: grlagf_fortran, byrows_fortran
+
+      grlagf_fortran = grlagf
+      byrows_fortran = byrows
+      CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf_fortran,                &
+                            nnzj, lj, J_val, J_var, J_fun, ne,                 &
+                            lhe_ptr, HE_row_ptr, HE_val_ptr,                   &
+                            lhe_row, HE_row, lhe_val, HE_val, byrows_fortran )
+
+      J_var( : nnzj ) = J_var( : nnzj ) - 1
+      J_fun( : nnzj ) = J_fun( : nnzj ) - 1
+      HE_row( : HE_row_ptr( ne + 1 ) - 1 )                                     &
+        = HE_row( : HE_row_ptr( ne + 1 ) - 1 ) - 1
+      HE_row_ptr( : ne + 1 ) = HE_row_ptr( : ne + 1 ) - 1
+      HE_val_ptr( : ne + 1 ) = HE_val_ptr( : ne + 1 ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_csgreh_c_r
+
+      END SUBROUTINE CUTEST_csgreh_c_r
 
 !-*-*-*-*-  C U T E S T    C I N T _ C S G R E H    S U B R O U T I N E  -*-*-*-
 
@@ -12,9 +99,10 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_csgreh_r( status, n, m, X, Y, grlagf,             &
-                                     nnzj, lj, J_val, J_var, J_fun, ne,        &
-                                     lhe_ptr, HE_row_ptr, HE_val_ptr,          &
-                                     lhe_row, HE_row, lhe_val, HE_val, byrows )
+                                       nnzj, lj, J_val, J_var, J_fun, ne,      &
+                                       lhe_ptr, HE_row_ptr, HE_val_ptr,        &
+                                       lhe_row, HE_row, lhe_val, HE_val,       &
+                                       byrows )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -72,9 +160,9 @@
       grlagf_fortran = grlagf
       byrows_fortran = byrows
       CALL CUTEST_csgreh_r( status, n, m, X, Y, grlagf_fortran,                &
-                          nnzj, lj, J_val, J_var, J_fun, ne,                   &
-                          lhe_ptr, HE_row_ptr, HE_val_ptr,                     &
-                          lhe_row, HE_row, lhe_val, HE_val, byrows_fortran )
+                            nnzj, lj, J_val, J_var, J_fun, ne,                 &
+                            lhe_ptr, HE_row_ptr, HE_val_ptr,                   &
+                            lhe_row, HE_row, lhe_val, HE_val, byrows_fortran )
 
       RETURN
 
@@ -91,9 +179,9 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_csgreh_r( status, n, m, X, Y, grlagf,                  &
-                                nnzj, lj, J_val, J_var, J_fun, ne,             &
-                                lhe_ptr, HE_row_ptr, HE_val_ptr,               &
-                                lhe_row, HE_row, lhe_val, HE_val, byrows )
+                                  nnzj, lj, J_val, J_var, J_fun, ne,           &
+                                  lhe_ptr, HE_row_ptr, HE_val_ptr,             &
+                                  lhe_row, HE_row, lhe_val, HE_val, byrows )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -146,11 +234,12 @@
 !  ----------------------------------------------------------------------------
 
       CALL CUTEST_csgreh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, m, X, Y, grlagf,               &
-                                     nnzj, lj, J_val, J_var, J_fun, ne,        &
-                                     lhe_ptr, HE_row_ptr, HE_val_ptr,          &
-                                     lhe_row, HE_row, lhe_val, HE_val, byrows )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, m, X, Y, grlagf,             &
+                                       nnzj, lj, J_val, J_var, J_fun, ne,      &
+                                       lhe_ptr, HE_row_ptr, HE_val_ptr,        &
+                                       lhe_row, HE_row, lhe_val, HE_val,       &
+                                       byrows )
       RETURN
 
 !  end of subroutine CUTEST_csgreh_r
@@ -166,10 +255,10 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_csgreh_threaded_r( status, n, m, X, Y, grlagf, nnzj,   &
-                                         lj, J_val, J_var, J_fun, ne, lhe_ptr, &
-                                         HE_row_ptr, HE_val_ptr, lhe_row,      &
-                                         HE_row, lhe_val, HE_val, byrows,      &
-                                         thread )
+                                           lj, J_val, J_var, J_fun, ne,        &
+                                           lhe_ptr, HE_row_ptr, HE_val_ptr,    &
+                                           lhe_row, HE_row, lhe_val, HE_val,   &
+                                           byrows, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -233,11 +322,12 @@
 !  evaluate using specified thread
 
       CALL CUTEST_csgreh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, m, X, Y, grlagf,               &
-                                     nnzj, lj, J_val, J_var, J_fun, ne,        &
-                                     lhe_ptr, HE_row_ptr, HE_val_ptr,          &
-                                     lhe_row, HE_row, lhe_val, HE_val, byrows )
+                                       CUTEST_work_global( thread ),           &
+                                       status, n, m, X, Y, grlagf,             &
+                                       nnzj, lj, J_val, J_var, J_fun, ne,      &
+                                       lhe_ptr, HE_row_ptr, HE_val_ptr,        &
+                                       lhe_row, HE_row, lhe_val, HE_val,       &
+                                       byrows )
       RETURN
 
 !  end of subroutine CUTEST_csgreh_threaded_r
@@ -254,10 +344,10 @@
 !   fortran 2003 version released in CUTEst, 27th November 2012
 
       SUBROUTINE CUTEST_csgreh_threadsafe_r( data, work, status, n, m, X, Y,   &
-                                           grlagf, nnzj, lj, J_val, J_var,     &
-                                           J_fun, ne, lhe_ptr, HE_row_ptr,     &
-                                           HE_val_ptr, lhe_row, HE_row,        &
-                                           lhe_val, HE_val, byrows )
+                                             grlagf, nnzj, lj, J_val, J_var,   &
+                                             J_fun, ne, lhe_ptr, HE_row_ptr,   &
+                                             HE_val_ptr, lhe_row, HE_row,      &
+                                             lhe_val, HE_val, byrows )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -334,21 +424,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function gradients and Hessians
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -381,9 +471,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 

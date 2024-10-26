@@ -197,6 +197,9 @@
         LOGICAL :: record_times = .FALSE.
         LOGICAL :: array_status = .FALSE.
         LOGICAL :: hessian_setup_complete = .FALSE.
+        LOGICAL :: jacobian_2d_setup_complete = .FALSE.
+        LOGICAL :: hessian_2d_setup_complete = .FALSE.
+        LOGICAL :: band_2d_setup_complete = .FALSE.
         LOGICAL :: firstg
         INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: ISWKSP
         INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: ICALCF
@@ -220,6 +223,9 @@
         REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: W_el
         REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: W_in
         REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: G_temp
+        REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: J_2d
+        REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: H_2d
+        REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: BAND_2d
         LOGICAL, ALLOCATABLE, DIMENSION( : ) :: LOGIC
       END TYPE CUTEST_work_type
 
@@ -4163,6 +4169,24 @@
          bad_alloc = 'work%H_val' ; GO TO 600 ; END IF
      END IF
 
+     IF ( ALLOCATED( work%J_2d ) ) THEN
+       DEALLOCATE( work%J_2d, STAT = alloc_status )
+       IF ( alloc_status /= 0 ) THEN
+         bad_alloc = 'work%H_val' ; GO TO 600 ; END IF
+     END IF
+
+     IF ( ALLOCATED( work%H_2d ) ) THEN
+       DEALLOCATE( work%H_2d, STAT = alloc_status )
+       IF ( alloc_status /= 0 ) THEN
+         bad_alloc = 'work%H_val' ; GO TO 600 ; END IF
+     END IF
+
+     IF ( ALLOCATED( work%BAND_2d ) ) THEN
+       DEALLOCATE( work%BAND_2d, STAT = alloc_status )
+       IF ( alloc_status /= 0 ) THEN
+         bad_alloc = 'work%H_val' ; GO TO 600 ; END IF
+     END IF
+
      IF ( ALLOCATED( work%FUVALS ) ) THEN
        DEALLOCATE( work%FUVALS, STAT = alloc_status )
        IF ( alloc_status /= 0 ) THEN
@@ -4212,6 +4236,10 @@
      END IF
      work%array_status = .FALSE.
      work%hessian_setup_complete = .FALSE.
+     work%jacobian_2d_setup_complete = .FALSE.
+     work%hessian_2d_setup_complete = .FALSE.
+     work%band_2d_setup_complete = .FALSE.
+
      RETURN
 
 !  unsuccessful returns

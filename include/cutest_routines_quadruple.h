@@ -280,3 +280,96 @@
 #define CUTEST_uvartype_threadsafe_r CUTEST_uvartype_threadsafe_q
 #define CUTEST_varnames_r CUTEST_varnames_q
 #define CUTEST_varnames_threadsafe_r CUTEST_varnames_threadsafe_q
+
+#define CUTEST_ufn_c_r            CUTEST_ufn_c_q            
+#define CUTEST_ugr_c_r            CUTEST_ugr_c_q            
+#define CUTEST_ubandh_c_r         CUTEST_ubandh_c_q         
+#define CUTEST_udh_c_r            CUTEST_udh_c_q            
+#define CUTEST_ushp_c_r           CUTEST_ushp_c_q           
+#define CUTEST_ush_c_r            CUTEST_ush_c_q            
+#define CUTEST_ueh_c_r            CUTEST_ueh_c_q            
+#define CUTEST_ugrdh_c_r          CUTEST_ugrdh_c_q          
+#define CUTEST_ugrsh_c_r          CUTEST_ugrsh_c_q          
+#define CUTEST_ugreh_c_r          CUTEST_ugreh_c_q          
+#define CUTEST_ushprod_c_r        CUTEST_ushprod_c_q        
+#define CUTEST_cfn_c_r            CUTEST_cfn_c_q            
+#define CUTEST_cconst_c_r         CUTEST_cconst_c_q         
+#define CUTEST_cofsg_c_r          CUTEST_cofsg_c_q          
+#define CUTEST_ccfg_c_r           CUTEST_ccfg_c_q           
+#define CUTEST_ccf_c_r            CUTEST_ccf_c_q            
+#define CUTEST_cgr_c_r            CUTEST_cgr_c_q            
+#define CUTEST_csgr_c_r           CUTEST_csgr_c_q           
+#define CUTEST_csgrp_c_r          CUTEST_csgrp_c_q          
+#define CUTEST_csjp_c_r           CUTEST_csjp_c_q           
+#define CUTEST_ccfsg_c_r          CUTEST_ccfsg_c_q          
+#define CUTEST_ccifg_c_r          CUTEST_ccifg_c_q          
+#define CUTEST_ccifsg_c_r         CUTEST_ccifsg_c_q         
+#define CUTEST_cgrdh_c_r          CUTEST_cgrdh_c_q          
+#define CUTEST_cdh_c_r            CUTEST_cdh_c_q            
+#define CUTEST_cdhc_c_r           CUTEST_cdhc_c_q           
+#define CUTEST_cdhj_c_r           CUTEST_cdhj_c_q           
+#define CUTEST_cshp_c_r           CUTEST_cshp_c_q           
+#define CUTEST_csh_c_r            CUTEST_csh_c_q            
+#define CUTEST_cshc_c_r           CUTEST_cshc_c_q           
+#define CUTEST_cshj_c_r           CUTEST_cshj_c_q           
+#define CUTEST_ceh_c_r            CUTEST_ceh_c_q            
+#define CUTEST_cifn_c_r           CUTEST_cifn_c_q           
+#define CUTEST_cigr_c_r           CUTEST_cigr_c_q           
+#define CUTEST_cisgr_c_r          CUTEST_cisgr_c_q          
+#define CUTEST_cisgrp_c_r         CUTEST_cisgrp_c_q         
+#define CUTEST_cidh_c_r           CUTEST_cidh_c_q           
+#define CUTEST_cish_c_r           CUTEST_cish_c_q           
+#define CUTEST_csgrsh_c_r         CUTEST_csgrsh_c_q         
+#define CUTEST_csgrshp_c_r        CUTEST_csgrshp_c_q        
+#define CUTEST_csgreh_c_r         CUTEST_csgreh_c_q         
+#define CUTEST_cshprod_c_r        CUTEST_cshprod_c_q        
+#define CUTEST_cshcprod_c_r       CUTEST_cshcprod_c_q       
+#define CUTEST_csjprod_c_r        CUTEST_csjprod_c_q        
+#define CUTEST_cchprods_c_r       CUTEST_cchprods_c_q       
+#define CUTEST_cchprodsp_c_r      CUTEST_cchprodsp_c_q      
+#define CUTEST_cohprods_c_r       CUTEST_cohprods_c_q       
+#define CUTEST_cohprodsp_c_r      CUTEST_cohprodsp_c_q      
+
+#define CUTEST_uofg_c_r           CUTEST_uofg_c_q           
+#define CUTEST_uhprod_c_r         CUTEST_uhprod_c_q         
+#define CUTEST_cofg_c_r           CUTEST_cofg_c_q           
+#define CUTEST_clfg_c_r           CUTEST_clfg_c_q           
+#define CUTEST_chprod_c_r         CUTEST_chprod_c_q         
+#define CUTEST_chcprod_c_r        CUTEST_chcprod_c_q        
+#define CUTEST_chjprod_c_r        CUTEST_chjprod_c_q        
+#define CUTEST_cjprod_c_r         CUTEST_cjprod_c_q
+
+#define CUTEST_usetup_c_r         CUTEST_usetup_c_q         
+#define CUTEST_csetup_c_r         CUTEST_csetup_c_q         
+
+#define CUTEST_udimen_c_r         CUTEST_udimen_c_q         
+#define CUTEST_udimsh_c_r         CUTEST_udimsh_c_q         
+#define CUTEST_udimse_c_r         CUTEST_udimse_c_q         
+#define CUTEST_uvartype_c_r       CUTEST_uvartype_c_q       
+#define CUTEST_unames_c_r         CUTEST_unames_c_q         
+#define CUTEST_ureport_c_r        CUTEST_ureport_c_q        
+
+#define CUTEST_cdimen_c_r         CUTEST_cdimen_c_q         
+#define CUTEST_cnoobj_c_r         CUTEST_cnoobj_c_q         
+#define CUTEST_cdimsg_c_r         CUTEST_cdimsg_c_q         
+#define CUTEST_cdimsj_c_r         CUTEST_cdimsj_c_q         
+#define CUTEST_cdimsh_c_r         CUTEST_cdimsh_c_q         
+#define CUTEST_cdimohp_c_r        CUTEST_cdimohp_c_q        
+#define CUTEST_cdimchp_c_r        CUTEST_cdimchp_c_q        
+#define CUTEST_cdimse_c_r         CUTEST_cdimse_c_q         
+#define CUTEST_cstats_c_r         CUTEST_cstats_c_q         
+#define CUTEST_cvartype_c_r       CUTEST_cvartype_c_q       
+#define CUTEST_cnames_c_r         CUTEST_cnames_c_q         
+#define CUTEST_creport_c_r        CUTEST_creport_c_q        
+
+#define CUTEST_classification_c_r CUTEST_classification_c_q 
+#define CUTEST_connames_c_r       CUTEST_connames_c_q       
+#define CUTEST_pname_c_r          CUTEST_pname_c_q          
+#define CUTEST_probname_c_r       CUTEST_probname_c_q       
+#define CUTEST_varnames_c_r       CUTEST_varnames_c_q       
+
+#define CUTEST_uterminate_c_r     CUTEST_uterminate_c_q     
+#define CUTEST_cterminate_c_r     CUTEST_cterminate_c_q     
+
+#define FORTRAN_open_c_r          FORTRAN_open_c_q          
+#define FORTRAN_close_c_r         FORTRAN_close_c_q                  

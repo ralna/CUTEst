@@ -1,7 +1,66 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-  C U T E S T    C S H C P R O D _ C   S U B R O U T I N E  -*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cshcprod_c_r( status, n, m, goth, X, Y,                &
+                                      nnz_vector, INDEX_nz_vector, VECTOR,     &
+                                      nnz_result, INDEX_nz_result, RESULT )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, nnz_vector
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnz_result
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: goth
+      INTEGER ( KIND = ip_ ), DIMENSION( nnz_vector ),                         &
+                              INTENT( INOUT ) :: INDEX_nz_vector
+      INTEGER ( KIND = ip_ ), DIMENSION( n ), INTENT( OUT ) :: INDEX_nz_result
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: RESULT
+
+!  --------------------------------------------------------------------------
+!  compute the matrix-vector product between the Hessian matrix of the
+!  constraint part of the Lagrangian function for the problem and a given
+!  sparse vector VECTOR. The result is placed in RESULT. If goth is .TRUE.
+!  the second derivatives are assumed to have already been computed. If the
+!  user is unsure, set GOTH = .FALSE. the first time a product is required
+!  with the Hessian evaluated at X and Y. X and Y are not used if goth =
+!  .TRUE. Only the components 0-based INDEX_nz_vector(1:nnz_vector) of VECTOR
+!  are nonzero, and the remaining components of VECTOR need not have been be
+!  set. On exit, only the components 0-based INDEX_nz_result(1:nnz_result) of 
+!  RESULT are nonzero, and the remaining components of RESULT may not have 
+!  been set.
+!  --------------------------------------------------------------------------
+
+      LOGICAL :: goth_fortran
+
+      goth_fortran = goth
+      INDEX_nz_vector( 1 : nnz_vector ) = INDEX_nz_vector( 1 : nnz_vector ) + 1
+
+      CALL CUTEST_cshcprod_r( status, n, m, goth_fortran, X, Y,                &
+                              nnz_vector, INDEX_nz_vector, VECTOR,             &
+                              nnz_result, INDEX_nz_result, RESULT )
+
+      INDEX_nz_vector( 1 : nnz_vector ) = INDEX_nz_vector( 1 : nnz_vector ) - 1
+      INDEX_nz_result( 1 : nnz_result ) = INDEX_nz_result( 1 : nnz_result ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cshcprod_c_r
+
+      END SUBROUTINE CUTEST_cshcprod_c_r
 
 !-*-*-*-*-  C U T E S T   C I N T _ C S H C P R O D   S U B R O U T I N E  -*-*-
 
@@ -12,8 +71,8 @@
 !   fortran 2003 version released in CUTEst, 3rd September 2014
 
       SUBROUTINE CUTEST_Cint_cshcprod_r( status, n, m, goth, X, Y,             &
-                                       nnz_vector, INDEX_nz_vector, VECTOR,    &
-                                       nnz_result, INDEX_nz_result, RESULT )
+                                         nnz_vector, INDEX_nz_vector, VECTOR,  &
+                                         nnz_result, INDEX_nz_result, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -47,8 +106,8 @@
 
       goth_fortran = goth
       CALL CUTEST_cshcprod_r( status, n, m, goth_fortran, X, Y,                &
-                            nnz_vector, INDEX_nz_vector, VECTOR,               &
-                            nnz_result, INDEX_nz_result, RESULT )
+                              nnz_vector, INDEX_nz_vector, VECTOR,             &
+                              nnz_result, INDEX_nz_result, RESULT )
 
       RETURN
 
@@ -65,8 +124,8 @@
 !   fortran 2003 version released in CUTEst, 3rd September 2014
 
       SUBROUTINE CUTEST_cshcprod_r( status, n, m, goth, X, Y,                  &
-                                  nnz_vector, INDEX_nz_vector, VECTOR,         &
-                                  nnz_result, INDEX_nz_result, RESULT )
+                                    nnz_vector, INDEX_nz_vector, VECTOR,       &
+                                    nnz_result, INDEX_nz_result, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -96,10 +155,10 @@
 !  --------------------------------------------------------------------------
 
       CALL CUTEST_cshcprod_threadsafe_r( CUTEST_data_global,                   &
-                                       CUTEST_work_global( 1 ),                &
-                                       status, n, m, goth, X, Y,               &
-                                       nnz_vector, INDEX_nz_vector, VECTOR,    &
-                                       nnz_result, INDEX_nz_result, RESULT )
+                                         CUTEST_work_global( 1 ),              &
+                                         status, n, m, goth, X, Y,             &
+                                         nnz_vector, INDEX_nz_vector, VECTOR,  &
+                                         nnz_result, INDEX_nz_result, RESULT )
       RETURN
 
 !  end of subroutine CUTEST_cshcprod_r
@@ -115,9 +174,9 @@
 !   fortran 2003 version released in CUTEst, 3rd September 2014
 
       SUBROUTINE CUTEST_cshcprod_threaded_r( status, n, m, goth, X, Y,         &
-                                           nnz_vector, INDEX_nz_vector, VECTOR,&
-                                           nnz_result, INDEX_nz_result, RESULT,&
-                                           thread )
+                                             nnz_vector, INDEX_nz_vector,      &
+                                             VECTOR, nnz_result,               &
+                                             INDEX_nz_result, RESULT, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -177,10 +236,11 @@
 !   fortran 77 version originally released as CPROD1 in CUTE, July 1991
 !   fortran 2003 version released in CUTEst, 3rd September 2014
 
-      SUBROUTINE CUTEST_cshcprod_threadsafe_r( data, work, status, n, m, goth,   &
-                                             X, Y, nnz_vector, INDEX_nz_vector,&
-                                             VECTOR, nnz_result,               &
-                                             INDEX_nz_result, RESULT )
+      SUBROUTINE CUTEST_cshcprod_threadsafe_r( data, work, status, n, m, goth, &
+                                               X, Y, nnz_vector,               &
+                                               INDEX_nz_vector,                &
+                                               VECTOR, nnz_result,             &
+                                               INDEX_nz_result, RESULT )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -230,21 +290,21 @@
 !  evaluate the element function values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    1, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      1, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element gradients and Hessian values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    3, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      3, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -277,9 +337,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 

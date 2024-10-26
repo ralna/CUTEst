@@ -1,7 +1,57 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 11:55 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-  C U T E S T    C S G R S H P _ C   S U B R O U T I N E  -*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 20th October 2024
+
+      SUBROUTINE CUTEST_csgrshp_c_r( status, n, nnzj, lj, J_var, J_fun,        &
+                                     nnzh, lh, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lj, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, nnzj, status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+
+!  ------------------------------------------------------------------------
+!  compute the spasity pattern of the gradients of the objective function
+!  and general constraints and the Hessian matrix of the associated
+!  Lagrangian function of a group partially separable function.
+
+!  The gradients are stored as a sparse matrix in 0-based coordinate form.
+!  The i-th entry of this matrix represents the derivative of
+!  function J_fun(i) with respect to variable J_var(i) for
+!  i = 1, ..., nnzj, where function -1 is the objective function, and
+!  function j>=0  is the jth constraint. The upper triangle of the Hessian
+!  is stored in coordinate form, i.e., the entry has 0-based row index
+!  H_row(i) and 0-based column index H_col(i) for i = 1, ...., nnzh
+!  -----------------------------------------------------------------------
+
+      CALL CUTEST_csgrshp_threadsafe_r( CUTEST_data_global,                    &
+                                        CUTEST_work_global( 1 ),               &
+                                        status, n, nnzj, lj, J_var, J_fun,     &
+                                        nnzh, lh, H_row, H_col )
+
+      J_var( : nnzj ) = J_var( : nnzj ) - 1
+      J_fun( : nnzj ) = J_fun( : nnzj ) - 1
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_csgrshp_c_r
+
+      END SUBROUTINE CUTEST_csgrshp_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    C S G R S H P   S U B R O U T I N E  -*-*-*-*-*-
 
@@ -12,7 +62,7 @@
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
       SUBROUTINE CUTEST_csgrshp_r( status, n, nnzj, lj, J_var, J_fun,          &
-                                 nnzh, lh, H_row, H_col )
+                                   nnzh, lh, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -38,9 +88,9 @@
 !  -----------------------------------------------------------------------
 
       CALL CUTEST_csgrshp_threadsafe_r( CUTEST_data_global,                    &
-                                      CUTEST_work_global( 1 ),                 &
-                                      status, n, nnzj, lj, J_var, J_fun,       &
-                                      nnzh, lh, H_row, H_col )
+                                        CUTEST_work_global( 1 ),               &
+                                        status, n, nnzj, lj, J_var, J_fun,     &
+                                        nnzh, lh, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_csgrshp_r
@@ -56,8 +106,8 @@
 !   fortran 2003 version released in CUTEst, 29th March 2017
 
       SUBROUTINE CUTEST_csgrshp_threadsafe_r( data, work, status, n,           &
-                                            nnzj, lj, J_var, J_fun,            &
-                                            nnzh, lh, H_row, H_col )
+                                              nnzj, lj, J_var, J_fun,          &
+                                              nnzh, lh, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 

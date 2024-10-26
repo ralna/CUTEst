@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 10:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -29,8 +29,8 @@
 !  ---------------------------------------------------------------------
 
       CALL CUTEST_cfn_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( 1 ),                     &
-                                  status, n, m, X, f, C )
+                                    CUTEST_work_global( 1 ),                   &
+                                    status, n, m, X, f, C )
       RETURN
 
 !  end of subroutine CUTEST_cfn_r
@@ -74,8 +74,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cfn_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( thread ),                &
-                                  status, n, m, X, f, C )
+                                    CUTEST_work_global( thread ),              &
+                                    status, n, m, X, f, C )
       RETURN
 
 !  end of subroutine CUTEST_cfn_threaded_r
@@ -127,11 +127,11 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -165,9 +165,9 @@
 
       ELSE
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .FALSE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .FALSE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 

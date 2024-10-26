@@ -1,7 +1,48 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 12:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C I G R _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 22nd October 2024
+
+      SUBROUTINE CUTEST_cigr_c_r( status, n, iprob, X, GR )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: GR
+
+!  -------------------------------------------------------------------
+!  compute the gradient of a specified problem function (iprob < 0 is
+!  the objective function, while iprob >= 0 is the 0-based iprob-th 
+!  constraint) of a problem initially written in Standard Input Format (SIF).
+!  The gradient is stored as a dense vector in array GR;
+!  that is, GR(j) is the partial derivative of constraint iprob with
+!  respect to variable j. (Subroutine CISGR performs the same
+!  calculations for a sparse gradient vector.)
+
+!  -------------------------------------------------------------------
+      INTEGER :: iprob_fortran
+
+      iprob_fortran = iprob + 1
+      CALL CUTEST_cigr_threadsafe_r( CUTEST_data_global,                       &
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, iprob_fortran, X, GR )
+      RETURN
+
+!  end of subroutine CUTEST_cigr_c_r
+
+      END SUBROUTINE CUTEST_cigr_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    C I G R    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -33,8 +74,8 @@
 !  -------------------------------------------------------------------
 
       CALL CUTEST_cigr_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, iprob, X, GR )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, iprob, X, GR )
       RETURN
 
 !  end of subroutine CUTEST_cigr_r
@@ -82,8 +123,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cigr_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, iprob, X, GR )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, iprob, X, GR )
       RETURN
 
 !  end of subroutine CUTEST_cigr_threaded_r
@@ -198,21 +239,21 @@
 !  evaluate the element functions
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  2, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the gradient. Initialize the gradient vector as zero
@@ -256,17 +297,17 @@
         ELSE
           ICALCG( 1 ) = ig
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
-                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
+                        data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
+                        .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative
 
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
-                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
-                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
+                        data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -301,7 +342,7 @@
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
               CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
-                          nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
                 j = data%IELVAR( l )
@@ -413,17 +454,17 @@
 
         ELSE
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .FALSE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .FALSE., igstat )
           IF ( igstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative values.
 
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,     &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                       .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -462,7 +503,7 @@
 
                 nin = data%INTVAR( iel + 1 ) - k
                 CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
-                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                              nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
                   j = data%IELVAR( l )

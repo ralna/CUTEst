@@ -1,7 +1,77 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-24 AT 07:50 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-*-  C U T E S T    U D H _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 21st October 2024
+
+      SUBROUTINE CUTEST_ubandh_c_r( status, n, X, semibandwidth, H_band,       &
+                                    lbandh, max_semibandwidth )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, semibandwidth, lbandh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, max_semibandwidth
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ),                                      &
+        DIMENSION( ( lbandh + 1 ) * n ) :: H_band
+
+!  --------------------------------------------------------------------
+!  compute the portion of the Hessian matrix of a group partially
+!  separable function which lies within a band of given semi-bandwidth.
+!  The diagonal and subdiagonal entries in column i are obtained in
+!  locations BAND_2d( j, i ), where j = 0 for the diagonal and j > 0 for
+!  the j-th subdiagonal entry, j = 1, ..., MIN( semibandwidth, n - i )
+!  and semibandwidth is the requested semi-bandwidth. They are then
+!  transformed into the one-dimensional ( lbandh + 1 ) * n array H_band, 
+!  stored by rows. max_semibandwidth gives the true semibandwidth, i.e, 
+!  all entries  outside the band with this semibandwidth are zero
+!  --------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: i, j, l
+
+!  create 2D band storage if needed
+
+      IF ( .NOT. CUTEST_work_global( 1 )%band_2d_setup_complete ) THEN
+        ALLOCATE( CUTEST_work_global( 1 )%BAND_2d( 0 : semibandwidth, n ),     &
+                  STAT = status )
+        IF ( status /= 0 ) RETURN
+        CUTEST_work_global( 1 )%band_2d_setup_complete = .TRUE.
+      END IF
+
+!  compute the 2D band matrix
+
+      CALL CUTEST_ubandh_threadsafe_r( CUTEST_data_global,                     &
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, X, semibandwidth,            &
+                                       CUTEST_work_global( 1 )%BAND_2d,        &
+                                       semibandwidth, max_semibandwidth )
+
+!  transfer the 2D band array stored by columns to a 1D array stored by rows
+
+      l = 0
+      DO i = 0, semibandwidth
+        DO j = 1, n
+          l = l + 1
+          H_band( l ) = CUTEST_work_global( 1 )%BAND_2d( i, j )
+        END DO
+      END DO
+
+      RETURN
+
+!  end of subroutine CUTEST_ubandh_c_r
+
+      END SUBROUTINE CUTEST_ubandh_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    U B A N D H    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -12,7 +82,7 @@
 !   fortran 2003 version released in CUTEst, 28th December 2012
 
       SUBROUTINE CUTEST_ubandh_r( status, n, X, semibandwidth, H_band,         &
-                                lbandh, max_semibandwidth )
+                                  lbandh, max_semibandwidth )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -35,9 +105,9 @@
 !  -----------------------------------------------------------------------
 
       CALL CUTEST_ubandh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, X, semibandwidth, H_band,      &
-                                     lbandh, max_semibandwidth )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, X, semibandwidth, H_band,    &
+                                       lbandh, max_semibandwidth )
       RETURN
 
 !  end of subroutine CUTEST_ubandh_r
@@ -88,9 +158,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ubandh_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, X, semibandwidth, H_band,      &
-                                     lbandh, max_semibandwidth )
+                                       CUTEST_work_global( thread ),           &
+                                       status, n, X, semibandwidth, H_band,    &
+                                       lbandh, max_semibandwidth )
       RETURN
 
 !  end of subroutine CUTEST_ubandh_threaded_r
@@ -107,8 +177,8 @@
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
       SUBROUTINE CUTEST_ubandh_threadsafe_r( data, work, status, n, X,         &
-                                           semibandwidth, H_band, lbandh,      &
-                                           max_semibandwidth )
+                                             semibandwidth, H_band, lbandh,    &
+                                             max_semibandwidth )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -160,21 +230,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -207,9 +277,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 

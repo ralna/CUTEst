@@ -16,12 +16,13 @@
                                  lhe_row, HE_row, lhe_val, HE_val, byrows )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
 
 !  dummy arguments
 
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lhe_ptr, lhe_row, lhe_val
       INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ne, status
-      LOGICAL, INTENT( IN ) :: byrows
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: byrows
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_row_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_ptr ) :: HE_val_ptr
       INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lhe_row ) :: HE_row
@@ -147,7 +148,6 @@
       CALL CUTEST_ceh_r( status, n, m, X, Y,                                   &
                          ne, lhe_ptr, HE_row_ptr, HE_val_ptr,                  &
                          lhe_row, HE_row, lhe_val, HE_val, byrows_fortran )
-
       RETURN
 
 !  end of subroutine CUTEST_Cint_ceh_r

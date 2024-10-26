@@ -196,12 +196,36 @@ run_c_test_cutest_unconstrained: utools test_cutest_unconstrained
 run_c_test_cutest_constrained: ctools test_cutest_constrained
 	echo " Exhaustive test of constrained C tools"
 	$(CP) ../test/ctest.c $(OBJ)/ctest.c
+#	cd $(OBJ) ; $(CC) -o ctest.o $(CFLAGS) -fsanitize=address -g ctest.c 
 	cd $(OBJ) ; $(CC) -o ctest.o $(CFLAGS) ctest.c 
 	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_c_test \
             $(NOFMAIN) $(C_TEST) ctest.o -L$(OBJ) $(LIBS)
+#            $(NOFMAIN) $(C_TEST) ctest.o -L$(OBJ) $(LIBS) \
+#            -fsanitize=address -static-libasan
+#	- $(OBJ)/run_c_test
+	- $(OBJ)/run_c_test >& ../test/c_test_con.output
+	cat ../test/c_test_con.output
+	rm $(OBJ)/run_c_test
+
+run_c_test_c_cutest_unconstrained: utools test_cutest_unconstrained
+	echo " Exhaustive test of 0-based unconstrained C tools"
+	$(CP) ../test/utest_c.c $(OBJ)/utest_c.c
+	cd $(OBJ) ; $(CC) -o utest_c.o $(CFLAGS) utest_c.c 
+	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_c_test \
+            $(NOFMAIN) $(U_TEST) utest_c.o -L$(OBJ) $(LIBS)
+	- $(OBJ)/run_c_test >& ../test/c_test_c_unc.output
+	cat ../test/c_test_c_unc.output
+	rm $(OBJ)/run_c_test
+
+run_c_test_c_cutest_constrained: ctools test_cutest_constrained
+	echo " Exhaustive test of 0-based constrained C tools"
+	$(CP) ../test/ctest_c.c $(OBJ)/ctest_c.c
+	cd $(OBJ) ; $(CC) -o ctest_c.o $(CFLAGS) ctest_c.c 
+	cd $(OBJ) ; $(FORTRAN) $(RUNFFLAGS) $(SPECIAL) -o run_c_test \
+            $(NOFMAIN) $(C_TEST) ctest_c.o -L$(OBJ) $(LIBS)
 	- $(OBJ)/run_c_test
-#	- $(OBJ)/run_c_test >& ../test/c_test_con.output
-#	cat ../test/c_test_con.output
+#	- $(OBJ)/run_c_test >& ../test/c_test_c_con.output
+#	cat ../test/c_test_c_con.output
 	rm $(OBJ)/run_c_test
 
 tools:

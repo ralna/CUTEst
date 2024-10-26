@@ -1,7 +1,49 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 15:50 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    U G R S H _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 20th October 2024
+
+      SUBROUTINE CUTEST_ugrsh_c_r( status, n, X, G,                            &
+                                   nnzh, lh, H_val, H_row, H_col )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, lh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzh, status
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lh ) :: H_row, H_col
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( n ) :: G
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh ) :: H_val
+
+!  -----------------------------------------------------------------------
+!  compute the gradient and Hessian matrix of a group partially
+!  separable function. The upper triangle of the Hessian is stored
+!  in 0-based coordinate form, i.e., the entry H_val(i) has 0-based row 
+!  index H_row(i) and 0-based column index H_col(i) for i = 1, ...., nnzh
+!  -----------------------------------------------------------------------
+
+      CALL CUTEST_ugrsh_threadsafe_r( CUTEST_data_global,                      &
+                                      CUTEST_work_global( 1 ), status, n,      &
+                                      X, G, nnzh, lh, H_val, H_row, H_col )
+
+      H_row( : nnzh ) = H_row( : nnzh ) - 1
+      H_col( : nnzh ) = H_col( : nnzh ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_ugrsh_c_r
+
+      END SUBROUTINE CUTEST_ugrsh_c_r
 
 !-*-*-*-*-*-*-  C U T E S T    U G R S H    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -13,7 +55,7 @@
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
       SUBROUTINE CUTEST_ugrsh_r( status, n, X, G,                              &
-                               nnzh, lh, H_val, H_row, H_col )
+                                 nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -34,8 +76,8 @@
 !  -------------------------------------------------------------------
 
       CALL CUTEST_ugrsh_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( 1 ), status, n,        &
-                                    X, G, nnzh, lh, H_val, H_row, H_col )
+                                      CUTEST_work_global( 1 ), status, n,      &
+                                      X, G, nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_ugrsh_r
@@ -51,8 +93,8 @@
 !   fortran 77 version originally released in CUTE, July 1991
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
-      SUBROUTINE CUTEST_ugrsh_threaded_r( status, n, X, G,                     &
-                                        nnzh, lh, H_val, H_row, H_col, thread )
+      SUBROUTINE CUTEST_ugrsh_threaded_r( status, n, X, G, nnzh, lh,           &
+                                          H_val, H_row, H_col, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -84,8 +126,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ugrsh_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( thread ), status, n,   &
-                                    X, G, nnzh, lh, H_val, H_row, H_col )
+                                      CUTEST_work_global( thread ), status, n, &
+                                      X, G, nnzh, lh, H_val, H_row, H_col )
       RETURN
 
 !  end of subroutine CUTEST_ugrsh_threaded_r
@@ -102,7 +144,7 @@
 !   fortran 2003 version released in CUTEst, 23rd November 2012
 
       SUBROUTINE CUTEST_ugrsh_threadsafe_r( data, work, status, n, X, G,       &
-                                          nnzh, lh, H_val, H_row, H_col )
+                                            nnzh, lh, H_val, H_row, H_col )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -143,21 +185,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -190,8 +232,8 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                     .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF

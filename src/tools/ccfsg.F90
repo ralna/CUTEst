@@ -1,7 +1,62 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C C F S G _ C   S U B R O U T I N E  -*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 23rd October 2024
+
+      SUBROUTINE CUTEST_ccfsg_c_r( status, n, m, X, C,                         &
+                                   nnzj, lj, J_val, J_var, J_fun, grad )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lj
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: nnzj, status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grad
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lj ) :: J_var, J_fun
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( m ) :: C
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lj ) :: J_val
+
+!  ----------------------------------------------------------------------
+!  Compute the values of the constraint functions and their gradients
+!  for constraints initially written in Standard Input Format (SIF).
+!  The Jacobian will be stored in a sparse co-ordinate format.
+!  (Subroutine CCFG performs the same calculations for a dense Jacobian.)
+
+!  J_val  is an array which gives the values of the nonzeros of the
+!        general constraint functions evaluated at X and Y.
+!        The i-th entry of J_val gives the value of the derivative
+!        with respect to 0-based variable J_var(i) of 0-based constraint
+!        function J_fun(i) (i.e., J_fun(i) = j >= 0 indicates the j-th
+!        general constraint function).
+!  ----------------------------------------------------------------------
+
+!  local variables
+
+      LOGICAL :: grad_fortran
+
+      grad_fortran = grad
+      CALL CUTEST_ccfsg_r( status, n, m, X, C,                                 &
+                           nnzj, lj, J_val, J_var, J_fun, grad_fortran )
+
+      J_var( : nnzj ) = J_var( : nnzj ) - 1
+      J_fun( : nnzj ) = J_fun( : nnzj ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cscfg_c_r
+
+      END SUBROUTINE CUTEST_ccfsg_c_r
 
 !-*-*-*-*-*-  C U T E S T  C I N T _ C C F S G    S U B R O U T I N E  -*-*-*-*-
 
@@ -12,7 +67,7 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_ccfsg_r( status, n, m, X, C,                      &
-                               nnzj, lj, J_val, J_var, J_fun, grad )
+                                      nnzj, lj, J_val, J_var, J_fun, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -45,7 +100,7 @@
 
       grad_fortran = grad
       CALL CUTEST_ccfsg_r( status, n, m, X, C,                                 &
-                         nnzj, lj, J_val, J_var, J_fun, grad_fortran )
+                           nnzj, lj, J_val, J_var, J_fun, grad_fortran )
 
       RETURN
 
@@ -62,7 +117,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_ccfsg_r( status, n, m, X, C,                           &
-                               nnzj, lj, J_val, J_var, J_fun, grad )
+                                 nnzj, lj, J_val, J_var, J_fun, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -91,9 +146,9 @@
 !  ----------------------------------------------------------------------
 
       CALL CUTEST_ccfsg_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( 1 ),                   &
-                                    status, n, m, X, C,                        &
-                                    nnzj, lj, J_val, J_var, J_fun, grad )
+                                      CUTEST_work_global( 1 ),                 &
+                                      status, n, m, X, C,                      &
+                                      nnzj, lj, J_val, J_var, J_fun, grad )
       RETURN
 
 !  end of subroutine CUTEST_cscfg
@@ -109,7 +164,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_ccfsg_threaded_r( status, n, m, X, C, nnzj, lj,        &
-                                        J_val, J_var, J_fun, grad, thread )
+                                          J_val, J_var, J_fun, grad, thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -149,9 +204,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ccfsg_threadsafe_r( CUTEST_data_global,                      &
-                                    CUTEST_work_global( thread ),              &
-                                    status, n, m, X, C,                        &
-                                    nnzj, lj, J_val, J_var, J_fun, grad )
+                                      CUTEST_work_global( thread ),            &
+                                      status, n, m, X, C,                      &
+                                      nnzj, lj, J_val, J_var, J_fun, grad )
       RETURN
 
 !  end of subroutine CUTEST_cscfg_threaded
@@ -168,7 +223,8 @@
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
       SUBROUTINE CUTEST_ccfsg_threadsafe_r( data, work, status, n, m, X, C,    &
-                                          nnzj, lj, J_val, J_var, J_fun, grad )
+                                            nnzj, lj, J_val, J_var, J_fun,     &
+                                            grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -237,21 +293,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,            &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives
 
       IF ( grad )                                                              &
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, icnt, data%ITYPEE,          &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
                     2, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
@@ -308,9 +364,9 @@
           END IF
         END DO
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,         &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .FALSE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .FALSE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 
@@ -332,9 +388,9 @@
       IF ( grad ) THEN
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, icnt,       &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -381,7 +437,7 @@
                IF ( data%INTREP( iel ) ) THEN
                  nin = data%INTVAR( iel + 1 ) - k
                  CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,       &
-                             nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                               nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                  DO i = 1, nvarel
                    j = data%IELVAR( l )

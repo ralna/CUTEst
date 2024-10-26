@@ -1,7 +1,60 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-26 AT 15:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-24 AT 07:50 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-  C U T E S T   C I N T _ C C I F S G    S U B R O U T I N E  -*-*-*-
+
+!  Copyright reserved, Gould/Orban/Toint, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   fortran 2003 version released in CUTEst, 21st August 2013
+
+      SUBROUTINE CUTEST_ccifsg_c_r( status, n, icon, X, ci,                    &
+                                    nnzgci, lgci, GCI_val, GCI_var, grad )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, icon, lgci
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, nnzgci
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: grad
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), DIMENSION( lgci ) :: GCI_var
+      REAL ( KIND = rp_ ), INTENT( OUT ) :: ci
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lgci ) :: GCI_val
+
+!  ---------------------------------------------------------------------
+!  evaluate 0-based constraint function icon and possibly its gradient,
+!  for constraints initially written in Standard Input Format (SIF).
+!  The constraint gradient is stored as a sparse vector in array GCI_val.
+!  The j-th entry of GCI_val gives the value of the partial derivative
+!  of constraint icon with respect to variable GCI_var(j).
+!  The number of nonzeros in vector GCI_val is given by nnzgci.
+!  (Subroutine CCIFG performs the same calculations for a dense
+!   constraint gradient vector.)
+!  ---------------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: icon_fortran
+      LOGICAL :: grad_fortran
+
+      icon_fortran = icon + 1
+      grad_fortran = grad
+      CALL CUTEST_ccifsg_r( status, n, icon_fortran, X, ci,                    &
+                            nnzgci, lgci, GCI_val, GCI_var, grad_fortran )
+
+      IF ( grad_fortran ) GCI_var( : nnzgci ) = GCI_var( : nnzgci ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_ccifsg_c_r
+
+      END SUBROUTINE CUTEST_ccifsg_c_r
 
 !-*-*-*-*-  C U T E S T   C I N T _ C C I F S G    S U B R O U T I N E  -*-*-*-
 
@@ -85,9 +138,9 @@
 !  ---------------------------------------------------------------------
 
       CALL CUTEST_ccifsg_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, icon, X, ci, nnzgci, lgci,     &
-                                     GCI_val, GCI_var, grad )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, icon, X, ci, nnzgci, lgci,   &
+                                       GCI_val, GCI_var, grad )
       RETURN
 
 !  end of subroutine CUTEST_ccifsg_r
@@ -141,9 +194,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_ccifsg_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, icon, X, ci, nnzgci, lgci,     &
-                                     GCI_val, GCI_var, grad )
+                                       CUTEST_work_global( thread ),           &
+                                       status, n, icon, X, ci, nnzgci, lgci,   &
+                                       GCI_val, GCI_var, grad )
       RETURN
 
 !  end of subroutine CUTEST_ccifsg_threaded_r
@@ -160,8 +213,8 @@
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
       SUBROUTINE CUTEST_ccifsg_threadsafe_r( data, work, status, n, icon, X,   &
-                                           ci, nnzgci, lgci, GCI_val,          &
-                                           GCI_var, grad )
+                                             ci, nnzgci, lgci, GCI_val,        &
+                                             GCI_var, grad )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -238,11 +291,11 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument value FTT. Consider only the group associated
@@ -276,9 +329,9 @@
       ELSE
         ICALCG( 1 ) = ig
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,        &
-                    data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,              &
-                    data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,               &
-                    .FALSE., igstat )
+                      data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,            &
+                      data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,             &
+                      .FALSE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 
@@ -294,12 +347,12 @@
 
       IF ( grad ) THEN
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, neling, data%ITYPEE,        &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    2, ifstat )
-        IF ( ifstat /= 0 ) GO TO 930
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      2, ifstat )
+          IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the group derivative values
 
@@ -307,7 +360,7 @@
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, 1_ip_,      &
                         data%ITYPEG, data%ISTGP, ICALCG, data%ltypeg,          &
                         data%lstgp, 1_ip_, data%lcalcg, data%lgpvlu,           &
-                      .TRUE., igstat )
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -346,7 +399,7 @@
 
               nin = data%INTVAR( iel + 1 ) - k
               CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,          &
-                          nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
               DO i = 1, nvarel
                 j = data%IELVAR( l )

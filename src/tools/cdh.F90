@@ -1,7 +1,72 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 16:10 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-*-  C U T E S T    C D H _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 20th October 2024
+
+      SUBROUTINE CUTEST_cdh_c_r( status, n, m, X, Y, lh1, H_val )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lh1
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( m ) :: Y
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh1 * n ) :: H_val
+
+!  -----------------------------------------------------------
+!  compute the Hessian matrix of the Lagrangian function of
+!  a problem initially written in Standard Input Format (SIF).
+
+!  H is stored as a 1D lh1 * n array by rows and gives the value
+!    of the Hessian matrix of the Lagrangian function evaluated at
+!    X and Y. The i,j-th component of the array will contain
+!    the derivative with respect to variables X(i) and X(j).
+!  -----------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: i, j, l
+
+!  create 2D Hessian storage if needed
+
+      IF ( .NOT. CUTEST_work_global( 1 )%hessian_2d_setup_complete ) THEN
+        ALLOCATE( CUTEST_work_global( 1 )%H_2d( n, n ), STAT = status )
+        IF ( status /= 0 ) RETURN
+        CUTEST_work_global( 1 )%hessian_2d_setup_complete = .TRUE.
+      END IF
+
+!  compute the Hessian values
+
+      CALL CUTEST_cdh_threadsafe_r( CUTEST_data_global,                        &
+                                    CUTEST_work_global( 1 ),                   &
+                                    status, n, m, X, Y, n,                     &
+                                    CUTEST_work_global( 1 )%H_2d )
+
+!  transfer the 2D Hessian array stored by columns to a 1D array stored by rows
+
+      l = 0
+      DO i = 1, n
+        DO j = 1, n
+          l = l + 1
+          H_val( l ) = CUTEST_work_global( 1 )%H_2d( i, j )
+        END DO
+      END DO
+
+      RETURN
+
+!  end of subroutine CUTEST_cdh_c_r
+
+      END SUBROUTINE CUTEST_cdh_c_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    C D H    S U B R O U T I N E  -*-*-*-*-*-*-*-
 
@@ -34,8 +99,8 @@
 !  -----------------------------------------------------------
 
       CALL CUTEST_cdh_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( 1 ),                     &
-                                  status, n, m, X, Y, lh1, H_val )
+                                    CUTEST_work_global( 1 ),                   &
+                                    status, n, m, X, Y, lh1, H_val )
       RETURN
 
 !  end of subroutine CUTEST_cdh_r
@@ -84,8 +149,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cdh_threadsafe_r( CUTEST_data_global,                        &
-                                  CUTEST_work_global( thread ),                &
-                                  status, n, m, X, Y, lh1, H_val )
+                                    CUTEST_work_global( thread ),              &
+                                    status, n, m, X, Y, lh1, H_val )
       RETURN
 
 !  end of subroutine CUTEST_cdh_threaded_r
@@ -102,7 +167,7 @@
 !   fortran 2003 version released in CUTEst, 24th November 2012
 
       SUBROUTINE CUTEST_cdh_threadsafe_r( data, work, status, n, m, X, Y,      &
-                                        lh1, H_val )
+                                          lh1, H_val )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -153,21 +218,21 @@
 !  evaluate the element function values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function Hessian values
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,        &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -200,9 +265,9 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,      &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
-                    .TRUE., igstat )
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
+                      .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF
 

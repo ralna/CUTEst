@@ -1,7 +1,72 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-21 AT 14:00 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-*-*-  C U T E S T    C I D H _ C   S U B R O U T I N E  -*-*-*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 21st October 2024
+
+      SUBROUTINE CUTEST_cidh_c_r( status, n, X, iprob, lh1, H )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, iprob, lh1
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lh1 * n ) :: H
+
+!  ------------------------------------------------------------
+!  compute the Hessian matrix of a specified problem function
+!  (iprob < 0 is the objective function, while iprob >= 0 is the
+!  iprob-th constraint) of a problem initially written in
+!  Standard Input Format (SIF).
+
+!  H is stored as a 1D lh1 * n array by rows and gives the value
+!    of the Hessian matrix of the Lagrangian function evaluated at
+!    X and Y. The i,j-th component of the array will contain
+!    the derivative with respect to variables X(i) and X(j).
+!  ------------------------------------------------------------
+
+!  local variables
+
+      INTEGER :: i, j, l, iprob_fortran
+
+!  create 2D Hessian storage if needed
+
+      IF ( .NOT. CUTEST_work_global( 1 )%hessian_2d_setup_complete ) THEN
+        ALLOCATE( CUTEST_work_global( 1 )%H_2d( n, n ), STAT = status )
+        IF ( status /= 0 ) RETURN
+        CUTEST_work_global( 1 )%hessian_2d_setup_complete = .TRUE.
+      END IF
+
+      iprob_fortran = iprob + 1
+      CALL CUTEST_cidh_threadsafe_r( CUTEST_data_global,                       &
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, X, iprob_fortran, n,           &
+                                     CUTEST_work_global( 1 )%H_2d )
+
+!  transfer the 2D Hessian array stored by columns to a 1D array stored by rows
+
+      l = 0
+      DO i = 1, n
+        DO j = 1, n
+          l = l + 1
+          H( l ) = CUTEST_work_global( 1 )%H_2d( i, j )
+        END DO
+      END DO
+
+      RETURN
+
+!  end of subroutine CUTEST_cidh_c_r
+
+      END SUBROUTINE CUTEST_cidh_c_r
 
 !-*-*-*-*-*-*-*-  C U T E S T    C I D H    S U B R O U T I N E  -*-*-*-*-*-*-
 
@@ -35,8 +100,8 @@
 !  ------------------------------------------------------------
 
       CALL CUTEST_cidh_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( 1 ),                    &
-                                   status, n, X, iprob, lh1, H )
+                                     CUTEST_work_global( 1 ),                  &
+                                     status, n, X, iprob, lh1, H )
       RETURN
 
 !  end of subroutine CUTEST_cidh_r
@@ -86,8 +151,8 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cidh_threadsafe_r( CUTEST_data_global,                       &
-                                   CUTEST_work_global( thread ),               &
-                                   status, n, X, iprob, lh1, H )
+                                     CUTEST_work_global( thread ),             &
+                                     status, n, X, iprob, lh1, H )
       RETURN
 
 !  end of subroutine CUTEST_cidh_threaded_r
@@ -213,21 +278,21 @@
 !  evaluate the element function values.
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, ncalcf, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  1, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function derivatives.
 
       CALL ELFUN_r( work%FUVALS, X, data%EPVALU, ncalcf, data%ITYPEE,          &
-                  data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,          &
-                  data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,           &
-                  data%lelvar, data%lntvar, data%lstadh, data%lstep,           &
-                  data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,          &
-                  3, ifstat )
+                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
+                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
+                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
+                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
+                    3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the list of groups involved in the required problem function.
@@ -276,8 +341,8 @@
 
       IF ( .NOT. data%altriv ) THEN
         CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, ncalcg,       &
-                    data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,         &
-                    data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,         &
+                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
+                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
                     .TRUE., igstat )
         IF ( igstat /= 0 ) GO TO 930
       END IF

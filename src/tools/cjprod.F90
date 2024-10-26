@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -12,7 +12,7 @@
 !   fortran 2003 version released in CUTEst, 21st August 2013
 
       SUBROUTINE CUTEST_Cint_cjprod_r( status, n, m, gotj, jtrans, X,          &
-                                     VECTOR, lvector, RESULT, lresult )
+                                       VECTOR, lvector, RESULT, lresult )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -41,7 +41,7 @@
       gotj_fortran = gotj
       jtrans_fortran = jtrans
       CALL CUTEST_cjprod_r( status, n, m, gotj_fortran, jtrans_fortran, X,     &
-                          VECTOR, lvector, RESULT, lresult )
+                            VECTOR, lvector, RESULT, lresult )
 
       RETURN
 
@@ -58,7 +58,7 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_cjprod_r( status, n, m, gotj, jtrans, X,               &
-                                VECTOR, lvector, RESULT, lresult )
+                                  VECTOR, lvector, RESULT, lresult )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -82,9 +82,9 @@
 !   -------------------------------------------------------------------
 
       CALL CUTEST_cjprod_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( 1 ),                  &
-                                     status, n, m, gotj, jtrans, X,            &
-                                     VECTOR, lvector, RESULT, lresult )
+                                       CUTEST_work_global( 1 ),                &
+                                       status, n, m, gotj, jtrans, X,          &
+                                       VECTOR, lvector, RESULT, lresult )
       RETURN
 
 !  end of subroutine CUTEST_cjprod_r
@@ -100,8 +100,8 @@
 !   fortran 2003 version released in CUTEst, 29th December 2012
 
       SUBROUTINE CUTEST_cjprod_threaded_r( status, n, m, gotj, jtrans, X,      &
-                                         VECTOR, lvector, RESULT, lresult,     &
-                                         thread )
+                                           VECTOR, lvector, RESULT, lresult,   &
+                                           thread )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -136,9 +136,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cjprod_threadsafe_r( CUTEST_data_global,                     &
-                                     CUTEST_work_global( thread ),             &
-                                     status, n, m, gotj, jtrans, X,            &
-                                     VECTOR, lvector, RESULT, lresult )
+                                       CUTEST_work_global( thread ),           &
+                                       status, n, m, gotj, jtrans, X,          &
+                                       VECTOR, lvector, RESULT, lresult )
       RETURN
 
 !  end of subroutine CUTEST_cjprod_threaded_r
@@ -155,8 +155,8 @@
 !   fortran 2003 version released in CUTEst, 28th November 2012
 
       SUBROUTINE CUTEST_cjprod_threadsafe_r( data, work, status, n, m, gotj,   &
-                                           jtrans, X, VECTOR, lvector,         &
-                                           RESULT, lresult )
+                                             jtrans, X, VECTOR, lvector,       &
+                                             RESULT, lresult )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -216,21 +216,21 @@
 !  evaluate the element function values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    1, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      1, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
-!  evaluate the element function values
+!  evaluate the element function derivatives
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    3, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      3, ifstat )
       IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -260,9 +260,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
          IF ( igstat /= 0 ) GO TO 930
         END IF
       END IF
@@ -304,7 +304,7 @@
 
                 nin = data%INTVAR( iel + 1 ) - k
                 CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
-                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                              nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
                   j = data%IELVAR( l )
@@ -362,7 +362,7 @@
 
                 nin = data%INTVAR( iel + 1 ) - k
                 CALL RANGE_r( iel, .TRUE., work%FUVALS( k ), work%W_el,        &
-                            nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
+                              nvarel, nin, data%ITYPEE( iel ), nin, nvarel )
 !DIR$ IVDEP
                 DO i = 1, nvarel
                   prod = prod                                                  &

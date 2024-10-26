@@ -1,7 +1,63 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
+
+!-*-*-*-*-  C U T E S T    C C H P R O D S _ C   S U B R O U T I N E  -*-*-*-*-
+
+!  Copyright reserved, Fowkes/Gould/Montoison/Orban, for GALAHAD productions
+!  Principal author: Nick Gould
+
+!  History -
+!   modern fortran version released in CUTEst, 20th October 2024
+
+      SUBROUTINE CUTEST_cchprods_c_r( status, n, m, goth, X, VECTOR,           &
+                                      lchp, CHP_val, CHP_ind, CHP_ptr )
+      USE CUTEST_KINDS_precision
+      USE CUTEST_precision
+      USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
+
+!  dummy arguments
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, m, lchp
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status
+      LOGICAL ( KIND = C_Bool ), INTENT( IN ) :: goth
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( n ) :: X, VECTOR
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ), DIMENSION( m + 1 ) :: CHP_ptr
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ), DIMENSION( lchp ) :: CHP_ind
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( lchp ) :: CHP_val
+
+!  ---------------------------------------------------------------------------
+!  compute the matrix-vector products H_i(x) v, i = 1, ..., m, between each of
+!  the Hessian matrices H_i(x) of the constraint functions for the problem and
+!  a given vector v stored in VECTOR. The nonzero entries of the resulting
+!  products H_i(x) v and their 0-base indices occur in (CHP_val(k),CHP_ind), k =
+!  CHP_ptr(i),..., CHP_ptr(i+1)-1, i = 1, ..., m. If goth is .TRUE. the second
+!  derivatives, CHP_ind, and CHP_ptr are assumed to have already been computed.
+!  If the user is unsure, set goth = .FALSE. the first time a product is
+!  required with the Hessians evaluated at X. X is not used if goth = .TRUE.
+!  ---------------------------------------------------------------------------
+
+      LOGICAL :: goth_fortran
+
+      goth_fortran = goth
+      IF ( goth_fortran ) THEN
+        CHP_ptr( : m + 1 ) = CHP_ptr( : m + 1 ) + 1
+        CHP_ind( : CHP_ptr( m + 1 ) - 1 )                                      &
+          = CHP_ind( : CHP_ptr( m + 1 ) - 1 ) + 1
+      END IF
+
+      CALL CUTEST_cchprods_r( status, n, m, goth_fortran, X, VECTOR, lchp,     &
+                              CHP_val, CHP_ind, CHP_ptr )
+
+      CHP_ind( : CHP_ptr( m + 1 ) - 1 ) = CHP_ind( : CHP_ptr( m + 1 ) - 1 ) - 1
+      CHP_ptr( : m + 1 ) = CHP_ptr( : m + 1 ) - 1
+
+      RETURN
+
+!  end of subroutine CUTEST_cchprods_c_r
+
+      END SUBROUTINE CUTEST_cchprods_c_r
 
 !-*-*-  C U T E S T   C I N T _ C C H P R O D S    S U B R O U T I N E  -*-*-
 
@@ -12,7 +68,7 @@
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
       SUBROUTINE CUTEST_Cint_cchprods_r( status, n, m, goth, X, VECTOR,        &
-                                       lchp, CHP_val, CHP_ind, CHP_ptr )
+                                         lchp, CHP_val, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
       USE, INTRINSIC :: ISO_C_BINDING, ONLY : C_Bool
@@ -42,7 +98,7 @@
 
       goth_fortran = goth
       CALL CUTEST_cchprods_r( status, n, m, goth_fortran, X, VECTOR, lchp,     &
-                           CHP_val, CHP_ind, CHP_ptr )
+                              CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
 !  end of subroutine CUTEST_Cint_cchprods_r
@@ -58,7 +114,7 @@
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
       SUBROUTINE CUTEST_cchprods_r( status, n, m, goth, X, VECTOR,             &
-                                  lchp, CHP_val, CHP_ind, CHP_ptr )
+                                    lchp, CHP_val, CHP_ind, CHP_ptr )
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -84,9 +140,9 @@
 !  ---------------------------------------------------------------------------
 
       CALL CUTEST_cchprods_threadsafe_r( CUTEST_data_global,                   &
-                                       CUTEST_work_global( 1 ),                &
-                                       status, n, m, goth, X, VECTOR, lchp,    &
-                                       CHP_val, CHP_ind, CHP_ptr )
+                                         CUTEST_work_global( 1 ),              &
+                                         status, n, m, goth, X, VECTOR, lchp,  &
+                                         CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
 !  end of subroutine CUTEST_cchprods_r
@@ -140,9 +196,9 @@
 !  evaluate using specified thread
 
       CALL CUTEST_cchprods_threadsafe_r( CUTEST_data_global,                   &
-                                       CUTEST_work_global( thread ),           &
-                                       status, n, m, goth, X, VECTOR, lchp,    &
-                                       CHP_val, CHP_ind, CHP_ptr )
+                                         CUTEST_work_global( thread ),         &
+                                         status, n, m, goth, X, VECTOR, lchp,  &
+                                         CHP_val, CHP_ind, CHP_ptr )
       RETURN
 
 !  end of subroutine CUTEST_cchprods_threaded_r
@@ -158,8 +214,8 @@
 !   fortran 2003 version released in CUTEst, 24th November 2015
 
       SUBROUTINE CUTEST_cchprods_threadsafe_r( data, work, status, n, m, goth, &
-                                             X, VECTOR, lchp, CHP_val, CHP_ind,&
-                                             CHP_ptr)
+                                               X, VECTOR, lchp, CHP_val,       &
+                                               CHP_ind, CHP_ptr)
       USE CUTEST_KINDS_precision
       USE CUTEST_precision
 
@@ -208,21 +264,21 @@
 !  evaluate the element function values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    1, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      1, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  evaluate the element function gradient and Hessian values
 
         CALL ELFUN_r( work%FUVALS, X, data%EPVALU, data%nel, data%ITYPEE,      &
-                    data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,        &
-                    data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,         &
-                    data%lelvar, data%lntvar, data%lstadh, data%lstep,         &
-                    data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,        &
-                    3, ifstat )
+                      data%ISTAEV, data%IELVAR, data%INTVAR, data%ISTADH,      &
+                      data%ISTEP, work%ICALCF, data%ltypee, data%lstaev,       &
+                      data%lelvar, data%lntvar, data%lstadh, data%lstep,       &
+                      data%lcalcf, data%lfuval, data%lvscal, data%lepvlu,      &
+                      3, ifstat )
         IF ( ifstat /= 0 ) GO TO 930
 
 !  compute the group argument values ft
@@ -255,9 +311,9 @@
 
         IF ( .NOT. data%altriv ) THEN
           CALL GROUP_r( work%GVALS, data%ng, work%FT, data%GPVALU, data%ng,    &
-                      data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,       &
-                      data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,       &
-                      .TRUE., igstat )
+                        data%ITYPEG, data%ISTGP, work%ICALCF, data%ltypeg,     &
+                        data%lstgp, data%lcalcf, data%lcalcg, data%lgpvlu,     &
+                        .TRUE., igstat )
           IF ( igstat /= 0 ) GO TO 930
         END IF
 
@@ -321,8 +377,8 @@
             IF ( data%INTREP( iel ) ) THEN
               nin = data%INTVAR( iel + 1 ) - k
               CALL RANGE_r( iel, .TRUE., work%FUVALS( k : k + nin - 1 ),       &
-                          work%H_el, nvarel, nin, data%ITYPEE( iel ),          &
-                          nin, nvarel )
+                            work%H_el, nvarel, nin, data%ITYPEE( iel ),        &
+                            nin, nvarel )
               DO i = 1, nvarel
                 j = data%IELVAR( l )
                 work%W_ws( j ) = work%W_ws( j ) + scalee * work%H_el( i )
@@ -413,7 +469,7 @@
 
                nin = data%INTVAR( iel + 1 ) - data%INTVAR( iel )
                CALL RANGE_r( iel, .FALSE., work%W_el, work%W_in, nvarel, nin,  &
-                           data%ITYPEE( iel ), nvarel, nin )
+                             data%ITYPEE( iel ), nvarel, nin )
 
 !  multiply the internal variables by the element Hessian and put the
 !  product in H_in. Consider the first column of the element Hessian
@@ -436,7 +492,7 @@
 !  scatter the product back onto the elemental variables, W
 
                CALL RANGE_r( iel, .TRUE., work%H_in, work%W_el, nvarel, nin,   &
-                           data%ITYPEE( iel ), nin, nvarel )
+                             data%ITYPEE( iel ), nin, nvarel )
 
 !  add the scattered product to Q
 
