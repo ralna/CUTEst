@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-20 AT 07:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 09:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -33,7 +33,7 @@
 
 !  local variables
 
-      INTEGER :: i     
+      INTEGER ( KIND = ip_ ) :: i     
       INTEGER, PARAMETER :: len_fname = 256
       CHARACTER ( LEN = len_fname ) :: fname = REPEAT( ' ', len_fname )
 

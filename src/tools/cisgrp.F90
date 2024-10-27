@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 15:00 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 08:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -31,7 +31,7 @@
 
 !  local variables
 
-      INTEGER :: iprob_fortran
+      INTEGER ( KIND = ip_ ) :: iprob_fortran
 
       iprob_fortran = iprob + 1
       CALL CUTEST_cisgrp_threadsafe_r( CUTEST_data_global,                     &

@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 16:00 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 09:20 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -30,7 +30,7 @@
 
 !  local variables
 
-      INTEGER :: i, j, l
+      INTEGER ( KIND = ip_ ) :: i, j, l
 
 !  create 2D Hessian storage if needed
 

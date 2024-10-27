@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-22 AT 15:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 09:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -36,7 +36,7 @@
 
 !  local variables
 
-      INTEGER :: icon_fortran
+      INTEGER ( KIND = ip_ ) :: icon_fortran
       LOGICAL :: grad_fortran
 
       icon_fortran = icon + 1

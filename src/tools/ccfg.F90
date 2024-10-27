@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:40 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 08:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -50,7 +50,7 @@
 
 !  local variables
 
-      INTEGER :: i, j, l
+      INTEGER ( KIND = ip_ ) :: i, j, l
       LOGICAL :: jtrans_fortran, grad_fortran
 
       grad_fortran = grad

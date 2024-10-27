@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-21 AT 14:00 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 09:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -36,7 +36,7 @@
 
 !  local variables
 
-      INTEGER :: i, j, l, iprob_fortran
+      INTEGER ( KIND = ip_ ) :: i, j, l, iprob_fortran
 
 !  create 2D Hessian storage if needed
 

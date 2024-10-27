@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-09-29 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-27 AT 09:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -23,7 +23,7 @@
 
 !  local variables
 
-      INTEGER :: i, l
+      INTEGER ( KIND = ip_ ) :: i, l
       CHARACTER ( LEN = 10 ) :: pname_fortran
 
       CALL CUTEST_probname_r( status, pname_fortran )
