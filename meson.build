@@ -15,6 +15,16 @@ cc = meson.get_compiler('c')
 fc = meson.get_compiler('fortran')
 fc_compiler = find_program(fc.cmd_array())
 
+# Remove messages about deprecated Intel compilers
+if cc.get_id() == 'intel'
+  add_global_arguments('-diag-disable=10441', language : 'c')
+  add_global_link_arguments('-diag-disable=10441', language : 'c')
+endif
+if cc.get_id() == 'intel-cl'
+  add_global_arguments('/Qdiag-disable=10441', language : 'c')
+  add_global_link_arguments('/Qdiag-disable=10441', language : 'c')
+endif
+
 # Options
 install_modules = get_option('modules')
 build_quadruple = get_option('quadruple')
