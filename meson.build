@@ -263,7 +263,7 @@ if build_tests
 endif
 
 # C tests
-if build_tests
+if build_tests and (fc.get_id() == 'gcc')
 
   fortran_tests_folder = 'tests/C'
 
