@@ -27,6 +27,6 @@ if build_quadruple
 
     cutest_c_tests += [['cutest', 'quadruple', 'ctest_c_quadruple' , files('ctest.c'  , 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')],
                        ['cutest', 'quadruple', 'utest_c_quadruple' , files('utest.c'  , 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')],
-                       ['cutest', 'quadruple', 'ctest2_c_quadruple', files('ctest_c.c', 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')]],
+                       ['cutest', 'quadruple', 'ctest2_c_quadruple', files('ctest_c.c', 'c_elfun_quadruple.f', 'c_group_quadruple.f', 'c_range_quadruple.f')],
                        ['cutest', 'quadruple', 'utest2_c_quadruple', files('utest_c.c', 'u_elfun_quadruple.f', 'u_group_quadruple.f', 'u_range_quadruple.f')]]
 endif
