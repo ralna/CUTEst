@@ -1189,6 +1189,7 @@ printf("hello\n");
 
 //here
     free(classification);
+    free(p_name);
     free(X_type);
     free(H_row);
     free(H_col);
@@ -1212,8 +1213,14 @@ printf("hello\n");
     free(result);
     free(G_val);
     free(G_var);
+    for (i = 0; i < n; i++)
+        free(X_names[i]);
     free(X_names);
+    free(X_names_fortran);
+    for (i = 0; i < m; i++)
+        free(C_names[i]);
     free(C_names);
+    free(C_names_fortran);
     free(equation);
     free(linear);
     free(INDEX_nz_vector);
@@ -1319,7 +1326,7 @@ void write_j_dense(ipc_ n, ipc_ m, ipc_ l_j2_1, ipc_ l_j2_2, rpc_ *J2_val) {
         printf("\n");
 
         // Print matrix values
-        for (ipc_ i = 0; i < l_j2_1; i++) {
+        for (ipc_ i = 0; i < m; i++) {
             printf(" * %7d      ", i + 1);
             for (ipc_ k = 0; k < 4 && j + k < n; k++) {
                 printf(" %12.4e", J2_val[i+l_j2_1*(j+k)]);
@@ -1340,7 +1347,7 @@ void write_jt_dense(ipc_ n, ipc_ m, ipc_ l_j2_1, ipc_ l_j2_2, rpc_ *J2_val) {
         printf("\n");
 
         // Print matrix values
-        for (ipc_ i = 0; i < l_j2_1; i++) {
+        for (ipc_ i = 0; i < n; i++) {
             printf(" * %7d      ", i + 1);
             for (ipc_ k = 0; k < 4 && j + k < m; k++) {
                 printf(" %12.4e", J2_val[i+l_j2_1*(j+k)]);

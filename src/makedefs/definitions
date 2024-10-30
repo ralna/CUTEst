@@ -131,3 +131,15 @@ $(PACKAGE) = $(OBJ)/$(package)_main.o
 U_TEST = $(OBJ)/u_elfun.o $(OBJ)/u_group.o $(OBJ)/u_range.o
 C_TEST = $(OBJ)/c_elfun.o $(OBJ)/c_group.o $(OBJ)/c_range.o
 Q_TEST = $(OBJ)/q_elfun.o $(OBJ)/q_group.o $(OBJ)/q_range.o
+
+#  valgrind options if needed
+
+#VALGRIND = --tool=memcheck --leak-check=full --show-reachable=yes \
+#VALGRIND = -v --tool=memcheck --leak-check=yes --show-reachable=yes \
+#--track-origins=yes -s
+VALGRIND = -v --tool=memcheck --leak-check=full --show-reachable=yes \
+--track-origins=yes -s
+
+#  gdb options if needed
+
+GDB = -silent -ex run -ex bt -ex exit

@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:30 GMT.
+! THIS VERSION: CUTEST 2.3 - 2024-10-30 AT 08:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -44,7 +44,7 @@
       CALL CUTEST_cofsg_r( status, n, X, f, nnzg, lg, G_val, G_var,            &
                            grad_fortran )
 
-      G_var( : nnzg ) = G_var( : nnzg ) - 1
+      IF ( grad_fortran ) G_var( : nnzg ) = G_var( : nnzg ) - 1
 
       RETURN
 

@@ -441,6 +441,8 @@ int main() {
     // Cleanup and close files
     free(classification);
     free(p_name);
+    for (i = 0; i < n; i++)
+        free(X_names[i]);
     free(X_names);
     free(X_names_fortran);
     free(X);
