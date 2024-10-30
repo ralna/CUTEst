@@ -15,7 +15,7 @@ cutest_c_tests += [['cutest', 'single', 'ctest_c_single' , files('ctest.c'  , 'c
                    ['cutest', 'single', 'utest2_c_single', files('utest_c.c', 'u_elfun_single.f', 'u_group_single.f', 'u_range_single.f')],
                    ['cutest', 'double', 'ctest_c_double' , files('ctest.c'  , 'c_elfun_double.f', 'c_group_double.f', 'c_range_double.f')],
                    ['cutest', 'double', 'utest_c_double' , files('utest.c'  , 'u_elfun_double.f', 'u_group_double.f', 'u_range_double.f')],
-                   ['cutest', 'double', 'ctest2_c_double', files('ctest_c.c', 'c_elfun_double.f', 'c_group_double.f', 'c_range_double.f')]],
+                   ['cutest', 'double', 'ctest2_c_double', files('ctest_c.c', 'c_elfun_double.f', 'c_group_double.f', 'c_range_double.f')],
                    ['cutest', 'double', 'utest2_c_double', files('utest_c.c', 'u_elfun_double.f', 'u_group_double.f', 'u_range_double.f')]]
 
 if build_quadruple
