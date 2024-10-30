@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.3 - 2024-10-18 AT 09:00 GMT */
+/* THIS VERSION: CUTEST 2.4 - 2024-10-30 AT 09:00 GMT */
 
 /*
  * ======================================================================
@@ -18,8 +18,6 @@
  *             fortran intent(in) variables defined as const, Dec 2 2015
  *             optional quadruple precision support added, January 2024
  *
- * this version 2024-10-18
- *
  * ======================================================================
  */
 
@@ -34,7 +32,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.3.0
+#define CUTEST_VERSION 2.4.0
 
 /*
  * Define name of main() function on a
