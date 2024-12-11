@@ -92,9 +92,18 @@ jobs:
             arch: 'arm64'
             int: '64'
             mode: 'shared'
-          # - os: ubuntu-latest
-          #   compiler: nvidia-hpc
-          #   version: '24.05'
+          - os: ubuntu-latest
+            arch: 'x64'
+            version: '24.11'
+            compiler: nvidia-hpc
+            int: '32'
+            mode: 'static'
+          - os: ubuntu-latest
+            arch: 'x64'
+            version: '24.11'
+            compiler: nvidia-hpc
+            int: '64'
+            mode: 'static'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out CUTEST
@@ -142,7 +151,7 @@ jobs:
             TESTS="false"
           fi
           QUADRUPLE="true"
-          if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
+          if [[ "${{ matrix.compiler }}" == "nvidia-hpc" || "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
             QUADRUPLE="false"
           fi
           meson setup builddir --buildtype=debug \
