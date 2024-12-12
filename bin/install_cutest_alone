@@ -298,9 +298,9 @@ fi
 [[ ! -e $PKGDIR/quadruple ]] && $MKDIR $PKGDIR/quadruple
 
 if [[ $QUADREAL == 'yes' ]] ; then
-  QUADFLAG="-DCUTEST_16btye_reals_exist"
-else
   QUADFLAG=""
+else
+  QUADFLAG="-Dno_16btye_reals_exist"
 fi
 
 #$CP $CUTEST/packages/defaults/* $PKGDIR/double/

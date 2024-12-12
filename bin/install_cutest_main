@@ -119,7 +119,7 @@ fi
 [[ ! -e $PKGDIR/quadruple ]] && $MKDIR $PKGDIR/quadruple
 
 if [[ $QUADREAL == "yes" ]] ; then
-  QUADFLAG="-DCUTEST_16btye_reals_exist"
+  QUADFLAG="-Dquad_reals_exist"
 else
   QUADFLAG=""
 fi
@@ -241,23 +241,19 @@ if [[ $? != 0 ]]; then
   cd $CUTEST/src/
   OPTIONS="-s -f $CUTEST/makefiles/$VERSION"
 
-  if [[ $QUADREAL == "yes" ]] ; then
-    if [[ $GALAHAD_REQPREC == "" ]] ; then
-      echo -e '\n CUTEst may be compiled in (S)ingle, (D)ouble or'
-      echo -e ' (Q)uadruple precision or (A)ll of these.'
-      read -p ' Which precision do you require for the installed subset (D/s/q/a) ? ' -r -n 1 GALAHAD_REQPREC;
-      if [[ $GALAHAD_REQPREC == "" ]] ; then
-        GALAHAD_REQPREC="D"
-      fi
+  if [[ $CUTEST_REQPREC == "" ]] ; then
+    if [[ $QUADREAL == "yes" ]] ; then
+      echo -e -n '\n CUTEst may be compiled in (S)ingle, (D)ouble '
+      echo -e 'or (Q)uadruple precision,' 
+      echo -e ' (A)ll or any combination (e.g DQ or QS).'
+      read -p ' Which precisions do you require for the installed subset (D/s/q/a) ? ' -r -n 3 GALAHAD_REQPREC;
+    else
+      echo -e -n '\n CUTEst may be compiled in (S)ingle or (D)ouble precision'
+      echo -e ' or (B)oth.'
+      read -p ' Which precisions do you require for the installed subset (D/s/b/a) ? ' -r -n 1 GALAHAD_REQPREC;
     fi
-
-  else
     if [[ $GALAHAD_REQPREC == "" ]] ; then
-      echo -e '\n CUTEst may be compiled in (S)ingle or (D)ouble precision or (B)oth.'
-      read -p ' Which precision do you require for the installed subset (D/s/b) ? ' -r -n 1 GALAHAD_REQPREC;
-      if [[ $GALAHAD_REQPREC == "" ]] ; then
-        GALAHAD_REQPREC="D"
-      fi
+      GALAHAD_REQPREC="D"
     fi
   fi
 
@@ -269,47 +265,36 @@ if [[ $? != 0 ]]; then
     fi
   fi
 
-  if [[ $GALAHAD_REQPREC == [Ss] ]] ; then
+#  build the single precision libraries if required
+
+  if [[ $GALAHAD_REQPREC =~ "s" || $GALAHAD_REQPREC =~ "S" ||
+        $GALAHAD_REQPREC =~ "a" || $GALAHAD_REQPREC =~ "A" ||
+        $GALAHAD_REQPREC =~ "b" || $GALAHAD_REQPREC =~ "B" ]]; then
     if [[ $GALAHAD_REQINT == [Ll] ]] ; then
       PREC='single_64'
     else
       PREC='single'
     fi
-  elif [[ $GALAHAD_REQPREC == [Qq] ]] ; then
-    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
-      PREC='quadruple_64'
-    else
-      PREC='quadruple'
-    fi
-  else
+    cutest_compile
+  fi
+
+#  build the double precision libraries if required
+
+  if [[ $GALAHAD_REQPREC =~ "d" || $GALAHAD_REQPREC =~ "D" ||
+        $GALAHAD_REQPREC =~ "a" || $GALAHAD_REQPREC =~ "A" ||
+        $GALAHAD_REQPREC =~ "b" || $GALAHAD_REQPREC =~ "B" ]]; then
     if [[ $GALAHAD_REQINT == [Ll] ]] ; then
       PREC='double_64'
     else
       PREC='double'
     fi
-  fi
-  cutest_compile
-
-#  optionally compile the selected packages in the other (single) precision
-
-  if [[ $GALAHAD_REQPREC == [Bb] ]] ; then
-    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
-      PREC='single_64'
-    else
-      PREC='single'
-    fi
     cutest_compile
   fi
 
-#  optionally compile the selected packages in all the other precisions
-
-  if [[ $GALAHAD_REQPREC == [Aa] ]] ; then
-    if [[ $GALAHAD_REQINT == [Ll] ]] ; then
-      PREC='single_64'
-    else
-      PREC='single'
-    fi
-    cutest_compile
+#  build the quadruple precision libraries if required
+  if [[ ( $GALAHAD_REQPREC =~ "q" || $GALAHAD_REQPREC =~ "Q" ||
+        $GALAHAD_REQPREC =~ "a" || $GALAHAD_REQPREC =~ "A" ) &&
+        $QUADREAL == "yes" ]]; then
     if [[ $GALAHAD_REQINT == [Ll] ]] ; then
       PREC='quadruple_64'
     else

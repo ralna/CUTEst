@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 08:15 GMT.
+! THIS VERSION: CUTEST 2.4 - 2024-11-23 AT 15:25 GMT.
 
 !-**-*-*-*-*-*-  S P A R S E _ H S L _ K I N D S   M O D U L E S -*-*-*-*-*-*-*-
 
@@ -72,6 +72,7 @@
 
   END MODULE CUTEST_KINDS_real
 
+#ifdef REAL_16
 !-*-*-*-*-*-*-  C U T E S T _  K I N D S _ H A L F   M O D U L E   -*-*-*-*-*-*-
 
   MODULE CUTEST_KINDS_r2
@@ -85,17 +86,12 @@
 !  Real and complex kinds (half precision)
 
     INTEGER, PARAMETER :: real_bytes_ = 2
-#ifdef CUTEST_2btye_reals_exist
-    INTEGER, PARAMETER :: rp_ = REAL16!! selected_real_kind( 3 )
-! INTEGER, PARAMETER :: rpc_ = C_FLOAT16!! does this exist??
+    INTEGER, PARAMETER :: rp_ = REAL16 !! selected_real_kind( 3 )
+! INTEGER, PARAMETER :: rpc_ = C_FLOAT16 !! does this exist??
     INTEGER, PARAMETER :: rpc_ = C_FLOAT
-#else
-    INTEGER, PARAMETER :: rp_ = REAL32
-    INTEGER, PARAMETER :: rpc_ = C_FLOAT
-#endif
-    INTEGER, PARAMETER :: cp_ = KIND( ( 1.0_rp_, 1.0_rp_ ) )
 
   END MODULE CUTEST_KINDS_r2
+#endif
 
 !-*-*-*-*-*-  C U T E S T _  K I N D S _ S I N G L E   M O D U L E   -*-*-*-*-*-
 
@@ -135,6 +131,7 @@
 
   END MODULE CUTEST_KINDS_r8
 
+#ifdef REAL_128
 !-*-  C U T E S T _  K I N D S _ Q U A D R U P L E   M O D U L E   -*-
 
   MODULE CUTEST_KINDS_r16
@@ -148,16 +145,11 @@
 !  Real and complex kinds (quadruple precision)
 
     INTEGER, PARAMETER :: real_bytes_ = 16
-#ifdef CUTEST_16btye_reals_exist
     INTEGER, PARAMETER :: rp_ = REAL128 !! selected_real_kind( 20 )
-    INTEGER, PARAMETER :: rpc_ = C_FLOAT128 !! does this exist??
-#else
-    INTEGER, PARAMETER :: rp_ = REAL64
-    INTEGER, PARAMETER :: rpc_ = C_DOUBLE
-#endif
+    INTEGER, PARAMETER :: rpc_ = C_FLOAT128 !! this may not exist
     INTEGER, PARAMETER :: cp_ = KIND( ( 1.0_rp_, 1.0_rp_ ) )
-
   END MODULE CUTEST_KINDS_r16
+#endif
 
 ! ..............................................................................
 !
@@ -166,6 +158,7 @@
 ! ..............................................................................
 
 
+#ifdef REAL_16
 !-*-*-*-*-*-*-  C U T E S T _  K I N D S _ H A L F   M O D U L E   -*-*-*-*-*-
 
   MODULE CUTEST_KINDS_half
@@ -173,6 +166,7 @@
     USE CUTEST_KINDS_r2
     PUBLIC
   END MODULE CUTEST_KINDS_half
+#endif
 
 !-*-*-*-*-*-  C U T E S T _  K I N D S _ S I N G L E   M O D U L E   -*-*-*-*-*-
 
@@ -190,6 +184,7 @@
     PUBLIC
   END MODULE CUTEST_KINDS_double
 
+#ifdef REAL_128
 !-*-*-*-  C U T E S T _  K I N D S _ Q U A D R U P L E   M O D U L E   -*-*-*-
 
   MODULE CUTEST_KINDS_quadruple
@@ -197,7 +192,9 @@
     USE CUTEST_KINDS_r16
     PUBLIC
   END MODULE CUTEST_KINDS_quadruple
+#endif
 
+#ifdef REAL_16
 !-*-*-*-  C U T E S T _  K I N D S _ H A L F _ 6 4 B I T   M O D U L E  -*-*-*-
 
   MODULE CUTEST_KINDS_half_64
@@ -205,6 +202,7 @@
     USE CUTEST_KINDS_r2
     PUBLIC
   END MODULE CUTEST_KINDS_half_64
+#endif
 
 !-*-*-  C U T E S T _  K I N D S _ S I N G L E _ 6 4 B I T   M O D U L E -*-*-
 
@@ -222,6 +220,7 @@
     PUBLIC
   END MODULE CUTEST_KINDS_double_64
 
+#ifdef REAL_128
 !-*- C U T E S T _  K I N D S _ Q U A D R U P L E _ 6 4 B I T  M O D U L E -*-
 
   MODULE CUTEST_KINDS_quadruple_64
@@ -229,3 +228,4 @@
     USE CUTEST_KINDS_r16
     PUBLIC
   END MODULE CUTEST_KINDS_quadruple_64
+#endif
