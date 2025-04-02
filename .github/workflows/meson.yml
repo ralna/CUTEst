@@ -108,7 +108,7 @@ jobs:
       - name: Install Meson and Ninja
         shell: bash
         run: |
-          pip install meson==1.4.1
+          pip install meson
           pip install ninja
 
       - name: Set the environment variables CUTEST
@@ -146,6 +146,7 @@ jobs:
             QUADRUPLE="false"
           fi
           meson setup builddir --buildtype=debug \
+                               -Db_sanitize=address \
                                --prefix=$GITHUB_WORKSPACE/cutest \
                                -Ddefault_library=${MODE} \
                                -Dquadruple=${QUADRUPLE} \
