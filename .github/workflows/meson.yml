@@ -145,8 +145,12 @@ jobs:
           if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
             QUADRUPLE="false"
           fi
+          SANITIZER="none"
+          if [[ "${{matrix.os}}" == "ubuntu-latest" && "${{ matrix.compiler }}" == "gcc" ]]; then
+            SANITIZER="address,undefined"
+          fi
           meson setup builddir --buildtype=debug \
-                               -Db_sanitize=address,undefined \
+                               -Db_sanitize=${SANITIZER} \
                                --prefix=$GITHUB_WORKSPACE/cutest \
                                -Ddefault_library=${MODE} \
                                -Dquadruple=${QUADRUPLE} \
