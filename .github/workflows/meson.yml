@@ -146,7 +146,7 @@ jobs:
             QUADRUPLE="false"
           fi
           meson setup builddir --buildtype=debug \
-                               -Db_sanitize=address \
+                               -Db_sanitize=address,undefined \
                                --prefix=$GITHUB_WORKSPACE/cutest \
                                -Ddefault_library=${MODE} \
                                -Dquadruple=${QUADRUPLE} \
