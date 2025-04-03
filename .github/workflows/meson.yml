@@ -100,7 +100,7 @@ jobs:
             mode: 'static'
           - os: ubuntu-latest
             arch: 'x64'
-            version: '24.11'
+            version: '25.1'
             compiler: nvidia-hpc
             int: '64'
             mode: 'static'
