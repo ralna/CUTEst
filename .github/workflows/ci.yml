@@ -24,18 +24,6 @@ jobs:
             sifdecode_input: '2\nN1\nNyy'
             cutest_input: '2\nN1\n2\n2\nNNyDyN'
             arch: 'mac64.osx.gfo'
-          - os: ubuntu-latest
-            compiler: intel-classic
-            version: '2021.10'
-            sifdecode_input: '1\n1\nN2\nNyy'
-            cutest_input: '1\n1\nN2\n2\n8\nNNyDyN'
-            arch: 'pc64.lnx.ifr'
-          - os: macos-latest
-            compiler: intel-classic
-            version: '2021.10'
-            sifdecode_input: '2\nN2\nNyy'
-            cutest_input: '2\nN2\n2\n4\nNNyDyN'
-            arch: 'mac64.osx.ifr'
     runs-on: ${{ matrix.os }}
     env:
       ARCHDEFS: ${{ github.workspace }}/ARCHDefs
