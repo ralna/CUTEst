@@ -17,27 +17,6 @@ jobs:
         int: ['32', '64']
         mode: ['static', 'shared']
         include:
-          - compiler: gcc
-          - os: ubuntu-latest
-            compiler: intel-classic
-            version: '2021.10'
-            int: '32'
-            mode: 'static'
-          - os: ubuntu-latest
-            compiler: intel-classic
-            version: '2021.10'
-            int: '32'
-            mode: 'shared'
-          - os: ubuntu-latest
-            compiler: intel-classic
-            version: '2021.10'
-            int: '64'
-            mode: 'static'
-          - os: ubuntu-latest
-            compiler: intel-classic
-            version: '2021.10'
-            int: '64'
-            mode: 'shared'
           - os: windows-latest
             compiler: intel
             version: '2023.2'
@@ -94,7 +73,7 @@ jobs:
             mode: 'shared'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
-          #   version: '24.05'
+          #   version: '25.1'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out CUTEST
