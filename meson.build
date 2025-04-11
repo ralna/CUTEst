@@ -115,7 +115,7 @@ endif
 
 pp_options = []
 pp_flag = []
-if fc.get_id() == 'gcc'
+if fc.get_id() == 'gcc' or fc.get_id() == 'llvm-flang'
   pp_flag += '-cpp'
   pp_options += ['-cpp', '-E']
 elif fc.get_id() == 'intel' or fc.get_id() == 'intel-llvm'
