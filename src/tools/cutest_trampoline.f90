@@ -33,7 +33,7 @@
 #define RANGE_BIND_NAME "range_"
 #endif
 
-#ifdef _WIN32
+#ifdef WINDOWS
 #define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibraryA"
 #define cutest_dlsym GetProcAddress
@@ -105,7 +105,7 @@ contains
     character(kind=c_char), dimension(*), intent(in) :: libname
 
     ! Load the dynamic library
-#ifdef _WIN32
+#ifdef WINDOWS
       lib_handle = cutest_dlopen(libname)
 #else
       lib_handle = cutest_dlopen(libname, RTLD_LAZY)
