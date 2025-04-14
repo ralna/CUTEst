@@ -105,11 +105,8 @@ contains
     character(kind=c_char), dimension(*), intent(in) :: libname
 
     ! Load the dynamic library
-#ifdef WINDOWS
-      lib_handle = cutest_dlopen(libname)
-#else
-      lib_handle = cutest_dlopen(libname, RTLD_LAZY)
-#endif
+    lib_handle = cutest_dlopen(libname, RTLD_LAZY)
+
     if (.not. c_associated(lib_handle)) then
       stop "Unable to load shared library"
     end if
