@@ -94,5 +94,5 @@ libcutest_src += files('ccf.F90',
                        'varnames.F90')
 
 if get_option('default_library') == 'shared'
-    libcutest_src += files('cutest_delegate.f90')
+    libcutest_src += files('cutest_trampoline.f90')
 endif
