@@ -66,7 +66,7 @@ It requires the version `v2.5.0` of CUTEst.
 With this approach, there is no need to generate a new combined library for each decoded SIF problem.
 Instead, you dynamically load the decoded problem library at runtime.
 
-The only user-facing addition is the subroutines `load_routines_` and `unload_routines_` load_routines_`,
+The only user-facing addition is the subroutines `load_routines_` and `unload_routines_`,
 which allows you to specify the path to the SIF problem library.
 
 At runtime, the CUTEst shared library will forward the symbols `elfun_`, `group_`, and `range_` to the specified library.
