@@ -53,7 +53,6 @@ module CUTEST_TRAMPOLINE_precision
   use, intrinsic :: iso_c_binding
   implicit none
 
-
   ! Interface for dlopen / LoadLibrary
   interface
     function cutest_dlopen(name, mode) bind(C, name=DLOPEN_BIND_NAME)
@@ -83,7 +82,7 @@ module CUTEST_TRAMPOLINE_precision
   end interface
 
   ! Constant for the library open mode (lazy binding)
-  integer, parameter :: RTLD_LAZY = 1
+  integer(kind=c_int), parameter :: RTLD_LAZY = 1
 
   ! Handles for external functions
   type(c_ptr) :: lib_handle = c_null_ptr
@@ -108,13 +107,14 @@ contains
     lib_handle = cutest_dlopen(libname, RTLD_LAZY)
 
     if (.not. c_associated(lib_handle)) then
-      stop "Unable to load shared library"
+      print *, "Unable to load shared library."
+      return
     end if
 
     ! Resolve function symbols
-    ptr_elfun = cutest_dlsym(lib_handle, ELFUN_BIND_NAME//c_null_char)
-    ptr_group = cutest_dlsym(lib_handle, GROUP_BIND_NAME//c_null_char)
-    ptr_range = cutest_dlsym(lib_handle, RANGE_BIND_NAME//c_null_char)
+    ptr_elfun = cutest_dlsym(lib_handle, ELFUN_BIND_NAME // c_null_char)
+    ptr_group = cutest_dlsym(lib_handle, GROUP_BIND_NAME // c_null_char)
+    ptr_range = cutest_dlsym(lib_handle, RANGE_BIND_NAME // c_null_char)
 
     ! Associate procedure pointers
     call c_f_procpointer(ptr_elfun, fun_elfun)
