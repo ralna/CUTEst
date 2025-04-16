@@ -34,18 +34,12 @@
 #endif
 
 #ifdef WINDOWS
-#define cutest_dlopen LoadLibrary
 #define DLOPEN_BIND_NAME "LoadLibraryA"
-#define cutest_dlsym GetProcAddress
 #define DLSYM_BIND_NAME "GetProcAddress"
-#define cutest_dlclose FreeLibrary
 #define DLCLOSE_BIND_NAME "FreeLibrary"
 #else
-#define cutest_dlopen dlopen
 #define DLOPEN_BIND_NAME "dlopen"
-#define cutest_dlsym dlsym
 #define DLSYM_BIND_NAME "dlsym"
-#define cutest_dlclose dlclose
 #define DLCLOSE_BIND_NAME "dlclose"
 #endif
 
@@ -59,7 +53,7 @@ module CUTEST_TRAMPOLINE_precision
       use iso_c_binding, only: c_ptr, c_int, c_char
       type(c_ptr) :: cutest_dlopen
       character(kind=c_char), dimension(*) :: name
-      integer(kind=c_int) :: mode
+      integer(kind=c_int), value :: mode
     end function cutest_dlopen
   end interface
 
@@ -77,6 +71,7 @@ module CUTEST_TRAMPOLINE_precision
   interface
     subroutine cutest_dlclose(handle) bind(C, name=DLCLOSE_BIND_NAME)
       use iso_c_binding, only: c_ptr
+      ! type(c_int) :: cutest_dlclose
       type(c_ptr), value :: handle
     end subroutine cutest_dlclose
   end interface

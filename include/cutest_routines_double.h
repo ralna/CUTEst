@@ -373,4 +373,3 @@
 
 #define FORTRAN_open_c_r          FORTRAN_open_c          
 #define FORTRAN_close_c_r         FORTRAN_close_c
-         
