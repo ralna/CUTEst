@@ -11,23 +11,23 @@
 #include "cutest_modules.h"
 
 #ifdef REAL_32
-#define LOAD_ROUTINES_NAME "load_routines_s_"
-#define UNLOAD_ROUTINES_NAME "unload_routines_s_"
-#define SHOW_LOADED_LIBRARY_NAME "show_loaded_library_s_"
+#define LOAD_ROUTINES_NAME "cutest_load_routines_s_"
+#define UNLOAD_ROUTINES_NAME "cutest_unload_routines_s_"
+#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_s_"
 #define ELFUN_BIND_NAME "elfun_s_"
 #define GROUP_BIND_NAME "group_s_"
 #define RANGE_BIND_NAME "range_s_"
 #elif REAL_128
-#define LOAD_ROUTINES_NAME "load_routines_q_"
-#define UNLOAD_ROUTINES_NAME "unload_routines_q_"
-#define SHOW_LOADED_LIBRARY_NAME "show_loaded_library_q_"
+#define LOAD_ROUTINES_NAME "cutest_load_routines_q_"
+#define UNLOAD_ROUTINES_NAME "cutest_unload_routines_q_"
+#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_q_"
 #define ELFUN_BIND_NAME "elfun_q_"
 #define GROUP_BIND_NAME "group_q_"
 #define RANGE_BIND_NAME "range_q_"
 #else
-#define LOAD_ROUTINES_NAME "load_routines_"
-#define UNLOAD_ROUTINES_NAME "unload_routines_"
-#define SHOW_LOADED_LIBRARY_NAME "show_loaded_library_"
+#define LOAD_ROUTINES_NAME "cutest_load_routines_"
+#define UNLOAD_ROUTINES_NAME "cutest_unload_routines_"
+#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_"
 #define ELFUN_BIND_NAME "elfun_"
 #define GROUP_BIND_NAME "group_"
 #define RANGE_BIND_NAME "range_"
@@ -95,7 +95,7 @@ module CUTEST_TRAMPOLINE_precision
 
 contains
   ! Subroutine to load the routines from the given shared library
-  subroutine load_routines(libname) bind(C, name=LOAD_ROUTINES_NAME)
+  subroutine cutest_load_routines(libname) bind(C, name=LOAD_ROUTINES_NAME)
     character(kind=c_char), dimension(*), intent(in) :: libname
 
     ! Load the dynamic library
@@ -115,10 +115,10 @@ contains
     call c_f_procpointer(ptr_elfun, fun_elfun)
     call c_f_procpointer(ptr_group, fun_group)
     call c_f_procpointer(ptr_range, fun_range)
-  end subroutine load_routines
+  end subroutine cutest_load_routines
 
   ! Unload the routines and reset internal state
-  subroutine unload_routines() bind(C, name=UNLOAD_ROUTINES_NAME)
+  subroutine cutest_unload_routines() bind(C, name=UNLOAD_ROUTINES_NAME)
     if (c_associated(lib_handle)) then
       call cutest_dlclose(lib_handle)
       lib_handle = c_null_ptr
@@ -131,16 +131,16 @@ contains
     nullify(fun_elfun)
     nullify(fun_group)
     nullify(fun_range)
-  end subroutine unload_routines
+  end subroutine cutest_unload_routines
 
   ! Show the currently loaded library
-  ! subroutine show_loaded_library() bind(C, name=SHOW_LOADED_LIBRARY_NAME)
+  ! subroutine cutest_show_loaded_library() bind(C, name=SHOW_LOADED_LIBRARY_NAME)
   !   if (allocated(library_path)) then
   !     print *, "Currently loaded library: ", library_path
   !   else
   !     print *, "No library loaded."
   !   end if
-  ! end subroutine show_loaded_library
+  ! end subroutine cutest_show_loaded_library
 
   ! Redirection subroutine for calling the 'elfun' function from the dynamic library
   subroutine elfun() bind(C, name=ELFUN_BIND_NAME)
