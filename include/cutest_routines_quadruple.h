@@ -212,7 +212,7 @@
 #define CUTEST_newthread_threadsafe_r CUTEST_newthread_threadsafe_q
 #define CUTEST_classification_r CUTEST_classification_q
 #define CUTEST_pname_r CUTEST_pname_q
-#define CUTEST_problem_qetup_r CUTEST_problem_qetup_q
+#define CUTEST_problem_setup_r CUTEST_problem_setup_q
 #define CUTEST_problem_terminate_r CUTEST_problem_terminate_q
 #define CUTEST_probname_r CUTEST_probname_q
 #define CUTEST_probname_threadsafe_r CUTEST_probname_threadsafe_q
