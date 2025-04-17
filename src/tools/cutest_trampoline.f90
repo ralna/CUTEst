@@ -76,6 +76,58 @@ module CUTEST_TRAMPOLINE_precision
     end subroutine cutest_dlclose
   end interface
 
+  ! Interface for elfun
+  interface
+    subroutine elfun_interface( FUVALS, XVALUE, EPVALU, ncalcf, ITYPEE, ISTAEV,&
+                                IELVAR, INTVAR, ISTADH, ISTEPA, ICALCF, ltypee,&
+                                lstaev, lelvar, lntvar, lstadh, lstepa, lcalcf,&
+                                lfuval, lxvalu, lepvlu, ifflag, ifstat )
+      USE CUTEST_KINDS_precision
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ncalcf, ifflag, lxvalu, lepvlu
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ltypee, lstaev, lelvar, lntvar
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lstadh, lstepa, lcalcf, lfuval
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ifstat
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ITYPEE(ltypee), ISTAEV(lstaev)
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: IELVAR(lelvar), ISTEPA(lstepa)
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: INTVAR(lntvar), ISTADH(lstadh)
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ICALCF(lcalcf)
+      INTEGER ( KIND = rp_ ), INTENT( IN ) :: XVALUE(lxvalu), EPVALU(lepvlu)
+      INTEGER ( KIND = rp_ ), INTENT( INOUT ) :: FUVALS(lfuval)
+    end subroutine elfun_interface
+  end interface
+
+  ! Interface for group
+  interface
+    subroutine group_interface( GVALUE, lgvalu, FVALUE, GPVALU, ncalcg, ITYPEG,&
+                                ISTGPA, ICALCG, ltypeg, lstgpa, lcalcg, lfvalu,&
+                                lgpvlu, derivs, igstat )
+      USE CUTEST_KINDS_precision
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lgvalu, ncalcg, lgpvlu
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ltypeg, lstgpa, lcalcg, lfvalu
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: igstat
+      LOGICAL, INTENT( IN ) :: derivs
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( ltypeg ) :: ITYPEG
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( lstgpa ) :: ISTGPA
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( lcalcg ) :: ICALCG
+      INTEGER ( KIND = rp_ ), INTENT( IN ), DIMENSION ( lfvalu ) :: FVALUE
+      INTEGER ( KIND = rp_ ), INTENT( IN ), DIMENSION ( lgpvlu ) :: GPVALU
+      INTEGER ( KIND = rp_ ), INTENT( INOUT ), DIMENSION (lgvalu, 3) :: GVALUE
+    end subroutine group_interface
+  end interface
+
+  ! Interface for range
+  interface
+    subroutine range_interface( ielemn, transp, W1, W2, nelvar, ninvar, ieltyp,&
+                                lw1, lw2 )
+      USE CUTEST_KINDS_precision
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar, ieltyp
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lw1, lw2
+      LOGICAL, INTENT( IN ) :: transp
+      INTEGER ( KIND = rp_ ), INTENT( IN ) :: W1(lw1)
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: W2(lw2)
+    end subroutine range_interface
+  end interface
+
   ! Constant for the library open mode (lazy binding)
   integer(kind=c_int), parameter :: RTLD_LAZY = 1
 
@@ -85,13 +137,10 @@ module CUTEST_TRAMPOLINE_precision
   type(c_funptr) :: ptr_group = c_null_funptr
   type(c_funptr) :: ptr_range = c_null_funptr
 
-  ! Variable for the library path
-  ! character(len=:), allocatable :: library_path
-
   ! Procedure pointers for external functions
-  procedure(), pointer :: fun_elfun => null()
-  procedure(), pointer :: fun_group => null()
-  procedure(), pointer :: fun_range => null()
+  procedure(elfun_interface), pointer :: fun_elfun => null()
+  procedure(group_interface), pointer :: fun_group => null()
+  procedure(range_interface), pointer :: fun_range => null()
 
 contains
   ! Subroutine to load the routines from the given shared library
@@ -133,37 +182,67 @@ contains
     nullify(fun_range)
   end subroutine cutest_unload_routines
 
-  ! Show the currently loaded library
-  ! subroutine cutest_show_loaded_library() bind(C, name=SHOW_LOADED_LIBRARY_NAME)
-  !   if (allocated(library_path)) then
-  !     print *, "Currently loaded library: ", library_path
-  !   else
-  !     print *, "No library loaded."
-  !   end if
-  ! end subroutine cutest_show_loaded_library
-
   ! Redirection subroutine for calling the 'elfun' function from the dynamic library
-  subroutine elfun() bind(C, name=ELFUN_BIND_NAME)
+  subroutine elfun( FUVALS, XVALUE, EPVALU, ncalcf, ITYPEE, ISTAEV, IELVAR,    &
+                    INTVAR, ISTADH, ISTEPA, ICALCF, ltypee, lstaev, lelvar,    &
+                    lntvar, lstadh, lstepa, lcalcf, lfuval, lxvalu, lepvlu,    &
+                    ifflag, ifstat ) bind(C, name=ELFUN_BIND_NAME)
+    USE CUTEST_KINDS_precision
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ncalcf, ifflag, lxvalu, lepvlu
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ltypee, lstaev, lelvar, lntvar
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: lstadh, lstepa, lcalcf, lfuval
+    INTEGER ( KIND = ip_ ), INTENT( OUT ) :: ifstat
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ITYPEE(ltypee), ISTAEV(lstaev)
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: IELVAR(lelvar), ISTEPA(lstepa)
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: INTVAR(lntvar), ISTADH(lstadh)
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ICALCF(lcalcf)
+    INTEGER ( KIND = rp_ ), INTENT( IN ) :: XVALUE(lxvalu), EPVALU(lepvlu)
+    INTEGER ( KIND = rp_ ), INTENT( INOUT ) :: FUVALS(lfuval)
     if (associated(fun_elfun)) then
-      call fun_elfun()
+      call fun_elfun( FUVALS, XVALUE, EPVALU, ncalcf, ITYPEE, ISTAEV, IELVAR,  &
+                      INTVAR, ISTADH, ISTEPA, ICALCF, ltypee, lstaev, lelvar,  &
+                      lntvar, lstadh, lstepa, lcalcf, lfuval, lxvalu, lepvlu,  &
+                      ifflag, ifstat )
     else
       print *, "Error: fun_elfun is not associated."
     end if
   end subroutine elfun
 
   ! Redirection subroutine for calling the 'group' function from the dynamic library
-  subroutine group() bind(C, name=GROUP_BIND_NAME)
+  subroutine group( GVALUE, lgvalu, FVALUE, GPVALU, ncalcg, ITYPEG, ISTGPA,    &
+                    ICALCG, ltypeg, lstgpa, lcalcg, lfvalu, lgpvlu, derivs,    &
+                    igstat) bind(C, name=GROUP_BIND_NAME)
+    USE CUTEST_KINDS_precision
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: lgvalu, ncalcg, lgpvlu
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ltypeg, lstgpa, lcalcg, lfvalu
+    INTEGER ( KIND = ip_ ), INTENT( OUT ) :: igstat
+    LOGICAL, INTENT( IN ) :: derivs
+    INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( ltypeg ) :: ITYPEG
+    INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( lstgpa ) :: ISTGPA
+    INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION ( lcalcg ) :: ICALCG
+    INTEGER ( KIND = rp_ ), INTENT( IN ), DIMENSION ( lfvalu ) :: FVALUE
+    INTEGER ( KIND = rp_ ), INTENT( IN ), DIMENSION ( lgpvlu ) :: GPVALU
+    INTEGER ( KIND = rp_ ), INTENT( INOUT ), DIMENSION (lgvalu, 3) :: GVALUE
     if (associated(fun_group)) then
-      call fun_group()
+      call fun_group( GVALUE, lgvalu, FVALUE, GPVALU, ncalcg, ITYPEG, ISTGPA,  &
+                      ICALCG, ltypeg, lstgpa, lcalcg, lfvalu, lgpvlu, derivs,  &
+                      igstat )
     else
       print *, "Error: fun_group is not associated."
     end if
   end subroutine group
 
   ! Redirection subroutine for calling the 'range' function from the dynamic library
-  subroutine range() bind(C, name=RANGE_BIND_NAME)
+  subroutine range( ielemn, transp, W1, W2, nelvar, ninvar, ieltyp,            &
+                    lw1, lw2 ) bind(C, name=RANGE_BIND_NAME)
+    USE CUTEST_KINDS_precision
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar, ieltyp
+    INTEGER ( KIND = ip_ ), INTENT( IN ) :: lw1, lw2
+    LOGICAL, INTENT( IN ) :: transp
+    INTEGER ( KIND = rp_ ), INTENT( IN ) :: W1(lw1)
+    INTEGER ( KIND = ip_ ), INTENT( OUT ) :: W2(lw2)
     if (associated(fun_range)) then
-      call fun_range()
+      call fun_range( ielemn, transp, W1, W2, nelvar, ninvar, ieltyp, lw1, lw2 )
     else
       print *, "Error: fun_range is not associated."
     end if
