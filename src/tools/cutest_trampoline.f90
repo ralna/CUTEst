@@ -124,7 +124,7 @@ module CUTEST_TRAMPOLINE_precision
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: lw1, lw2
       LOGICAL, INTENT( IN ) :: transp
       INTEGER ( KIND = rp_ ), INTENT( IN ) :: W1(lw1)
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: W2(lw2)
+      INTEGER ( KIND = rp_ ), INTENT( OUT ) :: W2(lw2)
     end subroutine range_interface
   end interface
 
@@ -240,7 +240,7 @@ contains
     INTEGER ( KIND = ip_ ), INTENT( IN ) :: lw1, lw2
     LOGICAL, INTENT( IN ) :: transp
     INTEGER ( KIND = rp_ ), INTENT( IN ) :: W1(lw1)
-    INTEGER ( KIND = ip_ ), INTENT( OUT ) :: W2(lw2)
+    INTEGER ( KIND = rp_ ), INTENT( OUT ) :: W2(lw2)
     if (associated(fun_range)) then
       call fun_range( ielemn, transp, W1, W2, nelvar, ninvar, ieltyp, lw1, lw2 )
     else
