@@ -13,7 +13,7 @@
  * have contributed to it. In any case, many thanks to Andreas Waechter.
  *
  * Nick Gould and Dominique Orban, adapted from cutest.c with
- *    swap from 1- to 0-based indices, and column- to row-major 
+ *    swap from 1- to 0-based indices, and column- to row-major
  *    2D arrays, October 15 2024
  *
  * ======================================================================
@@ -30,7 +30,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.5.0
+#define CUTEST_VERSION 2.5.1
 
 /*
  * Define name of main() function on a

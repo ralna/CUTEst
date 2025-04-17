@@ -61,7 +61,7 @@ meson setup builddir -Ddefault_library=shared
 meson compile -C builddir
 meson install -C builddir
 ```
-It requires the version `v2.5.0` of CUTEst.
+It requires the version `v2.5.1` of CUTEst.
 
 With this approach, there is no need to generate a new combined library for each decoded SIF problem.
 Instead, you dynamically load the decoded problem library at runtime.
