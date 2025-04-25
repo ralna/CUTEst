@@ -17,11 +17,11 @@ script = raw"""
 cp ${host_prefix}/bin/ninja /usr/bin/ninja
 
 cd ${WORKSPACE}/srcdir/CUTEst
-meson setup builddir --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true
+meson setup builddir --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true -Dtests=false
 meson compile -C builddir
 meson install -C builddir
 
-meson setup builddir_shared --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true -Ddefault_library=shared
+meson setup builddir_shared --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true -Dtests=false -Ddefault_library=shared
 meson compile -C builddir_shared
 meson install -C builddir_shared
 """
