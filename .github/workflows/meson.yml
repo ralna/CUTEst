@@ -71,6 +71,12 @@ jobs:
             arch: 'arm64'
             int: '64'
             mode: 'shared'
+          - os: windows-latest
+            compiler: gcc
+            version: '14'
+            arch: 'x86'
+            int: '32'
+            mode: 'shared'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
           #   version: '25.1'
