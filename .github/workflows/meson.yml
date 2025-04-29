@@ -73,7 +73,7 @@ jobs:
             mode: 'shared'
           - os: windows-latest
             compiler: gcc
-            version: '14'
+            version: '13'
             arch: 'x86'
             int: '32'
             mode: 'shared'
