@@ -7,11 +7,12 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: ${{ matrix.os }}/${{ matrix.compiler }}-v${{ matrix.version }}/Mode-${{ matrix.mode }}/Int${{ matrix.int }}
+    name: ${{ matrix.os }}/${{ matrix.arch }}/${{ matrix.compiler }}-v${{ matrix.version }}/Mode-${{ matrix.mode }}/Int${{ matrix.int }}
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-13]
+        compiler: ['gcc']
         arch: ['x64']
         version: ['12']
         int: ['32', '64']
