@@ -150,7 +150,7 @@ jobs:
             QUADRUPLE="false"
           fi
           SANITIZER="none"
-          if [[ "${{matrix.os}}" == "ubuntu-latest" && "${{ matrix.compiler }}" == "gcc" ]]; then
+          if [[ "${{matrix.os}}" == "ubuntu-latest" && "${{ matrix.compiler }}" == "gcc" && "${{matrix.mode}}" == "static" ]]; then
             SANITIZER="address,undefined"
           fi
           meson setup builddir --buildtype=debug \
