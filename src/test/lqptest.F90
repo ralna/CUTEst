@@ -1,17 +1,7 @@
 ! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 15:50 GMT.
 
 #include "cutest_modules.h"
-
-#ifdef REAL_32
-#define CUTEST_load_routines_r cutest_load_routines_s
-#define CUTEST_unload_routines_r cutest_unload_routines_s
-#elif REAL_128
-#define CUTEST_load_routines_r cutest_load_routines_q
-#define CUTEST_unload_routines_r cutest_unload_routines_q
-#else
-#define CUTEST_load_routines_r cutest_load_routines
-#define CUTEST_unload_routines_r cutest_unload_routines
-#endif
+#include "cutest_routines.h"
 
 !-*-*-*-*-*-*-*-*- C U T E S T   l q p _ t e s t   P R O G R A M -*-*-*-*-*-*-*-
 
