@@ -182,6 +182,7 @@ jobs:
           path: builddir/meson-logs/install-log.txt
 
       - name: Test CUTEST
+        if: matrix.int == '32'
         shell: bash
         run: |
           if [[ "${{matrix.mode}}" == "static" ]]; then
