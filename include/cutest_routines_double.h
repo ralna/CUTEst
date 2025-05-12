@@ -280,6 +280,8 @@
 #define CUTEST_uvartype_threadsafe_r CUTEST_uvartype_threadsafe
 #define CUTEST_varnames_r CUTEST_varnames
 #define CUTEST_varnames_threadsafe_r CUTEST_varnames_threadsafe
+#define CUTEST_load_routines_r CUTEST_load_routines
+#define CUTEST_unload_routines_r CUTEST_unload_routines
 
 #define CUTEST_ufn_c_r            CUTEST_ufn_c            
 #define CUTEST_ugr_c_r            CUTEST_ugr_c            
@@ -370,6 +372,9 @@
 
 #define CUTEST_uterminate_c_r     CUTEST_uterminate_c     
 #define CUTEST_cterminate_c_r     CUTEST_cterminate_c     
+
+#define CUTEST_load_routines_c_r   CUTEST_load_routines_c
+#define CUTEST_unload_routines_c_r CUTEST_unload_routines_c
 
 #define FORTRAN_open_c_r          FORTRAN_open_c          
 #define FORTRAN_close_c_r         FORTRAN_close_c

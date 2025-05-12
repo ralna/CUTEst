@@ -13,21 +13,18 @@
 #ifdef REAL_32
 #define LOAD_ROUTINES_NAME "cutest_load_routines_s_"
 #define UNLOAD_ROUTINES_NAME "cutest_unload_routines_s_"
-#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_s_"
 #define ELFUN_BIND_NAME "elfun_s_"
 #define GROUP_BIND_NAME "group_s_"
 #define RANGE_BIND_NAME "range_s_"
 #elif REAL_128
 #define LOAD_ROUTINES_NAME "cutest_load_routines_q_"
 #define UNLOAD_ROUTINES_NAME "cutest_unload_routines_q_"
-#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_q_"
 #define ELFUN_BIND_NAME "elfun_q_"
 #define GROUP_BIND_NAME "group_q_"
 #define RANGE_BIND_NAME "range_q_"
 #else
 #define LOAD_ROUTINES_NAME "cutest_load_routines_"
 #define UNLOAD_ROUTINES_NAME "cutest_unload_routines_"
-#define SHOW_LOADED_LIBRARY_NAME "cutest_show_loaded_library_"
 #define ELFUN_BIND_NAME "elfun_"
 #define GROUP_BIND_NAME "group_"
 #define RANGE_BIND_NAME "range_"
