@@ -4,13 +4,13 @@
 
 #ifdef REAL_32
 #define CUTEST_load_routines_r galahad_load_routines_s
-#define CUTEST_unload_routines_r galahad_load_routines_s
+#define CUTEST_unload_routines_r galahad_unload_routines_s
 #elif REAL_128
 #define CUTEST_load_routines_r galahad_load_routines_q
-#define CUTEST_unload_routines_r galahad_load_routines_q
+#define CUTEST_unload_routines_r galahad_unload_routines_q
 #else
 #define CUTEST_load_routines_r galahad_load_routines
-#define CUTEST_unload_routines_r galahad_load_routines
+#define CUTEST_unload_routines_r galahad_unload_routines
 #endif
 
 !-*-*-*-*-*-*-*-*- C U T E S T   l q p _ t e s t   P R O G R A M -*-*-*-*-*-*-*-

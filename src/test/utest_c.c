@@ -8,14 +8,14 @@
 #include "cutest_c.h"
 
 #ifdef REAL_32
-#define CUTEST_load_routines_c_r galahad_load_routines_s
-#define CUTEST_unload_routines_c_r galahad_load_routines_s
+#define CUTEST_load_routines_c_r galahad_load_routines_s_
+#define CUTEST_unload_routines_c_r galahad_unload_routines_s_
 #elif REAL_128
-#define CUTEST_load_routines_c_r galahad_load_routines_q
-#define CUTEST_unload_routines_c_r galahad_load_routines_q
+#define CUTEST_load_routines_c_r galahad_load_routines_q_
+#define CUTEST_unload_routines_c_r galahad_unload_routines_q_
 #else
-#define CUTEST_load_routines_c_r galahad_load_routines
-#define CUTEST_unload_routines_c_r galahad_load_routines
+#define CUTEST_load_routines_c_r galahad_load_routines_
+#define CUTEST_unload_routines_c_r galahad_unload_routines_
 #endif
 
 // Function prototypes
