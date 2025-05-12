@@ -8,14 +8,14 @@
 #include "cutest.h"
 
 #ifdef REAL_32
-#define CUTEST_load_routines_r galahad_load_routines_s_
-#define CUTEST_unload_routines_r galahad_unload_routines_s_
+#define CUTEST_load_routines_r cutest_load_routines_s_
+#define CUTEST_unload_routines_r cutest_unload_routines_s_
 #elif REAL_128
-#define CUTEST_load_routines_r galahad_load_routines_q_
-#define CUTEST_unload_routines_r galahad_unload_routines_q_
+#define CUTEST_load_routines_r cutest_load_routines_q_
+#define CUTEST_unload_routines_r cutest_unload_routines_q_
 #else
-#define CUTEST_load_routines_r galahad_load_routines_
-#define CUTEST_unload_routines_r galahad_unload_routines_
+#define CUTEST_load_routines_r cutest_load_routines_
+#define CUTEST_unload_routines_r cutest_unload_routines_
 #endif
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
