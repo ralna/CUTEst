@@ -214,9 +214,11 @@ jobs:
               SHARED="-shared"
             fi
             if [[ "${{ matrix.compiler }}" == "intel" ]]; then
-              PP="-fpp"
+              PPF="-fpp"
+              PPC=""
             else
-              PP="-cpp"
+              PPF="-cpp"
+              PPC="-cpp"
             fi
             cd src/test
             ${FC} ${SHARED} -fPIC c_elfun_single.f c_group_single.f c_range_single.f -o c_single.${DLEXT}
@@ -228,34 +230,34 @@ jobs:
             ${FC} ${SHARED} -fPIC c_elfun_quadruple.f c_group_quadruple.f c_range_quadruple.f -o c_quadruple.${DLEXT}
             ${FC} ${SHARED} -fPIC u_elfun_quadruple.f u_group_quadruple.f u_range_quadruple.f -o u_quadruple.${DLEXT}
             ${FC} ${SHARED} -fPIC q_elfun_quadruple.f q_group_quadruple.f q_range_quadruple.f -o q_quadruple.${DLEXT}
-            ${FC} ${PP} -DREAL_32 ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_single
-            ${FC} ${PP} -DREAL_32 ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_threaded_single
-            ${FC} ${PP} -DREAL_32 utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_single
-            ${FC} ${PP} -DREAL_32 utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_threaded_single
-            ${FC} ${PP} -DREAL_32 lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o lqp_test_single
-            ${CC} ${PP} -DREAL_32 ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_c_single
-            ${CC} ${PP} -DREAL_32 utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_c_single
-            ${CC} ${PP} -DREAL_32 ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest2_c_single
-            ${CC} ${PP} -DREAL_32 utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest2_c_single
-            ${FC} ${PP} ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_double
-            ${FC} ${PP} ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_threaded_double
-            ${FC} ${PP} utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_double
-            ${FC} ${PP} utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_threaded_double
-            ${FC} ${PP} lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o lqp_test_double
-            ${CC} ${PP} ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_c_double
-            ${CC} ${PP} utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_c_double
-            ${CC} ${PP} ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest2_c_double
-            ${CC} ${PP} utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest2_c_double
+            ${FC} ${PPF} -DREAL_32 ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_single
+            ${FC} ${PPF} -DREAL_32 ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_threaded_single
+            ${FC} ${PPF} -DREAL_32 utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_single
+            ${FC} ${PPF} -DREAL_32 utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_threaded_single
+            ${FC} ${PPF} -DREAL_32 lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o lqp_test_single
+            ${CC} ${PPC} -DREAL_32 ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest_c_single
+            ${CC} ${PPC} -DREAL_32 utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest_c_single
+            ${CC} ${PPC} -DREAL_32 ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o ctest2_c_single
+            ${CC} ${PPC} -DREAL_32 utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_single -o utest2_c_single
+            ${FC} ${PPF} ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_double
+            ${FC} ${PPF} ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_threaded_double
+            ${FC} ${PPF} utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_double
+            ${FC} ${PPF} utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_threaded_double
+            ${FC} ${PPF} lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o lqp_test_double
+            ${CC} ${PPC} ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_c_double
+            ${CC} ${PPC} utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_c_double
+            ${CC} ${PPC} ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest2_c_double
+            ${CC} ${PPC} utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest2_c_double
             if [[ "${{ matrix.compiler }}" != "intel" && "${{ matrix.os }}" != "ubuntu-24.04-arm" ]]; then
-              ${FC} ${PP} -DREAL_128 ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_quadruple
-              ${FC} ${PP} -DREAL_128 ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_threaded_quadruple
-              ${FC} ${PP} -DREAL_128 utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_quadruple
-              ${FC} ${PP} -DREAL_128 utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_threaded_quadruple
-              ${FC} ${PP} -DREAL_128 lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o lqp_test_quadruple
-              ${CC} ${PP} -DREAL_128 ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_c_quadruple
-              ${CC} ${PP} -DREAL_128 utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_c_quadruple
-              ${CC} ${PP} -DREAL_128 ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest2_c_quadruple
-              ${CC} ${PP} -DREAL_128 utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest2_c_quadruple
+              ${FC} ${PPF} -DREAL_128 ctest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_quadruple
+              ${FC} ${PPF} -DREAL_128 ctest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_threaded_quadruple
+              ${FC} ${PPF} -DREAL_128 utest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_quadruple
+              ${FC} ${PPF} -DREAL_128 utest_threaded.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_threaded_quadruple
+              ${FC} ${PPF} -DREAL_128 lqptest.F90 -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o lqp_test_quadruple
+              ${CC} ${PPC} -DREAL_128 ctest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest_c_quadruple
+              ${CC} ${PPC} -DREAL_128 utest.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest_c_quadruple
+              ${CC} ${PPC} -DREAL_128 ctest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o ctest2_c_quadruple
+              ${CC} ${PPC} -DREAL_128 utest_c.c -I${GITHUB_WORKSPACE}/cutest/include -I${GITHUB_WORKSPACE}/cutest/modules -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_quadruple -o utest2_c_quadruple
             fi
           fi
       - uses: actions/upload-artifact@v4
