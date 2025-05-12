@@ -212,16 +212,25 @@ jobs:
               DLEXT="dll"
               SHARED="-shared"
             fi
-            gfortran ${SHARED} -fPIC c_elfun_single.f c_group_single.f c_range_single.f -o c_single.${DLEXT}
-            gfortran ${SHARED} -fPIC u_elfun_single.f u_group_single.f u_range_single.f -o u_single.${DLEXT}
-            gfortran ${SHARED} -fPIC q_elfun_single.f q_group_single.f q_range_single.f -o q_single.${DLEXT}
-            gfortran ${SHARED} -fPIC c_elfun_double.f c_group_double.f c_range_double.f -o c_double.${DLEXT}
-            gfortran ${SHARED} -fPIC u_elfun_double.f u_group_double.f u_range_double.f -o u_double.${DLEXT}
-            gfortran ${SHARED} -fPIC q_elfun_double.f q_group_double.f q_range_double.f -o q_double.${DLEXT}
-            gfortran ${SHARED} -fPIC c_elfun_quadruple.f c_group_quadruple.f c_range_quadruple.f -o c_quadruple.${DLEXT}
-            gfortran ${SHARED} -fPIC u_elfun_quadruple.f u_group_quadruple.f u_range_quadruple.f -o u_quadruple.${DLEXT}
-            gfortran ${SHARED} -fPIC q_elfun_quadruple.f q_group_quadruple.f q_range_quadruple.f -o q_quadruple.${DLEXT}
-            gfortran ctest.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_double
+            cd src/test
+            ${FC} ${SHARED} -fPIC c_elfun_single.f c_group_single.f c_range_single.f -o c_single.${DLEXT}
+            ${FC} ${SHARED} -fPIC u_elfun_single.f u_group_single.f u_range_single.f -o u_single.${DLEXT}
+            ${FC} ${SHARED} -fPIC q_elfun_single.f q_group_single.f q_range_single.f -o q_single.${DLEXT}
+            ${FC} ${SHARED} -fPIC c_elfun_double.f c_group_double.f c_range_double.f -o c_double.${DLEXT}
+            ${FC} ${SHARED} -fPIC u_elfun_double.f u_group_double.f u_range_double.f -o u_double.${DLEXT}
+            ${FC} ${SHARED} -fPIC q_elfun_double.f q_group_double.f q_range_double.f -o q_double.${DLEXT}
+            ${FC} ${SHARED} -fPIC c_elfun_quadruple.f c_group_quadruple.f c_range_quadruple.f -o c_quadruple.${DLEXT}
+            ${FC} ${SHARED} -fPIC u_elfun_quadruple.f u_group_quadruple.f u_range_quadruple.f -o u_quadruple.${DLEXT}
+            ${FC} ${SHARED} -fPIC q_elfun_quadruple.f q_group_quadruple.f q_range_quadruple.f -o q_quadruple.${DLEXT}
+            ${FC} ctest.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_double
+            ${FC} ctest_threaded.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_threaded_double
+            ${FC} utest.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_double
+            ${FC} utest_threaded.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_threaded_double
+            ${FC} lqptest.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o lqp_test_double
+            ${CC} ctest.c -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_c_double
+            ${CC} utest.c -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest_c_double
+            ${CC} ctest_c.c -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest2_c_double
+            ${CC} utest_c.c -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o utest2_c_double
           fi
       - uses: actions/upload-artifact@v4
         if: failure()
