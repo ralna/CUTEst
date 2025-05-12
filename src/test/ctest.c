@@ -55,7 +55,7 @@ void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
 #include "cutest_modules.h"
 #include "cutest_routines.h"
 
-int main() {
+int main(int argc, char **argv) {
     // CUTEst data file
     char *fname = "c_OUTSDIF.d\0";
 

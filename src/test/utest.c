@@ -33,7 +33,7 @@ void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
                    ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result);
 void write_h_band(ipc_ n, ipc_ lbandh, rpc_ *H_band);
 
-int main() {
+int main(int argc, char **argv) {
     // CUTEst data file
     char *fname = "u_OUTSDIF.d";
 
