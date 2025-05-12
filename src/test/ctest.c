@@ -7,17 +7,6 @@
 #include "cutest_routines.h"
 #include "cutest.h"
 
-#ifdef REAL_32
-#define CUTEST_load_routines_r cutest_load_routines_s_
-#define CUTEST_unload_routines_r cutest_unload_routines_s_
-#elif REAL_128
-#define CUTEST_load_routines_r cutest_load_routines_q_
-#define CUTEST_unload_routines_r cutest_unload_routines_q_
-#else
-#define CUTEST_load_routines_r cutest_load_routines_
-#define CUTEST_unload_routines_r cutest_unload_routines_
-#endif
-
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
@@ -51,9 +40,6 @@ void write_result(ipc_ n, rpc_ *vector, rpc_ *result);
 void write_result2(ipc_ n_vector, rpc_ *vector, ipc_ n_result, rpc_ *result);
 void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector, 
                    ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result);
-
-#include "cutest_modules.h"
-#include "cutest_routines.h"
 
 int main(int argc, char **argv) {
     // CUTEst data file

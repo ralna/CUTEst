@@ -7,17 +7,6 @@
 #include "cutest_routines.h"
 #include "cutest_c.h"
 
-#ifdef REAL_32
-#define CUTEST_load_routines_c_r cutest_load_routines_s_
-#define CUTEST_unload_routines_c_r cutest_unload_routines_s_
-#elif REAL_128
-#define CUTEST_load_routines_c_r cutest_load_routines_q_
-#define CUTEST_unload_routines_c_r cutest_unload_routines_q_
-#else
-#define CUTEST_load_routines_c_r cutest_load_routines_
-#define CUTEST_unload_routines_c_r cutest_unload_routines_
-#endif
-
 // Function prototypes
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u);
 void write_x_type(ipc_ n, ipc_ *X_type);
