@@ -188,30 +188,36 @@ jobs:
           if [[ "${{matrix.mode}}" == "static" ]]; then
             meson test -C builddir
           else
+            cd src/test
             if [[ "${{ matrix.os }}" == "ubuntu-24.04-arm" ]]; then
               LIBDIR="lib"
               DLEXT="so"
               SHARED="-shared"
+              export LD_LIBRARY_PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$LD_LIBRARY_PATH"
             fi
             if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
               LIBDIR="lib"
               DLEXT="so"
               SHARED="-shared"
+              export LD_LIBRARY_PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$LD_LIBRARY_PATH"
             fi
             if [[ "${{matrix.os}}" == "macos-13" ]]; then
               LIBDIR="lib"
               DLEXT="dylib"
               SHARED="-dynamiclib"
+              export DYLD_LIBRARY_PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$DYLD_LIBRARY_PATH"
             fi
             if [[ "${{matrix.os}}" == "macos-latest" ]]; then
               LIBDIR="lib"
               DLEXT="dylib"
               SHARED="-dynamiclib"
+              export DYLD_LIBRARY_PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$DYLD_LIBRARY_PATH"
             fi
             if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
               LIBDIR="bin"
               DLEXT="dll"
               SHARED="-shared"
+              export PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$PATH"
             fi
             if [[ "${{ matrix.compiler }}" == "intel" ]]; then
               PPF="-fpp"
@@ -220,7 +226,6 @@ jobs:
               PPF="-cpp"
               PPC="-cpp"
             fi
-            cd src/test
             ${FC} ${SHARED} -fPIC c_elfun_single.f c_group_single.f c_range_single.f -o libc_single.${DLEXT}
             ${FC} ${SHARED} -fPIC u_elfun_single.f u_group_single.f u_range_single.f -o libu_single.${DLEXT}
             ${FC} ${SHARED} -fPIC q_elfun_single.f q_group_single.f q_range_single.f -o libq_single.${DLEXT}
