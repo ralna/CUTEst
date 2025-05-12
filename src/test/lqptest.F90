@@ -25,6 +25,7 @@
 
       USE CUTEST_KINDS_precision
       USE CUTEST_LQP_precision
+      USE ISO_C_BINDING, only: C_NULL_CHAR
 
 !----------------------
 !   P a r a m e t e r s
