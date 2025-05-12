@@ -7,6 +7,17 @@
 #include "cutest_routines.h"
 #include "cutest.h"
 
+#ifdef REAL_32
+#define CUTEST_load_routines_r galahad_load_routines_s
+#define CUTEST_unload_routines_r galahad_load_routines_s
+#elif REAL_128
+#define CUTEST_load_routines_r galahad_load_routines_q
+#define CUTEST_unload_routines_r galahad_load_routines_q
+#else
+#define CUTEST_load_routines_r galahad_load_routines
+#define CUTEST_unload_routines_r galahad_load_routines
+#endif
+
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
@@ -79,6 +90,16 @@ int main() {
     char *X_names_fortran, *C_names_fortran;
     char **X_names, **C_names;
     rpc_ CPU[4], CALLS[7];
+
+#ifdef CUTEST_SHARED
+    if (argc < 2) {
+        fprintf(stderr, "ERROR: please provide the path to the shared library\n");
+        return EXIT_FAILURE;
+    }
+
+    const char *libsif_path = argv[1];
+    CUTEST_load_routines_r(libsif_path);
+#endif
 
     printf("in\n");
     // Open the problem data file
@@ -1236,6 +1257,9 @@ printf("hello\n");
 
     FORTRAN_close_r(&input, &status);
 
+#ifdef CUTEST_SHARED
+    CUTEST_unload_routines_r();
+#endif
     return 0;
 }
 

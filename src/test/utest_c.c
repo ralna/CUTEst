@@ -7,6 +7,17 @@
 #include "cutest_routines.h"
 #include "cutest_c.h"
 
+#ifdef REAL_32
+#define CUTEST_load_routines_c_r galahad_load_routines_s
+#define CUTEST_unload_routines_c_r galahad_load_routines_s
+#elif REAL_128
+#define CUTEST_load_routines_c_r galahad_load_routines_q
+#define CUTEST_unload_routines_c_r galahad_load_routines_q
+#else
+#define CUTEST_load_routines_c_r galahad_load_routines
+#define CUTEST_unload_routines_c_r galahad_load_routines
+#endif
+
 // Function prototypes
 void write_x(ipc_ n, rpc_ *X, rpc_ *X_l, rpc_ *X_u);
 void write_x_type(ipc_ n, ipc_ *X_type);
@@ -51,6 +62,16 @@ int main() {
     char *X_names_fortran;
     char **X_names;
     rpc_ CPU[4], CALLS[4];
+
+#ifdef CUTEST_SHARED
+    if (argc < 2) {
+        fprintf(stderr, "ERROR: please provide the path to the shared library\n");
+        return EXIT_FAILURE;
+    }
+
+    const char *libsif_path = argv[1];
+    CUTEST_load_routines_c_r(libsif_path);
+#endif
 
     // Open the problem data file
     FORTRAN_open_c_r(&input, fname, &status);
@@ -465,6 +486,10 @@ int main() {
     free(H_band);
     
     FORTRAN_close_c_r(&input, &status);
+
+#ifdef CUTEST_SHARED
+    CUTEST_unload_routines_c_r();
+#endif
     return 0;
 }
 

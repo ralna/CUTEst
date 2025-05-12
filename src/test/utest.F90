@@ -3,6 +3,17 @@
 #include "cutest_modules.h"
 #include "cutest_routines.h"
 
+#ifdef REAL_32
+#define CUTEST_load_routines_r galahad_load_routines_s
+#define CUTEST_unload_routines_r galahad_load_routines_s
+#elif REAL_128
+#define CUTEST_load_routines_r galahad_load_routines_q
+#define CUTEST_unload_routines_r galahad_load_routines_q
+#else
+#define CUTEST_load_routines_r galahad_load_routines
+#define CUTEST_unload_routines_r galahad_load_routines
+#endif
+
 !- C U T E S T  t e s t _ u n c o n s t r a i n e d _ t o o l s  P R O G R A M -
 
     PROGRAM CUTEST_test_unconstrained_tools
@@ -50,6 +61,19 @@
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: H2_val, H_band
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names
       REAL ( KIND = rp_ ) :: CPU( 4 ), CALLS( 4 )
+
+#ifdef CUTEST_SHARED
+      CHARACTER ( LEN = 256 ) :: libsif_path
+      INTEGER :: arg_len
+
+      CALL GET_COMMAND_ARGUMENT(1, libsif_path, LENGTH = arg_len)
+      IF (arg_len <= 0) THEN
+            WRITE(*,*) 'ERROR: please provide the path to the shared library'
+            STOP
+      END IF
+
+      CALL CUTEST_load_routines_r(TRIM(libsif_path) // C_NULL_CHAR)
+#endif
 
 !  open the problem data file
 
@@ -320,6 +344,10 @@
                   X_l, X_u, G, H_val, HE_val, VECTOR, RESULT, H2_val, H_band,  &
                   X_names, INDEX_nz_vector, INDEX_nz_result, stat = alloc_stat )
       CLOSE( input )
+
+#ifdef CUTEST_SHARED
+      CALL CUTEST_unload_routines_r()
+#endif
       STOP
 
 !  error exits

@@ -2,6 +2,17 @@
 
 #include "cutest_modules.h"
 
+#ifdef REAL_32
+#define CUTEST_load_routines_r galahad_load_routines_s
+#define CUTEST_unload_routines_r galahad_load_routines_s
+#elif REAL_128
+#define CUTEST_load_routines_r galahad_load_routines_q
+#define CUTEST_unload_routines_r galahad_load_routines_q
+#else
+#define CUTEST_load_routines_r galahad_load_routines
+#define CUTEST_unload_routines_r galahad_load_routines
+#endif
+
 !-*-*-*-*-*-*-*-*- C U T E S T   l q p _ t e s t   P R O G R A M -*-*-*-*-*-*-*-
 
     PROGRAM CUTEST_lqp_test
@@ -39,6 +50,19 @@
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: A_val, H_val
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: A_dense, H_dense
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names, C_names
+
+#ifdef CUTEST_SHARED
+      CHARACTER ( LEN = 256 ) :: libsif_path
+      INTEGER :: arg_len
+
+      CALL GET_COMMAND_ARGUMENT(1, libsif_path, LENGTH = arg_len)
+      IF (arg_len <= 0) THEN
+            WRITE(*,*) 'ERROR: please provide the path to the shared library'
+            STOP
+      END IF
+
+      CALL CUTEST_load_routines_r(TRIM(libsif_path) // C_NULL_CHAR)
+#endif
 
 !  open the problem data file
 
@@ -212,6 +236,10 @@
       IF ( status /= 0 ) GO TO 900
 
       CLOSE( input )
+
+#ifdef CUTEST_SHARED
+      CALL CUTEST_unload_routines_r()
+#endif
       STOP
 
 !  error exits
