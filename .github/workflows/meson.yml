@@ -72,6 +72,30 @@ jobs:
             arch: 'arm64'
             int: '64'
             mode: 'shared'
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            version: '14'
+            arch: 'arm64'
+            int: '32'
+            mode: 'static'
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            version: '14'
+            arch: 'arm64'
+            int: '64'
+            mode: 'static'
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            version: '14'
+            arch: 'arm64'
+            int: '32'
+            mode: 'shared'
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            version: '14'
+            arch: 'arm64'
+            int: '64'
+            mode: 'shared'
           # - os: ubuntu-latest
           #   compiler: nvidia-hpc
           #   version: '25.1'
@@ -122,7 +146,7 @@ jobs:
             TESTS="false"
           fi
           QUADRUPLE="true"
-          if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" ]]; then
+          if [[ "${{ matrix.compiler }}" == "intel-classic" || "${{ matrix.compiler }}" == "intel" || "${{ matrix.os }}" == "ubuntu-24.04-arm" ]]; then
             QUADRUPLE="false"
           fi
           SANITIZER="none"
@@ -160,7 +184,45 @@ jobs:
       - name: Test CUTEST
         shell: bash
         run: |
-          meson test -C builddir
+          if [[ "${{matrix.mode}}" == "static" ]]; then
+            meson test -C builddir
+          else
+            if [[ "${{ matrix.os }}" == "ubuntu-24.04-arm" ]]; then
+              LIBDIR="lib"
+              DLEXT="so"
+              SHARED="-shared"
+            fi
+            if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+              LIBDIR="lib"
+              DLEXT="so"
+              SHARED="-shared"
+            fi
+            if [[ "${{matrix.os}}" == "macos-13" ]]; then
+              LIBDIR="lib"
+              DLEXT="dylib"
+              SHARED="-dynamiclib"
+            fi
+            if [[ "${{matrix.os}}" == "macos-latest" ]]; then
+              LIBDIR="lib"
+              DLEXT="dylib"
+              SHARED="-dynamiclib"
+            fi
+            if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+              LIBDIR="bin"
+              DLEXT="dll"
+              SHARED="-shared"
+            fi
+            gfortran ${SHARED} -fPIC c_elfun_single.f c_group_single.f c_range_single.f -o c_single.${DLEXT}
+            gfortran ${SHARED} -fPIC u_elfun_single.f u_group_single.f u_range_single.f -o u_single.${DLEXT}
+            gfortran ${SHARED} -fPIC q_elfun_single.f q_group_single.f q_range_single.f -o q_single.${DLEXT}
+            gfortran ${SHARED} -fPIC c_elfun_double.f c_group_double.f c_range_double.f -o c_double.${DLEXT}
+            gfortran ${SHARED} -fPIC u_elfun_double.f u_group_double.f u_range_double.f -o u_double.${DLEXT}
+            gfortran ${SHARED} -fPIC q_elfun_double.f q_group_double.f q_range_double.f -o q_double.${DLEXT}
+            gfortran ${SHARED} -fPIC c_elfun_quadruple.f c_group_quadruple.f c_range_quadruple.f -o c_quadruple.${DLEXT}
+            gfortran ${SHARED} -fPIC u_elfun_quadruple.f u_group_quadruple.f u_range_quadruple.f -o u_quadruple.${DLEXT}
+            gfortran ${SHARED} -fPIC q_elfun_quadruple.f q_group_quadruple.f q_range_quadruple.f -o q_quadruple.${DLEXT}
+            gfortran ctest.F90 -L${GITHUB_WORKSPACE}/cutest/${LIBDIR} -lcutest_double -o ctest_double
+          fi
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
