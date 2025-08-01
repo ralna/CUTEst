@@ -193,11 +193,7 @@ if build_quadruple
 
   gen_quadruple = generator(fc_compiler,
                             output : 'quadruple_@BASENAME@.f90',
-<<<<<<< HEAD
                             arguments : pp_options + '-DREAL_128' + 
-=======
-                            arguments : pp_options + '-DREAL_128' +
->>>>>>> 9fe696355fa50bfa7add79fce8a402d06dd40310
                                         ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
                                         output_generator)
 
