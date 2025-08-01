@@ -15,6 +15,7 @@
 
       USE CUTEST_KINDS_precision
       USE CUTEST_INTERFACE_precision
+      USE ISO_C_BINDING, only: C_NULL_CHAR
 
 !----------------------
 !   P a r a m e t e r s
@@ -50,6 +51,19 @@
       REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : , : ) :: H2_val, H_band
       CHARACTER ( len = 10 ), ALLOCATABLE, DIMENSION( : ) :: X_names
       REAL ( KIND = rp_ ) :: CPU( 4 ), CALLS( 4 )
+
+#ifdef CUTEST_SHARED
+      CHARACTER ( LEN = 256 ) :: libsif_path
+      INTEGER :: arg_len
+
+      CALL GET_COMMAND_ARGUMENT(1, libsif_path, LENGTH = arg_len)
+      IF (arg_len <= 0) THEN
+            WRITE(*,*) 'ERROR: please provide the path to the shared library'
+            STOP
+      END IF
+
+      CALL CUTEST_load_routines_r(TRIM(libsif_path) // C_NULL_CHAR)
+#endif
 
 !  open the problem data file
 
@@ -320,6 +334,10 @@
                   X_l, X_u, G, H_val, HE_val, VECTOR, RESULT, H2_val, H_band,  &
                   X_names, INDEX_nz_vector, INDEX_nz_result, stat = alloc_stat )
       CLOSE( input )
+
+#ifdef CUTEST_SHARED
+      CALL CUTEST_unload_routines_r()
+#endif
       STOP
 
 !  error exits

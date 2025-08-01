@@ -1,7 +1,7 @@
 project(
   'CUTEst',
   'fortran', 'c',
-  version: '2.5.1',
+  version: '2.5.3',
   meson_version: '>= 0.62.0',
   default_options: [
     'buildtype=release',
@@ -131,6 +131,10 @@ elif fc.get_id() == 'nvidia_hpc'
   pp_flag += '-Mcpp'
   pp_options += ['-Mcpp', '-F']
 endif
+if build_quadruple
+  pp_flag += '-DCUTEST_16btye_reals_exist'
+  pp_options += '-DCUTEST_16btye_reals_exist'
+endif
 if int64
   pp_flag += '-DINTEGER_64'
   pp_options += '-DINTEGER_64'
@@ -189,7 +193,11 @@ if build_quadruple
 
   gen_quadruple = generator(fc_compiler,
                             output : 'quadruple_@BASENAME@.f90',
+<<<<<<< HEAD
                             arguments : pp_options + '-DREAL_128' + 
+=======
+                            arguments : pp_options + '-DREAL_128' +
+>>>>>>> 9fe696355fa50bfa7add79fce8a402d06dd40310
                                         ['-I', '@CURRENT_SOURCE_DIR@/include', '@INPUT@'] +
                                         output_generator)
 
@@ -245,7 +253,7 @@ if build_tests
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      args_precision = pp_flag + '-DREAL_128' + '-DCUTEST_16btye_reals_exist'
+      args_precision = pp_flag + '-DREAL_128'
     endif
 
     test(name,
@@ -283,7 +291,7 @@ if build_tests and (fc.get_id() == 'gcc')
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      args_precision = pp_flag + '-DREAL_128' + '-DCUTEST_16btye_reals_exist'
+      args_precision = pp_flag + '-DREAL_128'
     endif
 
     test(name,

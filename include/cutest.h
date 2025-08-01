@@ -32,7 +32,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.5.1
+#define CUTEST_VERSION 2.5.3
 
 /*
  * Define name of main() function on a
@@ -203,6 +203,9 @@ typedef struct VarTypes {
 
 #define CUTEST_uterminate     FUNDERSCORE(cutest_uterminate)
 #define CUTEST_cterminate     FUNDERSCORE(cutest_cterminate)
+
+#define CUTEST_load_routines   FUNDERSCORE(cutest_load_routines)
+#define CUTEST_unload_routines FUNDERSCORE(cutest_unload_routines)
 
 #define FORTRAN_open          FUNDERSCORE(fortran_open)
 #define FORTRAN_close         FUNDERSCORE(fortran_close)
@@ -467,6 +470,12 @@ void CUTEST_cohprodsp( integer *status, integer *nnzohp,
 void CUTEST_uterminate( integer *status );
 void CUTEST_cterminate( integer *status );
 
+/* Load dynamic library and resolve CUTEst routine symbols */
+void CUTEST_load_routines( const char *libname );
+
+/* Unload dynamic library and reset pointers */
+void CUTEST_unload_routines( void );
+
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
 void FORTRAN_open(  const integer *funit, const char *fname, integer *ierr );
 void FORTRAN_close( const integer *funit, integer *ierr );
@@ -566,6 +575,9 @@ void FORTRAN_close( const integer *funit, integer *ierr );
 
 #define CUTEST_uterminate_s     FUNDERSCORE(cutest_uterminate_s)
 #define CUTEST_cterminate_s     FUNDERSCORE(cutest_cterminate_s)
+
+#define CUTEST_load_routines_s   FUNDERSCORE(cutest_load_routines_s)
+#define CUTEST_unload_routines_s FUNDERSCORE(cutest_unload_routines_s)
 
 #define FORTRAN_open_s          FUNDERSCORE(fortran_open_s)
 #define FORTRAN_close_s         FUNDERSCORE(fortran_close_s)
@@ -833,6 +845,12 @@ void CUTEST_cohprodsp_s( integer *status, integer *nnzohp,
 void CUTEST_uterminate_s( integer *status );
 void CUTEST_cterminate_s( integer *status );
 
+/* Load dynamic library and resolve CUTEst routine symbols */
+void CUTEST_load_routines_s( const char *libname );
+
+/* Unload dynamic library and reset pointers */
+void CUTEST_unload_routines_s( void );
+
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
 void FORTRAN_open_s( const integer *funit, const char *fname, 
                       integer *ierr );
@@ -935,6 +953,9 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 
 #define CUTEST_uterminate_q FUNDERSCORE(cutest_uterminate_q)
 #define CUTEST_cterminate_q FUNDERSCORE(cutest_cterminate_q)
+
+#define CUTEST_load_routines_q   FUNDERSCORE(cutest_load_routines_q)
+#define CUTEST_unload_routines_q FUNDERSCORE(cutest_unload_routines_q)
 
 #define FORTRAN_open_q      FUNDERSCORE(fortran_open_q)
 #define FORTRAN_close_q     FUNDERSCORE(fortran_close_q)
@@ -1205,6 +1226,12 @@ void CUTEST_cohprodsp_q( integer *status, integer *nnzohp,
 /* Termination routines */
 void CUTEST_uterminate_q( integer *status );
 void CUTEST_cterminate_q( integer *status );
+
+/* Load dynamic library and resolve CUTEst routine symbols */
+void CUTEST_load_routines_q( const char *libname );
+
+/* Unload dynamic library and reset pointers */
+void CUTEST_unload_routines_q( void );
 
 /* FORTRAN auxiliary subroutines to retrieve stream unit numbers */
 void FORTRAN_open_q(  const integer *funit, const char *fname, 

@@ -22,7 +22,7 @@ void write_sresult(ipc_ nnz_vector, ipc_ *INDEX_nz_vector, rpc_ *vector,
                    ipc_ nnz_result, ipc_ *INDEX_nz_result, rpc_ *result);
 void write_h_band(ipc_ n, ipc_ lbandh, rpc_ *H_band);
 
-int main() {
+int main(int argc, char **argv) {
     // CUTEst data file
     char *fname = "u_OUTSDIF.d";
 
@@ -51,6 +51,16 @@ int main() {
     char *X_names_fortran;
     char **X_names;
     rpc_ CPU[4], CALLS[4];
+
+#ifdef CUTEST_SHARED
+    if (argc < 2) {
+        fprintf(stderr, "ERROR: please provide the path to the shared library\n");
+        return EXIT_FAILURE;
+    }
+
+    const char *libsif_path = argv[1];
+    CUTEST_load_routines_r(libsif_path);
+#endif
 
     // Open the problem data file
     FORTRAN_open_r(&input, fname, &status);
@@ -465,6 +475,10 @@ int main() {
     free(H_band);
     
     FORTRAN_close_r(&input, &status);
+
+#ifdef CUTEST_SHARED
+    CUTEST_unload_routines_r();
+#endif
     return 0;
 }
 

@@ -15,5 +15,5 @@ option('int64',
 
 option('tests',
        type : 'boolean',
-       value : false,
+       value : true,
        description : 'whether to generate the tests')
