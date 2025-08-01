@@ -14,49 +14,49 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-13]
         compiler: ['gcc']
         arch: ['x64']
-        version: ['12']
+        version: ['14']
         int: ['32', '64']
         mode: ['static', 'shared']
         include:
           - os: windows-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '32'
             mode: 'static'
           - os: windows-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '64'
             mode: 'static'
           - os: ubuntu-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '32'
             mode: 'static'
           - os: ubuntu-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '32'
             mode: 'shared'
           - os: ubuntu-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '64'
             mode: 'static'
           - os: ubuntu-latest
             compiler: intel
-            version: '2023.2'
+            version: '2025.2'
             int: '64'
             mode: 'shared'
           - os: macos-latest
             compiler: gcc
-            version: '13'
+            version: '14'
             arch: 'arm64'
             int: '32'
             mode: 'static'
           - os: macos-latest
             compiler: gcc
-            version: '13'
+            version: '14'
             arch: 'arm64'
             int: '64'
             mode: 'static'
@@ -68,7 +68,7 @@ jobs:
             mode: 'shared'
           - os: macos-latest
             compiler: gcc
-            version: '13'
+            version: '14'
             arch: 'arm64'
             int: '64'
             mode: 'shared'
