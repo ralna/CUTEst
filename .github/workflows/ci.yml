@@ -14,13 +14,13 @@ jobs:
         include:
           - os: ubuntu-latest
             compiler: gcc
-            version: '12'
+            version: '14'
             sifdecode_input: '1\n1\nN1\nNyy'
             cutest_input: '1\n1\nN1\n2\n2\nNNyDyN'
             arch: 'pc64.lnx.gfo'
           - os: macos-latest
             compiler: gcc
-            version: '12'
+            version: '14'
             sifdecode_input: '2\nN1\nNyy'
             cutest_input: '2\nN1\n2\n2\nNNyDyN'
             arch: 'mac64.osx.gfo'
