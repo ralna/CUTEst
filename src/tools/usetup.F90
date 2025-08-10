@@ -197,7 +197,8 @@
       data%su_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
       data%out = out
       work%io_buffer = io_buffer
-      debug = .FALSE.
+!     debug = .FALSE.
+      debug = .TRUE.
       debug = debug .AND. out > 0
 
 !  input the problem dimensions
