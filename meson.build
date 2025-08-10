@@ -1,7 +1,7 @@
 project(
   'CUTEst',
   'fortran', 'c',
-  version: '2.5.4',
+  version: '2.5.5',
   meson_version: '>= 0.62.0',
   default_options: [
     'buildtype=release',

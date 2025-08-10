@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2023-11-12 AT 10:30 GMT.
+! THIS VERSION: CUTEST 2.5 - 2025-08-10 AT 15:50 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -1444,16 +1444,20 @@
 !  non-executable statements
 
  1010 FORMAT( ( 10I8 ) )
- 1020 FORMAT( ( 1P, 4D16.8 ) )
+!1020 FORMAT( ( 1P, 4D16.8 ) )
+ 1020 FORMAT( ( 1P, 4D18.10 ) )
  1030 FORMAT( ( 72L1 ) )
  1040 FORMAT( ( 8A10 ) )
- 1080 FORMAT( 1P, 2D16.8 )
+!1080 FORMAT( 1P, 2D16.8 )
+ 1080 FORMAT( 1P, 2D18.10 )
  1100 FORMAT( A10, 3I10 )
  1110 FORMAT( 1X, A6, /, ( 1X, 10I8 ) )
- 1120 FORMAT( 1X, A6, /, ( 1X, 1P, 4D16.8 ) )
+!1120 FORMAT( 1X, A6, /, ( 1X, 1P, 4D16.8 ) )
+ 1120 FORMAT( 1X, A6, /, ( 1X, 1P, 4D18.10 ) )
  1130 FORMAT( 1X, A6, /, ( 1X, 72L1 ) )
  1140 FORMAT( 1X, A6, /, ( 1X, 8A10 ) )
- 1180 FORMAT( 1X, A6, /, 1P, 2D16.8 )
+!1180 FORMAT( 1X, A6, /, 1P, 2D16.8 )
+ 1180 FORMAT( 1X, A6, /, 1P, 2D18.10 )
  2000 FORMAT( /, ' ** SUBROUTINE CUTEST_csetup: array length ', A,             &
                  ' too small.', /, ' -- Increase the dimension to at least ',  &
                  I0, ' and restart.' )
