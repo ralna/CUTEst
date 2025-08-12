@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.5 - 2025-08-10 AT 15:50 GMT.
+! THIS VERSION: CUTEST 2.5 - 2025-08-12 AT 15:55 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -197,8 +197,8 @@
       data%su_time = REAL( count, KIND = sp ) / REAL( count_rate, KIND = sp )
       data%out = out
       work%io_buffer = io_buffer
-!     debug = .FALSE.
-      debug = .TRUE.
+      debug = .FALSE.
+!     debug = .TRUE.
       debug = debug .AND. out > 0
 
 !  input the problem dimensions
