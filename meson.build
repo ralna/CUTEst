@@ -30,6 +30,7 @@ install_modules = get_option('modules')
 build_quadruple = get_option('quadruple')
 int64 = get_option('int64')
 build_tests = get_option('tests')
+static_compilation = get_option('default_library') == 'static'
 
 libcutest_src = []
 libcutest_f_src = []
@@ -229,7 +230,7 @@ if install_modules
 endif
 
 # Fortran tests
-if build_tests
+if build_tests and static_compilation
 
   fortran_tests_folder = 'tests/Fortran'
 
@@ -267,7 +268,7 @@ if build_tests
 endif
 
 # C tests
-if build_tests and (fc.get_id() == 'gcc')
+if build_tests and (fc.get_id() == 'gcc') and static_compilation
 
   fortran_tests_folder = 'tests/C'
 
