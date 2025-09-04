@@ -50,6 +50,11 @@ libcutest_include += include_directories('include')
 
 # Dependency
 libdl = fc.find_library('dl', required : false)
+if build_quadruple
+  libquadmath = fc.find_library('quadmath', required : true)
+else
+  libquadmath = fc.find_library('quadmath', required : false)
+endif
 
 # Sources
 subdir('include')
@@ -201,7 +206,7 @@ if build_quadruple
   pp_sources_quadruple = [gen_quadruple.process(libcutest_src)]
 
   libcutest_quadruple = library(libcutest_quadruple_name,
-                                dependencies : libdl,
+                                dependencies : [libdl, libquadmath],
                                 sources : pp_sources_quadruple + libcutest_c_src,
                                 include_directories : libcutest_include,
                                 install : true)
