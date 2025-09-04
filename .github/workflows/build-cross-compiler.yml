@@ -24,7 +24,6 @@ jobs:
           - aarch64-linux-gnu-libgfortran5
           - aarch64-apple-darwin-libgfortran5
           - x86_64-w64-mingw32-libgfortran5
-          - i686-w64-mingw32-libgfortran5
 
     steps:
       - uses: actions/checkout@v4
