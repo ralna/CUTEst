@@ -105,8 +105,8 @@ subdir('src/stats')
 # subdir('src/stenmin')      # needs stumcd_
 # subdir('src/tao')          # needs petsc/finclude/petsctao.h and Fortran module petsctao
 # subdir('src/tenmin')       # needs tensor_
-subdir('src/test')
 subdir('src/tools')
+subdir('src/test')
 # subdir('src/tron')         # needs dnrm2_, dgpnrm2_
 # subdir('src/uncmin')       # needs optif9_
 # subdir('src/vf13')         # needs vf13ad_
@@ -243,7 +243,7 @@ if build_tests and static_compilation
     package = test[0]
     precision = test[1]
     name = test[2]
-    file = test[3]
+    file = tests_common_src + test[3]
 
     if precision == 'single'
       libcutest_precision = libcutest_single

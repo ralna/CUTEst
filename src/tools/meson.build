@@ -96,3 +96,5 @@ libcutest_src += files('ccf.F90',
 if get_option('default_library') == 'shared'
     libcutest_src += files('cutest_trampoline.f90')
 endif
+
+tests_common_src = files('interface.F90')
