@@ -1,3 +1,5 @@
+# Note that this script can accept some limited command-line arguments, run
+# `julia build_tarballs.jl --help` to see a usage message.
 using BinaryBuilder, Pkg
 
 haskey(ENV, "CUTEST_RELEASE") || error("The environment variable CUTEST_RELEASE is not defined.")
@@ -12,17 +14,32 @@ sources = [
     GitSource(ENV["CUTEST_URL"], ENV["CUTEST_COMMIT"])
 ]
 
-# Bash recipe for building across all platforms
 script = raw"""
 # Update Ninja
 cp ${host_prefix}/bin/ninja /usr/bin/ninja
 
+QUADRUPLE="true"
+if [[ "${target}" == *arm* ]] || [[ "${target}" == *i686* ]] || [[ "${target}" == *aarch64-linux* ]] || [[ "${target}" == *aarch64-unknown-freebsd* ]] || [[ "${target}" == *powerpc64le-linux-gnu* ]] || [[ "${target}" == *riscv64* ]]; then
+    QUADRUPLE="false"
+fi
+
+mkdir ${includedir}
 cd ${WORKSPACE}/srcdir/CUTEst
-meson setup builddir --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true -Dtests=false
+
+meson setup builddir --cross-file="${MESON_TARGET_TOOLCHAIN}" \
+                     --prefix=$prefix \
+                     -Dtests=true \
+                     -Dquadruple=${QUADRUPLE}
+
 meson compile -C builddir
 meson install -C builddir
 
-meson setup builddir_shared --cross-file=${MESON_TARGET_TOOLCHAIN%.*}_gcc.meson --prefix=$prefix -Dquadruple=true -Dtests=false -Ddefault_library=shared
+meson setup builddir_shared --cross-file="${MESON_TARGET_TOOLCHAIN}" \
+                            --prefix=$prefix \
+                            -Dquadruple=${QUADRUPLE} \
+                            -Dtests=false \
+                            -Ddefault_library=shared
+
 meson compile -C builddir_shared
 meson install -C builddir_shared
 """
