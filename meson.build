@@ -280,20 +280,35 @@ if build_tests and (fc.get_id() == 'gcc')
     if precision == 'single'
       libcutest_precision = libcutest_single
       args_precision = pp_flag + '-DREAL_32'
+      if cc.get_id() == 'clang'
+        c_args_precision = '-DREAL_32'
+      else
+        c_args_precision = args_precision
+      endif
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
       args_precision = pp_flag
+      if cc.get_id() == 'clang'
+        c_args_precision = ''
+      else
+        c_args_precision = args_precision
+      endif
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
       args_precision = pp_flag + '-DREAL_128'
+      if cc.get_id() == 'clang'
+        c_args_precision = '-DREAL_128'
+      else
+        c_args_precision = args_precision
+      endif
     endif
 
     test(name,
          executable(name, file,
                     fortran_args : args_precision,
-                    c_args : args_precision,
+                    c_args : c_args_precision,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
                     include_directories: libcutest_include,
