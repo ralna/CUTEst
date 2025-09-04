@@ -52,11 +52,11 @@ platforms = expand_gfortran_versions(platforms)
 # The products that we will ensure are always built
 products = [
     FileProduct("lib/libcutest_single.a", :libcutest_single_a),
-    FileProduct("lib/libcutest_double.a", :libcutest_double_a),
-    FileProduct("lib/libcutest_quadruple.a", :libcutest_quadruple_a),
     LibraryProduct("libcutest_single", :libcutest_single),
+    FileProduct("lib/libcutest_double.a", :libcutest_double_a),
     LibraryProduct("libcutest_double", :libcutest_double),
-    LibraryProduct("libcutest_quadruple", :libcutest_quadruple),
+    # FileProduct("lib/libcutest_quadruple.a", :libcutest_quadruple_a),
+    # LibraryProduct("libcutest_quadruple", :libcutest_quadruple),
 ]
 
 # Dependencies that must be installed before this package can be built
