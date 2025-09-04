@@ -11,7 +11,7 @@ See the [wiki](https://github.com/ralna/CUTEst/wiki) for download and installati
 
 ### Precompiled libraries and executables
 
-We provide precompiled CUTEst libraries and executables in the [releases tab](https://github.com/ralna/CUTEst/releases/latest/) for Linux, macOS (Intel & Silicon) and Windows.
+We provide precompiled CUTEst libraries and executables in the [releases tab](https://github.com/ralna/galahad/releases/latest/) for Linux (x64 and aarch64), macOS (x64 and aarch64), and Windows (x64).
 
 ### Installation from source
 
