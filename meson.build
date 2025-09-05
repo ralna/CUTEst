@@ -120,33 +120,37 @@ else
 endif
 
 pp_options = []
-pp_flag = []
+fc_flag = []
+cc_flag = []
 if fc.get_id() == 'gcc' or fc.get_id() == 'llvm-flang'
-  pp_flag += '-cpp'
+  fc_flag += '-cpp'
   pp_options += ['-cpp', '-E']
 elif fc.get_id() == 'intel' or fc.get_id() == 'intel-llvm'
-  pp_flag += '-fpp'
+  fc_flag += '-fpp'
   pp_options += ['-fpp', '-P']
 elif fc.get_id() == 'intel-cl' or fc.get_id() == 'intel-llvm-cl'
-  pp_flag += '/fpp'
+  fc_flag += '/fpp'
   pp_options += ['/fpp', '/P']
 elif fc.get_id() == 'nagfor'
-  pp_flag += '-fpp'
+  fc_flag += '-fpp'
   pp_options += ['-fpp', '-F']
 elif fc.get_id() == 'nvidia_hpc'
-  pp_flag += '-Mcpp'
+  fc_flag += '-Mcpp'
   pp_options += ['-Mcpp', '-F']
 endif
 if build_quadruple
-  pp_flag += '-DCUTEST_16btye_reals_exist'
+  cc_flag += '-DCUTEST_16btye_reals_exist'
+  fc_flag += '-DCUTEST_16btye_reals_exist'
   pp_options += '-DCUTEST_16btye_reals_exist'
 endif
 if int64
-  pp_flag += '-DINTEGER_64'
+  cc_flag += '-DINTEGER_64'
+  fc_flag += '-DINTEGER_64'
   pp_options += '-DINTEGER_64'
 endif
 if host_machine.system() == 'windows'
-  pp_flag += '-DWINDOWS'
+  cc_flag += '-DWINDOWS'
+  fc_flag += '-DWINDOWS'
   pp_options += '-DWINDOWS'
 endif
 
@@ -247,20 +251,20 @@ if build_tests and static_compilation
 
     if precision == 'single'
       libcutest_precision = libcutest_single
-      args_precision = pp_flag + '-DREAL_32'
+      fortran_args_precision = fc_flag + '-DREAL_32'
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
-      args_precision = pp_flag
+      fortran_args_precision = fc_flag
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      args_precision = pp_flag + '-DREAL_128'
+      fortran_args_precision = fc_flag + '-DREAL_128'
     endif
 
     test(name,
          executable(name, file,
-                    fortran_args : args_precision,
+                    fortran_args : fortran_args_precision,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
                     include_directories: libcutest_include,
@@ -285,35 +289,23 @@ if build_tests and (fc.get_id() == 'gcc') and static_compilation
 
     if precision == 'single'
       libcutest_precision = libcutest_single
-      args_precision = pp_flag + '-DREAL_32'
-      if cc.get_id() == 'clang'
-        c_args_precision = '-DREAL_32'
-      else
-        c_args_precision = args_precision
-      endif
+      fortran_args_precision = fc_flag + '-DREAL_32'
+      c_args_precision = cc_flag + '-DREAL_32'
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
-      args_precision = pp_flag
-      if cc.get_id() == 'clang'
-        c_args_precision = ''
-      else
-        c_args_precision = args_precision
-      endif
+      fortran_args_precision = fc_flag
+      c_args_precision = cc_flag
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      args_precision = pp_flag + '-DREAL_128'
-      if cc.get_id() == 'clang'
-        c_args_precision = '-DREAL_128'
-      else
-        c_args_precision = args_precision
-      endif
+      fortran_args_precision = fc_flag + '-DREAL_128'
+      c_args_precision = cc_flag + '-DREAL_128'
     endif
 
     test(name,
          executable(name, file,
-                    fortran_args : args_precision,
+                    fortran_args : fortran_args_precision,
                     c_args : c_args_precision,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
