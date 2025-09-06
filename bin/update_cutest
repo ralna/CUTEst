@@ -31,7 +31,8 @@ fi
 
 cd $CUTEST
 message "Fetching updates (if any)"
-svn update >/dev/null 2>&1
+#svn update >/dev/null 2>&1
+git pull >/dev/null
 cd src
 fails=0
 for version in $to_rebuild
