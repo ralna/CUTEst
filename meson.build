@@ -247,24 +247,24 @@ if build_tests and static_compilation
     package = test[0]
     precision = test[1]
     name = test[2]
-    file = tests_common_src + test[3]
+    files_f90 = test[3]
+    files_f = test[4]
 
     if precision == 'single'
       libcutest_precision = libcutest_single
-      fortran_args_precision = fc_flag + '-DREAL_32'
+      pp_files_f90 = [gen_single.process(files_f90)]
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
-      fortran_args_precision = fc_flag
+      pp_files_f90 = [gen_double.process(files_f90)]
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      fortran_args_precision = fc_flag + '-DREAL_128'
+      pp_files_f90 = [gen_quadruple.process(files_f90)]
     endif
 
     test(name,
-         executable(name, file,
-                    fortran_args : fortran_args_precision,
+         executable(name, pp_files_f90 + files_f,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
                     include_directories: libcutest_include,
@@ -285,27 +285,24 @@ if build_tests and (fc.get_id() == 'gcc') and static_compilation
     package = test[0]
     precision = test[1]
     name = test[2]
-    file = test[3]
+    files_c = test[3]
+    files_f = test[4]
 
     if precision == 'single'
       libcutest_precision = libcutest_single
-      fortran_args_precision = fc_flag + '-DREAL_32'
       c_args_precision = cc_flag + '-DREAL_32'
     endif
     if precision == 'double'
       libcutest_precision = libcutest_double
-      fortran_args_precision = fc_flag
       c_args_precision = cc_flag
     endif
     if precision == 'quadruple'
       libcutest_precision = libcutest_quadruple
-      fortran_args_precision = fc_flag + '-DREAL_128'
       c_args_precision = cc_flag + '-DREAL_128'
     endif
 
     test(name,
-         executable(name, file,
-                    fortran_args : fortran_args_precision,
+         executable(name, files_c + files_f,
                     c_args : c_args_precision,
                     link_with : libcutest_precision,
                     link_language : 'fortran',
