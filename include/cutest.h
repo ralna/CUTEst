@@ -32,7 +32,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.5.7
+#define CUTEST_VERSION 2.5.8
 
 /*
  * Define name of main() function on a
