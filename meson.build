@@ -32,6 +32,10 @@ int64 = get_option('int64')
 build_tests = get_option('tests')
 static_compilation = get_option('default_library') == 'static'
 
+if get_option('default_library') == 'both'
+  error('The option "both" for default_library is not allowed for CUTEst. Use "static" or "shared".')
+endif
+
 libcutest_src = []
 libcutest_f_src = []
 libcutest_c_src = []
@@ -83,14 +87,14 @@ subdir('src/hrb')
 # subdir('src/lbfgsb')       # needs setulb_
 # subdir('src/lincoa')       # needs lincoa_
 # subdir('src/loqo')         # needs openlp, nlsetup, solvelp
-# subdir('src/matlab')       # --- not supported by build system ---
+# subdir('src/matlab')       # --- not supported by the Meson build system ---
 # subdir('src/minos')        # needs m1open_, mispec_, minoss_
 # subdir('src/newuoa')       # needs newuoa_
 # subdir('src/nitsol')       # needs nitsol_, ...
 # subdir('src/nlpqlp')       # needs nlpqlp_
 subdir('src/nomad')
 # subdir('src/npsol')        # needs npfile_, npoptn_, npsol_
-# subdir('src/octave')       # --- not supported by build system ---
+# subdir('src/octave')       # --- not supported by the Meson build system ---
 # subdir('src/osqp')         # needs osqp.h
 # subdir('src/pds')          # needs search_, getss_, pds_, result_
 # subdir('src/pennlp')       # needs pennlpf_
