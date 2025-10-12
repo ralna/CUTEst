@@ -102,15 +102,15 @@ when gotj = .FALSE., the derivatives will be evaluated at X. Otherwise
 X is not used,
 .TP
 .B nnz_vector \fP[in] - integer
-the number of nonzeros in the vector whose product with the Hessian 
+the number of nonzeros in the vector whose product with the Jacobian 
 is required,
 .TP
 .B INDEX_nz_vector \fP[in] - integer
 an array that gives the indiices of the nonzeros of the vector whose 
-product with the Hessian is required,
+product with the Jacobian is required,
 .TP
 .B VECTOR \fP[in] - real/double precision
-an array that gives the vector whose product with the Hessian is
+an array that gives the vector whose product with the Jacobian is
 required; only the nonzeros need be specified,
 .TP
 .B lvector \fP[in] - integer
@@ -118,15 +118,15 @@ the actual declared dimension of VECTOR, that should be at least n when
 jtrans is 'FALSE. and at least m when jtrans is .TRUE.,
 .TP
 .B nnz_result \fP[out] - integer
-the number of nonzeros in the result obtained by multiplying the Hessian 
+the number of nonzeros in the result obtained by multiplying the Jacobian 
 by VECTOR,
 .TP
 .B INDEX_nz_result \fP[out] - integer
 an array that gives the indiices of the nonzeros in the result obtained by
-multiplying the Hessian by VECTOR,
+multiplying the Jacobian by VECTOR,
 .TP
 .B RESULT \fP[out] - real/double precision
-an array that gives the result of multiplying the Hessian by VECTOR; 
+an array that gives the result of multiplying the Jacobian by VECTOR; 
 only the nonzeros will be set,
 .TP
 .B lresult \fP[in] - integer
