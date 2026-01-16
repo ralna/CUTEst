@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 08:05 GMT.
+! THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 14:50 GMT.
 
 #include "cutest_modules.h"
 
@@ -24,8 +24,9 @@
 
       PRIVATE
       PUBLIC :: CUTEST_initialize_workspace, CUTEST_form_gradients,            &
-                CUTEST_assemble_hessian, CUTEST_size_sparse_hessian,           &
-                CUTEST_assemble_hessian_pattern,                               &
+                CUTEST_size_sparse_hessian,                                    &
+                CUTEST_assemble_hessian, CUTEST_assemble_hessian_pattern,      &
+                CUTEST_assemble_hessian_i, CUTEST_assemble_hessian_i_pattern,  &
                 CUTEST_assemble_element_hessian, CUTEST_size_element_hessian,  &
                 CUTEST_hessian_times_vector, CUTEST_hessian_times_sp_vector,   &
                 CUTEST_extend_array,                                           &
@@ -163,6 +164,7 @@
         REAL :: time_cisgrp = 0.0
         REAL :: time_cidh = 0.0
         REAL :: time_cish = 0.0
+        REAL :: time_cishp = 0.0
         REAL :: time_cjprod = 0.0
         REAL :: time_clfg = 0.0
         REAL :: time_cofg = 0.0
@@ -1798,6 +1800,8 @@
         CALL CUTEST_allocate_array( H_col, lh_col, alloc_status )
         IF ( alloc_status /= 0 ) THEN
           bad_alloc = 'H_col' ; GO TO 980 ; END IF
+
+        hessian_setup_complete = .TRUE.
       END IF
 
 !  ----------------------------
@@ -1929,7 +1933,7 @@
 !  unsuccessful returns
 
   980 CONTINUE
-      WRITE( error, "( ' ** Message from -CUTEST_assemble_hessian-',           &
+      WRITE( error, "( ' ** Message from -CUTEST_assemble_hessian_pattern-',   &
      &    /, ' Allocation error (status = ', I0, ') for ', A )" )              &
         alloc_status, bad_alloc
       RETURN
@@ -1937,6 +1941,1032 @@
 !  end of subroutine CUTEST_assemble_hessian_pattern
 
      END SUBROUTINE CUTEST_assemble_hessian_pattern
+
+!-*-  C U T E S T _ a s s e m b l e _ h e s s i a n _ i  S U B R O U T I N E -*-
+
+      SUBROUTINE CUTEST_assemble_hessian_i(                                    &
+                      n, ng, nel, ntotel, nvrels, nnza, maxsel, nvargp,        &
+                      ISTADH, ICNA, ISTADA, INTVAR, IELVAR, IELING, ISTADG,    &
+                      ISTAEV, ISTAGV, ISVGRP, A, GUVALS, lnguvl, HUVALS,       &
+                      lnhuvl, GVALS2, GVALS3, GSCALE, ESCALE, GXEQX,           &
+                      ITYPEE, INTREP, RANGE, iprint, error, out,               &
+                      fixed_structure, use_band, nsemib, status,               &
+                      alloc_status, bad_alloc, hessian_setup_complete,         &
+                      lh_row, lh_col, lh_val, H_row, H_col, H_val, ROW_start,  &
+                      POS_in_H, USED, FILLED, lrowst, lpos, lused, lfilled,    &
+                      GRAD_el, W_el, W_in, H_el, H_in,                         &
+                      G_used, nnzh, maxsbw, DIAG, OFFDIA )
+
+!  Assemble the second derivative matrix of a subset of groups for a 
+!  groups partially separable function in either co-ordinate or band format
+
+!  History -
+!   modified version of CUTEST_assemble_hessian, January 16th, 2026
+
+!-----------------------------------------------
+!   D u m m y   A r g u m e n t s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nel, ng, maxsel, nsemib
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: nvrels, ntotel, nvargp, nnza
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: lnguvl, lnhuvl, iprint, error, out
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, alloc_status
+      LOGICAL, INTENT( IN ) :: fixed_structure, use_band
+      LOGICAL, INTENT( INOUT ) :: hessian_setup_complete
+      CHARACTER ( LEN = 24 ) :: bad_alloc
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nnza ) :: ICNA
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTADA
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTADG
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTAGV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel + 1 ) :: INTVAR
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel + 1 ) :: ISTAEV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel + 1 ) :: ISTADH
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvrels ) :: IELVAR
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ntotel ) :: IELING
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvargp ) :: ISVGRP
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel ) :: ITYPEE
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( nnza ) :: A
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lnguvl ) :: GUVALS
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( lnhuvl ) :: HUVALS
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( ng ) :: GVALS2
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( ng ) :: GVALS3
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( ng ) :: GSCALE
+      REAL ( KIND = rp_ ), INTENT( IN ), DIMENSION( ntotel ) :: ESCALE
+      LOGICAL, INTENT( IN ), DIMENSION( ng ) :: GXEQX
+      LOGICAL, INTENT( IN ), DIMENSION( nel ) :: INTREP
+
+!---------------------------------------------------------------
+!   D u m m y   A r g u m e n t s   f o r   W o r k s p a c e
+!--------------------------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: lh_row, lh_col, lh_val
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: lrowst, lpos, lused, lfilled
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: ROW_start
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: POS_in_H
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: USED
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: FILLED
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_row
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_col
+      REAL ( KIND = rp_ ), ALLOCATABLE, DIMENSION( : ) :: H_val
+
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( : ) :: GRAD_el
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( : ) :: W_el
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( : ) :: W_in
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( : ) :: H_el
+      REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION( : ) :: H_in
+
+!--------------------------------------------------
+!   O p t i o n a l   D u m m y   A r g u m e n t s
+!--------------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( OUT ), OPTIONAL :: maxsbw, nnzh
+      LOGICAL, INTENT( IN ), DIMENSION( ng ) :: G_USED
+      REAL ( KIND = rp_ ), INTENT( OUT ), OPTIONAL,                            &
+                                         DIMENSION( n ) :: DIAG
+      REAL ( KIND = rp_ ), INTENT( OUT ), OPTIONAL,                            &
+                                         DIMENSION( nsemib, n ) :: OFFDIA
+
+!-----------------------------------------------
+!   I n t e r f a c e   B l o c k s
+!-----------------------------------------------
+
+      INTERFACE
+        SUBROUTINE RANGE( ielemn, transp, W1, W2, nelvar, ninvar, ieltyp,      &
+                          lw1, lw2 )
+        USE CUTEST_KINDS_precision
+        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ielemn, nelvar, ninvar
+        INTEGER ( KIND = ip_ ), INTENT( IN ) :: ieltyp, lw1, lw2
+        LOGICAL, INTENT( IN ) :: transp
+        REAL ( KIND = rp_ ), INTENT( IN  ), DIMENSION ( lw1 ) :: W1
+        REAL ( KIND = rp_ ), INTENT( OUT ), DIMENSION ( lw2 ) :: W2
+        END SUBROUTINE RANGE
+      END INTERFACE
+
+!-----------------------------------------------
+!   L o c a l   V a r i a b l e s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ) :: i, ii, j, jj, k, kk, ig, l, ijhess
+      INTEGER ( KIND = ip_ ) :: irow, jcol, jcolst, ihnext, n_filled, nin
+      INTEGER ( KIND = ip_ ) :: iel, iell, ielh, nvarel, ig1, listvs, listve
+      REAL ( KIND = rp_ ) :: wki, hesnew, gdash, g2dash, scalee
+      CHARACTER ( LEN = 2 ), DIMENSION( 36, 36 ) :: MATRIX
+!     CHARACTER ( LEN = 80 ) :: array
+
+!  if a band storage scheme is to be used, initialize the entries within the
+!  band as zero
+
+      IF ( use_band ) THEN
+        maxsbw = 0
+        DIAG = 0.0_rp_ ; OFFDIA = 0.0_rp_
+
+!  if a co-ordinate scheme is to be used, determine the rows structure of the
+!  second derivative matrix of a groups partially separable function with
+!  possible repititions if this has not already been done
+
+      ELSE
+        CALL CUTEST_sparse_hessian_i_by_rows(                                  &
+                        n, ng, nel, ntotel, nvrels, nvargp, IELVAR,            &
+                        IELING, ISTADG, ISTAEV, ISTAGV, ISVGRP, GXEQX,         &
+                        error, status, alloc_status, bad_alloc,                &
+                        ROW_start, POS_in_H, lrowst, lpos, G_USED )
+        hessian_setup_complete = .FALSE.
+        IF ( status /= 0 ) RETURN                                           
+
+!  allocate workspace if required
+
+        lused = n
+        CALL CUTEST_allocate_array( USED, lused, alloc_status )
+        IF ( alloc_status /= 0 ) THEN
+          bad_alloc = 'USED' ; GO TO 980 ; END IF
+
+        lfilled = n
+        CALL CUTEST_allocate_array( FILLED, lfilled, alloc_status )
+        IF ( alloc_status /= 0 ) THEN
+          bad_alloc = 'FILLED' ; GO TO 980 ; END IF
+
+!  now pass through the nonzeros, setting up the position in the future
+!  H_row and H_col arrays of the data gathered from the groups
+
+        USED = 0
+        k = 1
+        DO i = 1, n
+          n_filled = 0
+          DO l = ROW_start( i ), ROW_start( i + 1 ) - 1
+            j = POS_in_H( l )
+            IF ( USED( j ) == 0 ) THEN
+              n_filled = n_filled + 1
+              FILLED( n_filled ) = j
+              USED( j ) = k
+              POS_in_H( l ) = k
+              k = k + 1
+            ELSE
+              POS_in_H( l ) = USED( j )
+            END IF
+          END DO
+          USED( FILLED( 1 : n_filled ) ) = 0
+        END DO
+        nnzh = k - 1
+
+!  allocate space for the row and column indices and values
+
+        lh_row = nnzh
+        CALL CUTEST_allocate_array( H_row, lh_row, alloc_status )
+        IF ( alloc_status /= 0 ) THEN
+          bad_alloc = 'H_row' ; GO TO 980 ; END IF
+
+        lh_col = nnzh
+        CALL CUTEST_allocate_array( H_col, lh_col, alloc_status )
+        IF ( alloc_status /= 0 ) THEN
+          bad_alloc = 'H_col' ; GO TO 980 ; END IF
+
+        lh_val = nnzh
+        CALL CUTEST_allocate_array( H_val, lh_val, alloc_status )
+        IF ( alloc_status /= 0 ) THEN
+          bad_alloc = 'H_val' ; GO TO 980 ; END IF
+
+        H_val( : nnzh ) = 0.0_rp_
+      END IF
+
+!  ---------------------------------------
+!  set the row and column lists and values
+!  ---------------------------------------
+
+!  consider the rank-one second order term for the i-th group
+
+      DO ig = 1, ng
+        IF ( GXEQX( ig ) ) CYCLE
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+        IF ( .NOT. fixed_structure .AND. GSCALE( ig ) == 0.0_rp_ ) CYCLE
+        IF ( iprint >= 100 ) WRITE( out,                                       &
+          "( ' Group ', I5, ' rank-one terms ' )" ) ig
+        g2dash = GSCALE( ig ) * GVALS3( ig )
+        IF ( iprint >= 100 ) WRITE( 6, * ) ' GVALS3( ig ) ', GVALS3( ig )
+        ig1 = ig + 1
+        listvs = ISTAGV( ig )
+        listve = ISTAGV( ig1 ) - 1
+
+!  form the gradient of the ig-th group
+
+        GRAD_el( ISVGRP( listvs : listve ) ) = 0.0_rp_
+
+!  consider any nonlinear elements for the group
+
+        DO iell = ISTADG( ig ), ISTADG( ig1 ) - 1
+          iel = IELING( iell )
+          k = INTVAR( iel )
+          l = ISTAEV( iel )
+          nvarel = ISTAEV( iel + 1 ) - l
+          scalee = ESCALE( iell )
+
+!  the iel-th element has an internal representation
+
+          IF ( INTREP( iel ) ) THEN
+            nin = INTVAR( iel + 1 ) - k
+            CALL RANGE( iel, .TRUE., GUVALS( k : k + nin - 1 ),                &
+                        H_el, nvarel, nin, ITYPEE( iel ), nin, nvarel )
+            DO i = 1, nvarel
+              j = IELVAR( l )
+              GRAD_el( j ) = GRAD_el( j ) + scalee * H_el( i )
+              l = l + 1
+            END DO
+
+!  the iel-th element has no internal representation
+
+          ELSE
+            DO i = 1, nvarel
+              j = IELVAR( l )
+              GRAD_el( j ) = GRAD_el( j ) + scalee * GUVALS( k )
+              k = k + 1 ; l = l + 1
+            END DO
+          END IF
+        END DO
+
+!  include the contribution from the linear element
+
+        DO k = ISTADA( ig ), ISTADA( ig1 ) - 1
+          j = ICNA( k )
+          GRAD_el( j ) = GRAD_el( j ) + A( k )
+        END DO
+
+!  the gradient is complete. Form the j-th column of the rank-one matrix
+
+        DO l = listvs, listve
+          j = ISVGRP( l )
+          IF ( j == 0 ) CYCLE
+
+!  find the entry in row i of this column
+
+          DO k = listvs, listve
+            i = ISVGRP( k )
+            IF ( i == 0 .OR. i > j ) CYCLE
+
+!  Skip all elements which lie outside a band of width nsemib
+
+            IF ( use_band ) maxsbw = MAX( maxsbw, j - i )
+            IF ( j - i > nsemib ) CYCLE
+            hesnew = GRAD_el( i ) * GRAD_el( j ) * g2dash
+            IF ( iprint >= 100 ) WRITE( out,                                   &
+              "( ' Row ', I6, ' column ', I6, ' used. Value = ', ES24.16 )" )  &
+                i, j, hesnew
+
+!  obtain the appropriate storage location in H for the new entry
+
+!  Case 1: band matrix storage scheme
+
+            IF ( use_band ) THEN
+
+!  the entry belongs on the diagonal
+
+              IF ( i == j ) THEN
+                DIAG( i ) = DIAG( i ) + hesnew
+
+!  the entry belongs off the diagonal
+
+              ELSE
+                OFFDIA( j - i, i ) = OFFDIA( j - i, i ) + hesnew
+              END IF
+
+!  Case 2: co-ordinate storage scheme
+
+            ELSE
+
+!  there is an entry in position (i,j) to be stored in
+!  H_row/col(COL(ROW_start(i)))
+
+              kk = POS_in_H( ROW_start( i ) )
+              H_row( kk ) = i
+              H_col( kk ) = j
+              H_val( kk ) = H_val( kk ) + hesnew
+              ROW_start( i ) = ROW_start( i ) + 1
+            END IF
+          END DO
+        END DO
+      END DO
+
+!  reset the workspace array to zero
+
+      W_el( : maxsel ) = 0.0_rp_
+
+!  now consider the low rank first order terms for the i-th group
+
+      DO ig = 1, ng
+        IF ( .NOT. fixed_structure .AND. GSCALE( ig ) == 0.0_rp_ ) CYCLE
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+        IF ( iprint >= 100 ) WRITE( out,                                       &
+          "( ' Group ', I5, ' second-order terms ' )" )  ig
+        IF ( GXEQX( ig ) ) THEN
+          gdash = GSCALE( ig )
+        ELSE
+          gdash = GSCALE( ig ) * GVALS2( ig )
+          IF ( iprint >= 100 ) WRITE( 6, * ) ' GVALS2( ig )', GVALS2( ig )
+        END IF
+        ig1 = ig + 1
+
+!  see if the group has any nonlinear elements
+
+        DO iell = ISTADG( ig ), ISTADG( ig + 1 ) - 1
+          iel = IELING( iell )
+          listvs = ISTAEV( iel )
+          listve = ISTAEV( iel + 1 ) - 1
+          nvarel = listve - listvs + 1
+          ielh = ISTADH( iel )
+          ihnext = ielh
+          scalee = ESCALE( iell )
+          DO l = listvs, listve
+            j = IELVAR( l )
+            IF ( j /= 0 ) THEN
+
+!  the iel-th element has an internal representation. Compute the j-th column
+!  of the element Hessian matrix
+
+              IF ( INTREP( iel ) ) THEN
+
+!  compute the j-th column of the Hessian
+
+                W_el( l - listvs + 1 ) = 1.0_rp_
+
+!  find the internal variables
+
+                nin = INTVAR( iel + 1 ) - INTVAR( iel )
+                CALL RANGE( iel, .FALSE., W_el, W_in, nvarel, nin,             &
+                            ITYPEE( iel ), nvarel, nin )
+
+!  multiply the internal variables by the element Hessian
+
+                H_in( : nin ) = 0.0_rp_
+
+!  only the upper triangle of the element Hessian is stored
+
+                jcolst = ielh - 1
+                DO jcol = 1, nin
+                  ijhess = jcolst
+                  jcolst = jcolst + jcol
+                  wki = W_in( jcol ) * gdash
+                  DO irow = 1, nin
+                    IF ( irow <= jcol ) THEN
+                      ijhess = ijhess + 1
+                    ELSE
+                      ijhess = ijhess + irow - 1
+                    END IF
+                    H_in( irow ) = H_in( irow ) + wki * HUVALS( ijhess )
+                  END DO
+                END DO
+
+!  scatter the product back onto the elemental variables
+
+                CALL RANGE( iel, .TRUE., H_in, H_el, nvarel, nin,              &
+                            ITYPEE( iel ), nin, nvarel )
+                W_el( l - listvs + 1 ) = 0.0_rp_
+              END IF
+
+!  find the entry in row i of this column
+
+              DO k = listvs, l
+                i = IELVAR( k )
+
+!  skip all elements which lie outside a band of width nsemib; only the upper
+!  triangle of the matrix is stored
+
+                IF ( use_band .AND. i /= 0 ) maxsbw = MAX( maxsbw, ABS( j - i ))
+                IF ( ABS( i - j ) <= nsemib .AND. i /= 0 ) THEN
+                  IF ( i <= j ) THEN
+                    ii = i
+                    jj = j
+                  ELSE
+                    ii = j
+                    jj = i
+                  END IF
+
+!  obtain the appropriate storage location in H for the new entry
+
+                  IF ( INTREP( iel ) ) THEN
+                    hesnew = scalee * H_el( k - listvs + 1 )
+                  ELSE
+                    hesnew = scalee * HUVALS( ihnext ) * gdash
+                  END IF
+                  IF ( iprint >= 100 ) WRITE( 6, "( ' Row ', I6, ' Column ',   &
+                 &   I6, ' used from element ', I6, ' value = ', ES24.16 )" )  &
+                    ii, jj, iel, hesnew
+
+!  Case 1: band matrix storage scheme
+
+                  IF ( use_band ) THEN
+
+!  The entry belongs on the diagonal
+
+                    IF ( ii == jj ) THEN
+                      DIAG( ii ) = DIAG( ii ) + hesnew
+                      IF ( k /= l ) DIAG( ii ) = DIAG( ii ) + hesnew
+
+!  the entry belongs off the diagonal
+
+                    ELSE
+                      OFFDIA( jj - ii, ii ) = OFFDIA( jj - ii, ii ) + hesnew
+                    END IF
+
+!  Case 2: co-ordinate storage scheme
+
+                  ELSE
+
+!  there is an entry in position (i,j) to be stored in
+!  H_row/col(COL(ROW_start(i)))
+
+                    kk = POS_in_H( ROW_start( ii ) )
+                    H_row( kk ) = ii
+                    H_col( kk ) = jj
+                    H_val( kk ) = H_val( kk ) + hesnew
+                    IF ( k /= l .AND. ii == jj )                               &
+                      H_val( kk ) = H_val( kk ) + hesnew
+                    ROW_start( ii ) = ROW_start( ii ) + 1
+                  END IF
+                END IF
+                ihnext = ihnext + 1
+              END DO
+            END IF
+          END DO
+        END DO
+      END DO
+
+!  restore the starting addresses
+
+      IF ( .NOT. use_band ) THEN
+        DO i = n - 1, 1, - 1
+          ROW_start( i + 1 ) = ROW_start( i )
+        END DO
+        ROW_start( 1 ) = 1
+      END IF
+
+!  ---------------------------------------
+!  For debugging, print the nonzero values
+!  ---------------------------------------
+
+!     IF ( .TRUE. ) THEN
+      IF ( iprint >= 10 ) THEN
+        IF ( .NOT. use_band )                                                  &
+          WRITE( out,                                                          &
+           "( '    Row  Column    Value        Row  Column    Value ', /       &
+         &    '    ---  ------    -----        ---  ------    ----- ', /       &
+         &    ( 2I6, ES24.16, 2I6, ES24.16 ) )" )                              &
+            ( H_row( i ), H_col( i ), H_val( i ), i = 1, nnzh )
+
+!  for debugging, print the nonzero pattern of the matrix
+
+        IF ( n <= 36 ) THEN
+          MATRIX( : n, : n ) = '  '
+          IF ( use_band ) THEN
+            DO i = 1, n
+              IF ( DIAG( i ) /= 0.0_rp_ ) MATRIX( i, i ) = ' *'
+              DO j = 1, MIN( nsemib, n - i )
+                IF ( OFFDIA( j, i ) /= 0.0_rp_ ) THEN
+                   MATRIX( i + j, i ) = ' *'
+                   MATRIX( i, i + j ) = ' *'
+                END IF
+              END DO
+            END DO
+          ELSE
+            DO i = 1, nnzh
+              IF ( H_row( i ) > n ) THEN
+                WRITE( out,                                                    &
+                  "( ' Entry out of bounds in CUTEST_assemble_hessian',        &
+                 &   ' row number = ', I0 )" ) H_row( i )
+!               STOP
+              END IF
+              IF ( H_col( i ) > n ) THEN
+                WRITE( out,                                                    &
+                  "( ' Entry out of bounds in CUTEST_assemble_hessian',        &
+                 &   ' col number = ', I0 )" ) H_col( i )
+!               STOP
+              END IF
+              MATRIX( H_row( i ), H_col( i ) ) = ' *'
+              MATRIX( H_col( i ), H_row( i ) ) = ' *'
+            END DO
+          END IF
+          WRITE( out, "( /, 5X, 36I2 )" ) ( i, i = 1, n )
+          DO i = 1, n
+            WRITE( out, "( I3, 2X, 36A2 )" ) i, ( MATRIX( i, j ), j = 1, n )
+          END DO
+        END IF
+      END IF
+
+!  successful return
+
+      status = 0
+      RETURN
+
+!  unsuccessful returns
+
+  980 CONTINUE
+      WRITE( error, "( ' ** Message from -CUTEST_assemble_hessian_i-',         &
+     &    /, ' Allocation error (status = ', I0, ') for ', A )" )              &
+        alloc_status, bad_alloc
+      RETURN
+
+!  end of subroutine CUTEST_assemble_hessian_i
+
+     END SUBROUTINE CUTEST_assemble_hessian_i
+
+!  C U T E S T _ a s s e m b l e _ h e s s i a n _ i _ p a t t e r n  SUBROUTINE
+
+      SUBROUTINE CUTEST_assemble_hessian_i_pattern(                            &
+                      n, ng, nel, ntotel, nvrels, nvargp,                      &
+                      IELVAR, IELING, ISTADG, ISTAEV, ISTAGV, ISVGRP, GXEQX,   &
+                      iprint, error, out, status, alloc_status, bad_alloc,     &
+                      hessian_setup_complete,                                  &
+                      lh_row, lh_col, H_row, H_col, ROW_start, POS_in_H,       &
+                      USED, FILLED, lrowst, lpos, lused, lfilled, nnzh,        &
+                      G_USED )
+
+!  Determine the sparisity pattern of the second derivative matrix for a subset 
+!  of groups of a groups partially separable function in co-ordinate format
+
+!  History -
+!   modified version of CUTEST_assemble_hessian_pattern, January 16th, 2026
+
+!-----------------------------------------------
+!   D u m m y   A r g u m e n t s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nel, ng, nvargp
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: nvrels, ntotel
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: iprint, error, out
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, alloc_status, nnzh
+      LOGICAL, INTENT( INOUT ) :: hessian_setup_complete
+      CHARACTER ( LEN = 24 ) :: bad_alloc
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTADG
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTAGV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel + 1 ) :: ISTAEV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvrels ) :: IELVAR
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ntotel ) :: IELING
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvargp ) :: ISVGRP
+      LOGICAL, INTENT( IN ), DIMENSION( ng ) :: GXEQX, G_USED
+
+!---------------------------------------------------------------
+!   D u m m y   A r g u m e n t s   f o r   W o r k s p a c e
+!--------------------------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: lh_row, lh_col
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: lrowst, lpos, lused, lfilled
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_row
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: H_col
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: ROW_start
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: POS_in_H
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: USED
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: FILLED
+
+!-----------------------------------------------
+!   L o c a l   V a r i a b l e s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ) :: i, ii, j, jj, k, kk, ig, l, iel
+      INTEGER ( KIND = ip_ ) :: iell, listvs, listve, n_filled
+      CHARACTER ( LEN = 2 ), DIMENSION( 36, 36 ) :: MATRIX
+!     CHARACTER ( LEN = 80 ) :: array
+
+!  determine the rows structure of the second derivative matrix of a
+!  groups partially separable function with possible repititions
+
+      CALL CUTEST_sparse_hessian_i_by_rows(                                    &
+                      n, ng, nel, ntotel, nvrels, nvargp,                      &
+                      IELVAR, IELING, ISTADG, ISTAEV, ISTAGV, ISVGRP, GXEQX,   &
+                      error, status, alloc_status, bad_alloc,                  &
+                      ROW_start, POS_in_H, lrowst, lpos, G_USED )
+      hessian_setup_complete = .FALSE.
+      IF ( status /= 0 ) RETURN
+
+!  allocate workspace if required
+
+      lused = n
+      CALL CUTEST_allocate_array( USED, lused, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'USED' ; GO TO 980 ; END IF
+
+      lfilled = n
+      CALL CUTEST_allocate_array( FILLED, lfilled, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'FILLED' ; GO TO 980 ; END IF
+
+!  now pass through the nonzeros, setting up the position in the future
+!  H_row and H_col arrays of the data gathered from the groups
+
+      USED = 0
+      k = 1
+      DO i = 1, n
+        n_filled = 0
+        DO l = ROW_start( i ), ROW_start( i + 1 ) - 1
+          j = POS_in_H( l )
+          IF ( USED( j ) == 0 ) THEN
+            n_filled = n_filled + 1
+            FILLED( n_filled ) = j
+            USED( j ) = k
+            POS_in_H( l ) = k
+            k = k + 1
+          ELSE
+            POS_in_H( l ) = USED( j )
+          END IF
+        END DO
+        USED( FILLED( 1 : n_filled ) ) = 0
+      END DO
+      nnzh = k - 1
+
+!  allocate space for the row and column indices
+
+      lh_row = nnzh
+      CALL CUTEST_allocate_array( H_row, lh_row, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'H_row' ; GO TO 980 ; END IF
+
+      lh_col = nnzh
+      CALL CUTEST_allocate_array( H_col, lh_col, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'H_col' ; GO TO 980 ; END IF
+
+!  ----------------------------
+!  set the row and column lists
+!  ----------------------------
+
+!  consider the rank-one second order term for the i-th group
+
+      DO ig = 1, ng
+        IF ( GXEQX( ig ) ) CYCLE
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+        listvs = ISTAGV( ig )
+        listve = ISTAGV( ig + 1 ) - 1
+
+!  Form the j-th column of the rank-one matrix
+
+        DO l = listvs, listve
+          j = ISVGRP( l )
+          IF ( j == 0 ) CYCLE
+
+!  find the entry in row i of this column
+
+          DO k = listvs, listve
+            i = ISVGRP( k )
+            IF ( i == 0 .OR. i > j ) CYCLE
+
+!  there is an entry in position (i,j) to be stored in
+!  H_row/col(COL(ROW_start(i)))
+
+            kk = POS_in_H( ROW_start( i ) )
+            H_row( kk ) = i
+            H_col( kk ) = j
+            ROW_start( i ) = ROW_start( i ) + 1
+          END DO
+        END DO
+      END DO
+
+!  now consider the low rank first order terms for the i-th group
+
+      DO ig = 1, ng
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+
+!  see if the group has any nonlinear elements
+
+        DO iell = ISTADG( ig ), ISTADG( ig + 1 ) - 1
+          iel = IELING( iell )
+          listvs = ISTAEV( iel )
+          listve = ISTAEV( iel + 1 ) - 1
+          DO l = listvs, listve
+            j = IELVAR( l )
+
+!  find the entry in row i of this column
+
+            IF ( j /= 0 ) THEN
+              DO k = listvs, l
+                i = IELVAR( k )
+
+!  only the upper triangle of the matrix is stored
+
+                IF ( i /= 0 ) THEN
+                  IF ( i <= j ) THEN
+                    ii = i
+                    jj = j
+                  ELSE
+                    ii = j
+                    jj = i
+                  END IF
+
+!  there is an entry in position (i,j) to be stored in
+!  H_row/col(COL(ROW_start(i)))
+
+                  kk = POS_in_H( ROW_start( ii ) )
+                  H_row( kk ) = ii
+                  H_col( kk ) = jj
+                  ROW_start( ii ) = ROW_start( ii ) + 1
+                END IF
+              END DO
+            END IF
+          END DO
+        END DO
+      END DO
+
+!  restore the starting addresses
+
+      DO i = n - 1, 1, - 1
+        ROW_start( i + 1 ) = ROW_start( i )
+      END DO
+      ROW_start( 1 ) = 1
+
+!  ---------------------------------------
+!  For debugging, print the nonzero values
+!  ---------------------------------------
+
+      IF ( iprint >= 10 ) THEN
+        WRITE( out,                                                            &
+           "( '    Row  Column   Row  Column   Row  Column   Row  Column', /,  &
+         &    '    ---  ------   ---  ------   ---  ------   ---  ------', /,  &
+         &    ( 2I6, 2I6, 2I6, 2I6 ) )" )                                      &
+            ( H_row( i ), H_col( i ), i = 1, nnzh )
+
+!  for debugging, print the nonzero pattern of the matrix
+
+        IF ( n <= 36 ) THEN
+          MATRIX( : n, : n ) = '  '
+          DO i = 1, nnzh
+            IF ( H_row( i ) > n ) THEN
+              WRITE( out,                                                      &
+                "( ' Entry out of bounds in CUTEST_assemble_hessian',          &
+               &   ' row number = ', I0 )" ) H_row( i )
+            END IF
+            IF ( H_col( i ) > n ) THEN
+              WRITE( out,                                                      &
+                "( ' Entry out of bounds in CUTEST_assemble_hessian',          &
+               &   ' col number = ', I0 )" ) H_col( i )
+            END IF
+            MATRIX( H_row( i ), H_col( i ) ) = ' *'
+            MATRIX( H_col( i ), H_row( i ) ) = ' *'
+          END DO
+          WRITE( out, "( /, 5X, 36I2 )" ) ( i, i = 1, n )
+          DO i = 1, n
+            WRITE( out, "( I3, 2X, 36A2 )" ) i, ( MATRIX( i, j ), j = 1, n )
+          END DO
+        END IF
+      END IF
+
+!  successful return
+
+      status = 0
+      RETURN
+
+!  unsuccessful returns
+
+  980 CONTINUE
+      WRITE( error, "( ' ** Message from -CUTEST_assemble_hessian_i_pattern-', &
+     &    /, ' Allocation error (status = ', I0, ') for ', A )" )              &
+        alloc_status, bad_alloc
+      RETURN
+
+!  end of subroutine CUTEST_assemble_hessian_i_pattern
+
+     END SUBROUTINE CUTEST_assemble_hessian_i_pattern
+
+! - C U T E S T _ s p a r s e _ h e s s i a n _i _ b y _ r o w s  SUBROUTINE -
+
+      SUBROUTINE CUTEST_sparse_hessian_i_by_rows(                              &
+                      n, ng, nel, ntotel, nvrels, nvargp,                      &
+                      IELVAR, IELING, ISTADG, ISTAEV, ISTAGV, ISVGRP, GXEQX,   &
+                      error, status, alloc_status, bad_alloc,                  &
+                      ROW_start, POS_in_H, lrowst, lpos, G_USED )
+
+!  Determine the rows structure of the second derivative matrix of a
+!  groups partially separable function with possible repititions
+
+!  History -
+!   modified version of CUTEST_sparse_hessian_by_rows, January 16th, 2026
+
+!-----------------------------------------------
+!   D u m m y   A r g u m e n t s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, ng, nvargp
+      INTEGER ( KIND = ip_ ), INTENT( IN ) :: nvrels, ntotel, nel, error
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, alloc_status
+      CHARACTER ( LEN = 24 ) :: bad_alloc
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTADG
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTAGV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nel + 1 ) :: ISTAEV
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvrels ) :: IELVAR
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ntotel ) :: IELING
+      INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( nvargp ) :: ISVGRP
+      LOGICAL, INTENT( IN ), DIMENSION( ng  ) :: GXEQX
+
+!---------------------------------------------------------------
+!   D u m m y   A r g u m e n t s   f o r   W o r k s p a c e
+!--------------------------------------------------------------
+
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: lrowst, lpos
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: ROW_start
+      INTEGER ( KIND = ip_ ), ALLOCATABLE, DIMENSION( : ) :: POS_in_H
+      LOGICAL, INTENT( IN ), DIMENSION( ng  ) :: G_USED
+
+!-----------------------------------------------
+!   L o c a l   V a r i a b l e s
+!-----------------------------------------------
+
+      INTEGER ( KIND = ip_ ) :: i, ii, iel, iell, ig, j, jj, k, l
+      INTEGER ( KIND = ip_ ) :: listvs, listve
+
+!  allocate workspace
+
+      lrowst = n + 1
+      CALL CUTEST_allocate_array( ROW_start, lrowst, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'ROW_start' ; GO TO 980 ; END IF
+
+!  ======
+!  PASS 1
+!  ======
+
+!  ROW_start(i+1) will hold the number of entries (with repeats) in row i
+
+      ROW_start( 2 : n + 1 ) = 0
+
+!  consider the rank-one second order term for the i-th group
+
+      DO ig = 1, ng
+        IF ( GXEQX( ig ) ) CYCLE
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+        listvs = ISTAGV( ig )
+        listve = ISTAGV( ig + 1 ) - 1
+
+!  Form the j-th column of the rank-one matrix
+
+        DO l = listvs, listve
+          j = ISVGRP( l )
+          IF ( j == 0 ) CYCLE
+
+!  find the entry in row i of this column
+
+          DO k = listvs, listve
+            i = ISVGRP( k )
+            IF ( i == 0 .OR. i > j ) CYCLE
+            ROW_start( i + 1 ) = ROW_start( i + 1 ) + 1
+
+!  there is an entry in position (i,j)
+
+          END DO
+        END DO
+      END DO
+
+!  now consider the low rank first order terms for the i-th group
+
+      DO ig = 1, ng
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+
+!  see if the group has any nonlinear elements
+
+        DO iell = ISTADG( ig ), ISTADG( ig + 1 ) - 1
+          iel = IELING( iell )
+          listvs = ISTAEV( iel )
+          listve = ISTAEV( iel + 1 ) - 1
+          DO l = listvs, listve
+            j = IELVAR( l )
+
+!  find the entry in row i of this column
+
+            IF ( j /= 0 ) THEN
+              DO k = listvs, l
+                i = IELVAR( k )
+
+!  only the upper triangle of the matrix is stored
+
+                IF ( i /= 0 ) THEN
+                  IF ( i <= j ) THEN
+                    ii = i
+                    jj = j
+                  ELSE
+                    ii = j
+                    jj = i
+                  END IF
+
+!  there is an entry in position (ii,jj)
+
+                  ROW_start( ii + 1 ) = ROW_start( ii + 1 ) + 1
+                END IF
+              END DO
+            END IF
+          END DO
+        END DO
+      END DO
+
+!  ROW_start(i) is changed to give the starting address for the list of
+!  column entries (with repeats) in row i (and ROW_start(n+1) points one
+!  beyond the end)
+
+!  compute starting addesses
+
+      ROW_start( 1 ) = 1
+      DO i = 2, n + 1
+        ROW_start( i ) = ROW_start( i ) +  ROW_start( i - 1 )
+      END DO
+
+!  ======
+!  PASS 2
+!  ======
+
+!  set the lists of column entries in each row
+
+!  allocate space for column indices
+
+      lpos = ROW_start( n + 1 ) - 1
+      CALL CUTEST_allocate_array( POS_in_H, lpos, alloc_status )
+      IF ( alloc_status /= 0 ) THEN
+        bad_alloc = 'ROW_start' ; GO TO 980 ; END IF
+
+!  consider the rank-one second order term for the i-th group
+
+      DO ig = 1, ng
+        IF ( GXEQX( ig ) ) CYCLE
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+        listvs = ISTAGV( ig )
+        listve = ISTAGV( ig + 1 ) - 1
+
+!  Form the j-th column of the rank-one matrix
+
+        DO l = listvs, listve
+          j = ISVGRP( l )
+          IF ( j == 0 ) CYCLE
+
+!  find the entry in row i of this column
+
+          DO k = listvs, listve
+            i = ISVGRP( k )
+            IF ( i == 0 .OR. i > j ) CYCLE
+            POS_in_H( ROW_start( i ) ) = j
+            ROW_start( i ) = ROW_start( i ) + 1
+
+!  there is an entry in position (i,j)
+
+          END DO
+        END DO
+      END DO
+
+!  now consider the low rank first order terms for the i-th group
+
+      DO ig = 1, ng
+        IF ( .NOT. G_USED( ig ) ) CYCLE
+
+!  see if the group has any nonlinear elements
+
+        DO iell = ISTADG( ig ), ISTADG( ig + 1 ) - 1
+          iel = IELING( iell )
+          listvs = ISTAEV( iel )
+          listve = ISTAEV( iel + 1 ) - 1
+          DO l = listvs, listve
+            j = IELVAR( l )
+
+!  find the entry in row i of this column
+
+            IF ( j /= 0 ) THEN
+              DO k = listvs, l
+                i = IELVAR( k )
+
+!  only the upper triangle of the matrix is stored
+
+                IF ( i /= 0 ) THEN
+                  IF ( i <= j ) THEN
+                    ii = i
+                    jj = j
+                  ELSE
+                    ii = j
+                    jj = i
+                  END IF
+
+!  there is an entry in position (i,j)
+
+                  POS_in_H( ROW_start( ii ) ) = jj
+                  ROW_start( ii ) = ROW_start( ii ) + 1
+                END IF
+              END DO
+            END IF
+          END DO
+        END DO
+      END DO
+
+!  restore the starting addresses
+
+      DO i = n - 1, 1, - 1
+        ROW_start( i + 1 ) = ROW_start( i )
+      END DO
+      ROW_start( 1 ) = 1
+
+!  successful return
+
+      status = 0
+      RETURN
+
+!  unsuccessful returns
+
+  980 CONTINUE
+      WRITE( error, "( ' ** Message from -CUTEST_sparse_hessian_by_rows-',     &
+     &    /, ' Allocation error (status = ', I0, ') for ', A )" )              &
+        alloc_status, bad_alloc
+      RETURN
+
+!  end of subroutine CUTEST_sparse_hessian_i_by_rows
+
+     END SUBROUTINE CUTEST_sparse_hessian_i_by_rows
 
 !-  C U T E S T _ s i z e _ s p a r s e  _ h e s s i a n  S U B R O U T I N E -
 
@@ -3794,7 +4824,7 @@
          bad_alloc = 'work%G_temp' ; GO TO 910
        END IF
 
-       ALLOCATE( work%LOGIC( data%nel ), STAT = alloc_status )
+       ALLOCATE( work%LOGIC( MAX( data%nel, data%ng ) ), STAT = alloc_status )
        IF ( alloc_status /= 0 ) THEN
          bad_alloc = 'work%LOGIC' ; GO TO 910
        END IF

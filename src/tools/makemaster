@@ -1,7 +1,7 @@
 #  Main body of the installation makefile for basic CUTEST tools packages
 
 #  Nick Gould, for GALAHAD productions
-#  This version: 2024-08-27
+#  This version: 2026-01-16
 
 #  include standard CUTEst makefile defaults before package-specifics
 
@@ -148,6 +148,7 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cidh_single.o) $(LCS)(csh_single.o) \
            $(LCS)(cshc_single.o) $(LCS)(cshj_single.o) \
            $(LCS)(cshp_single.o) $(LCS)(cish_single.o) \
+           $(LCS)(cishp_single.o) \
            $(LCS)(cjprod_single.o) $(LCS)(cstats_single.o) \
            $(LCS)(csgr_single.o) $(LCS)(csgreh_single.o) \
            $(LCS)(csgrsh_single.o) $(LCS)(csjprod_single.o) \
@@ -178,6 +179,7 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cidh_double.o) $(LCD)(csh_double.o) \
            $(LCD)(cshc_double.o) $(LCD)(cshj_double.o) \
            $(LCD)(cshp_double.o) $(LCD)(cish_double.o) \
+           $(LCD)(cishp_double.o) \
            $(LCD)(cjprod_double.o) $(LCD)(cstats_double.o) \
            $(LCD)(csgr_double.o) $(LCD)(csgreh_double.o) \
            $(LCD)(csgrsh_double.o) $(LCD)(csjprod_double.o) \
@@ -208,6 +210,7 @@ CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
            $(LCQ)(cidh_quadruple.o) $(LCQ)(csh_quadruple.o) \
            $(LCQ)(cshc_quadruple.o) $(LCQ)(cshj_quadruple.o) \
            $(LCQ)(cshp_quadruple.o) $(LCQ)(cish_quadruple.o) \
+           $(LCQ)(cishp_quadruple.o) \
            $(LCQ)(cjprod_quadruple.o) $(LCQ)(cstats_quadruple.o) \
            $(LCQ)(csgr_quadruple.o) $(LCQ)(csgreh_quadruple.o) \
            $(LCQ)(csgrsh_quadruple.o) $(LCQ)(csjprod_quadruple.o) \
@@ -238,6 +241,7 @@ CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cidh_single_64.o) $(LCS64)(csh_single_64.o) \
            $(LCS64)(cshc_single_64.o) $(LCS64)(cshj_single_64.o) \
            $(LCS64)(cshp_single_64.o) $(LCS64)(cish_single_64.o) \
+           $(LCS64)(cishp_single_64.o) \
            $(LCS64)(cjprod_single_64.o) $(LCS64)(cstats_single_64.o) \
            $(LCS64)(csgr_single_64.o) $(LCS64)(csgreh_single_64.o) \
            $(LCS64)(csgrsh_single_64.o) $(LCS64)(csjprod_single_64.o) \
@@ -268,6 +272,7 @@ CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cidh_double_64.o) $(LCD64)(csh_double_64.o) \
            $(LCD64)(cshc_double_64.o) $(LCD64)(cshj_double_64.o) \
            $(LCD64)(cshp_double_64.o) $(LCD64)(cish_double_64.o) \
+           $(LCD64)(cishp_double_64.o) \
            $(LCD64)(cjprod_double_64.o) $(LCD64)(cstats_double_64.o) \
            $(LCD64)(csgr_double_64.o) $(LCD64)(csgreh_double_64.o) \
            $(LCD64)(csgrsh_double_64.o) $(LCD64)(csjprod_double_64.o) \
@@ -298,6 +303,7 @@ CCUTESTQ64 = $(LCQ64)(csetup_quadruple_64.o) $(LCQ64)(cdimen_quadruple_64.o) \
            $(LCQ64)(cidh_quadruple_64.o) $(LCQ64)(csh_quadruple_64.o) \
            $(LCQ64)(cshc_quadruple_64.o) $(LCQ64)(cshj_quadruple_64.o) \
            $(LCQ64)(cshp_quadruple_64.o) $(LCQ64)(cish_quadruple_64.o) \
+           $(LCQ64)(cishp_quadruple_64.o) \
            $(LCQ64)(cjprod_quadruple_64.o) $(LCQ64)(cstats_quadruple_64.o) \
            $(LCQ64)(csgr_quadruple_64.o) $(LCQ64)(csgreh_quadruple_64.o) \
            $(LCQ64)(csgrsh_quadruple_64.o) $(LCQ64)(csjprod_quadruple_64.o) \
@@ -500,6 +506,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) cshj_$(PRECIS).o
 	$(RMARFILE) cshp_$(PRECIS).o
 	$(RMARFILE) cish_$(PRECIS).o
+	$(RMARFILE) cishp_$(PRECIS).o
 	$(RMARFILE) cjprod_$(PRECIS).o
 	$(RMARFILE) csjprod_$(PRECIS).o
 	$(RMARFILE) csgr_$(PRECIS).o
@@ -1045,6 +1052,19 @@ $(LC)(cish_$(PRECIS).o): ../tools/cish.F90
                    $(FORTRAN) -o cish_$(PRECIS).o $(F90FLAGSN) cish.F90 )
 	cd $(OBJ); $(ARR) cish_$(PRECIS).o; \
           $(RM) cish.F90 cish_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cishp.o: $(LC)(cishp_$(PRECIS).o)
+
+$(LC)(cishp_$(PRECIS).o): ../tools/cishp.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "cishp"
+	$(CP) ../tools/cishp.F90 $(OBJ)/cishp.F90
+	cd $(OBJ); $(FORTRAN) -o cishp_$(PRECIS).o $(F90FLAGS) cishp.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o cishp_$(PRECIS).o $(F90FLAGSN) cishp.F90 )
+	cd $(OBJ); $(ARR) cishp_$(PRECIS).o; \
+          $(RM) cishp.F90 cishp_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

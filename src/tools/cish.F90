@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2027-10-27 AT 08:40 GMT.
+! THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 11:20 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -367,10 +367,16 @@
 !     work%firstg = .FALSE.
       work%firstg = .TRUE.
 
+!  record all groups that are of the correct problem number
+
+      DO i = 1, data%ng
+        work%LOGIC( i ) = data%KNDOFC( i ) == iprob
+      END DO
+
 !  assemble the Hessian
 
       IF ( data%numcon > 0 ) THEN
-        CALL CUTEST_assemble_hessian(                                          &
+        CALL CUTEST_assemble_hessian_i(                                        &
                n, data%ng, data%nel, data%ntotel, data%nvrels, data%nnza,      &
                data%maxsel, data%nvargp, data%ISTADH,                          &
                data%ICNA, data%ISTADA, data%INTVAR, data%IELVAR, data%IELING,  &
@@ -385,9 +391,9 @@
                work%POS_in_H, work%USED, work%FILLED,                          &
                work%lrowst, work%lpos, work%lused, work%lfilled,               &
                work%W_ws, work%W_el, work%W_in, work%H_el, work%H_in,          &
-               nnzh = nnzh )
+               work%LOGIC, nnzh = nnzh )
       ELSE
-        CALL CUTEST_assemble_hessian(                                          &
+        CALL CUTEST_assemble_hessian_i(                                        &
                n, data%ng, data%nel, data%ntotel, data%nvrels, data%nnza,      &
                data%maxsel, data%nvargp, data%ISTADH,                          &
                data%ICNA, data%ISTADA, data%INTVAR, data%IELVAR, data%IELING,  &
@@ -402,7 +408,7 @@
                work%POS_in_H, work%USED, work%FILLED,                          &
                work%lrowst, work%lpos, work%lused, work%lfilled,               &
                work%W_ws, work%W_el, work%W_in, work%H_el, work%H_in,          &
-               nnzh = nnzh )
+               work%LOGIC, nnzh = nnzh )
       END IF
 
 !  check for errors in the assembly

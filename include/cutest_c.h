@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.5 - 2025-08-01 AT 10:00 GMT */
+/* THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 15:20 GMT */
 
 /*
  * ======================================================================
@@ -183,6 +183,7 @@ typedef struct VarTypes {
 #define CUTEST_cisgrp_c         FUNDERSCORE(cutest_cisgrp_c)
 #define CUTEST_cidh_c           FUNDERSCORE(cutest_cidh_c)
 #define CUTEST_cish_c           FUNDERSCORE(cutest_cish_c)
+#define CUTEST_cishp_c          FUNDERSCORE(cutest_cishp_c)
 #define CUTEST_csgrsh_c         FUNDERSCORE(cutest_csgrsh_c)
 #define CUTEST_csgrshp_c        FUNDERSCORE(cutest_csgrshp_c)
 #define CUTEST_csgreh_c         FUNDERSCORE(cutest_csgreh_c)
@@ -399,6 +400,9 @@ void CUTEST_cidh_c( integer *status, const integer *n, const doublereal *x,
 void CUTEST_cish_c( integer *status, const integer *n, const doublereal *x,
                     const integer *iprob, integer *nnzh, const integer *lh,
                     doublereal *h, integer *irnh, integer *icnh );
+void CUTEST_cishp_c( integer *status, const integer *n, 
+                     const integer *iprob, integer *nnzh, const integer *lh,
+                     integer *irnh, integer *icnh );
 void CUTEST_csgrsh_c( integer *status, const integer *n, const integer *m,
                       const doublereal *x, const doublereal *y,
                       const logical *grlagf, integer *nnzj,
@@ -555,6 +559,7 @@ void FORTRAN_close_c( const integer *funit, integer *ierr );
 #define CUTEST_cisgrp_c_s         FUNDERSCORE(cutest_cisgrp_c_s)
 #define CUTEST_cidh_c_s           FUNDERSCORE(cutest_cidh_c_s)
 #define CUTEST_cish_c_s           FUNDERSCORE(cutest_cish_c_s)
+#define CUTEST_cishp_c_s          FUNDERSCORE(cutest_cishp_c_s)
 #define CUTEST_csgrsh_c_s         FUNDERSCORE(cutest_csgrsh_c_s)
 #define CUTEST_csgrshp_c_s        FUNDERSCORE(cutest_csgrshp_c_s)
 #define CUTEST_csgreh_c_s         FUNDERSCORE(cutest_csgreh_c_s)
@@ -775,6 +780,9 @@ void CUTEST_cish_c_s    ( integer *status, const integer *n, const real *x,
                           const integer *iprob, integer *nnzh, 
                           const integer *lh, real *h, integer *irnh, 
                           integer *icnh );
+void CUTEST_cishp_c_s   ( integer *status, const integer *n,
+                          const integer *iprob, integer *nnzh, 
+                          const integer *lh, integer *irnh, integer *icnh );
 void CUTEST_csgrsh_c_s  ( integer *status, const integer *n, const integer *m,
                           const real *x, const real *y,
                           const logical *grlagf, integer *nnzj,
@@ -933,6 +941,7 @@ void FORTRAN_close_c_s( const integer *funit, integer *ierr );
 #define CUTEST_cisgrp_c_q         FUNDERSCORE(cutest_cisgrp_c_q)
 #define CUTEST_cidh_c_q           FUNDERSCORE(cutest_cidh_c_q)
 #define CUTEST_cish_c_q           FUNDERSCORE(cutest_cish_c_q)
+#define CUTEST_cishp_c_q          FUNDERSCORE(cutest_cishp_c_q)
 #define CUTEST_csgrsh_c_q         FUNDERSCORE(cutest_csgrsh_c_q)
 #define CUTEST_csgrshp_c_q        FUNDERSCORE(cutest_csgrshp_c_q)
 #define CUTEST_csgreh_c_q         FUNDERSCORE(cutest_csgreh_c_q)
@@ -1156,6 +1165,9 @@ void CUTEST_cish_c_q    ( integer *status, const integer *n, const quadreal *x,
                           const integer *iprob, integer *nnzh, 
                           const integer *lh, quadreal *h, 
                           integer *irnh, integer *icnh );
+void CUTEST_cishp_c_q   ( integer *status, const integer *n,
+                          const integer *iprob, integer *nnzh, 
+                          const integer *lh, integer *irnh, integer *icnh );
 void CUTEST_csgrsh_c_q  ( integer *status, const integer *n, const integer *m,
                           const quadreal *x, const quadreal *y,
                           const logical *grlagf, integer *nnzj,

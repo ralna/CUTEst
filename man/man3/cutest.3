@@ -269,6 +269,10 @@ evaluate the Hessian of the John function as a sparse matrix.
 evaluate the Hessian of the objective function or
 an individual constraint as a sparse matrix.
 .TP
+.B cutest_cishp  \fP(both unthreaded and threaded)
+evaluate the sparsity pattern of Hessian of the objective function or
+an individual constraint as a sparse matrix.
+.TP
 .B cutest_csgrshp \fP(both unthreaded and threaded)
 evaluate the sparsity pattern of the gradients of the objective function
 and constraints and the Hessian of the Lagrangian function
@@ -448,6 +452,8 @@ cutest_cshc(3M),
 cutest_cshc_threaded(3M),
 cutest_cish(3M),
 cutest_cish_threaded(3M),
+cutest_cishp(3M),
+cutest_cishp_threaded(3M),
 cutest_csgrsh(3M),
 cutest_csgrsh_threaded(3M),
 cutest_ceh(3M),

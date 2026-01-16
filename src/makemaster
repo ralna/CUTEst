@@ -99,6 +99,8 @@ all_single: tools_single
                    tenmin  $(S32) PWD=$(PWD)/tenmin )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    test  $(S32) PWD=$(PWD)/test )
+	( cd trial  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   trial  $(S32) PWD=$(PWD)/trial )
 	( cd tron  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    tron  $(S32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -186,6 +188,8 @@ all_double: tools_double
                    tenmin  $(D32) PWD=$(PWD)/tenmin )
 	( cd test  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    test  $(D32) PWD=$(PWD)/test )
+	( cd trial  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   trial  $(D32) PWD=$(PWD)/trial )
 	( cd tron  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    tron  $(D32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \

@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.2 - 2024-08-27 AT 09:25 GMT.
+! THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 15:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -910,6 +910,21 @@
         IF ( status /= 0 ) GO TO 900
         IF ( only_print_small )                                                &
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+
+!  compute the sparsity pattern of the Hessian of the objective or a constraint
+
+        iprob = 0
+        WRITE( out, "( ' Call CUTEST_cishp for the objective' )" )
+        CALL CUTEST_cishp_r( status, n, iprob, H_ne, l_h, H_row, H_col )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
+        iprob = 1
+        WRITE( out, "( ' Call CUTEST_cishp for a constraint' )" )
+        CALL CUTEST_cishp_r( status, n, iprob, H_ne, l_h, H_row, H_col )
+        IF ( status /= 0 ) GO to 900
+        IF ( only_print_small )                                                &
+          CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
 
 !  compute the sparse Hessian value of the objective or a constraint
 
