@@ -479,7 +479,7 @@
         bad_alloc = 'data%GXEQX' ; GO TO 910
       END IF
 
-      ALLOCATE( work%LOGIC( data%nel ), STAT = alloc_status )
+      ALLOCATE( work%LOGIC( MAX( data%nel, data%ng ) ), STAT = alloc_status )
       IF ( alloc_status /= 0 ) THEN
         bad_alloc = 'work%LOGIC' ; GO TO 910
       END IF

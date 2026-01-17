@@ -134,7 +134,7 @@
          status = 2 ; GO TO 990
       END IF
 
-!  record all groups that are of the correct problem number
+!  record all groups that are of the correct problem number in LOGIC
 
       DO i = 1, data%ng
         work%LOGIC( i ) = data%KNDOFC( i ) == iprob

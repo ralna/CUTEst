@@ -367,7 +367,7 @@
 !     work%firstg = .FALSE.
       work%firstg = .TRUE.
 
-!  record all groups that are of the correct problem number
+!  record all groups that are of the correct problem number in LOGIC
 
       DO i = 1, data%ng
         work%LOGIC( i ) = data%KNDOFC( i ) == iprob
