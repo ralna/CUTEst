@@ -201,7 +201,7 @@ jobs:
               SHARED="-shared"
               export LD_LIBRARY_PATH="$(pwd):${GITHUB_WORKSPACE}/cutest/$LIBDIR:$LD_LIBRARY_PATH"
             fi
-            if [[ "${{matrix.os}}" == "macos-13" ]]; then
+            if [[ "${{matrix.os}}" == "macos-15-intel" ]]; then
               LIBDIR="lib"
               DLEXT="dylib"
               SHARED="-dynamiclib"
