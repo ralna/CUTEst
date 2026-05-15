@@ -437,6 +437,13 @@ printf("hello\n");
        return 2;
     }
     printf("* J_ne = %d\n", J_ne);
+    printf("CALL CUTEST_cdimscj\n");
+    CUTEST_cdimscj_r( &status, &J_ne );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    printf("* J_ne = %d\n", J_ne);
 
     l_j = J_ne;
     J_val = malloc(l_j * sizeof(rpc_));
@@ -546,6 +553,15 @@ printf("hello\n");
        return 2;
     }
     write_c( m, C );
+
+    // compute the sparse Jacobian values
+    printf("CALL CUTEST_csj\n");
+    CUTEST_csj_r( &status, &n, X, &J_ne, &l_j, J_val, J_var, J_fun );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    write_j_sparse( J_ne, J_val, J_fun, J_var );
 
     // compute the Lagrangian function and gradient values
     grad = true;
@@ -778,6 +794,26 @@ printf("hello\n");
        return 2;
     }
     write_h_sparse( H_ne, H_val, H_row, H_col );
+
+    // compute the sparse Hessian value of the objective or a constraint
+    iprob = 0;
+    printf("CALL CUTEST_cish for objective\n");
+    CUTEST_cishp_r( &status, &n, &iprob,
+                    &H_ne, &l_h, H_row, H_col );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    write_h_sparsity_pattern( H_ne, H_row, H_col );
+    iprob = 1;
+    printf("CALL CUTEST_cish for a constraint\n");
+    CUTEST_cishp_r( &status, &n, &iprob,
+                    &H_ne, &l_h, H_row, H_col );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    write_h_sparsity_pattern( H_ne, H_row, H_col );
 
     // compute the sparse Hessian value of the objective or a constraint
     iprob = 0;

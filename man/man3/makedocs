@@ -17,6 +17,7 @@
 #               cutest_cdimsg \
 #               cutest_cdimsh \
 #               cutest_cdimsj \
+#               cutest_cdimscj \
 #               cutest_ceh \
 #               cutest_cfn \
 #               cutest_cgr \
@@ -51,6 +52,7 @@
 #               cutest_cshj \
 #               cutest_cshp \
 #               cutest_cshprod \
+#               cutest_csj \
 #               cutest_csjp \
 #               cutest_csjprod \
 #               cutest_cterminate \
@@ -177,6 +179,7 @@
 #foreach pack ( cutest_cdimse )
 #foreach pack ( cutest_cdimsh )
 #foreach pack ( cutest_cdimsj )
+#foreach pack ( cutest_cdimscj )
 #foreach pack ( cutest_ceh )
 #foreach pack ( cutest_cfn )
 #foreach pack ( cutest_cgr )

@@ -4,7 +4,7 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-11
- * this version 2024-08-28
+ * this version 2026-05-02
  */
 
 #define ELFUN_r ELFUN
@@ -24,6 +24,9 @@
 #define CUTEST_ccfsg_r CUTEST_ccfsg
 #define CUTEST_ccfsg_threaded_r CUTEST_ccfsg_threaded
 #define CUTEST_ccfsg_threadsafe_r CUTEST_ccfsg_threadsafe
+#define CUTEST_csj_r CUTEST_csj
+#define CUTEST_csj_threaded_r CUTEST_csj_threaded
+#define CUTEST_csj_threadsafe_r CUTEST_csj_threadsafe
 #define CUTEST_cchprodsp_r CUTEST_cchprodsp
 #define CUTEST_cchprodsp_threadsafe_r CUTEST_cchprodsp_threadsafe
 #define CUTEST_cchprods_r CUTEST_cchprods
@@ -60,6 +63,8 @@
 #define CUTEST_cdimsh_threadsafe_r CUTEST_cdimsh_threadsafe
 #define CUTEST_cdimsj_r CUTEST_cdimsj
 #define CUTEST_cdimsj_threadsafe_r CUTEST_cdimsj_threadsafe
+#define CUTEST_cdimscj_r CUTEST_cdimscj
+#define CUTEST_cdimscj_threadsafe_r CUTEST_cdimscj_threadsafe
 #define CUTEST_ceh_r CUTEST_ceh
 #define CUTEST_ceh_threaded_r CUTEST_ceh_threaded
 #define CUTEST_ceh_threadsafe_r CUTEST_ceh_threadsafe
@@ -92,6 +97,7 @@
 #define CUTEST_cigr_threadsafe_r CUTEST_cigr_threadsafe
 #define CUTEST_Cint_ccfg_r CUTEST_Cint_ccfg
 #define CUTEST_Cint_ccfsg_r CUTEST_Cint_ccfsg
+#define CUTEST_Cint_csj_r CUTEST_Cint_csj
 #define CUTEST_Cint_cchprods_r CUTEST_Cint_cchprods
 #define CUTEST_Cint_ccifg_r CUTEST_Cint_ccifg
 #define CUTEST_Cint_ccifsg_r CUTEST_Cint_ccifsg
@@ -136,6 +142,9 @@
 #define CUTEST_cish_r CUTEST_cish
 #define CUTEST_cish_threaded_r CUTEST_cish_threaded
 #define CUTEST_cish_threadsafe_r CUTEST_cish_threadsafe
+#define CUTEST_cishp_r CUTEST_cishp
+#define CUTEST_cishp_threaded_r CUTEST_cishp_threaded
+#define CUTEST_cishp_threadsafe_r CUTEST_cishp_threadsafe
 #define CUTEST_cjprod_r CUTEST_cjprod
 #define CUTEST_cjprod_threaded_r CUTEST_cjprod_threaded
 #define CUTEST_cjprod_threadsafe_r CUTEST_cjprod_threadsafe
@@ -304,6 +313,7 @@
 #define CUTEST_csgrp_c_r          CUTEST_csgrp_c          
 #define CUTEST_csjp_c_r           CUTEST_csjp_c           
 #define CUTEST_ccfsg_c_r          CUTEST_ccfsg_c          
+#define CUTEST_csj_c_r            CUTEST_csj_c          
 #define CUTEST_ccifg_c_r          CUTEST_ccifg_c          
 #define CUTEST_ccifsg_c_r         CUTEST_ccifsg_c         
 #define CUTEST_cgrdh_c_r          CUTEST_cgrdh_c          
@@ -321,6 +331,7 @@
 #define CUTEST_cisgrp_c_r         CUTEST_cisgrp_c         
 #define CUTEST_cidh_c_r           CUTEST_cidh_c           
 #define CUTEST_cish_c_r           CUTEST_cish_c           
+#define CUTEST_cishp_c_r          CUTEST_cishp_c           
 #define CUTEST_csgrsh_c_r         CUTEST_csgrsh_c         
 #define CUTEST_csgrshp_c_r        CUTEST_csgrshp_c        
 #define CUTEST_csgreh_c_r         CUTEST_csgreh_c         
@@ -355,6 +366,7 @@
 #define CUTEST_cnoobj_c_r         CUTEST_cnoobj_c         
 #define CUTEST_cdimsg_c_r         CUTEST_cdimsg_c         
 #define CUTEST_cdimsj_c_r         CUTEST_cdimsj_c         
+#define CUTEST_cdimscj_c_r        CUTEST_cdimscj_c         
 #define CUTEST_cdimsh_c_r         CUTEST_cdimsh_c         
 #define CUTEST_cdimohp_c_r        CUTEST_cdimohp_c        
 #define CUTEST_cdimchp_c_r        CUTEST_cdimchp_c        

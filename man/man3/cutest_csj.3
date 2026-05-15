@@ -1,0 +1,123 @@
+'\" e  @(#)cutest_csj v1.0 12/2012;
+.TH cutest_csj 3M "3 May 2026" "CUTEst user documentation" "CUTEst user documentation"
+.SH NAME
+CUTEST_csj \- CUTEst tool to evaluate constraint Jacobian values 
+in a sparse format.
+.SH SYNOPSIS
+.HP 1i
+CALL CUTEST_csj( status, n, X, nnzj, lj, J_val, J_var, J_con )
+
+.HP 1i
+For real rather than double precision arguments, instead
+
+.HP 1i
+CALL CUTEST_csj_s( ... )
+
+.HP 1i
+and for quadruple precision arguments, when available,
+
+.HP 1i
+CALL CUTEST_csj_q( ... )
+
+.SH DESCRIPTION
+The CUTEST_csj subroutine evaluates the values of the Jacobian J(x)
+of the constraint functions c(x) of the problem decoded from a SIF file by the 
+script \fIsifdecoder\fP at the point X in the constrained minimization 
+case. The Jacobian is stored in a sparse format. 
+
+The problem under consideration is to minimize or maximize an objective function
+.EQ
+f(x)
+.EN
+over all
+.EQ
+x
+.EN
+\(mo
+.EQ
+R sup n
+.EN
+subject to
+general equations
+.EQ
+c sub i (x) ~=~ 0,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ 1 ,..., m sub E } ),
+.EN
+general inequalities
+.EQ
+c sub i sup l ~<=~ c sub i (x) ~<=~ c sub i sup u,
+.EN
+.EQ
+~(i
+.EN
+\(mo
+.EQ
+{ m sub E + 1 ,..., m }),
+.EN
+and simple bounds
+.EQ
+x sup l ~<=~ x ~<=~ x sup u.
+.EN
+The objective function is group-partially separable and 
+all constraint functions are partially separable.
+
+.LP 
+.SH ARGUMENTS
+The arguments of CUTEST_csj are as follows
+.TP 5
+.B status \fP[out] - integer
+the outputr status: 0 for a succesful call, 1 for an array 
+allocation/deallocation error, 2 for an array bound error,
+3 for an evaluation error,
+.TP
+.B n \fP[in] - integer
+the number of variables for the problem,
+.TP
+.B X \fP[in] - real/double precision
+an array which gives the current estimate of the solution of the
+problem,
+.TP
+.B nnzj \fP[out] - integer
+the number of nonzeros in J_val,
+.TP
+.B lj \fP[in] - integer
+the actual declared dimensions of J_val, J_var and J_con,
+.TP
+.B J_val \fP[out] - real/double precision
+an array which gives the values of the nonzeros of the general
+constraint functions evaluated at X. The i-th entry of J_val gives the
+value of the derivative with respect to variable J_var(i) of
+constraint function J_con(i),
+.TP
+.B J_var \fP[out] - integer
+an array whose i-th component is the index of the variable with
+respect to which J_val(i) is the derivative,
+.TP
+.B J_con \fP[out] - integer
+an array whose i-th component is the index of the constraint function of
+which J_val(i) is the derivative,
+.LP
+.SH AUTHORS
+I. Bongartz, A.R. Conn, N.I.M. Gould, D. Orban and Ph.L. Toint
+.SH "SEE ALSO"
+\fICUTEst: a Constrained and Unconstrained Testing 
+Environment with safe threads\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   Computational Optimization and Applications \fB60\fP:3, pp.545-557, 2014.
+
+\fICUTEr (and SifDec): A Constrained and Unconstrained Testing
+Environment, revisited\fP,
+   N.I.M. Gould, D. Orban and Ph.L. Toint,
+   ACM TOMS, \fB29\fP:4, pp.373-394, 2003.
+
+\fICUTE: Constrained and Unconstrained Testing Environment\fP,
+   I. Bongartz, A.R. Conn, N.I.M. Gould and Ph.L. Toint, 
+   ACM TOMS, \fB21\fP:1, pp.123-160, 1995.
+
+cutest_ccfsg(3M), sifdecoder(1)

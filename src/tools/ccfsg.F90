@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-23 AT 08:30 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 14:10 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -54,7 +54,7 @@
 
       RETURN
 
-!  end of subroutine CUTEST_cscfg_c_r
+!  end of subroutine CUTEST_ccfsg_c_r
 
       END SUBROUTINE CUTEST_ccfsg_c_r
 
@@ -104,7 +104,7 @@
 
       RETURN
 
-!  end of subroutine CUTEST_Cint_cscfg
+!  end of subroutine CUTEST_Cint_ccfsg
 
       END SUBROUTINE CUTEST_Cint_ccfsg_r
 
@@ -151,7 +151,7 @@
                                       nnzj, lj, J_val, J_var, J_fun, grad )
       RETURN
 
-!  end of subroutine CUTEST_cscfg
+!  end of subroutine CUTEST_ccfsg
 
       END SUBROUTINE CUTEST_ccfsg_r
 
@@ -209,7 +209,7 @@
                                       nnzj, lj, J_val, J_var, J_fun, grad )
       RETURN
 
-!  end of subroutine CUTEST_cscfg_threaded
+!  end of subroutine CUTEST_ccfsg_threaded
 
       END SUBROUTINE CUTEST_ccfsg_threaded_r
 
@@ -548,7 +548,7 @@
       END IF
       RETURN
 
-!  end of subroutine CUTEST_cscfg_threadsafe_r
+!  end of subroutine CUTEST_ccfsg_threadsafe_r
 
       END SUBROUTINE CUTEST_ccfsg_threadsafe_r
 

@@ -1,4 +1,4 @@
-// THIS VERSION: CUTEST 2.3 - 2024-10-26 AT 15:00 GMT.
+// THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 15:30 GMT.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -435,6 +435,14 @@ int main(int argc, char **argv) {
     }
     printf("* J_ne = %d\n", J_ne);
 
+    printf("CALL CUTEST_cdimscj\n");
+    CUTEST_cdimscj_c_r( &status, &J_ne );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    printf("* J_ne = %d\n", J_ne);
+
     l_j = J_ne;
     J_val = malloc(l_j * sizeof(rpc_));
     J_fun = malloc(l_j * sizeof(ipc_));
@@ -542,6 +550,16 @@ int main(int argc, char **argv) {
        return 2;
     }
     write_c( m, C );
+
+    // compute the sparse Jacobian values
+    printf("CALL CUTEST_csj\n");
+    CUTEST_csj_c_r( &status, &n, X, &J_ne, &l_j, J_val, J_var, J_fun );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+    write_j_sparse( J_ne, J_val, J_fun, J_var );
+
 
     // compute the Lagrangian function and gradient values
     grad = true;

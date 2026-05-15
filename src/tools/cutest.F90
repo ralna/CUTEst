@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 14:50 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 14:20 GMT.
 
 #include "cutest_modules.h"
 
@@ -171,6 +171,7 @@
         REAL :: time_cofsg = 0.0
         REAL :: time_csgr = 0.0
         REAL :: time_csgrp = 0.0
+        REAL :: time_csj = 0.0
         REAL :: time_csjp = 0.0
         REAL :: time_csgreh = 0.0
         REAL :: time_csgrsh = 0.0

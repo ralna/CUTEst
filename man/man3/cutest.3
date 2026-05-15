@@ -168,6 +168,10 @@ determine whether the variables are continuous or discrete.
 determine the number of nonzeros in the sparse objective gradient,
 .TP
 .B cutest_cdimsj \fP(both threaded and unthreaded)
+determine the number of nonzeros in the sparse objective and constraint 
+Jacobian.
+.TP
+.B cutest_cdimscj \fP(both threaded and unthreaded)
 determine the number of nonzeros in the sparse constraint Jacobian.
 .TP
 .B cutest_cdimsh \fP(both threaded and unthreaded)
@@ -198,6 +202,9 @@ evaluate both the value and sparse gradient of the objective function.
 .TP
 .B cutest_csjp \fP(both unthreaded and threaded)
 evaluate the sparsity pattern of the Jacobian of gradients of the constraints
+.TP
+.B cutest_csj \fP(unthreaded) and \fBcutest_csj_threaded \fP(threaded)
+evaluate the Jacobian of the constraints.
 .TP
 .B cutest_csgrp \fP(both unthreaded and threaded)
 evaluate the sparsity pattern of the gradients of the objective function
@@ -412,6 +419,7 @@ cutest_cnames(3M),
 cutest_connames(3M),
 cutest_cvartype(3M),
 cutest_cdimsj(3M),
+cutest_cdimscj(3M),
 cutest_cdimsh(3M),
 cutest_cdimse(3M),
 cutest_cdimchp(3M),
@@ -424,6 +432,8 @@ cutest_cofg_threaded(3M),
 cutest_cofsg(3M),
 cutest_cofsg_threaded(3M),
 cutest_csjp(3M),
+cutest_csj(3M),
+cutest_csj_threaded(3M),
 cutest_csgrp(3M),
 cutest_csgr(3M),
 cutest_csgr_threaded(3M),

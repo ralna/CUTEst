@@ -133,6 +133,7 @@ UCUTESTQ64 = $(LCQ64)(usetup_quadruple_64.o) $(LCQ64)(udimen_quadruple_64.o) \
 
 CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cdimse_single.o) $(LCS)(cdimsh_single.o) \
+           $(LCS)(cdimscj_single.o) \
            $(LCS)(cdimsj_single.o) $(LCS)(cdimchp_single.o) \
            $(LCS)(cdimohp_single.o) $(LCS)(cvartype_single.o) \
            $(LCS)(cfn_single.o) $(LCS)(cgr_single.o) \
@@ -148,7 +149,7 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cidh_single.o) $(LCS)(csh_single.o) \
            $(LCS)(cshc_single.o) $(LCS)(cshj_single.o) \
            $(LCS)(cshp_single.o) $(LCS)(cish_single.o) \
-           $(LCS)(cishp_single.o) \
+           $(LCS)(cishp_single.o) $(LCS)(csj_single.o) \
            $(LCS)(cjprod_single.o) $(LCS)(cstats_single.o) \
            $(LCS)(csgr_single.o) $(LCS)(csgreh_single.o) \
            $(LCS)(csgrsh_single.o) $(LCS)(csjprod_single.o) \
@@ -164,6 +165,7 @@ CCUTESTS = $(LCS)(csetup_single.o) $(LCS)(cdimen_single.o) \
            $(LCS)(cnoobj_single.o)
 CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cdimse_double.o) $(LCD)(cdimsh_double.o) \
+           $(LCD)(cdimscj_double.o) \
            $(LCD)(cdimsj_double.o) $(LCD)(cdimchp_double.o) \
            $(LCD)(cdimohp_double.o) $(LCD)(cvartype_double.o) \
            $(LCD)(cfn_double.o) $(LCD)(cgr_double.o) \
@@ -179,7 +181,7 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cidh_double.o) $(LCD)(csh_double.o) \
            $(LCD)(cshc_double.o) $(LCD)(cshj_double.o) \
            $(LCD)(cshp_double.o) $(LCD)(cish_double.o) \
-           $(LCD)(cishp_double.o) \
+           $(LCD)(cishp_double.o) $(LCD)(csj_double.o) \
            $(LCD)(cjprod_double.o) $(LCD)(cstats_double.o) \
            $(LCD)(csgr_double.o) $(LCD)(csgreh_double.o) \
            $(LCD)(csgrsh_double.o) $(LCD)(csjprod_double.o) \
@@ -195,6 +197,7 @@ CCUTESTD = $(LCD)(csetup_double.o) $(LCD)(cdimen_double.o) \
            $(LCD)(cnoobj_double.o)
 CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
            $(LCQ)(cdimse_quadruple.o) $(LCQ)(cdimsh_quadruple.o) \
+           $(LCQ)(cdimscj_quadruple.o) \
            $(LCQ)(cdimsj_quadruple.o) $(LCQ)(cdimchp_quadruple.o) \
            $(LCQ)(cdimohp_quadruple.o) $(LCQ)(cvartype_quadruple.o) \
            $(LCQ)(cfn_quadruple.o) $(LCQ)(cgr_quadruple.o) \
@@ -210,7 +213,7 @@ CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
            $(LCQ)(cidh_quadruple.o) $(LCQ)(csh_quadruple.o) \
            $(LCQ)(cshc_quadruple.o) $(LCQ)(cshj_quadruple.o) \
            $(LCQ)(cshp_quadruple.o) $(LCQ)(cish_quadruple.o) \
-           $(LCQ)(cishp_quadruple.o) \
+           $(LCQ)(cishp_quadruple.o) $(LCQ)(csj_quadruple.o) \
            $(LCQ)(cjprod_quadruple.o) $(LCQ)(cstats_quadruple.o) \
            $(LCQ)(csgr_quadruple.o) $(LCQ)(csgreh_quadruple.o) \
            $(LCQ)(csgrsh_quadruple.o) $(LCQ)(csjprod_quadruple.o) \
@@ -226,6 +229,7 @@ CCUTESTQ = $(LCQ)(csetup_quadruple.o) $(LCQ)(cdimen_quadruple.o) \
            $(LCQ)(cnoobj_quadruple.o)
 CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cdimse_single_64.o) $(LCS64)(cdimsh_single_64.o) \
+           $(LCS64)(cdimscj_single_64.o) \
            $(LCS64)(cdimsj_single_64.o) $(LCS64)(cdimchp_single_64.o) \
            $(LCS64)(cdimohp_single_64.o) $(LCS64)(cvartype_single_64.o) \
            $(LCS64)(cfn_single_64.o) $(LCS64)(cgr_single_64.o) \
@@ -241,7 +245,7 @@ CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cidh_single_64.o) $(LCS64)(csh_single_64.o) \
            $(LCS64)(cshc_single_64.o) $(LCS64)(cshj_single_64.o) \
            $(LCS64)(cshp_single_64.o) $(LCS64)(cish_single_64.o) \
-           $(LCS64)(cishp_single_64.o) \
+           $(LCS64)(cishp_single_64.o) $(LCS64)(csj_single_64.o) \
            $(LCS64)(cjprod_single_64.o) $(LCS64)(cstats_single_64.o) \
            $(LCS64)(csgr_single_64.o) $(LCS64)(csgreh_single_64.o) \
            $(LCS64)(csgrsh_single_64.o) $(LCS64)(csjprod_single_64.o) \
@@ -257,6 +261,7 @@ CCUTESTS64 = $(LCS64)(csetup_single_64.o) $(LCS64)(cdimen_single_64.o) \
            $(LCS64)(cnoobj_single_64.o)
 CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cdimse_double_64.o) $(LCD64)(cdimsh_double_64.o) \
+           $(LCD64)(cdimscj_double_64.o) \
            $(LCD64)(cdimsj_double_64.o) $(LCD64)(cdimchp_double_64.o) \
            $(LCD64)(cdimohp_double_64.o) $(LCD64)(cvartype_double_64.o) \
            $(LCD64)(cfn_double_64.o) $(LCD64)(cgr_double_64.o) \
@@ -272,7 +277,7 @@ CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cidh_double_64.o) $(LCD64)(csh_double_64.o) \
            $(LCD64)(cshc_double_64.o) $(LCD64)(cshj_double_64.o) \
            $(LCD64)(cshp_double_64.o) $(LCD64)(cish_double_64.o) \
-           $(LCD64)(cishp_double_64.o) \
+           $(LCD64)(cishp_double_64.o) $(LCD64)(csj_double_64.o) \
            $(LCD64)(cjprod_double_64.o) $(LCD64)(cstats_double_64.o) \
            $(LCD64)(csgr_double_64.o) $(LCD64)(csgreh_double_64.o) \
            $(LCD64)(csgrsh_double_64.o) $(LCD64)(csjprod_double_64.o) \
@@ -288,6 +293,7 @@ CCUTESTD64 = $(LCD64)(csetup_double_64.o) $(LCD64)(cdimen_double_64.o) \
            $(LCD64)(cnoobj_double_64.o)
 CCUTESTQ64 = $(LCQ64)(csetup_quadruple_64.o) $(LCQ64)(cdimen_quadruple_64.o) \
            $(LCQ64)(cdimse_quadruple_64.o) $(LCQ64)(cdimsh_quadruple_64.o) \
+           $(LCQ64)(cdimscj_quadruple_64.o) \
            $(LCQ64)(cdimsj_quadruple_64.o) $(LCQ64)(cdimchp_quadruple_64.o) \
            $(LCQ64)(cdimohp_quadruple_64.o) $(LCQ64)(cvartype_quadruple_64.o) \
            $(LCQ64)(cfn_quadruple_64.o) $(LCQ64)(cgr_quadruple_64.o) \
@@ -303,7 +309,7 @@ CCUTESTQ64 = $(LCQ64)(csetup_quadruple_64.o) $(LCQ64)(cdimen_quadruple_64.o) \
            $(LCQ64)(cidh_quadruple_64.o) $(LCQ64)(csh_quadruple_64.o) \
            $(LCQ64)(cshc_quadruple_64.o) $(LCQ64)(cshj_quadruple_64.o) \
            $(LCQ64)(cshp_quadruple_64.o) $(LCQ64)(cish_quadruple_64.o) \
-           $(LCQ64)(cishp_quadruple_64.o) \
+           $(LCQ64)(cishp_quadruple_64.o) $(LCQ64)(csj_quadruple_64.o) \
            $(LCQ64)(cjprod_quadruple_64.o) $(LCQ64)(cstats_quadruple_64.o) \
            $(LCQ64)(csgr_quadruple_64.o) $(LCQ64)(csgreh_quadruple_64.o) \
            $(LCQ64)(csgrsh_quadruple_64.o) $(LCQ64)(csjprod_quadruple_64.o) \
@@ -476,6 +482,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) cdimse_$(PRECIS).o
 	$(RMARFILE) cdimsh_$(PRECIS).o
 	$(RMARFILE) cdimsj_$(PRECIS).o
+	$(RMARFILE) cdimscj_$(PRECIS).o
 	$(RMARFILE) cdimchp_$(PRECIS).o
 	$(RMARFILE) cdimohp_$(PRECIS).o
 	$(RMARFILE) cnames_$(PRECIS).o
@@ -510,6 +517,7 @@ $(LC)(cutest_$(PRECIS).o): ../tools/cutest.F90
 	$(RMARFILE) cjprod_$(PRECIS).o
 	$(RMARFILE) csjprod_$(PRECIS).o
 	$(RMARFILE) csgr_$(PRECIS).o
+	$(RMARFILE) csj_$(PRECIS).o
 	$(RMARFILE) csjp_$(PRECIS).o
 	$(RMARFILE) csgrp_$(PRECIS).o
 	$(RMARFILE) csgreh_$(PRECIS).o
@@ -662,6 +670,19 @@ $(LC)(cdimsj_$(PRECIS).o): ../tools/cdimsj.F90
                    $(FORTRAN) -o cdimsj_$(PRECIS).o $(F90FLAGSN) cdimsj.F90 )
 	cd $(OBJ); $(ARR) cdimsj_$(PRECIS).o; \
           $(RM) cdimsj.F90 cdimsj_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+cdimscj.o: $(LC)(cdimscj_$(PRECIS).o)
+
+$(LC)(cdimscj_$(PRECIS).o): ../tools/cdimscj.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "cdimscj"
+	$(CP) ../tools/cdimscj.F90 $(OBJ)/cdimscj.F90
+	cd $(OBJ); $(FORTRAN) -o cdimscj_$(PRECIS).o $(F90FLAGS) cdimscj.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o cdimscj_$(PRECIS).o $(F90FLAGSN) cdimscj.F90 )
+	cd $(OBJ); $(ARR) cdimscj_$(PRECIS).o; \
+          $(RM) cdimscj.F90 cdimscj_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 
@@ -1117,6 +1138,19 @@ $(LC)(csjp_$(PRECIS).o): ../tools/csjp.F90
                    $(FORTRAN) -o csjp_$(PRECIS).o $(F90FLAGSN) csjp.F90 )
 	cd $(OBJ); $(ARR) csjp_$(PRECIS).o; \
           $(RM) csjp.F90 csjp_$(PRECIS).o
+#	$(MVMODS)
+	@printf '[ OK ]\n'
+
+csj.o: $(LC)(csj_$(PRECIS).o)
+
+$(LC)(csj_$(PRECIS).o): ../tools/csj.F90
+	@printf ' %-9s %-15s\t\t' "Compiling" "csj"
+	$(CP) ../tools/csj.F90 $(OBJ)/csj.F90
+	cd $(OBJ); $(FORTRAN) -o csj_$(PRECIS).o $(F90FLAGS) csj.F90 \
+                || ( printf ' %-26s' "=> Disabling optimization " ; \
+                   $(FORTRAN) -o csj_$(PRECIS).o $(F90FLAGSN) csj.F90 )
+	cd $(OBJ); $(ARR) csj_$(PRECIS).o; \
+          $(RM) csj.F90 csj_$(PRECIS).o
 #	$(MVMODS)
 	@printf '[ OK ]\n'
 

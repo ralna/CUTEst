@@ -290,6 +290,11 @@
       IF ( status /= 0 ) GO to 900
       WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
 
+      WRITE( out, "( ' CALL CUTEST_cdimscj' )" )
+      CALL CUTEST_cdimscj_r( status, J_ne )
+      IF ( status /= 0 ) GO to 900
+      WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
+
       l_j = J_ne
       ALLOCATE( J_val( l_j ), J_fun( l_j ), J_var( l_j ), stat = alloc_stat )
       IF ( alloc_stat /= 0 ) GO TO 990
@@ -368,9 +373,17 @@
       grad = .FALSE.
       WRITE( out, "( ' CALL CUTEST_ccfsg with grad = .FALSE.' )" )
       CALL CUTEST_ccfsg_threaded_r( status, n, m, X, C, J_ne, l_j, J_val,      &
-                                   J_var, J_fun, grad, thread )
+                                    J_var, J_fun, grad, thread )
       IF ( status /= 0 ) GO to 900
       CALL WRITE_C( out, m, C )
+
+!  compute the constraint and sparse Jacobian values
+
+      WRITE( out, "( ' CALL CUTEST_csj' )" )
+      CALL CUTEST_csj_threaded_r( status, n, X, J_ne, l_j, J_val,              &
+                                  J_var, J_fun, thread )
+      IF ( status /= 0 ) GO to 900
+      CALL WRITE_J_sparse( out, J_ne, l_j, J_val, J_fun, J_var )
 
 !  compute the Lagrangian function and gradient values
 

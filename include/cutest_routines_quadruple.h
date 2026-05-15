@@ -4,7 +4,7 @@
  *
  * Nick Gould for CUTEst
  * initial version, 2023-11-11
- * this version 2024-08-27
+ * this version 2026-05-02
  */
 
 #define ELFUN_r ELFUN_q
@@ -24,6 +24,9 @@
 #define CUTEST_ccfsg_r CUTEST_ccfsg_q
 #define CUTEST_ccfsg_threaded_r CUTEST_ccfsg_threaded_q
 #define CUTEST_ccfsg_threadsafe_r CUTEST_ccfsg_threadsafe_q
+#define CUTEST_csj_r CUTEST_csj_q
+#define CUTEST_csj_threaded_r CUTEST_csj_threaded_q
+#define CUTEST_csj_threadsafe_r CUTEST_csj_threadsafe_q
 #define CUTEST_cchprodsp_r CUTEST_cchprodsp_q
 #define CUTEST_cchprodsp_threadsafe_r CUTEST_cchprodsp_threadsafe_q
 #define CUTEST_cchprods_r CUTEST_cchprods_q
@@ -60,6 +63,8 @@
 #define CUTEST_cdimsh_threadsafe_r CUTEST_cdimsh_threadsafe_q
 #define CUTEST_cdimsj_r CUTEST_cdimsj_q
 #define CUTEST_cdimsj_threadsafe_r CUTEST_cdimsj_threadsafe_q
+#define CUTEST_cdimscj_r CUTEST_cdimscj_q
+#define CUTEST_cdimscj_threadsafe_r CUTEST_cdimscj_threadsafe_q
 #define CUTEST_ceh_r CUTEST_ceh_q
 #define CUTEST_ceh_threaded_r CUTEST_ceh_threaded_q
 #define CUTEST_ceh_threadsafe_r CUTEST_ceh_threadsafe_q
@@ -92,6 +97,7 @@
 #define CUTEST_cigr_threadsafe_r CUTEST_cigr_threadsafe_q
 #define CUTEST_Cint_ccfg_r CUTEST_Cint_ccfg_q
 #define CUTEST_Cint_ccfsg_r CUTEST_Cint_ccfsg_q
+#define CUTEST_Cint_csj_r CUTEST_Cint_csj_q
 #define CUTEST_Cint_cchprods_r CUTEST_Cint_cchprods_q
 #define CUTEST_Cint_ccifg_r CUTEST_Cint_ccifg_q
 #define CUTEST_Cint_ccifsg_r CUTEST_Cint_ccifsg_q
@@ -136,6 +142,9 @@
 #define CUTEST_cish_r CUTEST_cish_q
 #define CUTEST_cish_threaded_r CUTEST_cish_threaded_q
 #define CUTEST_cish_threadsafe_r CUTEST_cish_threadsafe_q
+#define CUTEST_cishp_r CUTEST_cishp_q
+#define CUTEST_cishp_threaded_r CUTEST_cishp_threaded_q
+#define CUTEST_cishp_threadsafe_r CUTEST_cishp_threadsafe_q
 #define CUTEST_cjprod_r CUTEST_cjprod_q
 #define CUTEST_cjprod_threaded_r CUTEST_cjprod_threaded_q
 #define CUTEST_cjprod_threadsafe_r CUTEST_cjprod_threadsafe_q
@@ -304,6 +313,7 @@
 #define CUTEST_csgrp_c_r          CUTEST_csgrp_c_q          
 #define CUTEST_csjp_c_r           CUTEST_csjp_c_q           
 #define CUTEST_ccfsg_c_r          CUTEST_ccfsg_c_q          
+#define CUTEST_csj_c_r            CUTEST_csj_c_q          
 #define CUTEST_ccifg_c_r          CUTEST_ccifg_c_q          
 #define CUTEST_ccifsg_c_r         CUTEST_ccifsg_c_q         
 #define CUTEST_cgrdh_c_r          CUTEST_cgrdh_c_q          
@@ -321,6 +331,7 @@
 #define CUTEST_cisgrp_c_r         CUTEST_cisgrp_c_q         
 #define CUTEST_cidh_c_r           CUTEST_cidh_c_q           
 #define CUTEST_cish_c_r           CUTEST_cish_c_q           
+#define CUTEST_cishp_c_r          CUTEST_cishp_c_q           
 #define CUTEST_csgrsh_c_r         CUTEST_csgrsh_c_q         
 #define CUTEST_csgrshp_c_r        CUTEST_csgrshp_c_q        
 #define CUTEST_csgreh_c_r         CUTEST_csgreh_c_q         
@@ -355,6 +366,7 @@
 #define CUTEST_cnoobj_c_r         CUTEST_cnoobj_c_q         
 #define CUTEST_cdimsg_c_r         CUTEST_cdimsg_c_q         
 #define CUTEST_cdimsj_c_r         CUTEST_cdimsj_c_q         
+#define CUTEST_cdimscj_c_r        CUTEST_cdimscj_c_q         
 #define CUTEST_cdimsh_c_r         CUTEST_cdimsh_c_q         
 #define CUTEST_cdimohp_c_r        CUTEST_cdimohp_c_q        
 #define CUTEST_cdimchp_c_r        CUTEST_cdimchp_c_q        

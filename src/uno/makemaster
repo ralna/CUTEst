@@ -1,0 +1,38 @@
+#  Main body of the installation makefile for CUTEst generic Uno program
+
+#  Nick Gould, for GALAHAD productions
+#  This version: 2026-05-15
+
+#  include standard CUTEst makefile defaults before package-specifics
+
+include $(CUTEST)/src/makedefs/defaults
+
+#  ===========================================================================
+#  ====================  package-dependent parts  ============================
+#  ===========================================================================
+
+#  package name
+
+PACKAGE = UNO
+package = uno
+
+#  ===========================================================================
+#  =================  end of package-dependent parts  ========================
+#  ===========================================================================
+
+#  include standard CUTEst makefile definitions
+
+include $(CUTEST)/src/makedefs/definitions
+
+#  include compilation and run instructions
+
+include $(CUTEST)/src/makedefs/instructions
+
+#  select specific run test
+
+run_test: run_constrained_test
+
+#  include standard package compilation instructions
+
+include $(CUTEST)/src/makedefs/compile
+

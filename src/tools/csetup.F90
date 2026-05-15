@@ -748,7 +748,6 @@
         status = 2 ; RETURN
       END IF
       data%numcon = m
-
       IF ( v_order == 1 .OR. v_order == 2 ) THEN
 
 !  set addresses in CGROUP to reorder variables

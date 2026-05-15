@@ -30,10 +30,8 @@
 !   L o c a l   V a r i a b l e s
 !--------------------------------
 
-      INTEGER ( KIND = ip_ ) :: n, m, H_ne
+      INTEGER ( KIND = ip_ ) :: n, m, H_ne, l_h, ipass, iprob
       INTEGER ( KIND = ip_ ) :: status, alloc_stat
-      INTEGER ( KIND = ip_ ) :: l_h
-      INTEGER ( KIND = ip_ ) :: iprob
       INTEGER ( KIND = ip_ ) :: nonlinear_variables_objective
       INTEGER ( KIND = ip_ ) :: nonlinear_variables_constraints
       INTEGER ( KIND = ip_ ) :: equality_constraints, linear_constraints
@@ -247,19 +245,28 @@
 !  compute the sparse Hessian value of the objective or a constraint
 
         iprob = 0
-        WRITE( out, "( ' CALL CUTEST_cish for objective' )" )
+        WRITE( out, "( ' CALL CUTEST_cish for objective' )",                   &
+               advance = "no"  )
         CALL CUTEST_cish_r( status, n, X, iprob,                               &
                             H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        WRITE( out, "( ', H_ne = ', I0 )" ) H_ne
+!       IF ( only_print_small )                                                &
+        IF ( H_ne > 0  )                                                       &
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
-        iprob = 1
-        WRITE( out, "( ' CALL CUTEST_cish for a constraint' )" )
-        CALL CUTEST_cish_r( status, n, X, iprob,                               &
-                            H_ne, l_h, H_val, H_row, H_col )
-        IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
-          CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        DO ipass = 1, 2
+          DO iprob = 1, m
+            WRITE( out, "( ' CALL CUTEST_cish for constraint ', I0 )",         &
+                   advance = "no"  ) iprob
+            CALL CUTEST_cish_r( status, n, X, iprob,                           &
+                                H_ne, l_h, H_val, H_row, H_col )
+            IF ( status /= 0 ) GO to 900
+            WRITE( out, "( ', H_ne = ', I0 )" ) H_ne
+!           IF ( only_print_small )                                            &
+            IF ( H_ne > 0  )                                                   &
+              CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+          END DO
+        END DO
 
         DEALLOCATE( X_type, H_row, H_col, HE_row, HE_row_ptr, X,   &
                     X_l, X_u, G, Ji, Y, C_l, C_u, C, H_val,  &

@@ -81,7 +81,7 @@ This option is passed directly to the linker and causes the path
 BLAS and LAPACK libraries.
 .TP
 .B \-b, \-\-blas \fIkeyword\fP
-Overrides usage of the default \fIlinpack\fP library packaged with
+Overrides usage of the default \fIBLAS\fP library packaged with
 CUTEst. Instead, use the BLAS library specified by \fIkeyword\fP. The
 keyword \fIkeyword\fP has one of two forms. The first, \fI-lmyblas\fP
 causes the linker to search for BLAS subprograms in the libmyblas.a
@@ -498,6 +498,15 @@ SIAM J. Optimization 9(4) 1100-1127 (1999).
 See J. E. Koontz, R.B. Schnabel, and B.E. Weiss,
 \fIA modular system of algorithms for unconstrained minimization\fP,
 ACM Transactions on Mathematical Software, 11(4) 419-440 (1985).
+
+.TP
+.B \fIuno\fP
+.br
+See C. Vanaret and S. Leyffer,
+\fIImplementing a unified solver for nonlinearly constrained optimization\fP,
+arXiv:2406.13454 (2024), to appear, Mathematical Programming Computation (2026).
+
+  https://github.com/cvanaret/Uno
 
 .TP
 .B \fIvf13\fP

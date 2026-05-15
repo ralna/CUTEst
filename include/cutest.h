@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 15:20 GMT */
+/* THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 16:10 GMT */
 
 /*
  * ======================================================================
@@ -32,7 +32,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.6.0
+#define CUTEST_VERSION 2.7.0
 
 /*
  * Define name of main() function on a
@@ -129,6 +129,7 @@ typedef struct VarTypes {
 #define CUTEST_cnoobj         FUNDERSCORE(cutest_cint_cnoobj)
 #define CUTEST_cdimsg         FUNDERSCORE(cutest_cdimsg)
 #define CUTEST_cdimsj         FUNDERSCORE(cutest_cdimsj)
+#define CUTEST_cdimscj        FUNDERSCORE(cutest_cdimscj)
 #define CUTEST_cdimsh         FUNDERSCORE(cutest_cdimsh)
 #define CUTEST_cdimohp        FUNDERSCORE(cutest_cdimohp)
 #define CUTEST_cdimchp        FUNDERSCORE(cutest_cdimchp)
@@ -169,6 +170,7 @@ typedef struct VarTypes {
 #define CUTEST_csgrp          FUNDERSCORE(cutest_csgrp)
 #define CUTEST_csjp           FUNDERSCORE(cutest_csjp)
 #define CUTEST_ccfsg          FUNDERSCORE(cutest_cint_ccfsg)
+#define CUTEST_csj            FUNDERSCORE(cutest_cint_csj)
 #define CUTEST_ccifg          FUNDERSCORE(cutest_cint_ccifg)
 #define CUTEST_ccifsg         FUNDERSCORE(cutest_cint_ccifsg)
 #define CUTEST_cgrdh          FUNDERSCORE(cutest_cint_cgrdh)
@@ -246,6 +248,7 @@ void CUTEST_cdimen( integer *status, const integer *funit, integer *n,
 void CUTEST_cnoobj( integer *status, const integer *funit, logical *noobj );
 void CUTEST_cdimsg( integer *status, integer *nnzg );
 void CUTEST_cdimsj( integer *status, integer *nnzj );
+void CUTEST_cdimscj( integer *status, integer *nnzj );
 void CUTEST_cdimsh( integer *status, integer *nnzh );
 void CUTEST_cdimohp( integer *status, integer *nnzohp );
 void CUTEST_cdimchp( integer *status, integer *nnzchp );
@@ -340,6 +343,10 @@ void CUTEST_csgrp( integer *status, const integer *n, integer *nnzj,
                    const integer *lj, integer *jvar, integer *jcon );
 void CUTEST_csjp( integer *status, integer *nnzj, const integer *lj,
                   integer *jvar, integer *jcon );
+void CUTEST_csj( integer *status,  const integer *n,
+                 const rp_ *x, integer *nnzj,
+                 const integer *lcjac, rp_ *cjac, integer *indvar,
+                 integer *indcon );
 void CUTEST_ccfsg( integer *status,  const integer *n, const integer *m,
                    const rp_ *x, rp_ *c, integer *nnzj,
                    const integer *lcjac, rp_ *cjac, integer *indvar,
@@ -504,6 +511,7 @@ void FORTRAN_close( const integer *funit, integer *ierr );
 #define CUTEST_cnoobj_s         FUNDERSCORE(cutest_cint_cnoobj_s)
 #define CUTEST_cdimsg_s         FUNDERSCORE(cutest_cdimsg_s)
 #define CUTEST_cdimsj_s         FUNDERSCORE(cutest_cdimsj_s)
+#define CUTEST_cdimscj_s        FUNDERSCORE(cutest_cdimscj_s)
 #define CUTEST_cdimsh_s         FUNDERSCORE(cutest_cdimsh_s)
 #define CUTEST_cdimohp_s        FUNDERSCORE(cutest_cdimohp_s)
 #define CUTEST_cdimchp_s        FUNDERSCORE(cutest_cdimchp_s)
@@ -545,6 +553,7 @@ void FORTRAN_close( const integer *funit, integer *ierr );
 #define CUTEST_csgrp_s          FUNDERSCORE(cutest_csgrp_s)
 #define CUTEST_csjp_s           FUNDERSCORE(cutest_csjp_s)
 #define CUTEST_ccfsg_s          FUNDERSCORE(cutest_cint_ccfsg_s)
+#define CUTEST_csj_s            FUNDERSCORE(cutest_cint_csj_s)
 #define CUTEST_ccifg_s          FUNDERSCORE(cutest_cint_ccifg_s)
 #define CUTEST_ccifsg_s         FUNDERSCORE(cutest_cint_ccifsg_s)
 #define CUTEST_cgrdh_s          FUNDERSCORE(cutest_cint_cgrdh_s)
@@ -623,6 +632,7 @@ void CUTEST_cnoobj_s( integer *status, const integer *funit,
                       logical *noobj );
 void CUTEST_cdimsg_s( integer *status, integer *nnzg );
 void CUTEST_cdimsj_s( integer *status, integer *nnzj );
+void CUTEST_cdimscj_s( integer *status, integer *nnzj );
 void CUTEST_cdimsh_s( integer *status, integer *nnzh );
 void CUTEST_cdimohp_s( integer *status, integer *nnzohp );
 void CUTEST_cdimchp_s( integer *status, integer *nnzchp );
@@ -716,9 +726,13 @@ void CUTEST_csgr_s( integer *status, const integer *n, const integer *m,
                     const integer *lcjac, real *cjac,
                     integer *indvar, integer *indfun );
 void CUTEST_csgrp_s( integer *status, const integer *n, integer *nnzj,
-                          const integer *lj, integer *jvar, integer *jcon );
+                     const integer *lj, integer *jvar, integer *jcon );
 void CUTEST_csjp_s( integer *status, integer *nnzj, const integer *lj,
-                          integer *jvar, integer *jcon );
+                    integer *jvar, integer *jcon );
+void CUTEST_csj_s( integer *status,  const integer *n,
+                   const real *x, integer *nnzj,
+                   const integer *lcjac, real *cjac, integer *indvar,
+                   integer *indcon );
 void CUTEST_ccfsg_s( integer *status,  const integer *n, const integer *m,
                      const real *x, real *c, integer *nnzj,
                      const integer *lcjac, real *cjac, integer *indvar,
@@ -886,6 +900,7 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_cnoobj_q     FUNDERSCORE(cutest_cint_cnoobj_q)
 #define CUTEST_cdimsg_q     FUNDERSCORE(cutest_cdimsg_q)
 #define CUTEST_cdimsj_q     FUNDERSCORE(cutest_cdimsj_q)
+#define CUTEST_cdimscj_q    FUNDERSCORE(cutest_cdimscj_q)
 #define CUTEST_cdimsh_q     FUNDERSCORE(cutest_cdimsh_q)
 #define CUTEST_cdimohp_q    FUNDERSCORE(cutest_cdimohp_q)
 #define CUTEST_cdimchp_q    FUNDERSCORE(cutest_cdimchp_q)
@@ -927,6 +942,7 @@ void FORTRAN_close_s( const integer *funit, integer *ierr );
 #define CUTEST_csgrp_q      FUNDERSCORE(cutest_csgrp_q)
 #define CUTEST_csjp_q       FUNDERSCORE(cutest_csjp_q)
 #define CUTEST_ccfsg_q      FUNDERSCORE(cutest_cint_ccfsg_q)
+#define CUTEST_csj_q        FUNDERSCORE(cutest_cint_csj_q)
 #define CUTEST_ccifg_q      FUNDERSCORE(cutest_cint_ccifg_q)
 #define CUTEST_ccifsg_q     FUNDERSCORE(cutest_cint_ccifsg_q)
 #define CUTEST_cgrdh_q      FUNDERSCORE(cutest_cint_cgrdh_q)
@@ -1005,6 +1021,7 @@ void CUTEST_cnoobj_q( integer *status, const integer *funit,
                       logical *noobj );
 void CUTEST_cdimsg_q( integer *status, integer *nnzg );
 void CUTEST_cdimsj_q( integer *status, integer *nnzj );
+void CUTEST_cdimscj_q( integer *status, integer *nnzj );
 void CUTEST_cdimsh_q( integer *status, integer *nnzh );
 void CUTEST_cdimohp_q( integer *status, integer *nnzohp );
 void CUTEST_cdimchp_q( integer *status, integer *nnzchp );
@@ -1100,7 +1117,11 @@ void CUTEST_csgr_q( integer *status, const integer *n, const integer *m,
 void CUTEST_csgrp_q( integer *status, const integer *n, integer *nnzj,
                      const integer *lj, integer *jvar, integer *jcon );
 void CUTEST_csjp_q( integer *status, integer *nnzj, const integer *lj,
-                     integer *jvar, integer *jcon );
+                    integer *jvar, integer *jcon );
+void CUTEST_csj_q( integer *status,  const integer *n, 
+                   const quadreal *x, integer *nnzj,
+                   const integer *lcjac, quadreal *cjac, integer *indvar,
+                   integer *indcon );
 void CUTEST_ccfsg_q( integer *status,  const integer *n, const integer *m,
                      const quadreal *x, quadreal *c, integer *nnzj,
                      const integer *lcjac, quadreal *cjac, integer *indvar,

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Definitions for the Uno package
+# Nick Gould, Alexis Montoison and Charlie Vanaret, May 13th, 2026
+
+# The name of the package
+export PACKAGE=uno
+
+# Subdirectory of ${CUTEST}/src where the package lives
+export PACKDIR=uno
+
+# Precision for which the package was written
+# Valid values are "single", "double", "single double" and "double single"
+export PACK_PRECISION="double"
+
+# Define the name of any package object files used; any object file without
+# a full path must occur in ${CUTEST}/objects/(architecture)/(precision)/
+export PACKOBJS=""
+
+# Define package and system libraries using -llibrary to include library.a
+# or library.so together with any nonstandard library paths using -L(path)
+##  version for gfortran ... edit for other compilers (to be automated)
+export PACKLIBS="-L/usr/local/lib -luno"
+#export PACKLIBS="-L${UNOBUILD}/lib -luno -lhighs -ldmumps -lmumps_common -lmpiseq -lpord -lmetis -lbqpd -llapack -lcblas -lblas -lstdc++"
+
+# Define the name of the package specification file if any. This possibly
+# precision-dependent file must either lie in the current directory or in
+# ${CUTEST}/src/${PACKDIR}
+export SPECS=""
