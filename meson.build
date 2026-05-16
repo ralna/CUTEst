@@ -113,6 +113,7 @@ subdir('src/tools')
 subdir('src/test')
 # subdir('src/tron')         # needs dnrm2_, dgpnrm2_
 # subdir('src/uncmin')       # needs optif9_
+# subdir('src/uno')          # needs libuno
 # subdir('src/vf13')         # needs vf13ad_
 # subdir('src/worhp')        # needs worhp.h
 
