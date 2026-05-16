@@ -389,7 +389,7 @@
 
 !  Lagrangian Hessian
 
-    FUNCTION lagrangian_hessian_cutest( n, m, nnz_h, X, y0, Y, H_val,         &
+    FUNCTION lagrangian_hessian_cutest( n, m, nnz_h, X, y0, Y, H_val,          &
                                         user_data ) RESULT( res ) BIND( C )
     INTEGER ( KIND = uno_int ), VALUE :: n, m, nnz_h
     REAL ( KIND = c_double ), INTENT( IN ), DIMENSION( * ) :: X, Y
@@ -400,7 +400,8 @@
     INTEGER ( KIND = ip_ ) :: l_h
     INTEGER ( KIND = ip_ ), DIMENSION( nnz_h ) :: H_row, H_col
     l_h =  nnz_h
-    CALL CUTEST_cshj_r( status, n, m, X, y0, Y, nnz_h, l_h, H_val, H_row, H_col)
+    CALL CUTEST_cshj_r( status, n, m, X, y0, - Y( 1 ), nnz_h, l_h,             &
+                        H_val, H_row, H_col)
     res = INT( status, KIND = uno_int )
     RETURN
     END FUNCTION lagrangian_hessian_cutest
@@ -418,7 +419,7 @@
     INTEGER ( KIND = uno_int ) :: res
     LOGICAL :: got_h
     got_h = .NOT. evaluate_at_x
-    CALL CUTEST_chjprod_r( status, n, m, got_h, X, y0, Y, VECTOR, RESULT )
+    CALL CUTEST_chjprod_r( status, n, m, got_h, X, y0, - Y( 1 ), VECTOR, RESULT)
     res = INT( status, KIND = uno_int )
     RETURN
     END FUNCTION lagrangian_hessian_operator_cutest
