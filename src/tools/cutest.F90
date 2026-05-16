@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 14:20 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 
@@ -1711,7 +1711,8 @@
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: n, nel, ng, nvargp
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: nvrels, ntotel
       INTEGER ( KIND = ip_ ), INTENT( IN ) :: iprint, error, out
-      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, alloc_status, nnzh
+      INTEGER ( KIND = ip_ ), INTENT( OUT ) :: status, alloc_status
+      INTEGER ( KIND = ip_ ), INTENT( INOUT ) :: nnzh
       LOGICAL, INTENT( INOUT ) :: hessian_setup_complete
       CHARACTER ( LEN = 24 ) :: bad_alloc
       INTEGER ( KIND = ip_ ), INTENT( IN ), DIMENSION( ng  + 1 ) :: ISTADG

@@ -1,4 +1,4 @@
-// THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 15:30 GMT.
+// THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:50 GMT.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -427,14 +427,6 @@ int main(int argc, char **argv) {
     write_sg( G_ne, G_var, G_val );
 
     // compute the number of nonzeros in the sparse Jacobian
-    printf("CALL CUTEST_cdimsj\n");
-    CUTEST_cdimsj_c_r( &status, &J_ne );
-    if (status != 0) {
-       printf("error status = %d\n", status);
-       return 2;
-    }
-    printf("* J_ne = %d\n", J_ne);
-
     printf("CALL CUTEST_cdimscj\n");
     CUTEST_cdimscj_c_r( &status, &J_ne );
     if (status != 0) {
@@ -460,6 +452,28 @@ int main(int argc, char **argv) {
        return 2;
     }
     write_j_sparsity_pattern( J_ne, J_fun, J_var );
+
+    free(J_var);
+    free(J_fun);
+    free(J_val);
+
+    // compute the number of nonzeros in the sparse Jacobian & gradient
+    printf("CALL CUTEST_cdimsj\n");
+    CUTEST_cdimsj_c_r( &status, &J_ne );
+    if (status != 0) {
+       printf("error status = %d\n", status);
+       return 2;
+    }
+
+    printf("* J_ne = %d\n", J_ne);
+    l_j = J_ne;
+    J_val = malloc(l_j * sizeof(rpc_));
+    J_fun = malloc(l_j * sizeof(ipc_));
+    J_var = malloc(l_j * sizeof(ipc_));
+    if (J_val == NULL || J_fun == NULL || J_var == NULL) {
+        perror("Error allocating memory");
+        return 1;
+    }
 
     // compute the sparsity pattern of the Jacobian and objective gradient
     printf("Call CUTEST_csgrp\n");

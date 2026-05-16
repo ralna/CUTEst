@@ -86,6 +86,7 @@ test_cutest_quadratic_quadruple_64: $(Q_TEST)
 run_test_cutest: run_test_cutest_unconstrained run_test_cutest_constrained
 run_test_threaded_cutest: run_test_cutest_threaded_unconstrained \
                           run_test_cutest_threaded_constrained
+run_c_test_cutest: run_c_test_cutest_unconstrained run_c_test_cutest_constrained
 
 run_test_cutest_unconstrained: utools test_cutest_unconstrained
 	echo " Exhaustive test of unconstrained tools"

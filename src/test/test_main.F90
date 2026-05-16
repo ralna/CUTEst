@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.6 - 2026-01-16 AT 15:40 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:40 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -610,11 +610,6 @@
 
 !  compute the number of nonzeros in the sparse Jacobian
 
-        WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
-        CALL CUTEST_cdimsj_r( status, J_ne )
-        IF ( status /= 0 ) GO to 900
-        WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
-
         WRITE( out, "( ' CALL CUTEST_cdimscj' )" )
         CALL CUTEST_cdimscj_r( status, J_ne )
         IF ( status /= 0 ) GO to 900
@@ -631,6 +626,19 @@
         IF ( status /= 0 ) GO TO 900
         IF ( only_print_small )                                                &
           CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+        DEALLOCATE( J_val, J_fun, J_var, stat = alloc_stat )
+        IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the number of nonzeros in the sparse Jacobian and objective gradient
+
+        WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
+        CALL CUTEST_cdimsj_r( status, J_ne )
+        IF ( status /= 0 ) GO TO 900
+        WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
+
+        l_j = J_ne
+        ALLOCATE( J_val( l_j ), J_fun( l_j ), J_var( l_j ), stat = alloc_stat )
+        IF ( alloc_stat /= 0 ) GO TO 990
 
 !  compute the sparsity pattern of the Jacobian and objective gradient
 

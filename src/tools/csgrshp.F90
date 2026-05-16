@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-20 AT 11:55 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -197,11 +197,12 @@
              work%hessian_setup_complete, work%lh_row, work%lh_col,            &
              work%H_row, work%H_col, work%ROW_start, work%POS_in_H, work%USED, &
              work%FILLED, work%lrowst, work%lpos, work%lused, work%lfilled,    &
-             nnzh )
+             work%nnzh )
 
 !  record the pattern if it is available
 
       IF ( status == 0 ) THEN
+        nnzh = work%nnzh
         H_row( : nnzh ) = work%H_row( : nnzh )
         H_col( : nnzh ) = work%H_col( : nnzh )
 

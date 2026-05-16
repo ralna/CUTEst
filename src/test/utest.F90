@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-24 AT 07:10 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -15,7 +15,9 @@
 
       USE CUTEST_KINDS_precision
       USE CUTEST_INTERFACE_precision
+#ifdef CUTEST_SHARED
       USE ISO_C_BINDING, only: C_NULL_CHAR
+#endif
 
 !----------------------
 !   P a r a m e t e r s

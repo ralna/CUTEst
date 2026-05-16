@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 15:30 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -15,7 +15,9 @@
 
      USE CUTEST_KINDS_precision
      USE CUTEST_INTERFACE_precision
+#ifdef CUTEST_SHARED
      USE ISO_C_BINDING, only: C_NULL_CHAR
+#endif
 
 !----------------------
 !   P a r a m e t e r s
@@ -298,11 +300,6 @@
 
 !  compute the number of nonzeros in the sparse Jacobian
 
-      WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
-      CALL CUTEST_cdimsj_r( status, J_ne )
-      IF ( status /= 0 ) GO TO 900
-      WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
-
       WRITE( out, "( ' CALL CUTEST_cdimscj' )" )
       CALL CUTEST_cdimscj_r( status, J_ne )
       IF ( status /= 0 ) GO TO 900
@@ -318,6 +315,19 @@
       CALL CUTEST_csjp_r( status, J_ne, l_j, J_var, J_fun )
       IF ( status /= 0 ) GO TO 900
       CALL WRITE_J_sparsity_pattern( out, J_ne, l_j, J_fun, J_var )
+      DEALLOCATE( J_val, J_fun, J_var, stat = alloc_stat )
+      IF ( alloc_stat /= 0 ) GO TO 990
+
+!  compute the number of nonzeros in the sparse Jacobian and objective gradient
+
+      WRITE( out, "( ' CALL CUTEST_cdimsj' )" )
+      CALL CUTEST_cdimsj_r( status, J_ne )
+      IF ( status /= 0 ) GO TO 900
+      WRITE( out, "( ' * J_ne = ', I0 )" ) J_ne
+
+      l_j = J_ne
+      ALLOCATE( J_val( l_j ), J_fun( l_j ), J_var( l_j ), stat = alloc_stat )
+      IF ( alloc_stat /= 0 ) GO TO 990
 
 !  compute the sparsity pattern of the Jacobian and objective gradient
 

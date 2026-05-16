@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.3 - 2024-10-24 AT 07:10 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -16,7 +16,9 @@
 !  threaded version
 
       USE CUTEST_KINDS_precision
-      USE ISO_C_BINDING, only: C_NULL_CHAR
+#ifdef CUTEST_SHARED
+      USE ISO_C_BINDING, ONLY: C_NULL_CHAR
+#endif
 
 !----------------------
 !   P a r a m e t e r s
@@ -34,7 +36,7 @@
 !   L o c a l   V a r i a b l e s
 !--------------------------------
 
-      INTEGER ( KIND = ip_ ) :: i, n, HE_nel, HE_val_ne, HE_row_ne, status
+      INTEGER ( KIND = ip_ ) :: n, HE_nel, HE_val_ne, HE_row_ne, status
       INTEGER ( KIND = ip_ ) :: l_h2_1, l_h, lhe_ptr, H_ne, lhe_val, lhe_row
       INTEGER ( KIND = ip_ ) :: nnz_vector, nnz_result, maxsbw, alloc_stat
       INTEGER ( KIND = ip_ ) :: nsemib, lbandh
@@ -361,6 +363,7 @@
       SUBROUTINE WRITE_X( out, n, X, X_l, X_u )
       INTEGER ( KIND = ip_ ) :: n, out
       REAL ( KIND = rp_ ), DIMENSION( n ) :: X, X_l, X_u
+      INTEGER ( KIND = ip_ ) :: i
       WRITE( out, "( ' *       i      X_l          X          X_u' )" )
       DO i = 1, n
         WRITE( out, "( ' * ', I7, 3ES12.4 )" ) i, X_l( i ), X( i ), X_u( i )
@@ -491,6 +494,7 @@
       INTEGER ( KIND = ip_ ), DIMENSION( lhe_ptr ) :: HE_row_ptr, HE_val_ptr
       INTEGER ( KIND = ip_ ), DIMENSION( lhe_row ) :: HE_row
       REAL ( KIND = rp_ ), DIMENSION( lhe_val ) :: HE_val
+      INTEGER ( KIND = ip_ ) :: i
       WRITE( out, "( ' * H(element)' )" )
       DO i = 1, ne
         IF (  HE_row_ptr( i + 1 ) > HE_row_ptr( i ) ) THEN
