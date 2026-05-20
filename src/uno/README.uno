@@ -69,14 +69,13 @@ where
 	keyword_list = 	keyword   value
                		{keyword_list}
 
-Each keyword must be on a new line. keyword is
-one of the following, default values are also given
+Each keyword must be on a new line. keyword are described in
 
-keyword         default        meaning
------------------------------------------------------
-iprint          1              controls printing
+  https://github.com/cvanaret/Uno/blob/main/docs/options.md
 
-(to be finished)
+Any line starting with a # is a comment, and any data after a #
+on a particular line is ignored (and can be used to comment that
+definition).
 
 A default file is provided in the file uno.opt in $CUTEST/src/Uno
 

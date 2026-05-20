@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.7 - 2026-05-13 AT 11:00 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-05-20 AT 11:20 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -17,6 +17,10 @@
     INTEGER ( KIND = ip_ ), PARAMETER :: input = 7
     INTEGER ( KIND = ip_ ), PARAMETER :: out = 6
     INTEGER ( KIND = ip_ ), PARAMETER :: io_buffer = 11
+    INTEGER ( KIND = ip_ ) :: output_summary = 47
+    CHARACTER ( LEN = 10 ) :: summary_filename = 'Uno.res'
+    INTEGER ( KIND = ip_ ) :: last_method = 48
+    CHARACTER ( LEN = 10 ) :: last_method_filename = 'Uno.method'
 
 !  define storage types 
 
@@ -37,19 +41,22 @@
     REAL ( KIND = c_double ) :: solution_objective, solution_primal_feasibility
     REAL ( KIND = c_double ) :: solution_stationarity, solution_complementarity
     REAL ( KIND = c_double ) ::  cpu_time, dual_tolerance
-    REAL ( KIND = c_double ) ::  primal_tolerance = 1.0E-6
+!   REAL ( KIND = c_double ) ::  primal_tolerance = 1.0E-6
     REAL ( KIND = c_double ), ALLOCATABLE, DIMENSION( : ) ::                   &
       X_0, X_l, X_u, Y_0, C_l, C_u, X, Y, Z_l, Z_u
-    LOGICAL ( KIND = c_bool ) :: success, print_solution = .true.
+    LOGICAL :: filexst, same_method, new_header
+    LOGICAL ( KIND = c_bool ) :: success, print_solution
     LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATN, LINEAR
     CHARACTER ( LEN = 6 ) :: tool
-    CHARACTER ( : ), ALLOCATABLE :: logger
+    CHARACTER ( LEN = 10 ) :: p_name
+    CHARACTER ( LEN = 200 ) :: method_name
+    CHARACTER ( : ), ALLOCATABLE :: logger, method_description
+    CHARACTER ( LEN = * ), PARAMETER :: options_file_name = "uno.opt"
     CHARACTER ( LEN = * ), PARAMETER :: hessian_model = "exact"
     CHARACTER ( LEN = * ), PARAMETER :: problem_type = UNO_PROBLEM_NONLINEAR
     CHARACTER ( LEN = 1 ), PARAMETER ::                                        &
       hessian_triangular_part = UNO_UPPER_TRIANGLE
-!     hessian_triangular_part = UNO_LOWER_TRIANGLE
-    TYPE( c_ptr ) :: model, solver
+    TYPE ( c_ptr ) :: model, solver
     TYPE ( c_funptr ) :: objective, gradient, constraints, jacobian
     TYPE ( c_funptr ) :: lagrangian_hessian, lagrangian_hessian_operator
     TYPE ( c_funptr ) :: jacobian_operator, jacobian_transposed_operator
@@ -107,6 +114,12 @@
     tool = 'csetup'
     CALL CUTEST_csetup_r( status, input, out, io_buffer, n, m, X_0, X_l, X_u,  &
                           Y_0, C_l, C_u, EQUATN, LINEAR, 0_ip_, 1_ip_, 0_ip_ )
+    IF ( status /= 0 ) GO TO 10
+
+!  determine the names of the problem, variables and constraints.
+
+    tool = 'pname '
+    CALL CUTEST_pname_r( status, input, p_name )
     IF ( status /= 0 ) GO TO 10
 
 !  compute the numbers of nonzeros in the constraint Jacobian and Hessian
@@ -192,22 +205,27 @@
 !  solver creation
 
     solver = uno_create_solver( )
-    success =                                                                  &
-      uno_set_solver_integer_option(solver, "max_iterations", max_iterations)
-    success = uno_set_solver_double_option( solver, "primal_tolerance",        &
-                                            primal_tolerance)
-    success =                                                                  &
-      uno_set_solver_bool_option( solver, "print_solution", print_solution )
-    success =                                                                  &
-      uno_set_solver_string_option(solver, "hessian_model", hessian_model )
-    success = uno_set_solver_preset( solver, "filtersqp" )
 
+!  load option file
+
+    success = uno_load_solver_option_file( solver, options_file_name )
+
+!  how to set options:
+!   success =                                                                  &
+!     uno_set_solver_integer_option(solver, "max_iterations", max_iterations)
+!   success = uno_set_solver_double_option( solver, "primal_tolerance",        &
+!                                           primal_tolerance )
+!   success =                                                                  &
+!     uno_set_solver_bool_option( solver, "print_solution", print_solution )
+!   success =                                                                  &
+!     uno_set_solver_string_option(solver, "hessian_model", hessian_model )
+!   success = uno_set_solver_preset( solver, "filtersqp" )
 
 !  run 1: solve with no Hessian. Uno defaults to L-BFGS Hessian for NLPs
 
-    CALL uno_optimize( solver, model )
-    solution_objective = uno_get_solution_objective( solver )
-    WRITE( out, * ) 'Solution objective = ', solution_objective
+!   CALL uno_optimize( solver, model )
+!   solution_objective = uno_get_solution_objective( solver )
+!   WRITE( out, * ) 'Solution objective = ', solution_objective
 
 !  run 2: solve with exact Hessian
 
@@ -215,68 +233,154 @@
       uno_set_lagrangian_hessian( model, nnz_h_c, hessian_triangular_part,     &
                                   H_row, H_col, lagrangian_hessian )
     success =                                                                  &
-      uno_set_lagrangian_sign_convention( model, lagrangian_sign_convention )
-!  the Hessian model was overwritten. Set it again
-
-    success =                                                                  &
       uno_set_solver_string_option( solver, "hessian_model", hessian_model )
+    success =                                                                  &
+      uno_set_lagrangian_sign_convention( model, lagrangian_sign_convention )
+
+!  call the optimizer
+
     CALL uno_optimize( solver, model )
+
+!  recover method description
+
+    method_description = uno_get_method_description( solver )
+!   write(6,*) '  method_description = ',  method_description
 
 !  recover solver statistics
 
     max_iterations = uno_get_solver_integer_option( solver, "max_iterations" )
-    WRITE( out, * ) 'max_iterations = ', max_iterations
+    WRITE( out, "( ' max_iterations = ', I0 )" ) max_iterations
 
     dual_tolerance = uno_get_solver_double_option( solver, "dual_tolerance" )
-    WRITE( out, * ) 'dual_tolerance = ', dual_tolerance
+    WRITE( out, "( ' dual_tolerance = ', ES11.4 ) ") dual_tolerance
 
     print_solution = uno_get_solver_bool_option( solver, "print_solution" )
-    WRITE( out, * ) 'print_solution = ', print_solution
+    WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
 
     logger = uno_get_solver_string_option( solver, "logger" )
-    WRITE( out, * ) 'logger = ', logger
+    WRITE( out, "( ' logger = ', A )" ) logger
 
     option_type = uno_get_solver_option_type(solver, "linear_solver")
-    WRITE( out, * ) 'option_type for the option linear_solver = ', option_type
+    WRITE( out, "( 'option_type for the option linear_solver = ', I0 )" )      &
+      option_type
 
 !  recover the solution
 
     number_iterations = uno_get_number_iterations( solver )
-    WRITE( out, * ) 'number_iterations = ', number_iterations
+    WRITE( out, "( ' number_iterations = ', I0 )" ) number_iterations
 
     cpu_time = uno_get_cpu_time( solver )
-    WRITE( out, * ) 'cpu_time = ', cpu_time
+    WRITE( out, "( ' cpu_time = ', ES11.4 ) ") cpu_time
 
     optimization_status = uno_get_optimization_status( solver )
-    WRITE( out, * ) 'optimization_status = ', optimization_status
+    WRITE( out, "( ' optimization_status = ', I0 )" ) optimization_status
 
     iterate_status = uno_get_solution_status( solver )
-    WRITE( out, * ) 'iterate_status = ', iterate_status
+    WRITE( out, "( ' iterate_status = ', I0 )" ) iterate_status
 
     solution_objective = uno_get_solution_objective( solver )
-    WRITE( out, * ) 'Solution objective = ', solution_objective
+    WRITE( out, "( ' Solution objective = ', ES12.4 )" ) solution_objective
 
     call uno_get_primal_solution( solver, X )
-    WRITE( out, * ) 'Primal solution = ', X
+    WRITE( out, "( ' Primal solution = ', /, ( 5ES12.4 ) )" ) X
 
     call uno_get_constraint_dual_solution( solver, Y )
-    WRITE( out, * ) 'Constraint dual solution = ', Y
+    WRITE( out, "( ' Constraint dual solution = ', /, ( 5ES12.4 ) )" ) Y
 
     call uno_get_lower_bound_dual_solution( solver, Z_l )
-    WRITE( out, * ) 'Lower bound dual solution = ', Z_l
+    WRITE( out, "( ' Lower bound dual solution = ', /, ( 5ES12.4 ) )" ) Z_l
 
     call uno_get_upper_bound_dual_solution( solver, Z_u )
-    WRITE( out, * ) 'Upper bound dual solution = ', Z_u
+    WRITE( out, "( ' Upper bound dual solution = ', /, ( 5ES12.4 ) )" ) Z_u
 
     solution_primal_feasibility = uno_get_solution_primal_feasibility( solver )
-    WRITE( out, * ) 'Primal feasibility at solution = ',                       &
+    WRITE( out, "( ' Primal feasibility at solution = ', ES11.4 ) ")           &
       solution_primal_feasibility
 
     solution_stationarity = uno_get_solution_stationarity( solver )
-    WRITE( out, * ) 'Stationarity at solution = ', solution_stationarity
+    WRITE( out, "( ' Stationarity at solution = ', ES11.4 ) ")                 &
+      solution_stationarity
 
     solution_complementarity = uno_get_solution_complementarity( solver )
-    WRITE( out, * ) 'Complementarity at solution = ', solution_complementarity
+    WRITE( out, "( ' Complementarity at solution = ', ES11.4 ) ")              &
+      solution_complementarity
+
+!  append a summary of the results to a file if required
+
+    INQUIRE( FILE = last_method_filename, EXIST = filexst )
+    IF ( filexst ) THEN
+      OPEN( last_method, FILE = last_method_filename,                          &
+            FORM = 'FORMATTED', STATUS = 'OLD', POSITION = 'APPEND',           &
+            IOSTAT = status )
+    ELSE
+      OPEN( last_method, FILE = last_method_filename,                          &
+            FORM = 'FORMATTED', STATUS = 'NEW', IOSTAT = status )
+    END IF
+
+    IF ( status /= 0 ) THEN
+      WRITE( out, "( ' IOSTAT = ', I6, ' when opening file ', A,               &
+     & '. Stopping ' )" ) status, last_method_filename
+      STOP
+    END IF
+
+    IF ( filexst ) THEN
+      REWIND( last_method )
+      READ( last_method, "( A )" ) method_name
+      same_method = TRIM( method_name ) == TRIM( method_description )
+      IF ( .NOT. same_method ) THEN
+        REWIND( last_method )
+        WRITE( last_method, "( A )" ) TRIM( method_description )
+      END IF
+    ELSE
+      same_method = .FALSE.
+      WRITE( last_method, "( A )" ) TRIM( method_description )
+    END IF
+    CLOSE( last_method )
+
+    IF ( status /= 0 ) THEN
+      WRITE( out, "( ' IOSTAT = ', I6, ' when opening file ', A,               &
+     & '. Stopping ' )" ) status, summary_filename
+      STOP
+    END IF
+
+    INQUIRE( FILE = summary_filename, EXIST = filexst )
+    IF ( filexst ) THEN
+      OPEN( output_summary, FILE = summary_filename,                           &
+            FORM = 'FORMATTED', STATUS = 'OLD', POSITION = 'APPEND',           &
+            IOSTAT = status )
+      new_header = .NOT. same_method 
+    ELSE
+      OPEN( output_summary, FILE = summary_filename,                           &
+            FORM = 'FORMATTED', STATUS = 'NEW', IOSTAT = status )
+      new_header = .TRUE.
+    END IF
+    IF ( status /= 0 ) THEN
+      WRITE( out, "( ' IOSTAT = ', I6, ' when opening file ', A,               &
+     & '. Stopping ' )" ) status, summary_filename
+      STOP
+    END IF
+
+    IF ( new_header ) THEN
+      WRITE( output_summary, "( A )" ) TRIM( method_description )
+      WRITE( output_summary, "( 'name              n        m        f   ',    &
+     &  '     p_infeas d_infeas c_infeas     iter        time  stat' )" )
+    END IF  
+
+    SELECT CASE ( optimization_status )
+    CASE ( UNO_SUCCESS )
+      WRITE( output_summary,                                                   &
+        "( A10, 1X, I8, 1X, I8, ES16.8, 3ES9.1, bn, I9, F12.2, I6 )" )         &
+        p_name, n, m, solution_objective, solution_primal_feasibility,         &
+        solution_stationarity, solution_complementarity, number_iterations,    &
+        cpu_time, optimization_status
+    CASE DEFAULT
+      WRITE( output_summary,                                                   &
+        "( A10, 1X, I8, 1X, I8, ES16.8, 3ES9.1, bn, I9, F12.2, I6 )" )         &
+        p_name, n, m, solution_objective, solution_primal_feasibility,         &
+        solution_stationarity, solution_complementarity, - number_iterations,  &
+        - cpu_time, optimization_status
+    END SELECT
+    CLOSE( output_summary )
 
 !  cleanup
 

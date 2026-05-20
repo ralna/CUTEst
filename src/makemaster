@@ -105,6 +105,8 @@ all_single: tools_single
                    tron  $(S32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    uncmin  $(S32) PWD=$(PWD)/uncmin )
+#	( cd uno  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#                   uno  $(S32) PWD=$(PWD)/uno )
 	( cd vf13  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    vf13  $(S32) PWD=$(PWD)/vf13 )
 #	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -194,6 +196,8 @@ all_double: tools_double
                    tron  $(D32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    uncmin  $(D32) PWD=$(PWD)/uncmin )
+	( cd uno  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+                   uno  $(D32) PWD=$(PWD)/uno )
 	( cd vf13  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
                    vf13  $(D32) PWD=$(PWD)/vf13 )
 	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -497,6 +501,8 @@ run_test_single: tools_single test_single
              run_test $(S32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test $(S32) PWD=$(PWD)/uncmin )
+#	( cd uno  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+#             run_test $(S32) PWD=$(PWD)/uno )
 	( cd vf13  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test $(S32) PWD=$(PWD)/vf13 )
 #	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
@@ -579,6 +585,8 @@ run_test_double: tools_double test_double
              run_test $(D32) PWD=$(PWD)/tron )
 	( cd uncmin  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test $(D32) PWD=$(PWD)/uncmin )
+	( cd uno  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
+             run_test $(D32) PWD=$(PWD)/uno )
 	( cd vf13  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
              run_test $(D32) PWD=$(PWD)/vf13 )
 #	( cd worhp  ; $(MAKE) -f $(CUTEST)/makefiles/$(VERSION) \
