@@ -21,10 +21,12 @@
     CHARACTER ( LEN = 10 ) :: summary_filename = 'Uno.res'
     INTEGER ( KIND = ip_ ) :: last_method = 48
     CHARACTER ( LEN = 10 ) :: last_method_filename = 'Uno.method'
+    INTEGER ( KIND = ip_ ) :: output_sol = 49
+    CHARACTER ( LEN = 10 ) :: solution_filename = 'Uno.sol'
 
 !  define storage types 
 
-    INTEGER ( KIND = ip_ ) status, n, m, l_j, l_h, J_ne, H_ne
+    INTEGER ( KIND = ip_ ) status, i, n, m, l_j, l_h, J_ne, H_ne
     INTEGER ( KIND = uno_int ) :: n_c, m_c, nnz_j_c, nnz_h_c
     INTEGER ( KIND = uno_int ) :: major, minor, patch
     INTEGER ( KIND = uno_int ) :: optimization_status, iterate_status
@@ -38,17 +40,20 @@
       lagrangian_sign_convention = UNO_MULTIPLIER_NEGATIVE
     INTEGER ( KIND = uno_int ), ALLOCATABLE, DIMENSION( : ) ::                 &
       J_row, J_col, H_row, H_col
+    REAL ( KIND = c_double ), PARAMETER :: zero = 0.0_c_double
     REAL ( KIND = c_double ) :: solution_objective, solution_primal_feasibility
     REAL ( KIND = c_double ) :: solution_stationarity, solution_complementarity
-    REAL ( KIND = c_double ) ::  cpu_time, dual_tolerance
-!   REAL ( KIND = c_double ) ::  primal_tolerance = 1.0E-6
+    REAL ( KIND = c_double ) :: cpu_time, dual_tolerance, z_i
+!   REAL ( KIND = c_double ) :: primal_tolerance = 1.0E-6
     REAL ( KIND = c_double ), ALLOCATABLE, DIMENSION( : ) ::                   &
-      X_0, X_l, X_u, Y_0, C_l, C_u, X, Y, Z_l, Z_u
+      X_0, X_l, X_u, Y_0, C, C_l, C_u, X, Y, Z_l, Z_u
     LOGICAL :: filexst, same_method, new_header
     LOGICAL ( KIND = c_bool ) :: success, print_solution
+    LOGICAL ( KIND = c_bool ) :: write_solution_to_file
     LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATN, LINEAR
-    CHARACTER ( LEN = 6 ) :: tool
+    CHARACTER ( LEN = 7 ) :: tool
     CHARACTER ( LEN = 10 ) :: p_name
+    CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : ) :: x_names, c_names
     CHARACTER ( LEN = 200 ) :: method_name
     CHARACTER ( : ), ALLOCATABLE :: logger, method_description
     CHARACTER ( LEN = * ), PARAMETER :: options_file_name = "uno.opt"
@@ -92,7 +97,7 @@
 
 !  compute problem dimensions
 
-    tool = 'cdimen'
+    tool = 'cdimen '
     CALL CUTEST_cdimen_r( status, input, n, m )
     IF ( status /= 0 ) GO TO 10
     n_c = INT( n, KIND = uno_int )
@@ -111,24 +116,24 @@
 !  compute the starting points, and the lower and upper bounds on the 
 !  variables and constraints
 
-    tool = 'csetup'
+    tool = 'csetup '
     CALL CUTEST_csetup_r( status, input, out, io_buffer, n, m, X_0, X_l, X_u,  &
                           Y_0, C_l, C_u, EQUATN, LINEAR, 0_ip_, 1_ip_, 0_ip_ )
     IF ( status /= 0 ) GO TO 10
 
 !  determine the names of the problem, variables and constraints.
 
-    tool = 'pname '
+    tool = 'pname  '
     CALL CUTEST_pname_r( status, input, p_name )
     IF ( status /= 0 ) GO TO 10
 
 !  compute the numbers of nonzeros in the constraint Jacobian and Hessian
 
-    tool = 'cdimsj'
+    tool = 'cdimsj '
     CALL CUTEST_cdimscj_r( status, l_j )
     IF ( status /= 0 ) GO TO 10
 
-    tool = 'cdimsh'
+    tool = 'cdimsh '
     CALL CUTEST_cdimsh_r( status, l_h )
     IF ( status /= 0 ) GO TO 10
     nnz_j_c = INT( l_j, KIND = uno_int )
@@ -145,13 +150,13 @@
 
 !  compute the sparsity structure of the Jacobian
 
-    tool = 'csjp  '
+    tool = 'csjp   '
     CALL CUTEST_csjp_r( status, J_ne, l_j, J_col, J_row )
     IF ( status /= 0 ) GO TO 10
 
 !  compute the sparsity structure of the Hessian
 
-    tool = 'cshp  '
+    tool = 'cshp   '
     CALL CUTEST_cshp_r( status, n, H_ne, l_h, H_row, H_col )
     IF ( status /= 0 ) GO TO 10
 
@@ -209,25 +214,28 @@
 !  load option file
 
     success = uno_load_solver_option_file( solver, options_file_name )
+    print_solution = uno_get_solver_bool_option( solver, "print_solution" )
+    WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
 
 !  how to set options:
 !   success =                                                                  &
 !     uno_set_solver_integer_option(solver, "max_iterations", max_iterations)
 !   success = uno_set_solver_double_option( solver, "primal_tolerance",        &
 !                                           primal_tolerance )
+!   print_solution = .TRUE.
 !   success =                                                                  &
 !     uno_set_solver_bool_option( solver, "print_solution", print_solution )
 !   success =                                                                  &
 !     uno_set_solver_string_option(solver, "hessian_model", hessian_model )
 !   success = uno_set_solver_preset( solver, "filtersqp" )
 
-!  run 1: solve with no Hessian. Uno defaults to L-BFGS Hessian for NLPs
+!  how to solve with no Hessian. Uno defaults to L-BFGS Hessian for NLPs
 
 !   CALL uno_optimize( solver, model )
 !   solution_objective = uno_get_solution_objective( solver )
 !   WRITE( out, * ) 'Solution objective = ', solution_objective
 
-!  run 2: solve with exact Hessian
+!  how to solve with exact Hessian
 
     success =                                                                  &
       uno_set_lagrangian_hessian( model, nnz_h_c, hessian_triangular_part,     &
@@ -248,29 +256,23 @@
 
 !  recover solver statistics
 
-    max_iterations = uno_get_solver_integer_option( solver, "max_iterations" )
-    WRITE( out, "( ' max_iterations = ', I0 )" ) max_iterations
+!   max_iterations = uno_get_solver_integer_option( solver, "max_iterations" )
+!   WRITE( out, "( ' max_iterations = ', I0 )" ) max_iterations
 
-    dual_tolerance = uno_get_solver_double_option( solver, "dual_tolerance" )
-    WRITE( out, "( ' dual_tolerance = ', ES11.4 ) ") dual_tolerance
+!   dual_tolerance = uno_get_solver_double_option( solver, "dual_tolerance" )
+!   WRITE( out, "( ' dual_tolerance = ', ES11.4 ) ") dual_tolerance
 
-    print_solution = uno_get_solver_bool_option( solver, "print_solution" )
-    WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
+!   print_solution = uno_get_solver_bool_option( solver, "print_solution" )
+!   WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
 
-    logger = uno_get_solver_string_option( solver, "logger" )
-    WRITE( out, "( ' logger = ', A )" ) logger
+!   logger = uno_get_solver_string_option( solver, "logger" )
+!   WRITE( out, "( ' logger = ', A )" ) logger
 
-    option_type = uno_get_solver_option_type(solver, "linear_solver")
-    WRITE( out, "( 'option_type for the option linear_solver = ', I0 )" )      &
-      option_type
+!   option_type = uno_get_solver_option_type(solver, "linear_solver")
+!   WRITE( out, "( ' option_type for the option linear_solver = ', I0 )" )     &
+!     option_type
 
 !  recover the solution
-
-    number_iterations = uno_get_number_iterations( solver )
-    WRITE( out, "( ' number_iterations = ', I0 )" ) number_iterations
-
-    cpu_time = uno_get_cpu_time( solver )
-    WRITE( out, "( ' cpu_time = ', ES11.4 ) ") cpu_time
 
     optimization_status = uno_get_optimization_status( solver )
     WRITE( out, "( ' optimization_status = ', I0 )" ) optimization_status
@@ -279,31 +281,118 @@
     WRITE( out, "( ' iterate_status = ', I0 )" ) iterate_status
 
     solution_objective = uno_get_solution_objective( solver )
-    WRITE( out, "( ' Solution objective = ', ES12.4 )" ) solution_objective
-
-    call uno_get_primal_solution( solver, X )
-    WRITE( out, "( ' Primal solution = ', /, ( 5ES12.4 ) )" ) X
-
-    call uno_get_constraint_dual_solution( solver, Y )
-    WRITE( out, "( ' Constraint dual solution = ', /, ( 5ES12.4 ) )" ) Y
-
-    call uno_get_lower_bound_dual_solution( solver, Z_l )
-    WRITE( out, "( ' Lower bound dual solution = ', /, ( 5ES12.4 ) )" ) Z_l
-
-    call uno_get_upper_bound_dual_solution( solver, Z_u )
-    WRITE( out, "( ' Upper bound dual solution = ', /, ( 5ES12.4 ) )" ) Z_u
+    WRITE( out, "( ' Solution objective = ', ES22.14 )" ) solution_objective
 
     solution_primal_feasibility = uno_get_solution_primal_feasibility( solver )
-    WRITE( out, "( ' Primal feasibility at solution = ', ES11.4 ) ")           &
+    WRITE( out, "( ' Primal feasibility at solution = ', ES22.14 ) ")          &
       solution_primal_feasibility
 
     solution_stationarity = uno_get_solution_stationarity( solver )
-    WRITE( out, "( ' Stationarity at solution = ', ES11.4 ) ")                 &
+    WRITE( out, "( ' Stationarity at solution = ', ES22.14 ) ")                &
       solution_stationarity
 
     solution_complementarity = uno_get_solution_complementarity( solver )
-    WRITE( out, "( ' Complementarity at solution = ', ES11.4 ) ")              &
+    WRITE( out, "( ' Complementarity at solution = ', ES22.14 ) ")             &
       solution_complementarity
+
+    number_iterations = uno_get_number_iterations( solver )
+    WRITE( out, "( ' number_iterations = ', I0 )" ) number_iterations
+
+    cpu_time = uno_get_cpu_time( solver )
+    WRITE( out, "( ' cpu_time = ', F9.3 ) ") cpu_time
+
+    write_solution_to_file                                                     &
+!     = uno_get_solver_bool_option( solver, "write_solution_to_file" )
+      = .FALSE.
+!     = .TRUE.
+
+!  if required, write the solution to a file
+
+    IF ( write_solution_to_file ) THEN
+      INQUIRE( FILE = solution_filename, EXIST = filexst )
+      IF ( filexst ) THEN
+         OPEN( output_sol, FILE = solution_filename, FORM = 'FORMATTED',       &
+               STATUS = 'OLD', IOSTAT = status )
+      ELSE
+         OPEN( output_sol, FILE = solution_filename, FORM = 'FORMATTED',       &
+               STATUS = 'NEW', IOSTAT = status )
+      END IF
+      IF ( status /= 0 ) THEN
+        WRITE( out, "( ' IOSTAT = ', I6, ' when opening file ', A,             &
+       &  '. Stopping ' )" ) status, solution_filename
+        STOP
+      END IF
+      REWIND( output_sol )
+
+      ALLOCATE( X_names( n ), STAT = status )
+      IF ( status /= 0 ) THEN
+        WRITE( out, "( ' Array X_names allocation failed' )" )
+        STOP
+      END IF
+
+!  record the problem and solver details
+
+      WRITE( output_sol, "( ' Problem: ', A )" ) TRIM( p_name )
+      WRITE( output_sol, "( ' Uno method: ', A )" )  method_description
+      WRITE( output_sol, "( ' Objective value: ', ES22.14 )" )                 &
+        solution_objective
+
+!  record the primal and dual solutions
+
+      tool = 'varname'
+      CALL CUTEST_varnames( status, n, X_names )
+      IF ( status /= 0 ) GO TO 10
+      CALL uno_get_primal_solution( solver, X )
+      CALL uno_get_lower_bound_dual_solution( solver, Z_l )
+      CALL uno_get_upper_bound_dual_solution( solver, Z_u )
+
+      WRITE( output_sol, "( /, ' Solution: ', /,                               &
+     & '                                       ',                              &
+     & '   <---------------- Bounds ----------------> ', /                     &
+     & '       # name              value            ',                         &
+     & '       Lower                Upper                  Dual' )" )
+      DO i = 1, n
+        IF ( Z_l( i ) /= zero ) THEN
+          z_i = Z_l( i )
+        ELSE IF ( Z_u( i ) /= zero ) THEN
+          z_i = Z_u( i )
+        ELSE
+          z_i = zero
+        END IF
+        WRITE( output_sol, "( I8, 1X, A10, 4ES22.14 )" )                       &
+          i, X_names( i ), X( i ), X_l( i ), X_u( i ), z_i
+      END DO
+      DEALLOCATE( X_names, STAT = status )
+
+!  record the constraints and their Lagrange multipliers
+
+      IF ( m > 0 ) THEN
+        ALLOCATE( C_names( m ), C( m ), STAT = status )
+        IF ( status /= 0 ) THEN
+          WRITE( out, "( ' Array allocation failed' )" )
+          STOP
+        END IF
+        tool = 'conname'
+        CALL CUTEST_connames( status, m, C_names )
+        IF ( status /= 0 ) GO TO 10
+!       CALL uno_get_constraints( solver, C )
+        tool = 'ccf    '
+        CALL CUTEST_ccf( status, n, m, X, C )
+        IF ( status /= 0 ) GO TO 10
+        CALL uno_get_constraint_dual_solution( solver, Y )
+        WRITE( output_sol, "( /, ' Constraints: ', /,                          &
+       & '                                       ',                            &
+       & '   <---------------- Bounds ----------------> ', /                   &
+       & '       # name              value            ',                       &
+       & '       Lower                Upper               Multiplier' )" )
+        DO i = 1, m
+          WRITE( output_sol, "( I8, 1X, A10, 4ES22.14 )" )                     &
+            i, C_names( i ), C( i ), C_l( i ), C_u( i ), Y( i )
+        END DO
+        DEALLOCATE( C_names, C, STAT = status )
+      END IF
+      CLOSE( output_sol )
+    END IF
 
 !  append a summary of the results to a file if required
 
