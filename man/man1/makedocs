@@ -1,8 +1,8 @@
 #!/bin/csh
 
-foreach pack ( runcutest cutest2matlab )
+#foreach pack ( runcutest cutest2matlab )
 #foreach pack ( cutest2matlab )
-#foreach pack ( runcutest )
+foreach pack ( runcutest )
 
   echo "    " $pack
   echo "      .. making pdf"

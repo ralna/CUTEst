@@ -119,6 +119,7 @@
 #               cutest_cshj_threaded \
 #               cutest_cshprod_threaded \
 #               cutest_csh_threaded \
+#               cutest_csj_threaded \
 #               cutest_csjprod_threaded \
 #               cutest_timings_threaded \
 #               cutest_ubandh_threaded \
@@ -275,7 +276,10 @@
 #foreach pack ( cutest_ureport cutest_ureport_threaded \
 #               cutest_creport cutest_creport_threaded )
 
-foreach pack ( cutest_classification )
+foreach pack ( cutest_csj_threaded )
+
+#foreach pack ( cutest_classification )
+
 
   echo "    " $pack
   echo "      .. making pdf"
