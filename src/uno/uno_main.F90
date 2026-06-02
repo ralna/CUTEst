@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.7 - 2026-05-20 AT 11:20 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-06-02 AT 11:10 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -7,7 +7,7 @@
 
 !  Nick Gould, Alexis Montoison and Charlie Vanaret, May 2026
 
-  PROGRAM uno_cutest
+  PROGRAM UNO_CUTEST
     USE CUTEST_KINDS_precision
 !   USE UNO
     INCLUDE 'uno_c.f90'
@@ -30,8 +30,13 @@
     INTEGER ( KIND = uno_int ) :: n_c, m_c, nnz_j_c, nnz_h_c
     INTEGER ( KIND = uno_int ) :: major, minor, patch
     INTEGER ( KIND = uno_int ) :: optimization_status, iterate_status
-    INTEGER ( KIND = uno_int ) :: option_type
-    INTEGER ( KIND = uno_int) :: number_iterations, max_iterations = 1000
+    INTEGER ( KIND = uno_int) :: number_iterations
+    INTEGER ( KIND = uno_int) :: number_objective_evaluations
+    INTEGER ( KIND = uno_int) :: number_constraint_evaluations
+    INTEGER ( KIND = uno_int) :: number_objective_gradient_evaluations
+    INTEGER ( KIND = uno_int) :: number_jacobian_evaluations
+    INTEGER ( KIND = uno_int) :: number_hessian_evaluations
+    INTEGER ( KIND = uno_int) :: number_subproblems_solved
     INTEGER ( KIND = uno_int ), PARAMETER ::                                   &
       base_indexing = UNO_ONE_BASED_INDEXING
     INTEGER ( KIND = uno_int ), PARAMETER ::                                   &
@@ -43,24 +48,31 @@
     REAL ( KIND = c_double ), PARAMETER :: zero = 0.0_c_double
     REAL ( KIND = c_double ) :: solution_objective, solution_primal_feasibility
     REAL ( KIND = c_double ) :: solution_stationarity, solution_complementarity
-    REAL ( KIND = c_double ) :: cpu_time, dual_tolerance, z_i
-!   REAL ( KIND = c_double ) :: primal_tolerance = 1.0E-6
+    REAL ( KIND = c_double ) :: cpu_time, z_i
     REAL ( KIND = c_double ), ALLOCATABLE, DIMENSION( : ) ::                   &
       X_0, X_l, X_u, Y_0, C, C_l, C_u, X, Y, Z_l, Z_u
     LOGICAL :: filexst, same_method, new_header
-    LOGICAL ( KIND = c_bool ) :: success, print_solution
+    LOGICAL ( KIND = c_bool ) :: success
     LOGICAL ( KIND = c_bool ) :: write_solution_to_file
     LOGICAL, ALLOCATABLE, DIMENSION( : ) :: EQUATN, LINEAR
     CHARACTER ( LEN = 7 ) :: tool
     CHARACTER ( LEN = 10 ) :: p_name
     CHARACTER ( LEN = 10 ), ALLOCATABLE, DIMENSION( : ) :: x_names, c_names
     CHARACTER ( LEN = 200 ) :: method_name
-    CHARACTER ( : ), ALLOCATABLE :: logger, method_description
+    CHARACTER ( : ), ALLOCATABLE :: method_description
     CHARACTER ( LEN = * ), PARAMETER :: options_file_name = "uno.opt"
     CHARACTER ( LEN = * ), PARAMETER :: hessian_model = "exact"
     CHARACTER ( LEN = * ), PARAMETER :: problem_type = UNO_PROBLEM_NONLINEAR
     CHARACTER ( LEN = 1 ), PARAMETER ::                                        &
       hessian_triangular_part = UNO_UPPER_TRIANGLE
+    CHARACTER ( LEN = 17 ), DIMENSION( 0 : 5 ), PARAMETER :: OPT_STAT =        &
+      [ 'Success          ', 'Iteration limit  ', 'Time limit       ',         &
+        'Evaluation error ', 'Algorithmic error', 'User termination ' ]
+    CHARACTER ( LEN = 27 ), DIMENSION( 0 : 6 ), PARAMETER :: ITER_STAT =       &
+      [ 'Not optimal                ', 'Feasible KKT point         ',          &
+        'Feasible FJ point          ', 'Infeasible stationary point',          &
+        'Feasible small step        ', 'Infeasible small step      ',          &
+        'Unbounded                  ' ]
     TYPE ( c_ptr ) :: model, solver
     TYPE ( c_funptr ) :: objective, gradient, constraints, jacobian
     TYPE ( c_funptr ) :: lagrangian_hessian, lagrangian_hessian_operator
@@ -163,7 +175,8 @@
 !  record the version of Uno used
 
     CALL uno_get_version( major, minor, patch )
-    WRITE( out, "( ' Uno version: ', A, '.', A, '.', A )" ) major, minor, patch
+    WRITE( out, "( /, ' Calling Uno version: ', I0, '.', I0, '.', I0 )" )      &
+      major, minor, patch
 
 !  callbacks for Uno
 
@@ -200,10 +213,6 @@
     success                                                                    &
        = uno_set_jacobian_transposed_operator( model,                          &
                                                jacobian_transposed_operator )
-! success                                                                      &
-!   = uno_set_lagrangian_hessian_operator(model, lagrangian_hessian_operator)
-! success                                                                      &
-!   = uno_set_lagrangian_sign_convention(model, lagrangian_sign_convention)
     success = uno_set_initial_primal_iterate( model, X_0 )
     success = uno_set_initial_dual_iterate( model, Y_0 )
 
@@ -214,26 +223,6 @@
 !  load option file
 
     success = uno_load_solver_option_file( solver, options_file_name )
-    print_solution = uno_get_solver_bool_option( solver, "print_solution" )
-    WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
-
-!  how to set options:
-!   success =                                                                  &
-!     uno_set_solver_integer_option(solver, "max_iterations", max_iterations)
-!   success = uno_set_solver_double_option( solver, "primal_tolerance",        &
-!                                           primal_tolerance )
-!   print_solution = .TRUE.
-!   success =                                                                  &
-!     uno_set_solver_bool_option( solver, "print_solution", print_solution )
-!   success =                                                                  &
-!     uno_set_solver_string_option(solver, "hessian_model", hessian_model )
-!   success = uno_set_solver_preset( solver, "filtersqp" )
-
-!  how to solve with no Hessian. Uno defaults to L-BFGS Hessian for NLPs
-
-!   CALL uno_optimize( solver, model )
-!   solution_objective = uno_get_solution_objective( solver )
-!   WRITE( out, * ) 'Solution objective = ', solution_objective
 
 !  how to solve with exact Hessian
 
@@ -251,60 +240,69 @@
 
 !  recover method description
 
+    WRITE( out, "( /, ' Solved CUTEst problem ', A, ' with Uno version ',     &
+   &  I0, '.', I0, '.', I0, ' using a' )" ) TRIM( p_name ), major, minor, patch
     method_description = uno_get_method_description( solver )
-!   write(6,*) '  method_description = ',  method_description
+    WRITE( 6, "( 1X, A )" ) method_description
 
-!  recover solver statistics
-
-!   max_iterations = uno_get_solver_integer_option( solver, "max_iterations" )
-!   WRITE( out, "( ' max_iterations = ', I0 )" ) max_iterations
-
-!   dual_tolerance = uno_get_solver_double_option( solver, "dual_tolerance" )
-!   WRITE( out, "( ' dual_tolerance = ', ES11.4 ) ") dual_tolerance
-
-!   print_solution = uno_get_solver_bool_option( solver, "print_solution" )
-!   WRITE( out, "( ' print_solution = ', L1 )" ) print_solution
-
-!   logger = uno_get_solver_string_option( solver, "logger" )
-!   WRITE( out, "( ' logger = ', A )" ) logger
-
-!   option_type = uno_get_solver_option_type(solver, "linear_solver")
-!   WRITE( out, "( ' option_type for the option linear_solver = ', I0 )" )     &
-!     option_type
-
-!  recover the solution
+!  recover solution statistics
 
     optimization_status = uno_get_optimization_status( solver )
-    WRITE( out, "( ' optimization_status = ', I0 )" ) optimization_status
+    WRITE( out, "( /, ' Optimization status:  ', 11X, A )" )                   &
+      OPT_STAT( optimization_status )
 
     iterate_status = uno_get_solution_status( solver )
-    WRITE( out, "( ' iterate_status = ', I0 )" ) iterate_status
+    WRITE( out, "( ' Iterate status: ', 17X, A )" ) ITER_STAT( iterate_status )
 
     solution_objective = uno_get_solution_objective( solver )
-    WRITE( out, "( ' Solution objective = ', ES22.14 )" ) solution_objective
+    WRITE( out, "( ' Solution objective: ', 11X, ES22.14 )" ) solution_objective
 
     solution_primal_feasibility = uno_get_solution_primal_feasibility( solver )
-    WRITE( out, "( ' Primal feasibility at solution = ', ES22.14 ) ")          &
+    WRITE( out, "( ' Primal feasibility at solution:', ES22.14 )" )            &
       solution_primal_feasibility
 
     solution_stationarity = uno_get_solution_stationarity( solver )
-    WRITE( out, "( ' Stationarity at solution = ', ES22.14 ) ")                &
+    WRITE( out, "( ' Stationarity at solution:      ', ES22.14 )" )            &
       solution_stationarity
 
     solution_complementarity = uno_get_solution_complementarity( solver )
-    WRITE( out, "( ' Complementarity at solution = ', ES22.14 ) ")             &
+    WRITE( out, "( ' Complementarity at solution:   ', ES22.14 )" )            &
       solution_complementarity
 
     number_iterations = uno_get_number_iterations( solver )
-    WRITE( out, "( ' number_iterations = ', I0 )" ) number_iterations
+    WRITE( out, "( ' Number iterations ', 15X, I0 )" ) number_iterations
 
+    number_objective_evaluations                                               &
+      = uno_get_number_objective_evaluations( solver )
+    WRITE( out, "( ' Objective evaluations: ', 10X, I0 )" )                    &
+      number_objective_evaluations                                            
+
+    number_constraint_evaluations                                              &
+      = uno_get_number_constraint_evaluations( solver )
+    WRITE( out, "( ' Constraints evaluations: ', 8X, I0 )" )                   &
+      number_constraint_evaluations
+
+    number_objective_gradient_evaluations                                      &
+      = uno_get_number_objective_gradient_evaluations( solver )
+    WRITE( out, "( ' Objective gradient evaluations: ', 1X, I0 )" )           &
+      number_objective_gradient_evaluations
+
+    number_jacobian_evaluations = uno_get_number_jacobian_evaluations( solver )
+    WRITE( out, "( ' Jacobian evaluations: ', 11X, I0 )" )                     &
+      number_jacobian_evaluations
+
+    number_hessian_evaluations = uno_get_number_hessian_evaluations( solver )
+    WRITE( out, "( ' Hessian evaluations: ', 12X, I0 )" )                      &
+      number_hessian_evaluations
+    number_subproblems_solved                                                  &
+      = uno_get_number_subproblem_solved_evaluations( solver )
+    WRITE( out, "( ' Number of subproblems solved: ', 3X, I0 )" )              &
+      number_subproblems_solved
     cpu_time = uno_get_cpu_time( solver )
-    WRITE( out, "( ' cpu_time = ', F9.3 ) ") cpu_time
+    WRITE( out, "( ' CPU time (secs) ', 13X, F9.3 ) ") cpu_time
 
     write_solution_to_file                                                     &
-!     = uno_get_solver_bool_option( solver, "write_solution_to_file" )
-      = .FALSE.
-!     = .TRUE.
+      = uno_get_solver_bool_option( solver, "write_solution_to_file" )
 
 !  if required, write the solution to a file
 
@@ -333,6 +331,8 @@
 !  record the problem and solver details
 
       WRITE( output_sol, "( ' Problem: ', A )" ) TRIM( p_name )
+      WRITE( output_sol, "( ' Uno version: ',  I0, '.', I0, '.', I0 )" )       &
+        major, minor, patch
       WRITE( output_sol, "( ' Uno method: ', A )" )  method_description
       WRITE( output_sol, "( ' Objective value: ', ES22.14 )" )                 &
         solution_objective
@@ -375,10 +375,10 @@
         tool = 'conname'
         CALL CUTEST_connames( status, m, C_names )
         IF ( status /= 0 ) GO TO 10
-!       CALL uno_get_constraints( solver, C )
-        tool = 'ccf    '
-        CALL CUTEST_ccf( status, n, m, X, C )
-        IF ( status /= 0 ) GO TO 10
+!       tool = 'ccf    '
+!       CALL CUTEST_ccf( status, n, m, X, C )
+!       IF ( status /= 0 ) GO TO 10
+        call uno_get_solution_constraints( solver, C )
         CALL uno_get_constraint_dual_solution( solver, Y )
         WRITE( output_sol, "( /, ' Constraints: ', /,                          &
        & '                                       ',                            &
@@ -592,16 +592,24 @@
     INTEGER ( KIND = uno_int ) :: res
     INTEGER ( KIND = ip_ ) :: l_h
     INTEGER ( KIND = ip_ ), DIMENSION( nnz_h ) :: H_row, H_col
+    REAL ( KIND = c_double ) :: Y_null( 1 )
+    REAL ( KIND = c_double ), DIMENSION( m ) :: YY
     l_h =  nnz_h
-    CALL CUTEST_cshj_r( status, n, m, X, y0, - Y( 1 ), nnz_h, l_h,             &
-                        H_val, H_row, H_col)
+    IF ( m > 0 ) THEN
+      YY( 1 : m ) = Y( 1 : m )
+      CALL CUTEST_cshj_r( status, n, m, X, y0, - YY, nnz_h, l_h,               &
+                          H_val, H_row, H_col )
+    ELSE
+      CALL CUTEST_cshj_r( status, n, m, X, y0, Y_null( 1 ), nnz_h, l_h,        &
+                          H_val, H_row, H_col )
+    END IF
     res = INT( status, KIND = uno_int )
     RETURN
     END FUNCTION lagrangian_hessian_cutest
 
 !  Lagrangian Hessian operator
 
-    FUNCTION lagrangian_hessian_operator_cutest(n, m, X, evaluate_at_x, y0,    &
+    FUNCTION lagrangian_hessian_operator_cutest( n, m, X, evaluate_at_x, y0,   &
                           Y, VECTOR, RESULT, user_data ) RESULT( res ) BIND( C )
     INTEGER ( KIND = uno_int ), VALUE :: n, m
     REAL ( KIND = c_double), INTENT( IN ), DIMENSION( * ) :: X, Y, VECTOR
@@ -610,11 +618,20 @@
     REAL ( KIND = c_double ), INTENT( OUT ), DIMENSION( * ) :: RESULT
     TYPE( c_ptr ), VALUE :: user_data
     INTEGER ( KIND = uno_int ) :: res
+    REAL ( KIND = c_double ) :: Y_null( 1 )
+    REAL ( KIND = c_double ), DIMENSION( m ) :: YY
     LOGICAL :: got_h
     got_h = .NOT. evaluate_at_x
-    CALL CUTEST_chjprod_r( status, n, m, got_h, X, y0, - Y( 1 ), VECTOR, RESULT)
+    IF ( m > 0 ) THEN
+      YY( 1 : m ) = Y( 1 : m )
+      CALL CUTEST_chjprod_r( status, n, m, got_h, X, y0, - YY,                 &
+                             VECTOR, RESULT )
+    ELSE
+      CALL CUTEST_chjprod_r( status, n, m, got_h, X, y0, Y_null( 1 ),          &
+                             VECTOR, RESULT )
+    END IF
     res = INT( status, KIND = uno_int )
     RETURN
     END FUNCTION lagrangian_hessian_operator_cutest
 
-  END PROGRAM uno_cutest
+  END PROGRAM UNO_CUTEST
