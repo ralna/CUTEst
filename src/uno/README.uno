@@ -4,7 +4,7 @@
 		      *                       *
                       *************************
 
-              ( Last modified on 15 May 2026 at 16:10:00 )
+            ( Last modified on 4 June 2026 at 07:50:00 CUTEst version 2.7.1 )
 
 WHAT IS Uno?
 ------------
@@ -30,6 +30,8 @@ HOW DO I GET Uno?
 See
 
   https://github.com/cvanaret/Uno
+
+Make sure you have Uno version at least 2.7.4.
 
 USING Uno WITH CUTEst
 ---------------------------
