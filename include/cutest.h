@@ -1,4 +1,4 @@
-/* THIS VERSION: CUTEST 2.7 - 2026-05-02 AT 16:10 GMT */
+/* THIS VERSION: CUTEST 2.7 - 2026-06-04 AT 15:30 GMT */
 
 /*
  * ======================================================================
@@ -32,7 +32,7 @@
  * give a version number
  */
 
-#define CUTEST_VERSION 2.7.0
+#define CUTEST_VERSION 2.7.1
 
 /*
  * Define name of main() function on a
