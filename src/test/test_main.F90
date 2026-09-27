@@ -1,4 +1,4 @@
-! THIS VERSION: CUTEST 2.7 - 2026-05-16 AT 11:40 GMT.
+! THIS VERSION: CUTEST 2.7 - 2026-09-27 AT 13:30 GMT.
 
 #include "cutest_modules.h"
 #include "cutest_routines.h"
@@ -902,8 +902,11 @@
         WRITE( out, "( ' Call CUTEST_cshp' )" )
         CALL CUTEST_cshp_r( status, n, H_ne, l_h, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparse Hessian value
 
@@ -911,8 +914,11 @@
         CALL CUTEST_csh_r( status, n, m, X, Y,                                 &
                            H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparse Hessian value without the objective
 
@@ -920,8 +926,11 @@
         CALL CUTEST_cshc_r( status, n, m, X, Y,                                &
                             H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparse Hessian of the John function
 
@@ -929,8 +938,11 @@
         CALL CUTEST_cshj_r( status, n, m, X, y0, Y,                            &
                             H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO TO 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparsity pattern of the Hessian of the objective or a constraint
 
@@ -938,31 +950,43 @@
         WRITE( out, "( ' Call CUTEST_cishp for the objective' )" )
         CALL CUTEST_cishp_r( status, n, iprob, H_ne, l_h, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
         iprob = 1
         WRITE( out, "( ' Call CUTEST_cishp for a constraint' )" )
         CALL CUTEST_cishp_r( status, n, iprob, H_ne, l_h, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparsity_pattern( out, H_ne, l_h, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparse Hessian value of the objective or a constraint
 
         iprob = 0
-        WRITE( out, "( ' CALL CUTEST_cish for objective' )" )
+        WRITE( out, "( ' CALL CUTEST_cish for the objective' )" )
         CALL CUTEST_cish_r( status, n, X, iprob,                               &
                             H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
         iprob = 1
         WRITE( out, "( ' CALL CUTEST_cish for a constraint' )" )
         CALL CUTEST_cish_r( status, n, X, iprob,                               &
                             H_ne, l_h, H_val, H_row, H_col )
         IF ( status /= 0 ) GO to 900
-        IF ( only_print_small )                                                &
+        IF ( only_print_small ) THEN
           CALL WRITE_H_sparse( out, H_ne, l_h, H_val, H_row, H_col )
+        ELSE
+          WRITE( out, "( ' * H_ne = ', I0 )" ) H_ne
+        END IF
 
 !  compute the sparsity pattern of the gradients and Hessian
 

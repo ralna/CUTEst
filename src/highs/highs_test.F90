@@ -25,7 +25,7 @@ CONTAINS
       s = 0_ipc_
     END FUNCTION Highs_run
 
-    FUNCTION Highs_getModelStatus (h) &
+    FUNCTION Highs_getModelStatus ( h ) &
         result(model_status) bind(c, name='Highs_getModelStatus')
       USE iso_c_binding
       TYPE ( c_ptr ), VALUE :: h
@@ -151,6 +151,16 @@ CONTAINS
       v = 0.0_rpc_
       s = 0_ipc_
     END FUNCTION Highs_getDoubleInfoValue
+
+    FUNCTION Highs_getStringOptionValue ( h, o, v ) &
+      result( s ) bind ( c, name='Highs_getStringOptionValue' )
+      USE iso_c_binding
+      TYPE ( c_ptr ), VALUE :: h
+      CHARACTER ( c_char ) :: o(*)
+      CHARACTER ( c_char ) :: v(*)
+      INTEGER ( c_int ) :: s
+      s = 0_ipc_
+    END FUNCTION Highs_getStringOptionValue
 
     FUNCTION Highs_getSolution (h, cv, cd, rv, rd) &
         result ( s ) bind ( c, name='Highs_getSolution' )

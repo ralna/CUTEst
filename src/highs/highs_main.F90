@@ -37,11 +37,11 @@
   INTEGER ( KIND = ipc_ ), PARAMETER :: runstatus_error = - 1
   INTEGER ( KIND = ipc_ ), PARAMETER :: runstatus_ok = 0
   INTEGER ( KIND = ipc_ ), PARAMETER :: runstatus_warning = - 1
-  REAL ( KIND = rpc_ ), PARAMETER :: offset = 0
+  REAL ( KIND = rpc_ ) :: offset
   LOGICAL, PARAMETER :: no_highs_logging = .TRUE.
   LOGICAL ( KIND = c_bool ), PARAMETER :: logical_false = .false.
   LOGICAL ( KIND = c_bool ), PARAMETER :: logical_true = .true.
-  INTEGER ( KIND = ipc_ ) :: iteration_count
+  INTEGER ( KIND = ipc_ ) :: iteration_count, ip_iteration_count
   REAL ( KIND = rpc_ ) :: objective_function_value
   TYPE ( c_ptr ) :: highs
 
@@ -73,6 +73,7 @@
   REAL ( KIND = rpc_ ) :: max_dual_infeasibility
   LOGICAL ( KIND = c_bool ) :: b_value
   CHARACTER ( KIND = c_char, LEN = 80 ) :: s_value
+  CHARACTER ( KIND = c_char, LEN = 10 ) :: solver_used
   INTEGER ( KIND = ipc_ ) :: numcol, numrow, numnz, hessian_numnz
   INTEGER ( KIND = ipc_ ), ALLOCATABLE, DIMENSION( : ) :: astart
   INTEGER ( KIND = ipc_ ), ALLOCATABLE, DIMENSION( : ) :: aindex
@@ -154,9 +155,9 @@
   numnz = A_ptr( n + 1 ) - 1
   hessian_numnz = H_ptr( n + 1 ) - 1
 
-!  transfer the linear term for the objective function
+!  transfer the constant and linear term for the objective function
 
-!write(6,*) ' G ', G
+  offset = f
   ALLOCATE( colcost( numcol ), STAT = status )
   IF ( status /= 0 ) GO TO 990
   colcost( : numcol ) = G( : numcol )
@@ -266,31 +267,35 @@
     SELECT CASE ( TRIM( option_name ) )
     CASE( "time_limit", "infinite_cost", "infinite_bound",                     &
           "small_matrix_value", "large_matrix_value",                          &
+          "kkt_tolerance",                                                     &
           "primal_feasibility_tolerance",                                      &
           "dual_feasibility_tolerance",                                        &
+          "qp_regularization_value",                                           &
           "objective_bound", "objective_target" )
       READ( option_value, * ) r_value
       runstatus = Highs_setDoubleOptionValue( highs,                           &
          TRIM( option_name ) // C_NULL_CHAR, r_value )
-    CASE( "highs_random_seed", "highs_debug_level",                            &
+    CASE( "random_seed", "highs_debug_level",                                  &
           "highs_analysis_level", "simplex_strategy",                          &
           "simplex_scale_strategy", "simplex_crash_strategy",                  &
           "simplex_dual_edge_weight_strategy",                                 &
           "simplex_primal_edge_weight_strategy",                               &
           "simplex_iteration_limit", "simplex_update_limit",                   &
-          "highs_min_threads", "highs_max_threads" )
+          "qp_iteration_limit", "qp_nullspace_limit",                          &
+          "threads", "write_solution_style" )
       READ( option_value, * ) i_value
       runstatus = Highs_setIntOptionValue( highs,                              &
          TRIM( option_name ) // C_NULL_CHAR, i_value )
     CASE( "output_flag", "write_solution_to_file",                             &
-          "write_solution_pretty", "log_to_console" )
+          "log_to_console" )
       READ( option_value, * ) b_value
       runstatus = Highs_setBoolOptionValue( highs,                             &
          TRIM( option_name ) // C_NULL_CHAR, b_value )
-    CASE ( "solution_file", "log_file" )
+    CASE ( "presolve", "solver", "parallel", "run_crossover",                  &
+           "solution_file", "log_file" )
       READ( option_value, * ) s_value
       runstatus = Highs_setStringOptionValue( highs,                           &
-         TRIM( option_name ) // C_NULL_CHAR, TRIM( s_value ) )
+         TRIM( option_name ) // C_NULL_CHAR, TRIM( s_value ) // C_NULL_CHAR )
     CASE ( "print_full_solution" )
       READ( option_value, * ) b_value
       fulsol = b_value
@@ -303,7 +308,7 @@
 
 !  transfer the data before solution
 
-  highs = Highs_create( )
+!  highs = Highs_create( )
 
   IF ( no_highs_logging ) THEN
     runstatus = Highs_setBoolOptionValue(highs,  &
@@ -337,13 +342,27 @@
   runstatus = Highs_run( highs )
   modelstatus = Highs_getModelStatus( highs )
 
+!  record which HiGHS solver was actually used
+
+  runstatus = Highs_getStringOptionValue( highs,                               &
+      "solver" // C_NULL_CHAR, solver_used )
+  DO i = 1, 10
+    IF( solver_used( i : i ) == C_NULL_CHAR ) EXIT
+  END DO
+  IF ( i < 10 ) solver_used( i : 10 ) = ' '
+
 !  recover the objective function value and iteration count
 
   runstatus = Highs_getDoubleInfoValue( highs,                                 &
     "objective_function_value" // C_NULL_CHAR, objective_function_value )
   IF ( qp ) THEN
-    runstatus = Highs_getIntInfoValue( highs,                                  &
-      "qp_iteration_count" // C_NULL_CHAR, iteration_count )
+    IF ( TRIM( solver_used ) == 'hipo' ) THEN
+      runstatus = Highs_getIntInfoValue( highs,                                &
+        "ipm_iteration_count" // C_NULL_CHAR, iteration_count )
+    ELSE
+      runstatus = Highs_getIntInfoValue( highs,                                &
+        "qp_iteration_count" // C_NULL_CHAR, iteration_count )
+    END IF
   ELSE
     runstatus = Highs_getIntInfoValue( highs,                                  &
       "simplex_iteration_count" // C_NULL_CHAR, iteration_count )
@@ -362,7 +381,8 @@
 
 !  get the primal and dual solution ...
 
-  runstatus = Highs_getSolution( highs, colvalue( : numcol), coldual( : numrow), rowvalue, rowdual )
+  runstatus = Highs_getSolution( highs, colvalue( : numcol),                   &
+                                 coldual( : numrow), rowvalue, rowdual )
 
 !  ... and the basis
 
@@ -506,7 +526,7 @@
 
   CALL CUTEST_creport_r( status, CALLS, TIMES )
   WRITE( out, "( /, 24('*'), ' CUTEst statistics ', 24('*') //                 &
- &              ,' Package used            :  HiGHS',    /                     &
+ &              ,' Package used            :  HiGHS (', A, ')',  /             &
  &              ,' Problem                 :  ', A10,    /                     &
  &              ,' # variables             =      ', I10 /                     &
  &              ,' # constraints           =      ', I10 /                     &
@@ -514,7 +534,7 @@
  &              ,' Final f                 = ', ES15.7 /                       &
  &              ,' Set up time             =      ', 0P, F10.2, ' seconds' /   &
  &              ,' Solve time              =      ', 0P, F10.2, ' seconds' //  &
- &               66('*') / )" ) p_name, n, m, runstatus,                       &
+ &               66('*') / )" ) TRIM( solver_used ), p_name, n, m, runstatus,  &
      objective_function_value, TIMES( 1 ), TIMES( 2 )
 
   l = 4 ; IF ( fulsol ) l = n

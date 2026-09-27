@@ -19,6 +19,13 @@ export PACKOBJS=""
 # or library.so together with any nonstandard library paths using -L(path)
 #export PACKLIBS=""
 export PACKLIBS="-lFortranHighs -lhighs -lipx -lbasiclu -I $HIGHS_BUILD/modules -L $HIGHS_BUILD/lib -lstdc++"
+export PACKLIBS="-lFortranHighs -lhighs -I $HIGHS_BUILD/modules -L $HIGHS_BUILD/lib -lstdc++"
+export PACKLIBS="-L $HIGHS_BUILD/lib -lFortranHighs -lhighs -I $HIGHS_BUILD/modules -lstdc++"
+export PACKLIBS="-L $HIGHS_BUILD/lib $HIGHS_BUILD/lib/libFortranHighs.so $HIGHS_BUILD/lib/libhighs.so -I $HIGHS_BUILD/modules -lstdc++ -L/home/nimg/c/HiGHS/gnu/lib"
+export PACKLIBS="-lFortranHighs -lhighs -I $HIGHS_BUILD/modules -L$HIGHS_BUILD/lib -Wl,-R$HIGHS_BUILD/lib -lstdc++"
+
+
+
 
 # Define the name of the package specification file if any. This possibly
 # precision-dependent file must either lie in the current directory or in

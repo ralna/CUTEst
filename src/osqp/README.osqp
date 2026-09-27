@@ -30,7 +30,7 @@ COMPILING THE OBJECT MODULE FOR OSQP
 
 Follow the instructions in
 
-  https://osqp.org/docs/installation/sources.html
+  https://github.com/osqp/osqp/blob/master/docs/get_started/sources.rst
 
 Once the package has been installed, set the environment variable
 OSQP to point to main osqp directory (that is the one and for which
