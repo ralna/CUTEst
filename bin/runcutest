@@ -15,9 +15,8 @@ if [[ ${CUTEST+set} != 'set' ]]; then
     exit 1
 fi
 
-. $CUTEST/bin/cutest_envcheck
-[[ $? != 0 ]] && exit $?
-. $ARCHDEFS/bin/helper_functions
+. $CUTEST/bin/cutest_envcheck || exit $?
+. $ARCHDEFS/bin/helper_functions || exit $?
 
 # Default settings
 
@@ -228,15 +227,16 @@ Parse_Arguments() {
 Decode_Problem() {
     # Problem name is passed as argument #1
     # Temporary working dir is passed as argument #2
-    cd $2
+    cd $2 || exit $?
     ${RM} ${EXEC}/run_${PACKAGE}
     ${RM} ${FUNSF} ${FUNSO}
     if [[ ${SIFDECODE+set} == 'set' ]]; then
         command="${SIFDECODE}/bin/sifdecoder -A ${ARCH} ${sd_opts[@]} $1"
         (( show_commands )) && echo $command
         $command
-        cd - 2>&1 >/dev/null
-        [[ $? != 0 ]] && exit $?
+        local status=$?
+        cd - >/dev/null 2>&1
+        (( status == 0 )) || exit $status
     else
         error "${thisprog}: environment variable SIFDECODE not set."
         cd -
@@ -246,16 +246,18 @@ Decode_Problem() {
 
 ###############################################################################
 
-# Run specified package
+# Run specified package (returns the exit status of the executable)
 
 Run_Package() {
 
     (( OUTPUT )) && printf "\nRunning run_${PACKAGE} on current test problem ...\n"
     (( LIMIT  )) && ulimit -t ${LIMIT}
     ${EXEC}/run_${PACKAGE}
+    local status=$?
 
     # Tidy up the current directory, deleting all junk.
     (( KEEP == 0 )) && ${RM} ${EXEC}/run_${PACKAGE}
+    return $status
 }
 
 ###############################################################################
@@ -265,7 +267,9 @@ Run_Package() {
 Run_Pre() {
 
     # Run package-dependent commands before solving if any were defined
-    [[ -e ${CUTEST}/bin/${PACKAGE}_pre ]] && . ${CUTEST}/bin/${PACKAGE}_pre
+    if [[ -e ${CUTEST}/bin/${PACKAGE}_pre ]]; then
+        . ${CUTEST}/bin/${PACKAGE}_pre
+    fi
 }
 
 ###############################################################################
@@ -275,7 +279,9 @@ Run_Pre() {
 Run_Post() {
 
     # Run post-solving package-dependent commands if any were defined
-    [[ -e ${CUTEST}/bin/${PACKAGE}_post ]] && . ${CUTEST}/bin/${PACKAGE}_post
+    if [[ -e ${CUTEST}/bin/${PACKAGE}_post ]]; then
+        . ${CUTEST}/bin/${PACKAGE}_post
+    fi
 }
 
 ###############################################################################
@@ -293,6 +299,20 @@ Clean_Up() {
 
 ###############################################################################
 
+# Post-process, clean up and exit with the first nonzero status
+# (argument #1 is the status of the main command)
+
+Finish() {
+    local status=$1
+    Run_Post
+    local post_status=$?
+    Clean_Up
+    (( status == 0 )) && status=$post_status
+    exit $status
+}
+
+###############################################################################
+
 # Perform requested operations
 
 thisprog=`basename $0`
@@ -304,8 +324,7 @@ Initialize_Settings
 Parse_Arguments "$@"
 
 # Check that environment is correctly defined
-. ${CUTEST}/bin/cutest_envcheck
-[[ $? != 0 ]] && exit $?
+. ${CUTEST}/bin/cutest_envcheck || exit $?
 
 if [[ -z "$ARCH" ]]; then
   if [[ -z "$MYARCH" ]]; then
@@ -323,7 +342,7 @@ if [[ ! -e ${CUTEST}/bin/sys/${ARCH} ]]; then
     error "ARCH=${ARCH} but ${CUTEST}/bin/sys/${ARCH} does not exist."
     exit 3
 fi
-. ${CUTEST}/bin/sys/${ARCH}
+. ${CUTEST}/bin/sys/${ARCH} || exit $?
 
 (( $blas_set == 1 )) && BLAS=$MYBLAS
 (( $lapack_set == 1 )) && LAPACK=$MYLAPACK
@@ -350,7 +369,11 @@ fi
 
 # If -D is not specified, problem is in current dir. Do not stash.
 (( problem_set == 0 )) && let stash=0
-(( stash )) && WorkingDir=`mktemp -d -t cutestXXXXXXXX` || WorkingDir=${PWD}
+if (( stash )); then
+    WorkingDir=`mktemp -d -t cutestXXXXXXXX` || exit $?
+else
+    WorkingDir=${PWD}
+fi
 if (( show_config )); then
   echo "Working in $WorkingDir"
 fi
@@ -366,9 +389,9 @@ FUNSO="ELFUN${PSUFFIX}.o GROUP${PSUFFIX}.o RANGE${PSUFFIX}.o EXTER${PSUFFIX}.o"
 # Source package definitions
 
 if [[ -x ${CUTEST}/packages/${ARCH}/${PRECISION}/${PKG} ]]; then
-   . ${CUTEST}/packages/${ARCH}/${PRECISION}/${PKG}
+   . ${CUTEST}/packages/${ARCH}/${PRECISION}/${PKG} || exit $?
 elif [[ -x ${CUTEST}/packages/defaults/${PKG} ]]; then
-   . ${CUTEST}/packages/defaults/${PKG}
+   . ${CUTEST}/packages/defaults/${PKG} || exit $?
 else
    error "Cannot find a ${PKG} definitions file in
  ${CUTEST}/packages/${ARCH}/${PRECISION}
@@ -376,7 +399,6 @@ or
  ${CUTEST}/packages/defaults"
    exit 9
 fi
-[[ $? != 0 ]] && exit $?
 
 # Main driver for the package
 DRIVER=${PACKAGE}_main
@@ -396,17 +418,17 @@ if (( precision_ok == 0 )); then
     exit 6
 fi
 
-Run_Pre
+Run_Pre || exit $?
 
 # Ensure CUTEst library is present
 LIBDIR=${CUTEST}/objects/${ARCH}/${PRECISION}
 if [[ ! -e ${LIBDIR}/libcutest.a  ]]; then
     [[ -w $LIBDIR ]] && let writable=1 || let writable=0
     if (( writable )); then
-        cd ${LIBDIR}
+        cd ${LIBDIR} || exit $?
         ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} \
-          PRECIS=$(PRECISION) cutest_silent
-        cd ${WorkingDir}
+          PRECIS=${PRECISION} cutest_silent || exit $?
+        cd ${WorkingDir} || exit $?
     else
         error "${LIBDIR}/libcutest.a does not exist and
 You do not have write permissions to $LIBDIR"
@@ -417,26 +439,28 @@ fi
 # Make sure package is up to date
 [[ -w ${CUTEST}/objects ]] && let writable=1 || let writable=0
 if (( writable )); then
-    cd ${CUTEST}/src/${PKG}
-    ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} PRECIS=${PRECISION} tools ${PKG}
+    cd ${CUTEST}/src/${PKG} || exit $?
+    ${MAKE} -s -f ${CUTEST}/makefiles/${ARCH} PRECIS=${PRECISION} tools ${PKG} \
+      || exit $?
 else
     warning "You do not have write permissions to ${CUTEST}/objects
 Attempting to continue..."
 fi
 
-cd ${WorkingDir}
+cd ${WorkingDir} || exit $?
 # If needed, use the package spec file
 if [[ ${SPECS} != "" ]]; then
   if [[ ! -e ~/.cutest/specs ]] ; then
-    mkdir -p ~/.cutest/specs
+    mkdir -p ~/.cutest/specs || exit $?
     chmod 755 -Rf ~/.cutest
   fi
   if [[ ! -e ${SPECS} ]]; then
      if [[ -e ${CUTEST}/src/${PACKDIR}/${SPECS} ]]; then
        if [[ ! -e ~/.cutest/specs/${SPECS} ]]; then
-         cp ${CUTEST}/src/${PACKDIR}/${SPECS} ~/.cutest/specs/${SPECS}
+         cp ${CUTEST}/src/${PACKDIR}/${SPECS} ~/.cutest/specs/${SPECS} \
+           || exit $?
        fi
-       ${LN} -fs ~/.cutest/specs/${SPECS} ${SPECS}
+       ${LN} -fs ~/.cutest/specs/${SPECS} ${SPECS} || exit $?
      else
         warning "Cannot find spec file ${SPECS}---skipping"
      fi
@@ -451,22 +475,20 @@ FUNSO="ELFUN${PSUFFIX}.o GROUP${PSUFFIX}.o RANGE${PSUFFIX}.o"
 for i in  ELFUN${PSUFFIX} GROUP${PSUFFIX} RANGE${PSUFFIX}
 do
     if [[ ! -e ${i}.o  ]]; then
-        ${CP} ${i}.f ${i}.f90
+        ${CP} ${i}.f ${i}.f90 || exit $?
         command="${FORTRAN} ${PROBFLAGS} ${i}.f90"
         (( show_commands )) && echo $command
-        $command
-        [[ $? != 0 ]] && exit $?
+        $command || exit $?
         ${RM} ${i}.f90
     fi
 done
 
 [[ -e EXTER${PSUFFIX}.f && ! -s EXTER${PSUFFIX}.f ]] && ${RM} EXTER${PSUFFIX}.f
 if [[ -e EXTER${PSUFFIX}.f ]]; then
-    ${CP} EXTER${PSUFFIX}.f EXTER${PSUFFIX}.f90
+    ${CP} EXTER${PSUFFIX}.f EXTER${PSUFFIX}.f90 || exit $?
     command="${FORTRAN} ${PROBFLAGS} EXTER${PSUFFIX}.f90"
     (( show_commands )) && echo $command
-    $command
-    [[ $? != 0 ]] && exit $?
+    $command || exit $?
     ${RM} EXTER${PSUFFIX}.f90
     [[ -e EXTER${PSUFFIX}.o && -z EXTER${PSUFFIX}.o ]] \
       && ${RM} EXTER${PSUFFIX}.o || FUNSO="${FUNSO} EXTER${PSUFFIX}.o"
@@ -481,7 +503,7 @@ do
     [[ ! -e ${PACKOBJS[$i]} ]] && \
       PACKOBJS[$i]=${CUTEST}/objects/${ARCH}/${PRECISION}/${PACKOBJS[$i]}
 done
-cd ${WorkingDir}
+cd ${WorkingDir} || exit $?
 
 # If user requested Matlab, the procedure is special
 if [[ ${PKG} == "matlab" ]]; then
@@ -501,9 +523,7 @@ ${CUTEST}/objects/${ARCH}/${PRECISION}/mcutest.o ${FUNSO} -L${LIBDIR} \
 -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -lgfortran -g"
     (( show_commands )) && echo "$command"
     $command
-    Run_Post
-    Clean_Up
-    exit $?
+    Finish $?
 elif [[ ${PKG} == "octave" ]]; then
     MEXFORTRAN=/usr/bin/mkoctfile
     if [[ ! -x ${MEXFORTRAN} ]]; then
@@ -517,9 +537,7 @@ ${CUTEST}/objects/${ARCH}/${PRECISION}/ocutest.o  ${FUNSO} \
 -L${LIBDIR} -lcutest ${ALT_LIB_PATH[@]} ${BLAS} ${LAPACK} ${PACKLIBS} -g"
     (( show_commands )) && echo "$command"
     $command
-    Run_Post
-    Clean_Up
-    exit $?
+    Finish $?
 elif [[ ${PKG} == "nomad" ]]; then
     # Link all the PACK and tools files together.
     (( OUTPUT )) && printf '\nLinking all the object files together ...\n'
@@ -528,10 +546,10 @@ ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} \
 ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} \
 -lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
-    $command
+    $command || exit $?
     command="$CP $CUTEST/src/nomad/run_nomad ./"
     (( show_commands )) && echo "$command"
-    $command
+    $command || exit $?
     let KEEP=1
 else
     # Link all the PACK and tools files together.
@@ -541,18 +559,18 @@ ${CUTEST}/objects/${ARCH}/${PRECISION}/${DRIVER}.o ${PACKOBJS[@]} \
 ${ALT_LIB_PATH[@]} -L${LIBDIR} ${PACKLIBS} ${SPECIALLIBS} \
 -lcutest ${XTRALIBS[*]} ${BLAS} ${LAPACK}"
     (( show_commands )) && echo "$command"
-    $command
+    $command || exit $?
 fi
 
-[[ ${PWD} != ${EXEC} ]] && ${MV} run_${PACKAGE} ${EXEC}/run_${PACKAGE}
+if [[ ${PWD} != ${EXEC} ]]; then
+    ${MV} run_${PACKAGE} ${EXEC}/run_${PACKAGE} || exit $?
+fi
 
 #  run PACK on the current test problem unless -debug is set.
 
 if (( DEBUG )); then
     echo '  debug enabled, load module is in '${EXEC}'/'
-else
-    Run_Package
-    Run_Post
-    Clean_Up
+    exit 0
 fi
-exit 0
+Run_Package
+Finish $?
