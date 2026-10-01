@@ -831,7 +831,7 @@
 !  compute the dense Hessian value of the objective or a constraint
 
         iprob = 0
-        WRITE( out, "( ' CALL CUTEST_cidh for objective' )" )
+        WRITE( out, "( ' CALL CUTEST_cidh for the objective' )" )
         CALL CUTEST_cidh_r( status, n, X, iprob, l_h2_1, H2_val )
         IF ( status /= 0 ) GO to 900
         IF ( only_print_small )                                                &
