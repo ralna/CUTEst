@@ -78,7 +78,7 @@ unbounded_objective_threshold -1e20
 # -------------
 
 # Verbosity level of the logger (SILENT|DISCRETE|WARNING|INFO|DEBUG|DEBUG2|DEBUG3)
-logger INFO
+logger SILENT
 
 # Norm used for the progress measures (L1|L2|INF)
 progress_norm L1
