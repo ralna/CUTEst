@@ -1,40 +1,43 @@
-# ------------
-## Ingredients
-# ------------
+# -----------------------------------------
+## Ingredients (set by presets or manually)
+# -----------------------------------------
 
 # constraint relaxation strategy (feasibility_restoration)
-constraint_relaxation_strategy feasibility_restoration
+#constraint_relaxation_strategy feasibility_restoration
 
 # inequality handling method (inequality_constrained|interior_point)
-inequality_handling_method 	inequality_constrained
+#inequality_handling_method inequality_constrained
 
 # Hessian model (exact|LBFGS|LSR1|identity|zero)
-hessian_model 	exact
+#hessian_model exact
 
 # inertia correction strategy (primal|primal_dual|none)
-inertia_correction_strategy none
+#inertia_correction_strategy none
 
 # globalization mechanism (TR|LS)
-globalization_mechanism TR
+#globalization_mechanism TR
 
 # globalization strategy (merit_function|fletcher_filter_method|waechter_filter_method|funnel_method)
-globalization_strategy fletcher_filter_method
+#globalization_strategy fletcher_filter_method
 
-## Preset (uncomment to force) (filtersqp|ipopt)
-#preset filtersqp
+# preset (filtersqp|ipopt)
+#preset ipopt
 
 # --------------------------------------------------------------------
 ## Subproblem solver (picked by Uno automatically, uncomment to force)
 # --------------------------------------------------------------------
 
 # QP solver (BQPD|HiGHS)
-#QP_solver 	BQPD
+#QP_solver BQPD
 
 # QP solver (BQPD|HiGHS)
-#LP_solver 	BQPD
+#LP_solver BQPD
 
 # linear solver (MA57|MA27|MUMPS|SSIDS)
-#linear_solver 	MA57
+#linear_solver MA57
+
+# path to the HSL shared library to dlopen for MA27/MA57/MA86 (empty = platform default libhsl.{so,dylib,dll}) (string)
+#libhsl_path /path/to/libhsl.{so,dylib,dll}
 
 # ------------
 ## Termination
@@ -64,6 +67,9 @@ time_limit infinity
 # Whether the primal-dual solution is printed (bool)
 print_solution false
 
+# Threshold on norm of primal variables to declare diverging iterate (double)
+diverging_iterate_threshold 1e20
+
 # Objective threshold under which the problem is declared unbounded (double)
 unbounded_objective_threshold -1e20
 
@@ -72,7 +78,7 @@ unbounded_objective_threshold -1e20
 # -------------
 
 # Verbosity level of the logger (SILENT|DISCRETE|WARNING|INFO|DEBUG|DEBUG2|DEBUG3)
-logger SILENT
+logger INFO
 
 # Norm used for the progress measures (L1|L2|INF)
 progress_norm L1
@@ -91,6 +97,18 @@ protected_actual_reduction_macheps_coefficient 10
 
 # Whether the subproblem is printed in DEBUG mode (bool)
 print_subproblem false
+
+# use function scaling based on the initial gradients (bool)
+use_function_scaling false
+
+# Threshold on the function scaling coefficients (double)
+function_scaling_threshold 100.
+
+# Whether minor iterations (line search and trust-region method) are printed in the statistics table (bool)
+print_minor_iterations false
+
+# Whether the statistics table is printed in extended form (bool)
+print_extended_statistics false
 
 # Whether the solution is printed to a file (used by AMPL and CUTEst) (bool)
 write_solution_to_file false
@@ -112,6 +130,9 @@ armijo_tolerance 1e-9
 # Fraction of the constraint violation that should be achieved by the predicted reduction in the switching condition (double)
 switching_delta 0.999
 
+# Exponent of the directional derivative of the merit function in the switching condition (double)
+switching_merit_exponent 1
+
 # Exponent of the constraint violation in the switching condition (double)
 switching_infeasibility_exponent 2
 
@@ -125,9 +146,6 @@ sufficient_infeasibility_decrease_ratio 0.9
 # ----------------------
 ## Filter method options
 # ----------------------
-
-# Type of the filter data structure (standard)
-filter_type standard
 
 # Fraction in the infeasibility sufficient reduction condition (double)
 filter_beta 0.999
@@ -146,6 +164,12 @@ filter_capacity 50
 
 # Infeasibility decrease factor in the infeasibility sufficient decrease condition (double)
 filter_sufficient_infeasibility_decrease_factor 0.9
+
+# Number of consecutive filter rejections before the filter is reset (integer)
+filter_reset_iteration_threshold 5
+
+# Maximum number of filter resets (integer)
+max_number_filter_resets 5
 
 # ---------------
 ## Funnel options
@@ -179,11 +203,21 @@ funnel_require_acceptance_wrt_current_iterate false
 # Decrease ratio of the step length for backtracking line search (double)
 LS_backtracking_ratio 0.5
 
-# Minimum acceptable step length before failure is reported (double)
-LS_min_step_length 1e-12
-
 # Whether the Lagrange multipliers are scaled with the step length (bool)
 LS_scale_duals_with_step_length true
+
+# Safety factor for the minimum step length (double)
+gamma_alpha 0.05
+
+# --------------------------------------
+## Second-order correction (SOC) options
+# --------------------------------------
+
+# Maximum number of SOC iterations (integer)
+SOC_max_iterations 4
+
+# Fraction of the infeasibility in the SOC termination criterion (double)
+SOC_infeasibility_fraction 0.99
 
 # ---------------------------
 ## Inertia correction options
@@ -223,8 +257,11 @@ threshold_unsuccessful_attempts 8
 # Size of the quasi-Newton limited memory (integer)
 quasi_newton_memory_size 6
 
-# Upper bound on delta in L-BFGS (double)
-LBFGS_delta_upper_bound 100
+# Lower bound on delta in quasi-Newton approximations (double)
+quasi_newton_delta_lower_bound 1e-8
+
+# Upper bound on delta in quasi-Newton approximations (double)
+quasi_newton_delta_upper_bound 1e8
 
 # Number of consecutive skips before the limited memory is reset (integer)
 LBFGS_max_skips_before_reset 2
@@ -266,6 +303,9 @@ switch_to_optimality_requires_linearized_feasibility true
 
 # Coefficient of the constraint violation in the ℓ_1 relaxed problem (double)
 l1_constraint_violation_coefficient 1
+
+# Whether a proximal term is used in the feasibility problem (bool)
+use_proximal_term false
 
 # ---------------------------
 ## Barrier subproblem options
@@ -319,9 +359,25 @@ barrier_small_infeasibility_factor 1e-4
 # Maximum accepted norm of the least-square multipliers (double)
 least_square_multiplier_max_norm 1e3
 
+# Maximum accepted norm of the bound duals when switching from restoration to optimality (double)
+bound_multiplier_max_norm 1e3
+
+# Constraint violation tolerance (double)
+constraint_violation_tolerance 1e-4
+
+# Bound relaxation factor (double)
+bound_relaxation_factor 1e-8
+
 # -------------
 ## BQPD options
 # -------------
 
 # Heuristic used to pick upper bound on nullspace size (kmax) (filtersqp|minotaur)
 BQPD_kmax_heuristic filtersqp
+
+# -------------
+## MA57 options
+# -------------
+
+# Whether the MA57 scaling (MC64) is enabled (bool)
+MA57_use_scaling false
