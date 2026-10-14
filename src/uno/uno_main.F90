@@ -223,6 +223,9 @@
 !  load option file
 
     success = uno_load_solver_option_file( solver, options_file_name )
+    if (.not. success) then
+        error stop "uno_load_solver_option_file failed"
+    end if
 
 !  how to solve with exact Hessian
 
