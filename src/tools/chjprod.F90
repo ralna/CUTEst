@@ -312,6 +312,8 @@
           data%ISLGRP, data%ITYPEE, data%ISYMMH, work%ISTAJC,                  &
           work%W_ws, work%W_el, work%W_in, work%H_in, RANGE_r )
       END IF
+!  without constraints, the group weights above ignore y0: scale by y0 here
+      IF ( data%numcon == 0 ) RESULT( : n ) = y0 * RESULT( : n )
 
 !  update the counters for the report tool
 
