@@ -363,6 +363,8 @@
         i = work%H_row( k ) ; j = work%H_col( k )
         H_val( i, j ) = work%H_val( k ) ; H_val( j, i ) = work%H_val( k )
       END DO
+!  without constraints, the group weights above ignore y0: scale by y0 here
+      IF ( data%numcon == 0 ) H_val( : n, : n ) = y0 * H_val( : n, : n )
 
 !  update the counters for the report tool
 

@@ -331,6 +331,8 @@
       H_row( : nnzh ) = work%H_row( : nnzh )
       H_col( : nnzh ) = work%H_col( : nnzh )
       H_val( : nnzh ) = work%H_val( : nnzh )
+!  without constraints, the group weights above ignore y0: scale by y0 here
+      IF ( data%numcon == 0 ) H_val( : nnzh ) = y0 * H_val( : nnzh )
 
 !  update the counters for the report tool
 
