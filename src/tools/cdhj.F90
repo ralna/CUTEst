@@ -364,7 +364,7 @@
         H_val( i, j ) = work%H_val( k ) ; H_val( j, i ) = work%H_val( k )
       END DO
 !  without constraints, the group weights above ignore y0: scale by y0 here
-      IF ( data%numcon == 0 ) H_val( : n, : n ) = y0 * H_val( : n, : n )
+      IF ( data%numcon == 0 .AND. y0 /= 1.0_rp_ ) H_val( : n, : n ) = y0 * H_val( : n, : n )
 
 !  update the counters for the report tool
 
