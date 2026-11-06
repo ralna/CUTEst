@@ -319,7 +319,10 @@
 !   L o c a l   V a r i a b l e s
 !-----------------------------------------------
 
-      INTEGER ( KIND = ip_ ) :: i, iel, ig, j, k, l, iielts, ientry, nsizeh
+      INTEGER ( KIND = ip_ ) :: i, iel, ig, j, k, l, iielts, ientry, nsizeh, ivar
+!  LINK_TAIL( i ) is the last entry of the list of the elements using variable
+!  i, so that appending to the list does not traverse it (O(1) instead of O(k))
+      INTEGER ( KIND = ip_ ), DIMENSION( n ) :: LINK_TAIL
       INTEGER ( KIND = ip_ ) :: llink, mlink, nlink, ulink, nel1, lnwksp
       LOGICAL :: reallocate
 
@@ -392,32 +395,27 @@
 !  loop on the variables from the i-th element
 
           DO k = ISTAEV( iel ), ISTAEV( iel + 1 ) - 1
-            ientry = IELVAR( k )
+            ivar = IELVAR( k )
+            ientry = ivar
             IF ( LINK_elem_uses_var( ientry ) >= 0 ) THEN
 
-!  if we have reached the end of the list of the elements using the variable
-!  IELVAR( K ), add the iel-th element to it. Otherwise, find the next entry
-!  in the list
+!  jump to the end of the list of the elements using the variable (tail)
 
-  30          CONTINUE
-              IF ( LINK_elem_uses_var( ientry ) > 0 ) THEN
-                ientry = LINK_elem_uses_var( ientry )
-                GO TO 30
-              ELSE
-               IF ( iielts == llink ) THEN
-                  nlink = llink
-                  ulink = iielts; mlink = iielts + 1
-                  CALL CUTEST_extend_array( LINK_elem_uses_var, llink, ulink,  &
-                                            nlink, mlink, buffer, status,      &
-                                            alloc_status)
-                  IF ( status /= 0 ) THEN
-                    bad_alloc = 'LINK_elem_uses_var' ; GO TO 610 ; END IF
-                  llink = nlink
-                END IF
-                iielts = iielts + 1
-                LINK_elem_uses_var( ientry ) = iielts
-                LINK_elem_uses_var( iielts ) = 0
+              ientry = LINK_TAIL( ivar )
+              IF ( iielts == llink ) THEN
+                nlink = llink
+                ulink = iielts; mlink = iielts + 1
+                CALL CUTEST_extend_array( LINK_elem_uses_var, llink, ulink,  &
+                                          nlink, mlink, buffer, status,      &
+                                          alloc_status)
+                IF ( status /= 0 ) THEN
+                  bad_alloc = 'LINK_elem_uses_var' ; GO TO 610 ; END IF
+                llink = nlink
               END IF
+              iielts = iielts + 1
+              LINK_elem_uses_var( ientry ) = iielts
+              LINK_elem_uses_var( iielts ) = 0
+              LINK_TAIL( ivar ) = iielts
             ELSE
 
 !  the list of elements involving the variable IELVAR(k) was
@@ -425,6 +423,7 @@
 !  that its end has been reached
 
               LINK_elem_uses_var( ientry ) = 0
+              LINK_TAIL( ivar ) = ivar
             END IF
           END DO
         END DO
@@ -543,23 +542,18 @@
 !  loop on the variables of the I-th element
 
           DO k = ISTAEV( iel ), ISTAEV( iel + 1 ) - 1
-            ientry = IELVAR( k )
+            ivar = IELVAR( k )
+            ientry = ivar
             IF ( LINK_elem_uses_var( ientry ) >= 0 ) THEN
 
-!  if we have reached the end of the list of the elements using the variable
-!  IELVAR( K ), add the I-th element to it and record that the end of the list
-!  has occured. Otherwise, find the next entry in the list
+!  jump to the end of the list (tail) and append the I-th element
 
-  110         CONTINUE
-              IF ( LINK_elem_uses_var( ientry ) > 0 ) THEN
-                ientry = LINK_elem_uses_var( ientry )
-                GO TO 110
-              ELSE
-                iielts = iielts + 1
-                LINK_elem_uses_var( ientry ) = iielts
-                LINK_elem_uses_var( iielts ) = 0
-                LIST_elements( iielts ) = i
-              END IF
+              ientry = LINK_TAIL( ivar )
+              iielts = iielts + 1
+              LINK_elem_uses_var( ientry ) = iielts
+              LINK_elem_uses_var( iielts ) = 0
+              LIST_elements( iielts ) = i
+              LINK_TAIL( ivar ) = iielts
             ELSE
 
 !  the list of elements involving the variable IELVAR( K ) was previously
@@ -569,6 +563,7 @@
 
               LINK_elem_uses_var( ientry ) = 0
               LIST_elements( ientry ) = i
+              LINK_TAIL( ivar ) = ivar
             END IF
           END DO
         END DO
